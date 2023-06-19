@@ -374,9 +374,9 @@ ValidForGrooveStats = function(player)
 	-- AutoPlay/AutoplayCPU is not allowed
 	valid[12] = IsHumanPlayer(player)
 	
-	local minTNSToScoreNores = ToEnumShortString(PREFSMAN:GetPreference("MinTNSToScoreNotes"))
+	local minTNSToScoreNotes = ToEnumShortString(PREFSMAN:GetPreference("MinTNSToScoreNotes"))
 
-	valid[13] = minTNSToScoreNores ~= "W1" and minTNSToScoreNores ~= "W2"
+	valid[13] = minTNSToScoreNotes ~= "W1" and minTNSToScoreNotes ~= "W2"
 	
 	-- ------------------------------------------
 	-- return the entire table so that we can let the player know which settings,
