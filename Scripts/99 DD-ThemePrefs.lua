@@ -37,7 +37,7 @@ SL_CustomPrefs.Get = function()
 			Values 	= { false, true }
 		},
 		RescoreEarlyHits = {
-			Default = false,
+			Default = true,
 			Choices =  { THEME:GetString("ThemePrefs","Yes"), THEME:GetString("ThemePrefs", "No") },
 			Values	= { true, false }
 		},
