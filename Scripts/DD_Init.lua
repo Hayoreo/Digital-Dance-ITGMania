@@ -32,7 +32,6 @@ local PlayerDefaults = {
 				ActionOnMissedTarget = "Nothing",
 				Pacemaker = false,
 				LifeMeterType = "Vertical",
-				MissBecauseHeld = true,
 				NPSGraphAtTop = false,
 				JudgmentTilt = false,
 				ErrorBar = "None",

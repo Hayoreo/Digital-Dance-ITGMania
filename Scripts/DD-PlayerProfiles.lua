@@ -48,7 +48,6 @@ local permitted_profile_settings = {
 	ColumnFlashOnMiss = "boolean",
 	SubtractiveScoring = "boolean",
 	Pacemaker = "boolean",
-	MissBecauseHeld = "boolean",
 	NPSGraphAtTop = "boolean",
 	JudgmentTilt         = "boolean",
 	ErrorBar             = "string",
