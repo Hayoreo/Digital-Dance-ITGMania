@@ -149,15 +149,15 @@ local SetScoreData = function(data_idx, score_idx, rank, name, score, isSelf, is
 end
 
 local LeaderboardRequestProcessor = function(res, master)
-	if res == nil or res["status"] == "disabled" or res["status"] == "fail" then
-		local text = "Timed Out"
-		if res ~= nil then
-			if res["status"] == "disabled" then
-				text = "Leaderboard Disabled"
-			end
-			if res["status"] == "fail" then
-				text = "Failed to Load 😞"
-			end
+	if master == nil then return end
+	
+	if res.error or res.statusCode ~= 200 then
+		local error = res.error and ToEnumShortString(res.error) or nil
+		local text = ""
+		if error == "Timeout" then
+			text = "Timed Out"
+		elseif error or (res.statusCode ~= nil and res.statusCode ~= 200) then
+			text = "Failed to Load 😞"
 		end
 		for i=1, num_scores do
 			SetScoreData(1, i, "", "", "", false, false, false)
@@ -172,7 +172,7 @@ local LeaderboardRequestProcessor = function(res, master)
 	end
 
 	local playerStr = "player"..n
-	local data = res["status"] == "success" and res["data"] or nil
+	local data = JsonDecode(res.body)
 
 	-- First check to see if the leaderboard even exists.
 	if data and data[playerStr] then
@@ -227,6 +227,11 @@ local LeaderboardRequestProcessor = function(res, master)
 									false)
 				end
 			end
+		else
+			for i=1,num_scores do
+				SetScoreData(1, i, "", "", "", false, false, false)
+			end
+			SetScoreData(1, 1, "", "Chart Not Ranked", "", false, false, false)
 		end
 
 		if data[playerStr]["rpg"] then
@@ -327,6 +332,7 @@ local af = Def.ActorFrame{
 			self:visible(true)
 		end
 	end,
+	OffCommand=function(self) self:stoptweening() end,
 	CurrentSongChangedMessageCommand=function(self)
 		self:stoptweening()
 		if GAMESTATE:GetCurrentSong() == nil then
@@ -434,7 +440,7 @@ local af = Def.ActorFrame{
 		
 	end,
 	
-	RequestResponseActor("Leaderboard"..pn, 10, 0, 0)..{
+	RequestResponseActor(0, 0)..{
 		OnCommand=function(self)
 			-- Create variables for both players, even if they're not currently active.
 			self.IsParsing = {false, false}
@@ -468,15 +474,13 @@ local af = Def.ActorFrame{
 		end,
 		MakeRequestCommand=function(self)
 			local sendRequest = false
-			local data = {
-				action="groovestats/player-leaderboards",
+			local headers = {}
+			local query = {
 				maxLeaderboardResults=num_scores,
 			}
 			if SL[pn].ApiKey ~= "" then
-				data["player"..n] = {
-					chartHash=SL[pn].Streams.Hash,
-					apiKey=SL[pn].ApiKey
-				}
+				query["chartHashP"..n] = SL[pn].Streams.Hash
+				headers["x-api-key-player-"..n] = SL[pn].ApiKey
 				sendRequest = true
 			end
 
@@ -505,14 +509,13 @@ local af = Def.ActorFrame{
 				
 				self.RequestNumber = self.RequestNumber + 1
 				local thisRequestNumber = self.RequestNumber
-				MESSAGEMAN:Broadcast("Leaderboard"..pn, {
-					data=data,
+				self:playcommand("MakeGrooveStatsRequest", {
+					endpoint="player-leaderboards.php?"..NETWORK:EncodeQueryParameters(query),
+					method="GET",
+					headers=headers,
+					timeout=10,
+					callback=LeaderboardRequestProcessor,
 					args=self:GetParent(),
-					callback=function(res, master)
-						if self.RequestNumber == thisRequestNumber then
-							LeaderboardRequestProcessor(res, master)
-						end
-					end,
 				})
 			end
 		end
@@ -526,7 +529,8 @@ local af = Def.ActorFrame{
 		end,
 		UpdateScoreboxCommand=function(self)
 			self:stoptweening():linear(transition_seconds/2):diffuse(style_color[cur_style])
-		end
+		end,
+		OffCommand=function(self) self:stoptweening() end
 	},
 	-- Main body
 	Def.Quad{
@@ -549,7 +553,8 @@ local af = Def.ActorFrame{
 			else
 				self:linear(transition_seconds/2):diffusealpha(0)
 			end
-		end
+		end,
+		OffCommand=function(self) self:stoptweening():stopeffect() end
 	},
 	-- SRPG Logo
 	Def.Sprite{
@@ -565,7 +570,8 @@ local af = Def.ActorFrame{
 			else
 				self:linear(transition_seconds/2):diffusealpha(0)
 			end
-		end
+		end,
+		OffCommand=function(self) self:stoptweening() end
 	},
 	-- ITL Logo
 	Def.Sprite{
@@ -581,7 +587,8 @@ local af = Def.ActorFrame{
 			else
 				self:linear(transition_seconds/2):diffusealpha(0)
 			end
-		end
+		end,
+		OffCommand=function(self) self:stoptweening() end
 	},
 	-- Machine Logo
 	Def.Sprite{
@@ -597,7 +604,8 @@ local af = Def.ActorFrame{
 			else
 				self:linear(transition_seconds/2):diffusealpha(0)
 			end
-		end
+		end,
+		OffCommand=function(self) self:stoptweening() end
 	},
 }
 
@@ -621,7 +629,8 @@ for i=1,num_scores do
 				if score.rank ~= "" then
 					self:linear(transition_seconds/2):diffusealpha(1)
 				end
-			end
+			end,
+			OffCommand=function(self) self:stoptweening() end
 		}
 	else
 		af[#af+1] = LoadFont("Common Normal")..{
@@ -648,6 +657,7 @@ for i=1,num_scores do
 				end
 				self:linear(transition_seconds/2):diffusealpha(1):diffuse(clr)
 			end,
+			OffCommand=function(self) self:stoptweening() end
 		}
 	end
 
@@ -671,6 +681,7 @@ for i=1,num_scores do
 			self:settext(score.name)
 			self:linear(transition_seconds/2):diffusealpha(1):diffuse(clr)
 		end,
+		OffCommand=function(self) self:stoptweening() end
 	}
 
 	af[#af+1] = LoadFont("Common Normal")..{
@@ -694,7 +705,8 @@ for i=1,num_scores do
 			end
 			self:settext(score.score)
 			self:linear(transition_seconds/2):diffusealpha(1):diffuse(clr)
-		end
+		end,
+		OffCommand=function(self) self:stoptweening() end
 	}
 	
 	--- Machine scores
@@ -730,6 +742,7 @@ for i=1,num_scores do
 					self:linear(transition_seconds/2):diffusealpha(1)
 				end
 			end,
+			OffCommand=function(self) self:stoptweening() end
 		}
 	end
 	
@@ -750,6 +763,7 @@ for i=1,num_scores do
 				self:linear(transition_seconds/2):diffusealpha(1):settext("No Scores")
 			end
 		end,
+		OffCommand=function(self) self:stoptweening() end
 	}
 	
 	af[#af+1] = LoadFont("Common Normal")..{
@@ -767,6 +781,7 @@ for i=1,num_scores do
 				self:linear(transition_seconds/2):diffusealpha(1)
 			end
 		end,
+		OffCommand=function(self) self:stoptweening() end
 	}
 end
 return af

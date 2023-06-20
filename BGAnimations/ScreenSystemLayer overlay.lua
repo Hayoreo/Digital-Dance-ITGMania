@@ -50,6 +50,7 @@ for player in ivalues(PlayerNumber) do
 		ScreenChangedMessageCommand=function(self)   self:queuecommand("Update") end,
 		PlayerJoinedMessageCommand=function(self, params)   if params.Player==player then self:queuecommand("Update") end end,
 		PlayerUnjoinedMessageCommand=function(self, params) if params.Player==player then self:queuecommand("Update") end end,
+		PlayerProfileSetMessageCommand=function(self, params) if params.Player==player then self:queuecommand("Update") end end,
 
 		UpdateCommand=function(self)
 			local path = GetPlayerAvatarPath(player)
@@ -59,7 +60,7 @@ for player in ivalues(PlayerNumber) do
 				return
 			end
 
-			-- only read from disk if not currently set
+			-- only read from disk if not currently set or if the path has changed
 			if self:GetTexture() == nil then
 				self:Load(path):finishtweening():linear(0.075):diffusealpha(1)
 
@@ -157,22 +158,6 @@ end
 
 LoadModules()
 
-t[#t+1] = RequestResponseActor("PingLauncher", 10, 0, 0, 1)..{
-	-- OnCommand doesn't work in ScreenSystemLayer
-	InitCommand=function(self)
-		MESSAGEMAN:Broadcast("PingLauncher", {
-				data={action="ping", protocol=1},
-				args={},
-				callback=function(res, args)
-					if res == nil then return end
-					
-					SL.GrooveStats.Launcher = true
-					MESSAGEMAN:Broadcast("NewSessionRequest")
-				end
-			})
-	end,
-}
-
 -- -----------------------------------------------------------------------
 -- The GrooveStats service info pane.
 -- Technically it only appears on ScreenTitleMenu if the launcher was found.
@@ -193,33 +178,44 @@ local NewSessionRequestProcessor = function(res, gsInfo)
 	service1:visible(false)
 	service2:visible(false)
 	service3:visible(false)
-	
-	if res == nil then
-		groovestats:settext("Timed Out")
-		return
-	end
 
-	if not res["status"] == "success" then
-		if res["status"] == "fail" then
-			service1:settext("Failed to Load 😞"):visible(true)
-		elseif res["status"] == "disabled" then
-			service1:settext("Disabled"):visible(true)
+	SL.GrooveStats.IsConnected = false
+	if res.error or res.statusCode ~= 200 then
+		local error = res.error and ToEnumShortString(res.error) or nil
+		if error == "Timeout" then
+			groovestats:settext("Timed Out")
+		elseif error or (res.statusCode ~= nil and res.statusCode ~= 200) then
+			local text = ""
+			if error == "Blocked" then
+				text = "Access to GrooveStats Host Blocked"
+			elseif error == "CannotConnect" then
+				text = "Machine Offline"
+			elseif error == "Timeout" then
+				text = "Request Timed Out"
+			else
+				text = "Failed to Load 😞"
+			end
+			service1:settext(text):visible(true)
+
+
+			-- These default to false, but may have changed throughout the game's lifetime.
+			-- It doesn't hurt to explicitly set them to false.
+			SL.GrooveStats.GetScores = false
+			SL.GrooveStats.Leaderboard = false
+			SL.GrooveStats.AutoSubmit = false
+			groovestats:settext("❌ GrooveStats")
+
+			DiffuseEmojis(service1:ClearAttributes())
 		end
-
-		-- These default to false, but may have changed throughout the game's lifetime.
-		-- It doesn't hurt to explicitly set them to false.
-		SL.GrooveStats.GetScores = false
-		SL.GrooveStats.Leaderboard = false
-		SL.GrooveStats.AutoSubmit = false
-		groovestats:settext("❌ GrooveStats")
+		DiffuseEmojis(groovestats:ClearAttributes())
 		return
 	end
 
-	local data = res["data"]
+	local data = JsonDecode(res.body)
 	if data == nil then return end
 
-	if data["servicesAllowed"] ~= nil then
-		local services = data["servicesAllowed"]
+	local services = data["servicesAllowed"]
+	if services ~= nil then
 		local serviceCount = 1
 
 		if services["playerScores"] ~= nil then
@@ -256,9 +252,14 @@ local NewSessionRequestProcessor = function(res, gsInfo)
 		end
 	end
 
+	local events = data["activeEvents"]
+	local easter_eggs = PREFSMAN:GetPreference("EasterEggs")
+	local game = GAMESTATE:GetCurrentGame():GetName()
+
 	-- All services are enabled, display a green check.
 	if SL.GrooveStats.GetScores and SL.GrooveStats.Leaderboard and SL.GrooveStats.AutoSubmit then
 		groovestats:settext("✔ GrooveStats")
+		SL.GrooveStats.IsConnected = true
 	-- All services are disabled, display a red X.
 	elseif not SL.GrooveStats.GetScores and not SL.GrooveStats.Leaderboard and not SL.GrooveStats.AutoSubmit then
 		groovestats:settext("❌ GrooveStats")
@@ -268,8 +269,14 @@ local NewSessionRequestProcessor = function(res, gsInfo)
 		service3:visible(false)
 	-- Some combination of the two, we display a caution symbol.
 	else
-		groovestats:settext("⚠️ GrooveStats")
+		groovestats:settext("⚠ GrooveStats")
+		SL.GrooveStats.IsConnected = true
 	end
+
+	DiffuseEmojis(groovestats:ClearAttributes())
+	DiffuseEmojis(service1:ClearAttributes())
+	DiffuseEmojis(service2:ClearAttributes())
+	DiffuseEmojis(service3:ClearAttributes())
 end
 
 local TextColor = Color.White
@@ -284,11 +291,8 @@ t[#t+1] = Def.ActorFrame{
 		local screen = SCREENMAN:GetTopScreen()
 		if screen:GetName() == "ScreenTitleMenu" then
 			self:queuecommand("Reset")
-			self:visible(SL.GrooveStats.Launcher)
-			self:diffusealpha(0):sleep(0.2):linear(0.4):diffusealpha(1)
-			if SL.GrooveStats.Launcher then
-				MESSAGEMAN:Broadcast("NewSessionRequest")
-			end
+			self:diffusealpha(0):sleep(0.2):linear(0.4):diffusealpha(1):visible(true)
+			self:queuecommand("SendRequest")
 		else
 			self:visible(false)
 		end
@@ -297,48 +301,70 @@ t[#t+1] = Def.ActorFrame{
 	LoadFont("Common Normal")..{
 		Name="GrooveStats",
 		Text="     GrooveStats",
-		InitCommand=function(self) self:diffuse(TextColor):horizalign(left) end,
-		ResetCommand=function(self) self:settext("     GrooveStats") end
+		InitCommand=function(self)
+			self:visible(ThemePrefs.Get("EnableGrooveStats"))
+			self:horizalign(left)
+			DiffuseText(self)
+		end,
+		ResetCommand=function(self)
+			self:visible(ThemePrefs.Get("EnableGrooveStats"))
+			self:settext("     GrooveStats")
+		end
 	},
 
 	LoadFont("Common Normal")..{
 		Name="Service1",
 		Text="",
-		InitCommand=function(self) self:diffuse(TextColor):visible(true):addy(18):horizalign(left) end,
+		InitCommand=function(self)
+			self:visible(true):addy(18):horizalign(left)
+			DiffuseText(self)
+		end,
 		ResetCommand=function(self) self:settext("") end
 	},
 
 	LoadFont("Common Normal")..{
 		Name="Service2",
 		Text="",
-		InitCommand=function(self) self:diffuse(TextColor):visible(true):addy(36):horizalign(left) end,
+		InitCommand=function(self)
+			self:visible(true):addy(36):horizalign(left)
+			DiffuseText(self)
+		end,
 		ResetCommand=function(self) self:settext("") end
 	},
 
 	LoadFont("Common Normal")..{
 		Name="Service3",
 		Text="",
-		InitCommand=function(self) self:diffuse(TextColor):visible(true):addy(54):horizalign(left) end,
+		InitCommand=function(self)
+			self:visible(true):addy(54):horizalign(left)
+			DiffuseText(self)
+		end,
 		ResetCommand=function(self) self:settext("") end
 	},
 
-	RequestResponseActor("NewSession", 10, 0, 0, 1)..{
-		NewSessionRequestMessageCommand=function(self)
-			if SL.GrooveStats.Launcher then
+	RequestResponseActor(5, 0)..{
+		SendRequestCommand=function(self)
+			if ThemePrefs.Get("EnableGrooveStats") then
 				-- These default to false, but may have changed throughout the game's lifetime.
 				-- Reset these variable before making a request.
 				SL.GrooveStats.GetScores = false
 				SL.GrooveStats.Leaderboard = false
 				SL.GrooveStats.AutoSubmit = false
-				MESSAGEMAN:Broadcast("NewSession", {
-						data={action="groovestats/new-session", ChartHashVersion=SL.GrooveStats.ChartHashVersion},
-						args=self:GetParent(),
-						callback=NewSessionRequestProcessor,
-					})
+				self:playcommand("MakeGrooveStatsRequest", {
+					endpoint="new-session.php?chartHashVersion="..SL.GrooveStats.ChartHashVersion,
+					method="GET",
+					timeout=10,
+					callback=NewSessionRequestProcessor,
+					args=self:GetParent()
+				})
 			end
 		end
 	}
 }
+
+-- -----------------------------------------------------------------------
+-- Loads the UnlocksCache from disk for SRPG unlocks.
+LoadUnlocksCache()
 
 -- -----------------------------------------------------------------------
 -- SystemMessage stuff.

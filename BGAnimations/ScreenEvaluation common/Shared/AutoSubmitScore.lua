@@ -61,31 +61,28 @@ end
 local AutoSubmitRequestProcessor = function(res, overlay)
 	local P1SubmitText = overlay:GetChild("AutoSubmitMaster"):GetChild("P1SubmitText")
 	local P2SubmitText = overlay:GetChild("AutoSubmitMaster"):GetChild("P2SubmitText")
-	if res == nil then
-		if P1SubmitText then P1SubmitText:queuecommand("TimedOut") end
-		if P2SubmitText then P2SubmitText:queuecommand("TimedOut") end
+	if res.error or res.statusCode ~= 200 then
+		local error = res.error and ToEnumShortString(res.error) or nil
+		if error == "Timeout" then
+			if P1SubmitText then P1SubmitText:queuecommand("TimedOut") end
+			if P2SubmitText then P2SubmitText:queuecommand("TimedOut") end
+		elseif error or (res.statusCode ~= nil and res.statusCode ~= 200) then
+			if P1SubmitText then P1SubmitText:queuecommand("SubmitFailed") end
+			if P2SubmitText then P2SubmitText:queuecommand("SubmitFailed") end
+		end
 		return
 	end
 	
 	local panes = overlay:GetChild("Panes")
 	local shouldDisplayOverlay = false
 
-	if res["status"] == "fail" then
-		if P1SubmitText then P1SubmitText:queuecommand("SubmitFailed") end
-		if P2SubmitText then P2SubmitText:queuecommand("SubmitFailed") end
-		return
-	elseif res["status"] == "disabled" then
-		if P1SubmitText then P1SubmitText:queuecommand("ServiceDisabled") end
-		if P2SubmitText then P2SubmitText:queuecommand("ServiceDisabled") end
-		return
-	end
 	-- Hijack the leaderboard pane to display the GrooveStats leaderboards.
 	if panes then
 		for i=1,2 do
 			local playerStr = "player"..i
 			local entryNum = 1
 			local rivalNum = 1
-			local data = res["status"] == "success" and res["data"] or nil
+			local data = JsonDecode(res.body)
 			-- Pane 7 is the groovestats highscores pane.
 			local highScorePane = panes:GetChild("Pane7_SideP"..i):GetChild("")
 			local QRPane = panes:GetChild("Pane6_SideP"..i):GetChild("")
@@ -234,13 +231,14 @@ end
 
 local af = Def.ActorFrame {
 	Name="AutoSubmitMaster",
-	RequestResponseActor("AutoSubmit", 30, 17, 50, 1)..{
+	RequestResponseActor(17, 50)..{
 		OnCommand=function(self)
 			local sendRequest = false
-			local data = {
-				action="groovestats/score-submit",
+			local headers = {}
+			local query = {
 				maxLeaderboardResults=NumEntries,
 			}
+			local body = {}
 
 			local rate = SL.Global.ActiveModifiers.MusicRate * 100
 			for i=1,2 do
@@ -262,15 +260,15 @@ local af = Def.ActorFrame {
 						end
 						
 						if SL[pn].ApiKey ~= "" and SL[pn].Streams.Hash ~= "" then
-							data["player"..i] = {
-								chartHash=SL[pn].Streams.Hash,
-								apiKey=SL[pn].ApiKey,
+							query["chartHashP"..i] = SL[pn].Streams.Hash
+							headers["x-api-key-player-"..i] = SL[pn].ApiKey
+
+							body["player"..i] = {
 								rate=rate,
 								score=score,
 								judgmentCounts=GetJudgmentCounts(player),
 								usedCmod=(GAMESTATE:GetPlayerState(pn):GetPlayerOptions("ModsLevel_Preferred"):CMod() ~= nil),
 								comment=CreateCommentString(player),
-								profileName=profileName,
 							}
 							sendRequest = true
 							submitForPlayer = true
@@ -291,10 +289,14 @@ local af = Def.ActorFrame {
 				-- Unjoined players won't have the text displayed.
 				self:GetParent():GetChild("P1SubmitText"):settext("Submitting ...")
 				self:GetParent():GetChild("P2SubmitText"):settext("Submitting ...")
-				MESSAGEMAN:Broadcast("AutoSubmit", {
-					data=data,
+				self:playcommand("MakeGrooveStatsRequest", {
+					endpoint="score-submit.php?"..NETWORK:EncodeQueryParameters(query),
+					method="POST",
+					headers=headers,
+					body=JsonEncode(body),
+					timeout=30,
+					callback=AutoSubmitRequestProcessor,
 					args=SCREENMAN:GetTopScreen():GetChild("Overlay"):GetChild("ScreenEval Common"),
-					callback=AutoSubmitRequestProcessor
 				})
 			end
 		end
@@ -325,9 +327,6 @@ af[#af+1] = LoadFont("Miso/_miso").. {
 	SubmitFailedCommand=function(self)
 		self:settext("Submit Failed 😞")
 	end,
-	ServiceDisabledCommand=function(self)
-		self:settext("Submit Disabled")
-	end,
 	TimedOutCommand=function(self)
 		self:settext("Timed Out")
 	end
@@ -351,9 +350,6 @@ af[#af+1] = LoadFont("Miso/_miso").. {
 	end,
 	SubmitFailedCommand=function(self)
 		self:settext("Submit Failed 😞")
-	end,
-	ServiceDisabledCommand=function(self)
-		self:settext("Submit Disabled")
 	end,
 	TimedOutCommand=function(self)
 		self:settext("Timed Out")

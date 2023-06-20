@@ -76,23 +76,23 @@ local SetScoreData = function(data_idx, score_idx, rank, name, score, isSelf, is
 end
 
 local LeaderboardRequestProcessor = function(res, master)
-	if res == nil or res["status"] == "disabled" or res["status"] == "fail" then
-		local text = "Timed Out"
-		if res ~= nil then
-			if res["status"] == "disabled" then
-				text = "Leaderboard Disabled"
-			end
-			if res["status"] == "fail" then
-				text = "Failed to Load 😞"
-			end
+	if master == nil then return end
+
+	if res.error or res.statusCode ~= 200 then
+		local error = res.error and ToEnumShortString(res.error) or nil
+		local text = ""
+		if error == "Timeout" then
+			text = "Timed Out"
+		elseif error or (res.statusCode ~= nil and res.statusCode ~= 200) then
+			text = "Failed to Load 😞"
 		end
-		SetScoreData(1, 1, "", text, "", false, false)
+		SetScoreData(1, 1, "", text, "", false, false, false)
 		master:queuecommand("CheckScorebox")
 		return
 	end
 
 	local playerStr = "player"..n
-	local data = res["status"] == "success" and res["data"] or nil
+	local data = JsonDecode(res.body)
 
 	-- First check to see if the leaderboard even exists.
 	if data and data[playerStr] then
@@ -180,6 +180,8 @@ local af = Def.ActorFrame{
 		self:queuecommand("LoopScorebox")
 	end,
 	LoopScoreboxCommand=function(self)
+		if #all_data == 0 then return end
+		
 		local start = cur_style
 
 		cur_style = (cur_style + 1) % num_styles
@@ -207,7 +209,7 @@ local af = Def.ActorFrame{
 		end
 	end,
 
-	RequestResponseActor("Leaderboard", loop_seconds, 0, 0)..{
+	RequestResponseActor(0, 0)..{
 		OnCommand=function(self)
 			self:queuecommand("MakeRequest")
 		end,
@@ -219,15 +221,13 @@ local af = Def.ActorFrame{
 		end,
 		MakeRequestCommand=function(self)
 			local sendRequest = false
-			local data = {
-				action="groovestats/player-leaderboards",
+			local headers = {}
+			local query = {
 				maxLeaderboardResults=NoteFieldIsCentered and 4 or 5,
 			}
 			if SL[pn].ApiKey ~= "" then
-				data["player"..n] = {
-					chartHash=SL[pn].Streams.Hash,
-					apiKey=SL[pn].ApiKey
-				}
+				query["chartHashP"..n] = SL[pn].Streams.Hash
+				headers["x-api-key-player-"..n] = SL[pn].ApiKey
 				sendRequest = true
 			end
 
@@ -236,10 +236,13 @@ local af = Def.ActorFrame{
 			-- Should be fine though.
 			if sendRequest then
 				self:GetParent():GetChild("Name1"):settext("Loading...")
-				MESSAGEMAN:Broadcast("Leaderboard", {
-					data=data,
+				self:playcommand("MakeGrooveStatsRequest", {
+					endpoint="player-leaderboards.php?"..NETWORK:EncodeQueryParameters(query),
+					method="GET",
+					headers=headers,
+					timeout=10,
+					callback=LeaderboardRequestProcessor,
 					args=self:GetParent(),
-					callback=LeaderboardRequestProcessor
 				})
 			end
 		end

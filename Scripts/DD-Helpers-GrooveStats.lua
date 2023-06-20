@@ -43,89 +43,108 @@
 
 --    x: The x position of the loading spinner.
 --    y: The y position of the loading spinner.
-RequestResponseActor = function(name, timeout, x, y, zoom)
-	-- Sanitize the timeout value.
-	local timeout = clamp(timeout, 1.0, 59.0)
-	local path_prefix = "/Save/GrooveStats/"
+RequestResponseActor = function(x, y)
+	local url_prefix = "https://api.groovestats.com/"
 
 	return Def.ActorFrame{
 		InitCommand=function(self)
-			if not GAMESTATE:IsCourseMode() then
-				self.request_id = nil
-				self.request_time = nil
-				self.args = nil
-				self.callback = nil
-				self:xy(x, y)
-			else end
+			self.request_time = -1
+			self.timeout = -1
+			self.request_handler = nil
+			self.leaving_screen = false
+			self:xy(x, y)
 		end,
-		WaitCommand=function(self)
-			local Reset = function(self)
-				self.request_id = nil
-				self.request_time = nil
-				self.args = nil
-				self.callback = nil
-				self:GetChild("Spinner"):visible(false)
+		CancelCommand=function(self)
+			self.leaving_screen = true
+			-- Cancel the request if we pressed back on the screen.
+			if self.request_handler then
+				self.request_handler:Cancel()
+				self.request_handler = nil
 			end
-			local now = GetTimeSinceStart()
-			local remaining_time = timeout - (now - self.request_time)
-			-- Only display the spinner after we've waiting for some amount of time.
-			if self.request_id ~= "ping" then
-				-- Tell the spinner how much remaining time there is.
-				self:playcommand("UpdateSpinner", {time=remaining_time})
+		end,
+		OffCommand=function(self)
+			self.leaving_screen = true
+			-- Cancel the request if this actor will be destructed soon.
+			if self.request_handler then
+				self.request_handler:Cancel()
+				self.request_handler = nil
 			end
-			
-			-- We're waiting on a response.
-			if self.request_id ~= nil then
-				local f = RageFileUtil.CreateRageFile()
-				-- Check to see if the response file was written.
-				if f:Open(path_prefix.."responses/"..self.request_id..".json", 1) then
-					local json_str = f:Read()
-					local data = {}
-					if #json_str ~= 0 then
-						data = json.decode(json_str)
+		end,
+		MakeGrooveStatsRequestCommand=function(self, params)
+			self:stoptweening()
+			if not params then
+				Warn("No params specified for MakeGrooveStatsRequestCommand.")
+				return
+			end
+
+			-- Cancel any existing requests if we're waiting on one at the moment.
+			if self.request_handler then
+				self.request_handler:Cancel()
+				self.request_handler = nil
+			end
+			self:GetChild("Spinner"):visible(true)
+
+			local timeout = params.timeout or 60
+			local endpoint = params.endpoint or ""
+			local method = params.method
+			local body = params.body
+			local headers = params.headers
+
+			self.timeout = timeout
+
+			-- Attempt to make the request
+			self.request_handler = NETWORK:HttpRequest{
+				url=url_prefix..endpoint,
+				method=method,
+				body=body,
+				headers=headers,
+				connectTimeout=timeout/2,
+				transferTimeout=timeout/2,
+				onResponse=function(response)
+					self.request_handler = nil
+					-- If we get a permanent error, make sure we "disconnect" from
+					-- GrooveStats until we recheck on ScreenTitleMenu.
+					if response.statusCode then
+						local body = nil
+						local code = response.statusCode
+						if code == 200 then
+							body = JsonDecode(response.body)
+						end
+						if (code >= 400 and code < 499 and code ~= 429) or (code == 200 and body and body.error and #body.error) then
+							SL.GrooveStats.IsConnected = false
+						end
 					end
-					self.callback(data, self.args)
-					f:Close()
-					Reset(self)
-				-- Have we timed out?
-				elseif remaining_time < 0 then
-					self.callback(nil, self.args)
-					Reset(self)
-				end
-				f:destroy()
-			end
 
-			-- If the id wasn't reset, then we're still waiting. Loop again.
-			if self.request_id ~= nil then
-				self:sleep(0.5):queuecommand('Wait')
-			end
+					if self.leaving_screen then
+						return
+					end
+					
+					if params.callback then
+						if not response.error or ToEnumShortString(response.error) ~= "Cancelled" then
+							params.callback(response, params.args)
+						end
+					end
+
+					self:GetChild("Spinner"):visible(false)
+				end,
+			}
+			-- Keep track of when we started making the request
+			self.request_time = GetTimeSinceStart()
+			-- Start looping for the spinner.
+			self:queuecommand("GrooveStatsRequestLoop")
 		end,
-		[name .. "MessageCommand"]=function(self, params)
-			if not SL.GrooveStats.Launcher and params.data["action"] ~= "ping" then return end
-			local id = nil
-			-- We don't want to generate a bunch of files if they will never get processed.
-			-- Specifically for the ping action, we will use a predetermined id.
-			if params.data["action"] == "ping" then
-				id = "ping"
-			else
-				id = CRYPTMAN:GenerateRandomUUID()
+		GrooveStatsRequestLoopCommand=function(self)
+			local now = GetTimeSinceStart()
+			local remaining_time = self.timeout - (now - self.request_time)
+			self:playcommand("UpdateSpinner", {
+				timeout=self.timeout,
+				remaining_time=remaining_time
+			})
+			-- Only loop if the request is still ongoing.
+			-- The callback always resets the request_handler once its finished.
+			if self.request_handler then
+				self:sleep(0.5):queuecommand("GrooveStatsRequestLoop")
 			end
-
-			local f = RageFileUtil:CreateRageFile()
-			if f:Open(path_prefix .. "requests/".. id .. ".json", 2) then
-				f:Write(json.encode(params.data))
-				f:Close()
-
-				self:stoptweening()
-				self.request_id = id
-				self.request_time = GetTimeSinceStart()
-				self.args = params.args
-				self.callback = params.callback
-				
-				self:GetChild("Spinner"):visible(false)
-				self:sleep(0.1):queuecommand('Wait')
-			end
-			f:destroy()
 		end,
 
 		Def.ActorFrame{
@@ -133,31 +152,32 @@ RequestResponseActor = function(name, timeout, x, y, zoom)
 			InitCommand=function(self)
 				self:visible(false)
 			end,
-			UpdateSpinnerCommand=function(self)
-				if SL.GrooveStats.Launcher then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end,
 			Def.Sprite{
 				Texture=THEME:GetPathG("", "LoadingSpinner 10x3.png"),
 				Frames=Sprite.LinearFrames(30,1),
 				InitCommand=function(self)
 					self:zoom(0.15)
+					self:diffuse(GetHexColor(SL.Global.ActiveColorIndex, true))
+				end,
+				VisualStyleSelectedMessageCommand=function(self)
+					self:diffuse(GetHexColor(SL.Global.ActiveColorIndex, true))
 				end
 			},
 			LoadFont("Common Normal")..{
-				InitCommand=function(self) self:zoom(0.9) end,
+				InitCommand=function(self)
+					self:zoom(0.9)
+					-- Leaderboard should be white since it's on a black background.
+					self:diffuse(Color.White)
+				end,
 				UpdateSpinnerCommand=function(self, params)
 					-- Only display the countdown after we've waiting for some amount of time.
-					if timeout - params.time > 2 then
+					if params.timeout - params.remaining_time > 2 then
 						self:visible(true)
 					else
 						self:visible(false)
 					end
-					if params.time > 1 then
-						self:settext(math.floor(params.time))
+					if params.remaining_time > 1 then
+						self:settext(math.floor(params.remaining_time))
 					end
 				end
 			}
@@ -227,6 +247,8 @@ end
 --  - We must not be in course mode.
 IsServiceAllowed = function(condition)
 	return (condition and
+		ThemePrefs.Get("EnableGrooveStats") and
+		SL.GrooveStats.IsConnected and
 		GAMESTATE:GetCurrentGame():GetName()=="dance" and
 		(SL.P1.ApiKey ~= "" or SL.P2.ApiKey ~= "") and
 		not GAMESTATE:IsCourseMode())
@@ -529,6 +551,163 @@ ParseGroovestatsDate = function(date)
 end
 
 -- -----------------------------------------------------------------------
+LoadUnlocksCache = function()
+	local cache_file = "/Songs/unlocks-cache.json"
+	if FILEMAN:DoesFileExist(cache_file) then
+		local f = RageFileUtil:CreateRageFile()
+		local cache = {}
+		if f:Open(cache_file, 1) then
+			local data = JsonDecode(f:Read())
+			if data ~= nil then
+				cache = data
+			end
+		end
+		f:destroy()
+		return cache
+	end
+	return {}
+end
+
+-- -----------------------------------------------------------------------
+WriteUnlocksCache = function()
+	local cache_file = "/Songs/unlocks-cache.json"
+	local f = RageFileUtil:CreateRageFile()
+	if f:Open(cache_file, 2) then
+		f:Write(JsonEncode(SL.GrooveStats.UnlocksCache))
+	end
+	f:destroy()
+end
+
+-- -----------------------------------------------------------------------
+-- Downloads an Event unlock and unzips it. If a download with the same URL and
+-- destination pack name exists, the download attempt is skipped.
+-- 
+-- Args are:
+--   url: string, the file to download from the web.
+--   unlockName: string, an identifier for the download.
+--               Used to display on ScreenDownloads
+--   packName: string, The pack name to unlock the contents of the unlock to.
+DownloadEventUnlock = function(url, unlockName, packName)
+	-- Forward slash is not allowed in both Linux or Windows.
+	-- All others are not allowed in Windows.
+	local invalidChars = {
+			["/"]="",
+			["<"]="",
+			[">"]="",
+			[":"]="",
+			["\""]="",
+			["\\"]="",
+			["|"]="",
+			["?"]="",
+			["*"]=""
+	}
+	packName = string.gsub(packName, ".", invalidChars)
+
+	-- Reserved file names for Windows.
+	local invalidFilenames = {
+			["CON"]=true,
+			["PRN"]=true,
+			["AUX"]=true,
+			["NUL"]=true,
+			["COM1"]=true,
+			["COM2"]=true,
+			["COM3"]=true,
+			["COM4"]=true,
+			["COM5"]=true,
+			["COM6"]=true,
+			["COM7"]=true,
+			["COM8"]=true,
+			["COM9"]=true,
+			["LPT1"]=true,
+			["LPT2"]=true,
+			["LPT3"]=true,
+			["LPT4"]=true,
+			["LPT5"]=true,
+			["LPT6"]=true,
+			["LPT7"]=true,
+			["LPT8"]=true,
+			["LPT9"]=true
+	}
+	-- If the packName is invalid, just append a space to it so it's not.
+	if invalidFilenames[packName] then
+		packName = " "..packName.." "
+	end
+
+	-- Check the download cache to see if we have already downloaded this unlock
+	-- successfully to the intended location.
+	-- Unlocks are placed in the cache whenever unlocks are bot successfully
+	-- downloaded and zipped.
+	if SL.GrooveStats.UnlocksCache[url] and SL.GrooveStats.UnlocksCache[url][packName] then
+		return
+	end
+
+	-- Then check that the same download isn't already active in the Downloads
+	-- table.
+	for _, downloadInfo in pairs(SL.Downloads) do
+		if downloadInfo.Url == url and downloadInfo.Destination == packName then
+			return
+		end
+	end
+
+	local uuid = CRYPTMAN:GenerateRandomUUID()
+	local downloadfile = uuid..".zip"
+
+	SL.Downloads[uuid] = {
+		Name=unlockName,
+		Url=url,
+		Destination=packName,
+		CurrentBytes=0,
+		TotalBytes=0,
+		Complete=false
+	}
+
+	-- Create the request separately. If the host is blocked it's possible that
+	-- the SL.Downloads[uuid] table is assigned.
+	SL.Downloads[uuid].Request = NETWORK:HttpRequest{
+		url=url,
+		downloadFile=downloadfile,
+		onProgress=function(currentBytes, totalBytes)
+			local downloadInfo = SL.Downloads[uuid]
+			if downloadInfo == nil then return end
+
+			downloadInfo.CurrentBytes = currentBytes
+			downloadInfo.TotalBytes = totalBytes
+		end,
+		onResponse=function(response)
+			local downloadInfo = SL.Downloads[uuid]
+			if downloadInfo == nil then return end
+			
+			downloadInfo.Complete = true
+			if response.error ~= nil then
+				downloadInfo.ErrorMessage = response.errorMessage
+				return
+			end
+
+			if response.statusCode == 200 then
+				if response.headers["Content-Type"] == "application/zip" then
+					-- Downloads are usually of the form:
+					--    /Downloads/<name>.zip/<song_folders/
+					if not FILEMAN:Unzip("/Downloads/"..downloadfile, "/Songs/"..packName.."/") then
+						downloadInfo.ErrorMessage = "Failed to Unzip!"
+					else
+						if SL.GrooveStats.UnlocksCache[url] == nil then
+							SL.GrooveStats.UnlocksCache[url] = {}
+						end
+						SL.GrooveStats.UnlocksCache[url][packName] = true
+
+						WriteUnlocksCache()
+					end
+				else
+					downloadInfo.ErrorMessage = "Download is not a Zip!"
+					Warn("Attempted to download from \""..url.."\" which is not a zip!")
+				end
+			else
+				downloadInfo.ErrorMessage = "Network Error "..response.statusCode
+			end
+		end,
+	}
+end
+
 -- Iterates over the RequestCache and removes those entries that are older
 -- than a certain amount of time.
 RemoveStaleCachedRequests = function()
