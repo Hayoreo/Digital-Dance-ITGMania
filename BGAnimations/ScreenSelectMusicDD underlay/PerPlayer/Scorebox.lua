@@ -377,22 +377,25 @@ local af = Def.ActorFrame{
 	
 	LoopScoreboxCommand=function(self)
 		self:stoptweening()
+		local song = GAMESTATE:GetCurrentSong() ~= nil and true or false
 		for i=1, num_scores do
-			self:GetChild("Rank"..i):visible(true)
-			self:GetChild("Name"..i):visible(true)
-			self:GetChild("Score"..i):visible(true)
-			self:GetChild("MachineRank"..i):visible(true)
-			self:GetChild("MachineName"..i):visible(true)
-			self:GetChild("MachineScore"..i):visible(true)
+			self:GetChild("Rank"..i):visible(song)
+			self:GetChild("Name"..i):visible(song)
+			self:GetChild("Score"..i):visible(song)
+			self:GetChild("MachineRank"..i):visible(song)
+			self:GetChild("MachineName"..i):visible(song)
+			self:GetChild("MachineScore"..i):visible(song)
 		end
 		if IsServiceAllowed(SL.GrooveStats.GetScores) then
 			self:GetChild("GrooveStatsLogo"):stopeffect()
 		end
-		self:GetChild("SRPG6Logo"):visible(true)
-		self:GetChild("ITLLogo"):visible(true)
-		self:GetChild("MachineLogo"):visible(true)
-		self:queuecommand("UpdateScorebox")
+		self:GetChild("SRPG6Logo"):visible(song)
+		self:GetChild("ITLLogo"):visible(song)
+		self:GetChild("MachineLogo"):visible(song)
+		if song then
+			self:queuecommand("UpdateScorebox")
 			:queuecommand("UpdateMachineScores")
+		end
 	end,
 	
 	GetMachineScoresCommand=function(self)
