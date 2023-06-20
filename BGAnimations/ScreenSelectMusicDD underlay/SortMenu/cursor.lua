@@ -180,6 +180,9 @@ local t = Def.ActorFrame{
 			elseif DDSortMenuCursorPosition == 16 then
 				self:zoomx(170)
 				self:xy(SCREEN_CENTER_X + 85,SCREEN_CENTER_Y + 180)
+			elseif DDSortMenuCursorPosition == 17 then
+				self:zoomx(170)
+				self:xy(SCREEN_CENTER_X + 85,SCREEN_CENTER_Y + 205)
 			end
 			self:queuecommand("FadeOut")
 			

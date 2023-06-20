@@ -195,8 +195,8 @@ local t = Def.ActorFrame{
 				end
 				self:xy(SCREEN_CENTER_X,SCREEN_CENTER_Y)
 				-- initial zoom before additional options are added
-				local InitialZoomY = 280
-				local InitialAddY = -12.5
+				local InitialZoomY = 305
+				local InitialAddY = 0
 				
 				if IsServiceAllowed(SL.GrooveStats.Leaderboard) and SongIsSelected then
 					InitialZoomY = InitialZoomY + 25
@@ -243,8 +243,8 @@ local t = Def.ActorFrame{
 				
 				self:xy(SCREEN_CENTER_X,SCREEN_CENTER_Y)
 				-- initial zoom before additional options are added
-				local InitialZoomY = 275
-				local InitialAddY = -12.5
+				local InitialZoomY = 300
+				local InitialAddY = 0
 				
 				if IsServiceAllowed(SL.GrooveStats.Leaderboard) and SongIsSelected then
 					InitialZoomY = InitialZoomY + 25
@@ -732,6 +732,7 @@ for i,FilterText in ipairs(FilterLabel) do
 end
 
 OtherLabel = {}
+OtherLabel[#OtherLabel+1] = "LOAD NEW SONGS"
 OtherLabel[#OtherLabel+1] = "RESET SORT/FILTERS"
 OtherLabel[#OtherLabel+1] = switchCourseSongSelectLabel
 

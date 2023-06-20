@@ -121,7 +121,7 @@ GetMaxCursorPosition = function()
 	end
 	
 	-- the minimum amount of items
-	local MaxCursorPosition = 13
+	local MaxCursorPosition = 14
 	
 	if GAMESTATE:GetCurrentStyle():GetStyleType() ~= 'StyleType_TwoPlayersTwoSides' then
 		MaxCursorPosition = MaxCursorPosition + 1
