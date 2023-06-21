@@ -333,7 +333,21 @@ SL = {
 		-- LoadUnlocksCache() is defined in SL-Helpers-GrooveStats.lua so that must
 		-- be loaded before this file.
 		UnlocksCache = LoadUnlocksCache(),
-	}
+	},
+	-- Stores all active/failed downloads.
+	-- Each entry is keyed on a string UUID which maps to a table with the
+	-- following keys:
+	--    Request: HttpRequestFuture, the closure returned by NETWORK:HttpRequest
+	--    Name: string, an identifier for this download.
+	--    Url: string, The URL of the download.
+	--    Destination: string, where the download should be unpacked to.
+	--    CurrentBytes: number, the bytes downloaded so far
+	--    TotalBytes: number, the total bytes of the file
+	--    Complete: bool, whether or not the download has completed
+	--              (either success or failure).
+	-- If a request fails, there will be another key:
+	--    ErrorMessage: string, the reasoning for the failure.
+	Downloads = {}
 }
 
 
