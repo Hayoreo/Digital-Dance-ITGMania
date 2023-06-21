@@ -324,6 +324,15 @@ SL = {
 		--   Response: string, the JSON-ified response to cache
 		--   Timestamp: number, when the request was made
 		RequestCache = {},
+		
+		-- Used to prevent redundant downloads for SRPG unlocks.
+		-- Each entry is keyed on the URL of the download which maps to a table of
+		-- PackNames the unlock has been unpacked to.
+		-- To see if we have already downloaded an unlock, one can just key on
+		-- SL.UnlocksCache[url][packName]
+		-- LoadUnlocksCache() is defined in SL-Helpers-GrooveStats.lua so that must
+		-- be loaded before this file.
+		UnlocksCache = LoadUnlocksCache(),
 	}
 }
 
