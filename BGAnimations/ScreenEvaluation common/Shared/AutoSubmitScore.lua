@@ -58,6 +58,47 @@ local GetJudgmentCounts = function(player)
 	return judgmentCounts
 end
 
+local AttemptDownloads = function(res)
+	local data = JsonDecode(res.body)
+	for i=1,2 do
+		local playerStr = "player"..i
+		local events = {"rpg", "itl"}
+
+		for event in ivalues(events) do
+			if data and data[playerStr] and data[playerStr][event] then
+				local eventData = data[playerStr][event]
+				local eventName = eventData["name"] or "Unknown Event"
+			
+				-- See if any quests were completed.
+				if eventData["progress"] and eventData["progress"]["questsCompleted"] then
+					local quests = eventData["progress"]["questsCompleted"]
+					-- Iterate through the quests...
+					for quest in ivalues(quests) do
+						-- ...and check for any unlocks.
+						if quest["songDownloadUrl"] then
+							local url = quest["songDownloadUrl"]
+							local title = quest["title"] or ""
+
+							if ThemePrefs.Get("SeparateUnlocksByPlayer") then
+								local profileName = "NoName"
+								local player = "PlayerNumber_P"..i
+								if (PROFILEMAN:IsPersistentProfile(player) and
+										PROFILEMAN:GetProfile(player)) then
+									profileName = PROFILEMAN:GetProfile(player):GetDisplayName()
+								end
+								title = title.." - "..profileName
+								DownloadEventUnlock(url, "["..eventName.."] "..title, eventName.." Unlocks - "..profileName)
+							else
+								DownloadEventUnlock(url, "["..eventName.."] "..title, eventName.." Unlocks")
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
 local AutoSubmitRequestProcessor = function(res, overlay)
 	local P1SubmitText = overlay:GetChild("AutoSubmitMaster"):GetChild("P1SubmitText")
 	local P2SubmitText = overlay:GetChild("AutoSubmitMaster"):GetChild("P2SubmitText")
@@ -226,6 +267,11 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 	if shouldDisplayOverlay then
 		overlay:GetChild("AutoSubmitMaster"):GetChild("EventOverlay"):visible(true)
 		overlay:queuecommand("DirectInputToEventOverlayHandler")
+	end
+	
+	if ThemePrefs.Get("AutoDownloadUnlocks") then
+		-- This will only download if the expected data exists.
+		AttemptDownloads(res)
 	end
 end
 
