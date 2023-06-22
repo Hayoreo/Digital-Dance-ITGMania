@@ -77,8 +77,9 @@ local CloseCurrentFolder = function()
 end
 
 t.AllowLateJoin = function()
-	-- Only allow LateJoin if playing single.
+	-- Only allow LateJoin if playing single and if enabled in the operator menu.
 	if GAMESTATE:GetCurrentStyle():GetName() ~= "single" then return false end
+	if not ThemePrefs.Get("AllowLateJoin") then return false end
 	return true
 end
 
