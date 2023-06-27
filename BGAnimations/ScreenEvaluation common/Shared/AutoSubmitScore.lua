@@ -265,6 +265,7 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 	end
 
 	if shouldDisplayOverlay then
+		MESSAGEMAN:Broadcast("ShowEventMenuToggle")
 		overlay:GetChild("AutoSubmitMaster"):GetChild("EventOverlay"):visible(true)
 		overlay:queuecommand("DirectInputToEventOverlayHandler")
 	end
@@ -439,6 +440,51 @@ af[#af+1] = LoadFont("Common Bold")..{
 		self:visible(false)
 	end,
 }
+
+--- Toggle to show/hide the event menu for rpg/itl
+
+-- outline for button
+af[#af+1] = Def.Quad{
+	Name="EventMenuButton",
+	InitCommand=function(self)
+		self:visible(false)
+		:zoomto(104,19)
+		:xy(SCREEN_CENTER_X,SCREEN_CENTER_Y + (SCREEN_HEIGHT/2) - 13)
+		:diffuse(color("#a0a0a0"))
+	end,
+	ShowEventMenuToggleMessageCommand=function(self)
+		self:visible(true)
+	end,
+}
+
+-- button
+af[#af+1] = Def.Quad{
+	Name="EventMenuButton",
+	InitCommand=function(self)
+		self:visible(false)
+		:zoomto(100,15)
+		:xy(SCREEN_CENTER_X,SCREEN_CENTER_Y + (SCREEN_HEIGHT/2) - 13)
+		:diffuse(color("#009709"))
+	end,
+	ShowEventMenuToggleMessageCommand=function(self)
+		self:visible(true)
+	end,
+}
+
+-- button text
+af[#af+1] = LoadFont("Common Bold")..{
+	Name="EventButtonLabel",
+	InitCommand=function(self)
+		self:zoom(0.225)
+		:xy(SCREEN_CENTER_X,SCREEN_CENTER_Y + (SCREEN_HEIGHT/2) - 13)
+		:settext("SHOW EVENT MENU")
+		self:visible(false)
+	end,
+	ShowEventMenuToggleMessageCommand=function(self)
+		self:visible(true)
+	end,
+}
+
 
 af[#af+1] = LoadActor("./EventOverlay.lua")
 

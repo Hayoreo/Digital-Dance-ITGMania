@@ -37,7 +37,6 @@ t.DirectInputToEventOverlayHandlerCommand=function(self)
 	end
 end
 
-
 -- This is to show style icons based on style type (1-2 Player vs Double)
 if GAMESTATE:GetCurrentStyle():GetStyleType() == "StyleType_OnePlayerTwoSides" then
 	t[#t+1] = LoadActor ("./4panels.png") .. {

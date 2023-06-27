@@ -4,6 +4,7 @@ local RpgGreen = color("#009b7f")
 local RpgTextGreen = color("#00e6bc")
 local RpgTextBody = color("#d8e87c")
 local ItlPink = color("1,0.2,0.406,1")
+local IsEvent = false
 
 local paneWidth1Player = 330
 local paneWidth2Player = 230
@@ -571,6 +572,10 @@ for player in ivalues(PlayerNumber) do
 					UpdateItlData(player)
 				end
 			end
+			
+			if params.data["rpg"] or params.data["itl"] then
+				IsEvent = true
+			end
 
 			self.PaneIndex = 1
 			if #self.PaneFunctions > 0 then
@@ -612,7 +617,7 @@ for player in ivalues(PlayerNumber) do
 			end
 		},
 
-		-- Main Black cement background
+		-- Main background
 		Def.Sprite {
 			Name="BackgroundImage",
 			Texture=THEME:GetPathG("", "SRPG/Overlay-BG.png"),

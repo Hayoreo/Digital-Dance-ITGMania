@@ -1,4 +1,6 @@
 local af, num_panes = unpack(...)
+local screen   = SCREENMAN:GetTopScreen()
+local overlay  = screen:GetChild("Overlay"):GetChild("ScreenEval Common")
 
 if not af
 or type(num_panes) ~= "number"
@@ -106,6 +108,13 @@ local OtherController = {
 }
 
 return function(event)
+
+	if event.DeviceInput.button == "DeviceButton_left shift" or 
+	(event.DeviceInput.button == "DeviceButton_left mouse button" and IsMouseGucci(SCREEN_CENTER_X, SCREEN_CENTER_Y + (SCREEN_HEIGHT/2) - 13, 104, 19, "center", "middle", 1) )
+	and event.type ~= "InputEventType_Release" then
+		overlay:GetChild("AutoSubmitMaster"):GetChild("EventOverlay"):visible(true)
+		overlay:queuecommand("DirectInputToEventOverlayHandler")
+	end
 
 	if not (event and event.PlayerNumber and event.button) then return false end
 
