@@ -119,7 +119,7 @@ else
 	cuePattern = '[124]'
 end
 
-local prevTime = 0
+local prevTime = -999
 local holdCount = 0
 for _, noteTime in ipairs(noteTimes) do
 	if noteTime.time - prevTime >= cue_time and holdCount == 0 then
@@ -131,7 +131,7 @@ for _, noteTime in ipairs(noteTimes) do
 				local times = columnTimes[col]
 				times[#times+1] = {
 					start=prevTime,
-					duration=noteTime.time-prevTime,
+					endTime=noteTime.time,
 					noteType=note.type,
 				}
 			end
@@ -225,6 +225,7 @@ for ColumnIndex=1,NumColumns do
 			local now = GAMESTATE:GetCurMusicSeconds() / SL.Global.ActiveModifiers.MusicRate
 			local flashDuration = nil
 			local color = nil
+
 			while true do
 				local nextTime = columnTimes[ColumnIndex][timeIndex]
 				if nextTime == nil then break end
@@ -235,7 +236,7 @@ for ColumnIndex=1,NumColumns do
 					break
 				end
 				timeIndex = timeIndex + 1
-				flashDuration = nextTime.duration
+				flashDuration = nextTime.endTime - now
 				if nextTime.noteType == 'M' then
 					color = {1,0.4,0.4,0.12}
 				else
