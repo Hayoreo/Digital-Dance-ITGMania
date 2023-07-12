@@ -112,8 +112,10 @@ return function(event)
 	if event.DeviceInput.button == "DeviceButton_left shift" or 
 	(event.DeviceInput.button == "DeviceButton_left mouse button" and IsMouseGucci(SCREEN_CENTER_X, SCREEN_CENTER_Y + (SCREEN_HEIGHT/2) - 13, 104, 19, "center", "middle", 1) )
 	and event.type ~= "InputEventType_Release" then
-		overlay:GetChild("AutoSubmitMaster"):GetChild("EventOverlay"):visible(true)
-		overlay:queuecommand("DirectInputToEventOverlayHandler")
+		if IsEvent then
+			overlay:GetChild("AutoSubmitMaster"):GetChild("EventOverlay"):visible(true)
+			overlay:queuecommand("DirectInputToEventOverlayHandler")
+		end
 	end
 
 	if not (event and event.PlayerNumber and event.button) then return false end

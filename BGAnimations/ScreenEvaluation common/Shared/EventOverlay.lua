@@ -4,7 +4,7 @@ local RpgGreen = color("#009b7f")
 local RpgTextGreen = color("#00e6bc")
 local RpgTextBody = color("#d8e87c")
 local ItlPink = color("1,0.2,0.406,1")
-local IsEvent = false
+IsEvent = false
 
 local paneWidth1Player = 330
 local paneWidth2Player = 230
