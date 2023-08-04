@@ -27,6 +27,7 @@ return Def.Actor{
 
 		storage.grade = pss:GetGrade()
 		storage.score = pss:GetPercentDancePoints()
+		storage.exscore = CalculateExScore(player)
 		storage.judgments = {
 			W1 = pss:GetTapNoteScores(TNSTypes[1]),
 			W2 = pss:GetTapNoteScores(TNSTypes[2]),
@@ -55,5 +56,6 @@ return Def.Actor{
 			storage.stepartist = pss:GetPlayedSteps()[1]:GetAuthorCredit()
 
 		end
+		storage.timingwindows = SL[pn].ActiveModifiers.TimingWindows
 	end
 }

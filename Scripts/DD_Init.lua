@@ -44,6 +44,7 @@ local PlayerDefaults = {
 				
 				ShowFaPlusWindow = false,
 				ShowEXScore = false,
+				TimingWindows = {true, true, true, true, true},
 			}
 			self.Streams = {
 				SongDir = nil,

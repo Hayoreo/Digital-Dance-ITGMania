@@ -55,8 +55,10 @@ af[#af+1] = LoadFont("Common Bold")..{
 	DrawStageCommand=function(self)
 		if playerStats and score then
 		
-			if playerStats.judgments and playerStats.judgments.W0 then
+			if playerStats.judgments and playerStats.judgments.W0 and playerStats.exscore then
 				self:zoom(0.48):y(-32)
+			else
+				self:zoom(0.5):y(-24)
 			end
 			
 			-- trim off the % symbol
@@ -125,8 +127,10 @@ af[#af+1] = LoadFont("Common Bold")..{
 	DrawStageCommand=function(self)
 		if playerStats and meter then
 			self:diffuse(DifficultyColor(difficulty))
-			if playerStats.judgments and playerStats.judgments.W0 then
+			if playerStats.judgments and playerStats.judgments.W0 and playerStats.exscore then
 				self:zoom(0.3):y(5)
+			else
+				self:zoom(0.4):y(-1)
 			end
 			if meter < 100 then
 				self:settext(meter)
@@ -187,7 +191,7 @@ for i=1,#TNSTypes do
 				local val = playerStats.judgments[TNSTypes[i]]
 				if val then self:settext(val) end
 
-				self:visible( (i == 1 and SL.Global.Stages.Stats[params.StageNum].TimingWindows[1]) or SL.Global.Stages.Stats[params.StageNum].TimingWindows[i-1] or i==#TNSTypes )
+				self:visible( (i == 1 and playerStats.timingwindows[1]) or playerStats.timingwindows[i-1] or i==#TNSTypes )
 			else
 				self:settext("")
 			end
