@@ -23,7 +23,7 @@ local mods = SL[pn].ActiveModifiers
 
 local judgments = {}
 for i=1,GAMESTATE:GetCurrentStyle():ColumnsPerPlayer() do
-	judgments[#judgments+1] = { W0=0, W1=0, W2=0, W3=0, W4=0, W5=0, Miss=0 }
+	judgments[#judgments+1] = { W0=0, W1=0, W2=0, W3=0, W4=0, W5=0, Miss=0, MissBecauseHeld=0, Early={ W1=0, W2=0, W3=0, W4=0, W5=0 } }
 end
 
 return Def.Actor{
