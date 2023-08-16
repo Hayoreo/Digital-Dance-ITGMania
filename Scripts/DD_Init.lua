@@ -12,6 +12,7 @@ local PlayerDefaults = {
 				NoteSkin = nil,
 				Mini = "0%",
 				BackgroundFilter = "Darkest",
+				VisualDelay = "0ms",
 
 				HideTargets = false,
 				HideSongBG = false,

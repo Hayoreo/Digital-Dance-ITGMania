@@ -16,6 +16,7 @@ local permitted_profile_settings = {
 	ComboFont = "string",
 	HoldJudgment = "string",
 	BackgroundFilter = "string",
+	VisualDelay      = "string",
 	ShowFaPlusWindow = "boolean",
 	ShowEXScore      = "boolean",
 	HideEarlyDecentWayOffJudgments = "boolean",
