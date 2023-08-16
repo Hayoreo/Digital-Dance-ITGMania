@@ -12,6 +12,8 @@ local PlayerDefaults = {
 				NoteSkin = nil,
 				Mini = "0%",
 				BackgroundFilter = "Darkest",
+				NoteFieldOffsetX = 0,
+				NoteFieldOffsetY = 0,
 				VisualDelay = "0ms",
 
 				HideTargets = false,
