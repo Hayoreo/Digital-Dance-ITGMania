@@ -59,6 +59,9 @@ if not GAMESTATE:IsCourseMode() then
 
 		local MinesPassedByP1 = MinesHitP1 + Player1MinesAvoided
 		local MinesPassedByP2 = MinesHitP2 + Player2MinesAvoided
+		
+		local LastSecond = GAMESTATE:GetCurrentSong():GetLastSecond()
+		local CurrentSecond = GAMESTATE:GetCurMusicSeconds()
 
 		if nsj == 2 then
 			if curMaxPointsP1 ~= totalPointsP1 then
@@ -93,12 +96,24 @@ if not GAMESTATE:IsCourseMode() then
 
 		local isDone
 		if nsj == 2 then
-			isDone = P1IsNotDone == 0 and P2IsNotDone == 0
+			if IsNoMinesP1 or IsNoMinesP2 then
+				isDone = CurrentSecond >= LastSecond
+			else
+				isDone = P1IsNotDone == 0 and P2IsNotDone == 0
+			end
 		else
 			if GAMESTATE:IsPlayerEnabled(0) then
-				isDone = P1IsNotDone == 0
-			else
-				isDone = P2IsNotDone == 0
+				if IsNoMinesP1 then
+					isDone = CurrentSecond >= LastSecond
+				else
+					isDone = P1IsNotDone == 0
+				end
+			elseif GAMESTATE:IsPlayerEnabled(1) then
+				if IsNoMinesP2 then
+					isDone = CurrentSecond >= LastSecond
+				else
+					isDone = P2IsNotDone == 0
+				end
 			end
 		end
 
