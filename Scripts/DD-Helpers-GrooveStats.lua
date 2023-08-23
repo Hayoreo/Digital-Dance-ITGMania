@@ -483,9 +483,10 @@ CreateCommentString = function(player)
 	end
 	
 	local pn = ToEnumShortString(player)
-	-- If a player CModded or MModded, then add that as well.
+	-- Show player's scroll speed
 	local cmod = GAMESTATE:GetPlayerState(pn):GetPlayerOptions("ModsLevel_Preferred"):CMod()
 	local mmod = GAMESTATE:GetPlayerState(pn):GetPlayerOptions("ModsLevel_Preferred"):MMod()
+	local xmod = GAMESTATE:GetPlayerState(pn):GetPlayerOptions("ModsLevel_Preferred"):XMod()
 	
 	if cmod ~= nil then
 		if #comment ~= 0 then
@@ -497,6 +498,11 @@ CreateCommentString = function(player)
 			comment = comment .. ", "
 		end
 		comment = comment.."M"..tostring(mmod)
+	elseif xmod ~= nil then
+		if #comment ~= 0 then
+			comment = comment .. ", "
+		end
+		comment = comment..tostring(xmod).."x"
 	end
 	
 	-- Show the EX Score if FA+ or EX Score tracking is enabled.
@@ -508,13 +514,22 @@ CreateCommentString = function(player)
 		comment = comment.."EX Score: "..EXScore.."%"
 	end
 	
+	-- Let's show if people are playing with Early Rescores on or not.
+	if ThemePrefs.Get("RescoreEarlyHits") then
+		if #comment ~= 0 then
+			comment = comment .. ", "
+		end
+		comment = comment.."Early Recores enabled"
+	end
+	
+	--- This currently doesn't work, I probably need to completely change the structure of the Autosubmit code.
 	-- Show that the score was untied when set if personal rank is 1
-	if IsUntiedWR then
+	--[[if IsUntiedWR then
 		if #comment ~= 0 then
 			comment = comment .. ", "
 		end
 		comment = comment.."Untied WR when set."
-	end
+	end--]]
 	
 	--Justin Case
 	if #comment == 0 then
