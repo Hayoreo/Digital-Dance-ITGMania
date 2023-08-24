@@ -317,6 +317,103 @@ local DataForSong = function(player, prevData)
 	}
 end
 
+-- Calculate Song Ranks
+CalculateITLSongRanks = function(player)
+	local pn = ToEnumShortString(player)
+	
+	-- Grab data from memory
+	itlData = SL[pn].ITLData
+	local songHashes = itlData["hashMap"]
+
+	-- Create and populate tables to rank each hash score
+	local points = {}
+	local songPoints = {}
+	for key in pairs(songHashes) do
+		songPoints[key] = songHashes[key]["points"]
+		table.insert(points,songHashes[key]["points"])
+	end		 
+	-- Reverse sort points values
+	table.sort(points,function(a,b) return a > b end)
+
+	for key in pairs(songPoints) do
+		local point = songPoints[key]
+		-- search for the point value in the list
+		for k, v in pairs(points) do
+			if v == point then
+				songHashes[key]["rank"] = k
+				break
+			end
+		end		 	
+	end
+	itlData["hashMap"] = songHashes
+
+	-- Write song scores sorted by point value descending into json
+	itlData["points"] = points
+
+	-- Rewrite the data in memory
+	SL[pn].ITLData = itlData
+end
+
+-- Quick function that overwrites EX score entry if the score found is higher than what is found locally
+UpdateItlExScore = function(player, hash, exscore)
+	local pn = ToEnumShortString(player)
+	local hashMap = SL[pn].ITLData["hashMap"]
+	if hashMap[hash] == nil then
+		-- New score, just copy things over.
+		hashMap[hash] = {
+			["judgments"] = {},
+			["ex"] = 0,
+			["clearType"] = 1,
+			["points"] = 0,
+			["usedCmod"] = false,
+			["date"] = "",
+			["maxPoints"] = 0,
+			["noCmod"] = false,
+		}
+		
+		updated = true
+	end
+	
+	if exscore >= hashMap[hash]["ex"] or hashMap[hash]["points"] == 0 then
+		hashMap[hash]["ex"] = exscore
+		
+		local steps = GAMESTATE:GetCurrentSteps(player)
+		local chartName = steps:GetChartName()
+
+		local maxPoints = nil
+		if steps:GetDescription() == SL[pn].Streams.Description then
+			maxPoints = chartName:gsub(" pts", "")
+			if #maxPoints == 0 then
+				maxPoints = nil
+			else
+				maxPoints = tonumber(maxPoints)
+				hashMap[hash]["maxPoints"] = maxPoints
+			end
+		end
+
+		if maxPoints == nil then
+			--  See if we already have these points stored if we failed to parse it.
+			if prevData ~= nil and prevData["maxPoints"] ~= nil then
+				maxPoints = prevData["maxPoints"]
+			-- Otherwise we don't know how many points this chart is. Default to 0.
+			else
+				maxPoints = 0
+			end
+		end
+		
+		-- Do not recalculate points if maxPoints is 0
+		if maxPoints > 0 then
+			hashMap[hash]["points"] = GetPointsForSong(maxPoints, exscore/100)
+		end
+		
+		updated = true
+		
+		if updated then
+			CalculateITLSongRanks(player)
+			WriteItlFile(player)
+		end
+	end
+end
 
 -- Should be called during ScreenEvaluation to update the ITL data loaded.
 -- Will also write the contents to the file.
