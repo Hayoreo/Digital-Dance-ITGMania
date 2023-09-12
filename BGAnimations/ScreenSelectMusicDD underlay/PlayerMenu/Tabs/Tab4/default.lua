@@ -2595,7 +2595,29 @@ af[#af+1] = Def.Quad{
 			self:zoomto(TextWidth, 3)
 			:x(TextXPosition)
 			:y(TextYPosition + TextHeight/3)
+			if pn == "P1" then
+				MESSAGEMAN:Broadcast("UpdateHasteP2")
+			elseif pn == "P2" then
+				MESSAGEMAN:Broadcast("UpdateHasteP1")
+			end
 		end
+	end,
+	["UpdateHaste"..pn.."MessageCommand"]=function(self)
+		local Parent
+		if GAMESTATE:GetSongOptionsObject("ModsLevel_Preferred"):Haste(0) ~= 0 then
+			Parent = self:GetParent():GetChild(pn.."HasteMod"..2)
+		else
+			Parent = self:GetParent():GetChild(pn.."HasteMod"..1)
+		end
+		local TextZoom = Parent:GetZoom()
+		local TextXPosition = Parent:GetX()
+		local TextYPosition = Parent:GetY()
+		local TextHeight = Parent:GetHeight()
+		local TextWidth = Parent:GetWidth() * TextZoom
+		self:zoomto(TextWidth, 3)
+			:x(TextXPosition)
+			:y(TextYPosition + TextHeight/3)
+		
 	end,
 }
 
