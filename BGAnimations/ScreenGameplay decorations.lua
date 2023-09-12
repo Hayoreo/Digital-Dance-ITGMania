@@ -184,6 +184,13 @@ if not GAMESTATE:IsCourseMode() then
 							local pss = STATSMAN:GetCurStageStats():GetPlayerStageStats(player)
 							pss:FailPlayer()
 						end
+					-- fail the player if they use Haste
+					elseif GAMESTATE:GetSongOptionsObject("ModsLevel_Preferred"):Haste() ~= 0 then
+						-- Let's fail the bots as well.
+						for player in ivalues( GAMESTATE:GetEnabledPlayers() ) do
+							local pss = STATSMAN:GetCurStageStats():GetPlayerStageStats(player)
+							pss:FailPlayer()
+						end
 					else
 						--- in the event that the player is playing on a sm build with the broken mine fix and they fail on the last step lol
 						for player in ivalues( GAMESTATE:GetEnabledPlayers() ) do

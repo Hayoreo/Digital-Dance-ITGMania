@@ -15,10 +15,12 @@ local Players = GAMESTATE:GetHumanPlayers()
 
 local didSelectSong = false
 local PressStartForOptions = false
-isSortMenuVisible = false
 IsSearchMenuVisible = false
 InputMenuHasFocus = false
 LeadboardHasFocus = false
+PlayerMenuP1 = false
+PlayerMenuP2 = false
+MusicWheelNeedsResetting = false
 
 -----------------------------------------------------
 -- input handler
@@ -64,8 +66,11 @@ local CloseCurrentFolder = function()
 	return end
 	
 	if SongSearchWheelNeedsResetting == true then
+		SongSearchSSMDD = false
+		SongSearchAnswer = nil
 		SongSearchWheelNeedsResetting = false
-		MESSAGEMAN:Broadcast("ReloadSSMDD")
+		SCREENMAN:GetTopScreen():SetNextScreenName("ScreenReloadSSMDD")
+		SCREENMAN:GetTopScreen():StartTransitioningScreen("SM_GoToNextScreen")
 	else	
 		-- otherwise...
 		t.Enabled = false
@@ -81,120 +86,6 @@ t.AllowLateJoin = function()
 	if GAMESTATE:GetCurrentStyle():GetName() ~= "single" then return false end
 	if not ThemePrefs.Get("AllowLateJoin") then return false end
 	return true
-end
-
-local SortMenuCursorLogic = function()
-	-- main sorts/filters
-	if DDSortMenuCursorPosition < 9 then
-		MESSAGEMAN:Broadcast("UpdateCursorColor")
-	end
-	-- GS/Autogen filter/toggle
-	if DDSortMenuCursorPosition == 9 or DDSortMenuCursorPosition == 10 then
-		SortMenuNeedsUpdating = true
-	end
-	
-	-- Favorites filter/toggle
-	--[[if DDSortMenuCursorPosition == 10 then
-		SortMenuNeedsUpdating = true
-	end	--]]
-	-- 
-	-- Load new songs
-	if DDSortMenuCursorPosition == 11 then
-		SCREENMAN:GetTopScreen():SetNextScreenName("ScreenReloadSongsSSM")
-		SCREENMAN:GetTopScreen():StartTransitioningScreen("SM_GoToNextScreen")
-	end
-	-- Reset the sorts/prefrences
-	if DDSortMenuCursorPosition == 12 then
-		MESSAGEMAN:Broadcast("DDResetSortsFilters")
-	end
-	-- Switch between Song/Course Select
-	if DDSortMenuCursorPosition == 13 then
-		MESSAGEMAN:Broadcast("SwitchSongCourseSelect")
-	end
-	-- Everything from here on is dynamic so it's not always the same for each position.
-	if DDSortMenuCursorPosition == 14 then
-		if GAMESTATE:GetCurrentStyle():GetStyleType() ~= 'StyleType_TwoPlayersTwoSides' then
-			MESSAGEMAN:Broadcast("DDSwitchStyles")
-		elseif IsServiceAllowed(SL.GrooveStats.Leaderboard) then
-			local curSong=GAMESTATE:GetCurrentSong()
-			if not curSong then
-				isSortMenuVisible = false
-				InputMenuHasFocus = true
-				MESSAGEMAN:Broadcast("ShowTestInput")
-				MESSAGEMAN:Broadcast("ToggleSortMenu")
-			else
-				LeadboardHasFocus = true
-				isSortMenuVisible = false
-				MESSAGEMAN:Broadcast("ToggleSortMenu")
-				MESSAGEMAN:Broadcast("ShowLeaderboard")
-			end
-		else
-			isSortMenuVisible = false
-			InputMenuHasFocus = true
-			MESSAGEMAN:Broadcast("ShowTestInput")
-			MESSAGEMAN:Broadcast("ToggleSortMenu")
-		end
-	end
-	if DDSortMenuCursorPosition == 15 then
-		if GAMESTATE:GetCurrentStyle():GetStyleType() ~= 'StyleType_TwoPlayersTwoSides' and IsServiceAllowed(SL.GrooveStats.Leaderboard) then
-				local curSong=GAMESTATE:GetCurrentSong()
-				if not curSong then
-					isSortMenuVisible = false
-					InputMenuHasFocus = true
-					MESSAGEMAN:Broadcast("ShowTestInput")
-					MESSAGEMAN:Broadcast("ToggleSortMenu")
-				else
-					LeadboardHasFocus = true
-					isSortMenuVisible = false
-					MESSAGEMAN:Broadcast("ToggleSortMenu")
-					MESSAGEMAN:Broadcast("ShowLeaderboard")
-				end
-		elseif GAMESTATE:GetCurrentStyle():GetStyleType() ~= 'StyleType_TwoPlayersTwoSides' then
-			if IsServiceAllowed(SL.GrooveStats.Leaderboard) then 
-				local curSong=GAMESTATE:GetCurrentSong()
-				if not curSong then
-					isSortMenuVisible = false
-					InputMenuHasFocus = true
-					MESSAGEMAN:Broadcast("ShowTestInput")
-					MESSAGEMAN:Broadcast("ToggleSortMenu")
-				else
-					LeadboardHasFocus = true
-					isSortMenuVisible = false
-					MESSAGEMAN:Broadcast("ToggleSortMenu")
-					MESSAGEMAN:Broadcast("ShowLeaderboard")
-				end
-			else
-				isSortMenuVisible = false
-				InputMenuHasFocus = true
-				MESSAGEMAN:Broadcast("ShowTestInput")
-				MESSAGEMAN:Broadcast("ToggleSortMenu")
-			end
-		else
-			isSortMenuVisible = false
-			InputMenuHasFocus = true
-			MESSAGEMAN:Broadcast("ShowTestInput")
-			MESSAGEMAN:Broadcast("ToggleSortMenu")
-		end
-		
-	end
-	if DDSortMenuCursorPosition == 16 then
-		if not GAMESTATE:GetCurrentStyle():GetStyleType() == 'StyleType_OnePlayerTwoSides' then
-			isSortMenuVisible = false
-			InputMenuHasFocus = true
-			MESSAGEMAN:Broadcast("ShowTestInput")
-			MESSAGEMAN:Broadcast("ToggleSortMenu")
-		end
-		if IsServiceAllowed(SL.GrooveStats.Leaderboard) then
-			isSortMenuVisible = false
-			InputMenuHasFocus = true
-			MESSAGEMAN:Broadcast("ShowTestInput")
-			MESSAGEMAN:Broadcast("ToggleSortMenu")
-		end
-	end
-	if DDSortMenuCursorPosition == GetMaxCursorPosition() and GAMESTATE:GetCurrentStyle():GetStyleType() ~= 'StyleType_TwoPlayersTwoSides' and GAMESTATE:IsPlayerEnabled(0) and GAMESTATE:GetCurrentSong() ~= nil then
-		SCREENMAN:GetTopScreen():SetNextScreenName("ScreenPractice")
-		SCREENMAN:GetTopScreen():StartTransitioningScreen("SM_GoToNextScreen")
-	end
 end
 
 -----------------------------------------------------
@@ -256,10 +147,11 @@ t.Handler = function(event)
 			holdingCtrl = false
 		end
 	end
+	
 	-- Allow Mouse Input here
 	if event.type == "InputEventType_FirstPress" and event.type ~= "InputEventType_Release" and not IsSearchMenuVisible then
 		if IsMouseOnScreen() and ThemePrefs.Get("MouseInput") then
-			if not isSortMenuVisible and not LeadboardHasFocus and not InputMenuHasFocus then
+			if not LeadboardHasFocus and not InputMenuHasFocus then
 				-- Close the song folder and switch to group wheel if mouse wheel is pressed.
 				if event.DeviceInput.button == "DeviceButton_middle mouse button" and t.WheelWithFocus == SongWheel and not didSelectSong then
 					stop_music()
@@ -270,7 +162,8 @@ t.Handler = function(event)
 				
 				-- Scroll the song wheel up/down with the mouse wheel.
 				if event.DeviceInput.button == "DeviceButton_mousewheel up" and not PressStartForOptions then
-					if IsMouseGucci(0, _screen.h - 152, SCREEN_WIDTH/3, 50, "left", "bottom") then
+					-- don't scroll the wheel for P1 difficulty select if they are enabled
+					if IsMouseGucci(0, _screen.h - 152, SCREEN_WIDTH/3, 50, "left", "bottom") and not PlayerMenuP1 then
 						if GAMESTATE:IsHumanPlayer("PlayerNumber_P1") then
 							ChartUpdater.DecreaseDifficulty("PlayerNumber_P1")
 						else
@@ -279,7 +172,8 @@ t.Handler = function(event)
 							stop_music()
 							ChartUpdater.UpdateCharts()
 						end
-					elseif IsMouseGucci(SCREEN_RIGHT, _screen.h - 152, SCREEN_WIDTH/3, 50, "right", "bottom") then
+					-- don't scroll the wheel for P2 difficulty select if they are enabled
+					elseif IsMouseGucci(SCREEN_RIGHT, _screen.h - 152, SCREEN_WIDTH/3, 50, "right", "bottom") and not PlayerMenuP2 then
 						if GAMESTATE:IsHumanPlayer("PlayerNumber_P2") then
 							ChartUpdater.DecreaseDifficulty("PlayerNumber_P2")
 						else
@@ -288,14 +182,27 @@ t.Handler = function(event)
 							stop_music()
 							ChartUpdater.UpdateCharts()
 						end
-					else
+					-- don't scroll the wheel on the left side of the screen if p1 has their menu open
+					elseif IsMouseGucci(0,SCREEN_CENTER_Y,SCREEN_WIDTH/3,SCREEN_HEIGHT,"left","middle") and not PlayerMenuP1 then
+						t.WheelWithFocus:scroll_by_amount(-1)
+						SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "change.ogg") )
+						stop_music()
+						ChartUpdater.UpdateCharts()
+					-- don't scroll the wheel on the right side of the screen if p2 has their menu open
+					elseif IsMouseGucci((SCREEN_WIDTH) - (SCREEN_WIDTH/3),SCREEN_CENTER_Y,SCREEN_WIDTH/3,SCREEN_HEIGHT,"left","middle") and not PlayerMenuP2 then
+						t.WheelWithFocus:scroll_by_amount(-1)
+						SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "change.ogg") )
+						stop_music()
+						ChartUpdater.UpdateCharts()
+					elseif IsMouseGucci(SCREEN_WIDTH/3,SCREEN_CENTER_Y,SCREEN_WIDTH/3,SCREEN_HEIGHT,"left","middle") then
 						t.WheelWithFocus:scroll_by_amount(-1)
 						SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "change.ogg") )
 						stop_music()
 						ChartUpdater.UpdateCharts()
 					end
 				elseif event.DeviceInput.button == "DeviceButton_mousewheel down" and not PressStartForOptions then
-					if IsMouseGucci(0, _screen.h - 152, SCREEN_WIDTH/3, 50, "left", "bottom") then
+					-- don't scroll the wheel for P1 difficulty select if they are enabled
+					if IsMouseGucci(0, _screen.h - 152, SCREEN_WIDTH/3, 50, "left", "bottom") and not PlayerMenuP1 then
 						if GAMESTATE:IsHumanPlayer("PlayerNumber_P1") then
 							ChartUpdater.IncreaseDifficulty("PlayerNumber_P1")
 						else
@@ -304,7 +211,8 @@ t.Handler = function(event)
 							stop_music()
 							ChartUpdater.UpdateCharts()
 						end
-					elseif IsMouseGucci(SCREEN_RIGHT, _screen.h - 152, SCREEN_WIDTH/3, 50, "right", "bottom") then
+					-- don't scroll the wheel for P2 difficulty select if they are enabled
+					elseif IsMouseGucci(SCREEN_RIGHT, _screen.h - 152, SCREEN_WIDTH/3, 50, "right", "bottom") and not PlayerMenuP2 then
 						if GAMESTATE:IsHumanPlayer("PlayerNumber_P2") then
 							ChartUpdater.IncreaseDifficulty("PlayerNumber_P2")
 						else
@@ -313,7 +221,19 @@ t.Handler = function(event)
 							stop_music()
 							ChartUpdater.UpdateCharts()
 						end
-					else
+					-- don't scroll the wheel on the left side of the screen if p1 has their menu open
+					elseif IsMouseGucci(0,SCREEN_CENTER_Y,SCREEN_WIDTH/3,SCREEN_HEIGHT,"left","middle") and not PlayerMenuP1 then
+						t.WheelWithFocus:scroll_by_amount(1)
+						SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "change.ogg") )
+						stop_music()
+						ChartUpdater.UpdateCharts()
+					-- don't scroll the wheel on the right side of the screen if p2 has their menu open
+					elseif IsMouseGucci((SCREEN_WIDTH) - (SCREEN_WIDTH/3),SCREEN_CENTER_Y,SCREEN_WIDTH/3,SCREEN_HEIGHT,"left","middle") and not PlayerMenuP2 then
+						t.WheelWithFocus:scroll_by_amount(1)
+						SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "change.ogg") )
+						stop_music()
+						ChartUpdater.UpdateCharts()
+					elseif IsMouseGucci(SCREEN_WIDTH/3,SCREEN_CENTER_Y,SCREEN_WIDTH/3,SCREEN_HEIGHT,"left","middle") then
 						t.WheelWithFocus:scroll_by_amount(1)
 						SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "change.ogg") )
 						stop_music()
@@ -321,7 +241,7 @@ t.Handler = function(event)
 					end
 				end
 				
-				-- Jump the songwheel to a song/group clicked on by the left mouse button.
+				-- Jump the songwheel to a song/group clicked on by the left mouse button. Or toggle player menu on.
 				if event.DeviceInput.button == "DeviceButton_left mouse button" and not PressStartForOptions then
 					for i=1, 5 do
 						if IsMouseGucci(_screen.cx, (_screen.cy + 45) - (i*25), WheelWidth, 24) then
@@ -342,7 +262,7 @@ t.Handler = function(event)
 					end
 					
 					if IsMouseGucci(_screen.cx, (_screen.cy + 45), WheelWidth, 24) then
-						if t.WheelWithFocus == SongWheel then
+						if t.WheelWithFocus == SongWheel and (not PlayerMenuP1 and not PlayerMenuP2) then
 							if t.WheelWithFocus:get_info_at_focus_pos() ~= "CloseThisFolder" then
 								didSelectSong = true
 								TransitionTime = 0
@@ -372,11 +292,26 @@ t.Handler = function(event)
 									t.WheelWithFocus.container:queuecommand("Unhide")
 								end
 							end
+						--- We still want to be able to open/close the group wheel when another player has their menu open?
+						elseif t.WheelWithFocus == SongWheel and t.WheelWithFocus:get_info_at_focus_pos() == "CloseThisFolder" and (PlayerMenuP1 or PlayerMenuP2) then
+							SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "expand.ogg") )
+							MESSAGEMAN:Broadcast("CloseCurrentFolder")
+							CloseCurrentFolder()
+							return false
 						end
 					end
 					
+					-- Toggle the PlayerMenu on if the options button is clicked (and the menu isn't already open).
+					if IsMouseGucci(SCREEN_WIDTH/3 - 20 - 60,148,65,21,"left","top") and not PlayerMenuP1 and GAMESTATE:IsSideJoined('PlayerNumber_P1') then
+						PlayerMenuP1 = true
+						MESSAGEMAN:Broadcast("ShowPlayerMenuP1")
+					elseif IsMouseGucci( (SCREEN_WIDTH) - (SCREEN_WIDTH/3 - 20),148,65,21,"left","top") and not PlayerMenuP2 and GAMESTATE:IsSideJoined('PlayerNumber_P2') then
+						PlayerMenuP2 = true
+						MESSAGEMAN:Broadcast("ShowPlayerMenuP2")
+					end
+					
 					-- Change the difficulty of the song when a player left clicks a chart.
-					if GAMESTATE:IsSideJoined('PlayerNumber_P1') then
+					if GAMESTATE:IsSideJoined('PlayerNumber_P1') and not PlayerMenuP1 then
 						-- Novice position
 						if IsMouseGucci(3.5, _screen.h-157, 54, 42, "left", "bottom", 1) then
 							ChartUpdater.ClickDifficulty("PlayerNumber_P1", "Difficulty_Beginner")
@@ -394,7 +329,7 @@ t.Handler = function(event)
 							ChartUpdater.ClickDifficulty('PlayerNumber_P1', "Difficulty_Challenge")
 						end
 					end
-					if GAMESTATE:IsSideJoined('PlayerNumber_P2') then
+					if GAMESTATE:IsSideJoined('PlayerNumber_P2') and not PlayerMenuP2 then
 						-- Novice position
 						if IsMouseGucci((_screen.w/3*2 - 52.5) + 1*56, _screen.h-157, 54,42, "left", "bottom", 1) then
 							ChartUpdater.ClickDifficulty("PlayerNumber_P2", "Difficulty_Beginner")	
@@ -413,7 +348,7 @@ t.Handler = function(event)
 						end
 					end
 					-- update steps display pane if a tab is clicked.
-					if GAMESTATE:IsSideJoined('PlayerNumber_P1') then
+					if GAMESTATE:IsSideJoined('PlayerNumber_P1') and not PlayerMenuP1 then
 						-- the first and last tabs are slightly bigger than the middle tabs
 						if IsMouseGucci(2.5,_screen.h-149.5,33, 14,"left","top",1) then
 							MESSAGEMAN:Broadcast("TabClickedPlayerNumber_P1", {1})
@@ -433,7 +368,7 @@ t.Handler = function(event)
 							end
 						end
 					end
-					if GAMESTATE:IsSideJoined('PlayerNumber_P2') then
+					if GAMESTATE:IsSideJoined('PlayerNumber_P2') and not PlayerMenuP2 then
 						-- the first and last tabs are slightly bigger than the middle tabs
 						if IsMouseGucci((_screen.w - _screen.w/3) + 2.5,_screen.h-149.5,33, 14,"left","top",1) then
 							MESSAGEMAN:Broadcast("TabClickedPlayerNumber_P2", {1})
@@ -458,196 +393,15 @@ t.Handler = function(event)
 					SCREENMAN:SetNewScreen("ScreenPlayerOptions")
 					return false
 				end
-				
-				-- Open the sort menu if the right mouse button is clicked.
-				if isSortMenuVisible == false then
-					if event.type ~= "InputEventType_Release" then
-						if event.DeviceInput.button == "DeviceButton_right mouse button" and PressStartForOptions == false then
-							local mpn = GAMESTATE:GetMasterPlayerNumber()
-							PlayerControllingSort = mpn 
-							MESSAGEMAN:Broadcast("InitializeDDSortMenu")
-							MESSAGEMAN:Broadcast("CheckForSongLeaderboard")
-							isSortMenuVisible = true
-							SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "sort.ogg") )
-							stop_music()
-							MESSAGEMAN:Broadcast("ToggleSortMenu")
-						end
-					end
-				end
-			elseif isSortMenuVisible and not LeadboardHasFocus and not InputMenuHasFocus then
-				if event.type ~= "InputEventType_Release" then
-					if event.DeviceInput.button == "DeviceButton_right mouse button" then
-						if IsSortMenuInputToggled == false then
-							if SortMenuNeedsUpdating == true then
-								SortMenuNeedsUpdating = false
-								MESSAGEMAN:Broadcast("ToggleSortMenu")
-								MESSAGEMAN:Broadcast("ReloadSSMDD")
-								isSortMenuVisible = false
-								SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "expand.ogg") )
-							elseif SortMenuNeedsUpdating == false then
-								isSortMenuVisible = false
-								SOUND:PlayOnce( THEME:GetPathS("ScreenPlayerOptions", "cancel all.ogg") )
-								MESSAGEMAN:Broadcast("ToggleSortMenu")
-							end
-						elseif IsSortMenuInputToggled then
-							SOUND:PlayOnce( THEME:GetPathS("common", "invalid.ogg") )
-							MESSAGEMAN:Broadcast("UpdateCursorColor")
-							MESSAGEMAN:Broadcast("ToggleSortMenuMovement")
-						end
-					end
-					if event.DeviceInput.button == "DeviceButton_mousewheel up" then
-						if not IsSortMenuInputToggled then
-							MESSAGEMAN:Broadcast("MoveCursorLeft")
-							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
-						elseif IsSortMenuInputToggled then
-							MESSAGEMAN:Broadcast("MoveSortMenuOptionLeft")
-						end
-					elseif event.DeviceInput.button == "DeviceButton_mousewheel down" then
-						if not IsSortMenuInputToggled then
-							MESSAGEMAN:Broadcast("MoveCursorRight")
-							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
-						elseif IsSortMenuInputToggled then
-							MESSAGEMAN:Broadcast("MoveSortMenuOptionRight")
-						end
-					end
-					if event.DeviceInput.button == "DeviceButton_left mouse button" then
-						-- The top half of the sort menu
-						if IsMouseGucci(SCREEN_CENTER_X + 145,SCREEN_CENTER_Y - 135, 190, 20, "right") then
-							if not IsSortMenuInputToggled then
-								DDSortMenuCursorPosition = 1
-								MESSAGEMAN:Broadcast("MoveCursorMouseClick", {TargetPosition = 1})
-								SortMenuCursorLogic()
-								MESSAGEMAN:Broadcast("SortMenuOptionSelected")
-								SOUND:PlayOnce( THEME:GetPathS("common", "start.ogg") )
-							elseif DDSortMenuCursorPosition == 1 then
-								SortMenuCursorLogic()
-								MESSAGEMAN:Broadcast("SetSortMenuTopStats")
-								MESSAGEMAN:Broadcast("SortMenuOptionSelected")
-								SOUND:PlayOnce( THEME:GetPathS("common", "start.ogg") )
-							end
-						elseif IsMouseGucci(SCREEN_CENTER_X + 145,SCREEN_CENTER_Y - 110, 190, 20, "right") then
-							if not IsSortMenuInputToggled then
-								DDSortMenuCursorPosition = 2
-								MESSAGEMAN:Broadcast("MoveCursorMouseClick", {TargetPosition = 2})
-								SortMenuCursorLogic()
-								MESSAGEMAN:Broadcast("SortMenuOptionSelected")
-								SOUND:PlayOnce( THEME:GetPathS("common", "start.ogg") )
-							elseif DDSortMenuCursorPosition == 2 then
-								SortMenuCursorLogic()
-								MESSAGEMAN:Broadcast("SetSortMenuTopStats")
-								MESSAGEMAN:Broadcast("SortMenuOptionSelected")
-								SOUND:PlayOnce( THEME:GetPathS("common", "start.ogg") )	
-							end
-						elseif IsMouseGucci(SCREEN_CENTER_X + 55,SCREEN_CENTER_Y - 85, 40, 20, "right") then
-							if not IsSortMenuInputToggled then
-								DDSortMenuCursorPosition = 3
-								MESSAGEMAN:Broadcast("MoveCursorMouseClick", {TargetPosition = 3})
-								SortMenuCursorLogic()
-								MESSAGEMAN:Broadcast("SortMenuOptionSelected")
-								SOUND:PlayOnce( THEME:GetPathS("common", "start.ogg") )
-							elseif DDSortMenuCursorPosition == 3 then
-								SortMenuCursorLogic()
-								MESSAGEMAN:Broadcast("SetSortMenuTopStats")
-								MESSAGEMAN:Broadcast("SortMenuOptionSelected")
-								SOUND:PlayOnce( THEME:GetPathS("common", "start.ogg") )	
-							end
-						elseif IsMouseGucci(SCREEN_CENTER_X + 135,SCREEN_CENTER_Y - 85, 40, 20, "right") then
-							if not IsSortMenuInputToggled then
-								DDSortMenuCursorPosition = 4
-								MESSAGEMAN:Broadcast("MoveCursorMouseClick", {TargetPosition = 4})
-								SortMenuCursorLogic()
-								MESSAGEMAN:Broadcast("SortMenuOptionSelected")
-								SOUND:PlayOnce( THEME:GetPathS("common", "start.ogg") )
-							elseif DDSortMenuCursorPosition == 4 then
-								SortMenuCursorLogic()
-								MESSAGEMAN:Broadcast("SetSortMenuTopStats")
-								MESSAGEMAN:Broadcast("SortMenuOptionSelected")
-								SOUND:PlayOnce( THEME:GetPathS("common", "start.ogg") )	
-							end
-						elseif IsMouseGucci(SCREEN_CENTER_X,SCREEN_CENTER_Y - 60, 40, 20, "right") then
-							if not IsSortMenuInputToggled then
-								DDSortMenuCursorPosition = 5
-								MESSAGEMAN:Broadcast("MoveCursorMouseClick", {TargetPosition = 5})
-								SortMenuCursorLogic()
-								MESSAGEMAN:Broadcast("SortMenuOptionSelected")
-								SOUND:PlayOnce( THEME:GetPathS("common", "start.ogg") )
-							elseif DDSortMenuCursorPosition == 5 then
-								SortMenuCursorLogic()
-								MESSAGEMAN:Broadcast("SetSortMenuTopStats")
-								MESSAGEMAN:Broadcast("SortMenuOptionSelected")
-								SOUND:PlayOnce( THEME:GetPathS("common", "start.ogg") )	
-							end
-						elseif IsMouseGucci(SCREEN_CENTER_X + 80,SCREEN_CENTER_Y - 60, 40, 20, "right") then
-							if not IsSortMenuInputToggled then
-								DDSortMenuCursorPosition = 6
-								MESSAGEMAN:Broadcast("MoveCursorMouseClick", {TargetPosition = 6})
-								SortMenuCursorLogic()
-								MESSAGEMAN:Broadcast("SortMenuOptionSelected")
-								SOUND:PlayOnce( THEME:GetPathS("common", "start.ogg") )
-							elseif DDSortMenuCursorPosition == 6 then
-								SortMenuCursorLogic()
-								MESSAGEMAN:Broadcast("SetSortMenuTopStats")
-								MESSAGEMAN:Broadcast("SortMenuOptionSelected")
-								SOUND:PlayOnce( THEME:GetPathS("common", "start.ogg") )	
-							end
-						elseif IsMouseGucci(SCREEN_CENTER_X + 48.5,SCREEN_CENTER_Y - 35, 65, 20, "right") then
-							if not IsSortMenuInputToggled then
-								DDSortMenuCursorPosition = 7
-								MESSAGEMAN:Broadcast("MoveCursorMouseClick", {TargetPosition = 7})
-								SortMenuCursorLogic()
-								MESSAGEMAN:Broadcast("SortMenuOptionSelected")
-								SOUND:PlayOnce( THEME:GetPathS("common", "start.ogg") )
-							elseif DDSortMenuCursorPosition == 7 then
-								SortMenuCursorLogic()
-								MESSAGEMAN:Broadcast("SetSortMenuTopStats")
-								MESSAGEMAN:Broadcast("SortMenuOptionSelected")
-								SOUND:PlayOnce( THEME:GetPathS("common", "start.ogg") )	
-							end
-						elseif IsMouseGucci(SCREEN_CENTER_X + 147.5,SCREEN_CENTER_Y - 35, 65, 20, "right") then
-							if not IsSortMenuInputToggled then
-								DDSortMenuCursorPosition = 8
-								MESSAGEMAN:Broadcast("MoveCursorMouseClick", {TargetPosition = 8})
-								SortMenuCursorLogic()
-								MESSAGEMAN:Broadcast("SortMenuOptionSelected")
-								SOUND:PlayOnce( THEME:GetPathS("common", "start.ogg") )
-							elseif DDSortMenuCursorPosition == 8 then
-								SortMenuCursorLogic()
-								MESSAGEMAN:Broadcast("SetSortMenuTopStats")
-								MESSAGEMAN:Broadcast("SortMenuOptionSelected")
-								SOUND:PlayOnce( THEME:GetPathS("common", "start.ogg") )	
-							end
-						elseif IsMouseGucci(SCREEN_CENTER_X + 122,SCREEN_CENTER_Y - 10, 65, 20, "right") then
-							if not IsSortMenuInputToggled then
-								DDSortMenuCursorPosition = 9
-								MESSAGEMAN:Broadcast("MoveCursorMouseClick", {TargetPosition = 9})
-								SortMenuCursorLogic()
-								MESSAGEMAN:Broadcast("SetSortMenuTopStats")
-								MESSAGEMAN:Broadcast("SortMenuOptionSelected")
-								SOUND:PlayOnce( THEME:GetPathS("common", "start.ogg") )
-							end
-						end
-						
-						-- The bottom half of the sort menu
-						if not IsSortMenuInputToggled then
-							for i=1, GetMaxCursorPosition() - 9 do
-								if IsMouseGucci(_screen.cx + 85, (_screen.cy + 5) + (i*25), 170, 20, "right") then
-									MESSAGEMAN:Broadcast("MoveCursorMouseClick", {TargetPosition = i+9})
-									SOUND:PlayOnce( THEME:GetPathS("common", "start.ogg") )
-									SortMenuCursorLogic()
-								end
-							end
-						end
-					end
-				end
-				--- Test input mouse controls
-			elseif InputMenuHasFocus and not isSortMenuVisible and not LeadboardHasFocus then
+			--- Test input mouse controls
+			elseif InputMenuHasFocus and not LeadboardHasFocus then
 				if event.DeviceInput.button == "DeviceButton_left mouse button" or event.DeviceInput.button == "DeviceButton_right mouse button" then
 					InputMenuHasFocus = false
 					SOUND:PlayOnce( THEME:GetPathS("common", "start.ogg") )
 					MESSAGEMAN:Broadcast("HideTestInput")
 				end
 				-- Leaderboard input mouse controls
-			elseif LeadboardHasFocus and not isSortMenuVisible and not InputMenuHasFocus then
+			elseif LeadboardHasFocus and not InputMenuHasFocus then
 				if event.DeviceInput.button == "DeviceButton_right mouse button" or event.DeviceInput.button == "DeviceButton_left mouse button" then
 					LeadboardHasFocus = false
 					SOUND:PlayOnce( THEME:GetPathS("common", "start.ogg") )
@@ -661,100 +415,74 @@ t.Handler = function(event)
 			end
 		end
 	end
-				
+	
+	-- Toggle PlayerMenu Input on/off
+	if event.type ~= "InputEventType_Release" and not IsSearchMenuVisible and not LeadboardHasFocus and not InputMenuHasFocus then
+			-- Toggle the PlayerMenu on/off with select.
+		if event.GameButton == "Select" and event.type == "InputEventType_FirstPress" and event.type ~= "InputEventType_Repeat"  then
+			if event.PlayerNumber == "PlayerNumber_P1" and GAMESTATE:IsSideJoined(event.PlayerNumber) then
+				if PlayerMenuP1 then
+					PlayerMenuP1 = false
+					if MusicWheelNeedsResetting then
+						MESSAGEMAN:Broadcast("ReloadSSMDD")
+					else
+						CurrentRowP1 = 0
+						CurrentColumnP1 = 1
+						MESSAGEMAN:Broadcast("UpdateMenuCursorPositionP1")
+						MESSAGEMAN:Broadcast("HidePlayerMenuP1")
+					end
+				else
+					PlayerMenuP1 = true
+					SOUND:StopMusic()
+					MESSAGEMAN:Broadcast("ShowPlayerMenuP1")
+				end
+			elseif event.PlayerNumber == "PlayerNumber_P2" and GAMESTATE:IsSideJoined(event.PlayerNumber) then
+				if PlayerMenuP2 then
+					PlayerMenuP2 = false
+					if MusicWheelNeedsResetting then
+						MESSAGEMAN:Broadcast("ReloadSSMDD")
+					else
+						CurrentRowP2 = 0
+						CurrentColumnP2 = 1
+						MESSAGEMAN:Broadcast("UpdateMenuCursorPositionP2")
+						MESSAGEMAN:Broadcast("HidePlayerMenuP2")
+					end
+				else
+					PlayerMenuP2 = true
+					SOUND:StopMusic()
+					MESSAGEMAN:Broadcast("ShowPlayerMenuP2")
+				end
+			end
+		end
+		
+		-- exit the player menu if escape is pressed
+		if event.GameButton == "Back" and event.type == "InputEventType_FirstPress" and event.type ~= "InputEventType_Repeat" then
+			if event.PlayerNumber == "PlayerNumber_P1" and GAMESTATE:IsSideJoined(event.PlayerNumber) and PlayerMenuP1 then
+				-- we have to make these nil otherwise we'll back out of the game x_x
+				PlayerMenuP1 = nil
+				if MusicWheelNeedsResetting then
+					MESSAGEMAN:Broadcast("ReloadSSMDD")
+				else
+					MESSAGEMAN:Broadcast("HidePlayerMenuP1")
+				end
+			elseif event.PlayerNumber == "PlayerNumber_P2" and GAMESTATE:IsSideJoined(event.PlayerNumber) and PlayerMenuP2 then
+				-- we have to make these nil otherwise we'll back out of the game x_x
+				PlayerMenuP2 = nil
+				if MusicWheelNeedsResetting then
+					MESSAGEMAN:Broadcast("ReloadSSMDD")
+				else
+					MESSAGEMAN:Broadcast("HidePlayerMenuP2")
+				end
+			end
+		end
+	end
 	
 	-- if any of these, don't attempt to handle input
 	if t.Enabled == false or not event or not event.PlayerNumber or not event.button or IsSearchMenuVisible then
 		return false
 	end
-	
-	if isSortMenuVisible == false then
-		if event.type ~= "InputEventType_Release" and event.type == "InputEventType_FirstPress" then
-			if event.GameButton == "Select" then
-				if event.PlayerNumber == 'PlayerNumber_P1' then
-					PlayerControllingSort = 'PlayerNumber_P1' 
-				else
-					PlayerControllingSort = 'PlayerNumber_P2'
-				end
-				MESSAGEMAN:Broadcast("InitializeDDSortMenu")
-				MESSAGEMAN:Broadcast("CheckForSongLeaderboard")
-			end
-		end
-	end
-	
-	
-	if isSortMenuVisible then
-		if event.type ~= "InputEventType_Release" then
-			if GAMESTATE:IsSideJoined(event.PlayerNumber) and event.PlayerNumber == PlayerControllingSort then
-				if event.type == "InputEventType_FirstPress" then
-					if event.GameButton == "Select" or event.GameButton == "Back" then
-						if IsSortMenuInputToggled == false then
-							if SortMenuNeedsUpdating == true then
-								SortMenuNeedsUpdating = false
-								MESSAGEMAN:Broadcast("ToggleSortMenu")
-								MESSAGEMAN:Broadcast("ReloadSSMDD")
-								isSortMenuVisible = false
-								SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "expand.ogg") )
-							elseif SortMenuNeedsUpdating == false then
-								isSortMenuVisible = false
-								SOUND:PlayOnce( THEME:GetPathS("ScreenPlayerOptions", "cancel all.ogg") )
-								MESSAGEMAN:Broadcast("ToggleSortMenu")
-							end
-						end
-					end
-				end
-				if event.GameButton == "Start" then
-					if event.type == "InputEventType_FirstPress" then
-						SortMenuCursorLogic()
-					end
-				end
-				
-				if event.GameButton == "MenuLeft" or event.GameButton == "MenuUp" then
-					MESSAGEMAN:Broadcast("MoveCursorLeft")
-					SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
-					
-				end
-				
-				if event.GameButton == "MenuRight" or event.GameButton == "MenuDown" then
-					MESSAGEMAN:Broadcast("MoveCursorRight")
-					SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
-				end
-				
-				if IsSortMenuInputToggled == true then
-					if event.GameButton == "Start" and event.type == "InputEventType_FirstPress" and event.type ~= "InputEventType_Release" then
-						MESSAGEMAN:Broadcast("SetSortMenuTopStats")
-						MESSAGEMAN:Broadcast("UpdateCursorColor")
-					end
-				end
-						if IsSortMenuInputToggled == true then
-							if event.GameButton == "Start" and event.type == "InputEventType_FirstPress" and event.type ~= "InputEventType_Release" then
-								MESSAGEMAN:Broadcast("SortMenuOptionSelected")
-								SOUND:PlayOnce( THEME:GetPathS("common", "start.ogg") )
-							end
-						elseif event.GameButton == "Start" and event.type == "InputEventType_FirstPress" and event.type ~= "InputEventType_Release" then
-							MESSAGEMAN:Broadcast("SortMenuOptionSelected")
-							SOUND:PlayOnce( THEME:GetPathS("common", "start.ogg") )
-						end
-				
-				---- This stops the cursor from moving when selecting a variable option
-				---- Like filtering bpms/difficulties/etc
-				if IsSortMenuInputToggled == true then
-					if event.GameButton == "MenuLeft" or event.GameButton == "MenuUp" then
-						MESSAGEMAN:Broadcast("MoveSortMenuOptionLeft")
-					elseif event.GameButton == "MenuRight" or event.GameButton == "MenuDown"then
-						MESSAGEMAN:Broadcast("MoveSortMenuOptionRight")
-					elseif event.GameButton == "Select" or event.GameButton == "Back" then
-						SOUND:PlayOnce( THEME:GetPathS("common", "invalid.ogg") )
-						MESSAGEMAN:Broadcast("UpdateCursorColor")
-						MESSAGEMAN:Broadcast("ToggleSortMenuMovement")
-					end
-				end
-			else end
-		end
-		
-		return false
-	end
-	
+
+
 	--- Input handler for the Test Input screen
 	if InputMenuHasFocus then
 		if not (event and event.PlayerNumber and event.button) then
@@ -777,9 +505,9 @@ t.Handler = function(event)
 
 		-- pressing Start or Back (typically Esc on a keyboard) will queue "DirectInputToEngine"
 		-- but only if the event.type is not a Release
-		-- as soon as TestInput is activated via the SortMenu, the player is likely still holding Start
+		-- as soon as TestInput is activated, the player is likely still holding Start
 		-- and will soon release it to start testing their input, which would inadvertently close TestInput
-		if (event.GameButton == "Start" or event.GameButton == "Back") and event.type ~= "InputEventType_Release" then
+		if event.GameButton == "Back" and event.type ~= "InputEventType_Release" then
 			InputMenuHasFocus = false
 			SOUND:PlayOnce( THEME:GetPathS("common", "start.ogg") )
 			MESSAGEMAN:Broadcast("HideTestInput")
@@ -810,9 +538,9 @@ t.Handler = function(event)
 
 		-- Pressing Start or Back (typically Esc on a keyboard) will queue "DirectInputToEngine"
 		-- but only if the event.type is not a Release.
-		-- As soon as the Leaderboard is activated via the SortMenu, the player is likely still holding Start
-		-- and will soon release it to start testing their input, which would inadvertently close the Leaderboard.
-		if (event.GameButton == "Start" or event.GameButton == "Back") and event.type ~= "InputEventType_Release" then
+		-- As soon as the Leaderboard is activated, the player is likely still holding Start
+		-- and will soon release it, which would inadvertently close the Leaderboard.
+		if event.GameButton == "Back" and event.type ~= "InputEventType_Release" then
 			LeadboardHasFocus = false
 			SOUND:PlayOnce( THEME:GetPathS("common", "start.ogg") )
 			MESSAGEMAN:Broadcast("HideLeaderboard")
@@ -821,6 +549,10 @@ t.Handler = function(event)
 		return false
 	end
 	
+	-- Don't allow input if a player has their Menu open.
+	if event.PlayerNumber == "PlayerNumber_P1" and PlayerMenuP1 == true then return false end
+	if event.PlayerNumber == "PlayerNumber_P2" and PlayerMenuP2 == true then return false end
+	
 	-- Disable input if EscapeFromEventMode is active
 	if EscapeFromEventMode then
 		t.enabled = false
@@ -828,7 +560,7 @@ t.Handler = function(event)
 	
 	if not GAMESTATE:IsSideJoined(event.PlayerNumber) then
 		if not t.AllowLateJoin() then return false end
-		if IsSearchMenuVisible or isSortMenuVisible or LeadboardHasFocus or InputMenuHasFocus then return false end
+		if IsSearchMenuVisible or LeadboardHasFocus or InputMenuHasFocus then return false end
 
 		-- latejoin
 		if event.GameButton == "Start" then
@@ -841,25 +573,27 @@ t.Handler = function(event)
 
 	if event.type ~= "InputEventType_Release" then
 
-		if event.GameButton == "Back" and event.type == "InputEventType_FirstPress" then
-			if didSelectSong then
-				didSelectSong = false
-				PressStartForOptions = false
-				MESSAGEMAN:Broadcast('HideOptionsJawn')
-				return false
+		if event.GameButton == "Back" and event.type == "InputEventType_FirstPress" and event.type ~= "InputEventType_Repeat" then
+			if not PlayerMenuP1 and not PlayerMenuP2 then
+				if didSelectSong then
+					didSelectSong = false
+					PressStartForOptions = false
+					MESSAGEMAN:Broadcast('HideOptionsJawn')
+					return false
+				else
+					if event.PlayerNumber == "PlayerNumber_P1" and PlayerMenuP1 == nil then
+						PlayerMenuP1 = false
+						return false
+					elseif event.PlayerNumber == "PlayerNumber_P2" and PlayerMenuP2 == nil then
+						PlayerMenuP2 = false
+						return false
+					end
+				end
+				SCREENMAN:GetTopScreen():SetNextScreenName( Branch.SSMCancel() ):StartTransitioningScreen("SM_GoToNextScreen")
 			end
+		end
 		
-			SCREENMAN:GetTopScreen():SetNextScreenName( Branch.SSMCancel() ):StartTransitioningScreen("SM_GoToNextScreen")
-		end
 		-------------------------------------------------------------
-		if event.GameButton == "Select" and event.type == "InputEventType_FirstPress"  then
-			if PressStartForOptions == false then
-					isSortMenuVisible = true
-					SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "sort.ogg") )
-					stop_music()
-					MESSAGEMAN:Broadcast("ToggleSortMenu")
-			end
-		end
 		UpdateGroupWheelMessageCommand = function(self)
 			t.WheelWithFocus:scroll_by_amount(1)
 		end

@@ -639,12 +639,7 @@ GetJudgmentGraphics = function()
 			-- remove the file extension from the string, leaving only the name of the graphic
 			local name = StripSpriteHints(filename)
 
-			-- Fill the table, special-casing Love so that it comes first.
-			if name == "Love" then
-				table.insert(judgment_graphics, 1, filename)
-			else
-				judgment_graphics[#judgment_graphics+1] = filename
-			end
+			judgment_graphics[#judgment_graphics+1] = filename
 		end
 	end
 

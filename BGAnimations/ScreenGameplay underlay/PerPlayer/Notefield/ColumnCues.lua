@@ -57,17 +57,21 @@ end
 if mirror then
 	noteMapping = {noteMapping[4], noteMapping[3], noteMapping[2], noteMapping[1]}
 end
+local pn = ToEnumShortString(player)
+
 
 local cue_time = nil
 if mods.ColumnCues ~= nil then
-	cue_time = tonumber(mods.ColumnCues:sub(1, #mods.ColumnCues-1))
+	cue_time = tonumber(GetPlayerMod(pn, "ColumnCueTime"))
+	-- we don't want this to run at 0
+	if cue_time == 0 then cue_time = nil end
 end
 
 if cue_time == nil then
 	return Def.ActorFrame {}
 end
 
-local pn = ToEnumShortString(player)
+
 local steps = GAMESTATE:GetCurrentSteps(player)
 
 local noteTimes = GetChartNoteTimes(steps, pn)
@@ -230,7 +234,7 @@ for ColumnIndex=1,NumColumns do
 				local nextTime = columnTimes[ColumnIndex][timeIndex]
 				if nextTime == nil then break end
 				local waitTime = nextTime.start - now
-				if waitTime >= 0.017 then
+				if waitTime >= 0.017 and waitTime > 0 then
 					self:sleep(waitTime)
 					self:queuecommand('Run')
 					break
@@ -249,8 +253,10 @@ for ColumnIndex=1,NumColumns do
 				quad:stoptweening()
 					:decelerate(fade_time)
 					:diffuse(color)
-					:sleep(flashDuration - 2*fade_time)
-					:accelerate(fade_time)
+					if flashDuration - 2*fade_time > 0 then
+						quad:sleep(flashDuration - 2*fade_time)
+					end
+					quad:accelerate(fade_time)
 					:diffuse(0,0,0,0)
 				if CountdownBreaks then
 					if BreakTime >= 5 then
@@ -296,9 +302,9 @@ for ColumnIndex=1,NumColumns do
 			end,
 			UpdateBreakCommand=function(self)
 				if BreakTime > 0.5 then
-					BreakTime = BreakTime - 0.1
-					if BreakTime > 0.5 then
-						self:sleep(0.1)
+					BreakTime = BreakTime - 0.05
+					if BreakTime > 0.5 and BreakTime > 0 then
+						self:sleep(0.05)
 							:settext(round(BreakTime))
 							:queuecommand("UpdateBreak")
 					else

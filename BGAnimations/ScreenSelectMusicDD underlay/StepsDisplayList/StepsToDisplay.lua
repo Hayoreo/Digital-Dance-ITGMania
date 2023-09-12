@@ -34,7 +34,7 @@ return function(AllSteps)
 		local currentSteps = GAMESTATE:GetCurrentSteps(player)
 
 		-- currentSteps can be nil while reloading SelectMusic after
-		-- switching style (e.g. double → single) using SL's SortMenu
+		-- switching style (e.g. double → single) using the PlayerMenu
 		if not currentSteps then return StepsToShow end
 
 		-- there are edit stepcharts available for the current song

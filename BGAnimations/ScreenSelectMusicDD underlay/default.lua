@@ -47,21 +47,20 @@ local CloseCurrentFolder = function()
 	NameOfGroup = ""
 	return end
 
-	--GAMESTATE:SetCurrentSong(nil)
 	if SongSearchWheelNeedsResetting == true then
+		SongSearchSSMDD = false
+		SongSearchAnswer = nil
 		SongSearchWheelNeedsResetting = false
-		MESSAGEMAN:Broadcast("ReloadSSMDD")
+		SCREENMAN:GetTopScreen():SetNextScreenName("ScreenReloadSSMDD")
+		SCREENMAN:GetTopScreen():StartTransitioningScreen("SM_GoToNextScreen")
 	else	
 		-- otherwise...
 		MESSAGEMAN:Broadcast("SwitchFocusToGroups")
 		Input.WheelWithFocus.container:playcommand("Hide")
 		Input.WheelWithFocus = GroupWheel
 		Input.WheelWithFocus.container:playcommand("Unhide")
-	end
-	
+	end	
 end
-
-
 
 local t = Def.ActorFrame {
 	InitCommand=function(self)
@@ -72,7 +71,6 @@ local t = Def.ActorFrame {
 		self:queuecommand("Capture")
 	end,
 	CaptureCommand=function(self)
-
 		-- One element of the Input table is an internal function, Handler
 		SCREENMAN:GetTopScreen():AddInputCallback( Input.Handler )
 
@@ -82,7 +80,6 @@ local t = Def.ActorFrame {
 		-- It should be safe to enable input for players now
 		self:queuecommand("EnableInput")
 	end,
-	
 	ShowOptionsJawnMessageCommand=function(self)
 		if LeavingScreenSelectMusicDD == false then
 			LeavingScreenSelectMusicDD = true
@@ -95,17 +92,13 @@ local t = Def.ActorFrame {
 		-- reinvent that functionality for the Lua InputCallback that I'm using otherwise.
 		
 		-- Don't do these codes if the sort menu is open or if going to the options screen
-		if LeavingScreenSelectMusicDD == false then
-			if not isSortMenuVisible and not LeadboardHasFocus and not IsSearchMenuVisible then
-				if InputMenuHasFocus == false then
-					if params.Name == "CloseCurrentFolder" or params.Name == "CloseCurrentFolder2" then
-						if Input.WheelWithFocus == SongWheel and GAMESTATE:IsPlayerEnabled(params.PlayerNumber) then
-							stop_music()
-							SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "expand.ogg") )
-							MESSAGEMAN:Broadcast("CloseCurrentFolder")
-							CloseCurrentFolder()
-						end
-					end
+		if not LeavingScreenSelectMusicDD and not LeadboardHasFocus and not IsSearchMenuVisible and not InputMenuHasFocus and not PlayerMenuP1 and not PlayerMenuP2 then
+			if params.Name == "CloseCurrentFolder" or params.Name == "CloseCurrentFolder2" then
+				if Input.WheelWithFocus == SongWheel and GAMESTATE:IsPlayerEnabled(params.PlayerNumber) then
+					stop_music()
+					SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "expand.ogg") )
+					MESSAGEMAN:Broadcast("CloseCurrentFolder")
+					CloseCurrentFolder()
 				end
 			end
 		end
@@ -153,12 +146,12 @@ local t = Def.ActorFrame {
 	LoadActor("./PerPlayer/Over.lua"),
 	-- grid of Difficulty Blocks (normal) or CourseContentsList (CourseMode)
 	LoadActor("./StepsDisplayList/default.lua"),
-	-- The GrooveStats leaderboard that can (maybe) be accessed from the SortMenu
+	-- Menu that has all player options as well as sorts/filters.
+	LoadActor("./PlayerMenu/default.lua"),
+	-- The GrooveStats leaderboard that can (maybe) be accessed from the PlayerMenu
 	-- This is only added in "dance" mode and if the service is available.
 	LoadActor("./Leaderboard.lua"),
-	-- Sort and Filter menu wow
-	LoadActor("./SortMenu/default.lua"),
-	-- a Test Input overlay can be accessed from the SortMenu
+	-- a Test Input overlay can be accessed from the PlayerMenu
 	LoadActor("./TestInput.lua"),
 	-- Handles song search data
 	LoadActor("./SearchMenu/default.lua"),

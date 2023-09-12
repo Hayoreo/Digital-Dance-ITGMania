@@ -79,13 +79,38 @@ function SetSubSortPreference(value)
 	end
 end
 
------ Lower Difficulty Filter profile settings ----- 
-function GetLowerDifficultyFilter()
+----- SUB SORT2 PROFILE PREFERNCE -----
+function GetSubSort2Preference()
 	local value
 	if GAMESTATE:IsPlayerEnabled(PLAYER_1) then
-		value = DDStats.GetStat(PLAYER_1, 'LowerDifficultyFilter')
+		value = DDStats.GetStat(PLAYER_1, 'SubSort2Preference')
 	else
-		value = DDStats.GetStat(PLAYER_2, 'LowerDifficultyFilter')
+		value = DDStats.GetStat(PLAYER_2, 'SubSort2Preference')
+	end
+
+	if value == nil then
+		value = 2
+	end
+	
+	SubSort2Index = tonumber(value)
+
+	return tonumber(value)
+end
+
+function SetSubSort2Preference(value)
+	for i,playerNum in ipairs(GAMESTATE:GetHumanPlayers()) do
+		DDStats.SetStat(playerNum, 'SubSort2Preference', value)
+		DDStats.Save(playerNum)
+	end
+end
+
+----- Lower Meter Filter profile settings ----- 
+function GetLowerMeterFilter()
+	local value
+	if GAMESTATE:IsPlayerEnabled(PLAYER_1) then
+		value = DDStats.GetStat(PLAYER_1, 'LowerMeterFilter')
+	else
+		value = DDStats.GetStat(PLAYER_2, 'LowerMeterFilter')
 	end
 
 	if value == nil then
@@ -95,20 +120,20 @@ function GetLowerDifficultyFilter()
 	return tonumber(value)
 end
 
-function SetLowerDifficultyFilter(value)
+function SetLowerMeterFilter(value)
 	for i,playerNum in ipairs(GAMESTATE:GetHumanPlayers()) do
-		DDStats.SetStat(playerNum, 'LowerDifficultyFilter', value)
+		DDStats.SetStat(playerNum, 'LowerMeterFilter', value)
 		DDStats.Save(playerNum)
 	end
 end
 
------ Upper Difficulty Filter profile settings ----- 
-function GetUpperDifficultyFilter()
+----- Upper Meter Filter profile settings ----- 
+function GetUpperMeterFilter()
 	local value
 	if GAMESTATE:IsPlayerEnabled(PLAYER_1) then
-		value = DDStats.GetStat(PLAYER_1, 'UpperDifficultyFilter')
+		value = DDStats.GetStat(PLAYER_1, 'UpperMeterFilter')
 	else
-		value = DDStats.GetStat(PLAYER_2, 'UpperDifficultyFilter')
+		value = DDStats.GetStat(PLAYER_2, 'UpperMeterFilter')
 	end
 
 	if value == nil then
@@ -118,12 +143,37 @@ function GetUpperDifficultyFilter()
 	return tonumber(value)
 end
 
-function SetUpperDifficultyFilter(value)
+function SetUpperMeterFilter(value)
 	for i,playerNum in ipairs(GAMESTATE:GetHumanPlayers()) do
-		DDStats.SetStat(playerNum, 'UpperDifficultyFilter', value)
+		DDStats.SetStat(playerNum, 'UpperMeterFilter', value)
 		DDStats.Save(playerNum)
 	end
 end
+
+
+----- Show difficulty profile settings -----
+function GetShowDifficulty(difficulty)
+	local value
+	if GAMESTATE:IsPlayerEnabled(PLAYER_1) then
+		value = DDStats.GetStat(PLAYER_1, difficulty)
+	else
+		value = DDStats.GetStat(PLAYER_2, difficulty)
+	end
+
+	if value == nil then
+		value = 1
+	end
+
+	return tonumber(value)
+end
+
+function SetShowDifficulty(difficulty, value)
+	for i,playerNum in ipairs(GAMESTATE:GetHumanPlayers()) do
+		DDStats.SetStat(playerNum, difficulty, value)
+		DDStats.Save(playerNum)
+	end
+end
+
 
 ----- Lower BPM Filter profile settings ----- 
 function GetLowerBPMFilter()
@@ -226,11 +276,11 @@ function GetGroovestatsFilter()
 		value = DDStats.GetStat(PLAYER_2, 'GroovestatsFilter')
 	end
 
-	if value == nil then
-		value = 'No'
+	if value == nil or value == "No" or value == "Yes" then
+		value = 1
 	end
 
-	return value
+	return tonumber(value)
 end
 
 function SetGroovestatsFilter(value)
@@ -249,11 +299,11 @@ function GetAutogenFilter()
 		value = DDStats.GetStat(PLAYER_2, 'AutogenFilter')
 	end
 
-	if value == nil then
-		value = 'No'
+	if value == nil or value == "No" or value == "Yes" then
+		value = 1
 	end
 
-	return value
+	return tonumber(value)
 end
 
 function SetAutogenFilter(value)
@@ -263,22 +313,50 @@ function SetAutogenFilter(value)
 	end
 end
 
+
 function IsUsingFilters()
-	if GetLowerDifficultyFilter() ~= nil and GetLowerDifficultyFilter() ~= 0 then return true
-	elseif GetUpperDifficultyFilter() ~= nil and GetUpperDifficultyFilter() ~= 0 then return true
+	if GetLowerMeterFilter() ~= nil and GetLowerMeterFilter() ~= 0 then return true
+	elseif GetUpperMeterFilter() ~= nil and GetUpperMeterFilter() ~= 0 then return true
+	elseif GetShowDifficulty("Beginner") ~= nil and GetShowDifficulty("Beginner") ~= 1 then return true
+	elseif GetShowDifficulty("Easy") ~= nil and GetShowDifficulty("Easy") ~= 1 then return true
+	elseif GetShowDifficulty("Medium") ~= nil and GetShowDifficulty("Medium") ~= 1 then return true
+	elseif GetShowDifficulty("Hard") ~= nil and GetShowDifficulty("Hard") ~= 1 then return true
+	elseif GetShowDifficulty("Challenge") ~= nil and GetShowDifficulty("Challenge") ~= 1 then return true
+	elseif GetShowDifficulty("Edit") ~= nil and GetShowDifficulty("Edit") ~= 1 then return true
 	elseif GetLowerBPMFilter() ~= nil and GetLowerBPMFilter() ~= 49 then return true
 	elseif GetUpperBPMFilter() ~= nil and GetUpperBPMFilter() ~= 49 then return true
 	elseif GetLowerLengthFilter() ~= nil and GetLowerLengthFilter() ~= 0 then return true
 	elseif GetUpperLengthFilter() ~= nil and GetUpperLengthFilter() ~= 0 then return true
-	elseif GetGroovestatsFilter() ~= nil and GetGroovestatsFilter() ~= 'No' then return true
+	elseif GetGroovestatsFilter() ~= nil and GetGroovestatsFilter() ~= 1 then return true
+	elseif GetAutogenFilter() ~= nil and GetAutogenFilter() ~= 1 then return true
 	end
 	
 	return false
 end
 
+function IsUsingSorts()
+	if GetMainSortPreference() ~= nil and GetMainSortPreference() ~= 1 then return true
+	elseif GetSubSortPreference() ~= nil and GetSubSortPreference() ~= 2 then return true
+	elseif GetSubSort2Preference() ~= nil and GetSubSort2Preference() ~= 2 then return true
+	end
+	
+	return false
+end
+
+function IsUsingDifficultyFilters()
+	if GetShowDifficulty("Beginner") ~= nil and GetShowDifficulty("Beginner") ~= 1 then return true
+	elseif GetShowDifficulty("Easy") ~= nil and GetShowDifficulty("Easy") ~= 1 then return true
+	elseif GetShowDifficulty("Medium") ~= nil and GetShowDifficulty("Medium") ~= 1 then return true
+	elseif GetShowDifficulty("Hard") ~= nil and GetShowDifficulty("Hard") ~= 1 then return true
+	elseif GetShowDifficulty("Challenge") ~= nil and GetShowDifficulty("Challenge") ~= 1 then return true
+	elseif GetShowDifficulty("Edit") ~= nil and GetShowDifficulty("Edit") ~= 1 then return true
+	end
+end
+
+
 function IsUsingCourseFilters()
-	if GetLowerDifficultyFilter() ~= nil and GetLowerDifficultyFilter() ~= 0 then return true
-	elseif GetUpperDifficultyFilter() ~= nil and GetUpperDifficultyFilter() ~= 0 then return true
+	if GetLowerMeterFilter() ~= nil and GetLowerMeterFilter() ~= 0 then return true
+	elseif GetUpperMeterFilter() ~= nil and GetUpperMeterFilter() ~= 0 then return true
 	elseif GetLowerBPMFilter() ~= nil and GetLowerBPMFilter() ~= 49 then return true
 	elseif GetUpperBPMFilter() ~= nil and GetUpperBPMFilter() ~= 49 then return true
 	elseif GetLowerLengthFilter() ~= nil and GetLowerLengthFilter() ~= 0 then return true
@@ -286,4 +364,31 @@ function IsUsingCourseFilters()
 	end
 	
 	return false
+end
+
+
+--- Why the actual fuck do I have to do this shit
+function GetPlayerMod(pn, mod)
+	local value
+	if pn == "P1" then
+		value = DDStats.GetStat(PLAYER_1, "DD"..mod)
+	elseif pn == "P2" then
+		value = DDStats.GetStat(PLAYER_2, "DD"..mod)
+	end
+
+	if value == nil then
+		value = 0
+	end
+
+	return tonumber(value)
+end
+
+function SetPlayerMod(pn, mod, value)
+	if pn == "P1" then
+		DDStats.SetStat(PLAYER_1, "DD"..mod, value)
+		DDStats.Save(PLAYER_1)
+	elseif pn == "P2" then
+		DDStats.SetStat(PLAYER_2, "DD"..mod, value)
+		DDStats.Save(PLAYER_2)
+	end
 end

@@ -332,17 +332,17 @@ local UpdatePrunedCourses = function()
 					end
 				end
 				
-				---- Filter for Difficulty
-				if GetLowerDifficultyFilter() ~= 0 or GetUpperDifficultyFilter() ~= 0 then
-					local hasPassingDifficulty = false
+				---- Filter for Meter
+				if GetLowerMeterFilter() ~= 0 or GetUpperMeterFilter() ~= 0 then
+					local hasPassingMeter = false
 					for trail in ivalues(GetPlayableTrails(course)) do
-						local passesLower = GetLowerDifficultyFilter() == 0 or trail:GetMeter() >= GetLowerDifficultyFilter()
-						local passesUpper = GetUpperDifficultyFilter() == 0 or trail:GetMeter() <= GetUpperDifficultyFilter()
+						local passesLower = GetLowerMeterFilter() == 0 or trail:GetMeter() >= GetLowerMeterFilter()
+						local passesUpper = GetUpperMeterFilter() == 0 or trail:GetMeter() <= GetUpperMeterFilter()
 						if passesLower and passesUpper then
-							hasPassingDifficulty = true
+							hasPassingMeter = true
 						end
 					end
-					if not hasPassingDifficulty then
+					if not hasPassingMeter then
 						passesFilters = false
 					end
 				end

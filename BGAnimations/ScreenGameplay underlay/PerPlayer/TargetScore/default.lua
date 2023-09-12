@@ -50,8 +50,9 @@ local function GetTopScore(pn, kind)
 		local topscore = scorelist:GetHighScores()[1]
 		if topscore then return topscore:GetPercentDP() end
 	end
-
-	return 0
+	
+	--- if no scores exist set the target to 90%
+	return 90/100
 end
 
 -- Ported from PSS.cpp, can be removed if that gets exported to Lua
@@ -149,22 +150,15 @@ local target_grade = {
 	score = 0
 }
 
-if (target_grade.index == 17) then
+if (target_grade.index == 101) then
 	-- player set TargetGrade as Machine best
 	target_grade.score = GetTopScore(player, "Machine")
-
-elseif (target_grade.index == 18) then
+elseif (target_grade.index == 102) then
 	-- player set TargetGrade as Personal best
 	target_grade.score = pbGradeScore
 else
-	-- player set TargetGrade as a particular letter grade
-	-- anything from C- to ☆☆☆☆
-	target_grade.score = THEME:GetMetric("PlayerStageStats", "GradePercentTier" .. string.format("%02d", 17 - target_grade.index))
-end
-
--- if there is no personal/machine score, default to S as target
-if target_grade.score == 0 then
-	target_grade.score = THEME:GetMetric("PlayerStageStats", "GradePercentTier06")
+	-- player set TargetGrade as a particular score % from 0 to 100
+	target_grade.score = target_grade.index/100
 end
 
 -- ---------------------------------------------------------------
@@ -571,6 +565,10 @@ if SL[pn].ActiveModifiers.Pacemaker or FailOnMissedTarget or RestartOnMissedTarg
 				if FailOnMissedTarget then
 					-- use SM_BeginFailed instead of SM_NotesEnded to *immediately* leave the screen instead of a nice fadeout.
 					-- we want to get back into the next round because we want that score boi.
+					for player in ivalues( GAMESTATE:GetEnabledPlayers() ) do
+						local pss = STATSMAN:GetCurStageStats():GetPlayerStageStats(player)
+						pss:FailPlayer()
+					end
 					SCREENMAN:GetTopScreen():PostScreenMessage("SM_BeginFailed", 0)
 				elseif RestartOnMissedTarget then
 					-- this setting assumes event mode, so no need for changing stage number.

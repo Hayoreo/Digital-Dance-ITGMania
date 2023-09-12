@@ -2,26 +2,39 @@ local HasResetFilterPreferences = false
 local HelpText
 
 ----- Default preference values
-local DefaultLowerDifficulty = 0
-local DefaultUpperDifficulty = 0
+local DefaultLowerMeter = 0
+local DefaultUpperMeter = 0
 local DefaultLowerBPM = 49
 local DefaultUpperBPM = 49
 local DefaultLowerLength = 0
 local DefaultUpperLength = 0
-local DefaultGroovestats = 'No'
-local DefaultAutogen = 'No'
+local DefaultGroovestats = 1
+local DefaultAutogen = 1
+local DefaultDifficulty = 1
 
 if 
-GetLowerDifficultyFilter() ~= DefaultLowerDifficulty or
-GetUpperDifficultyFilter() ~= DefaultUpperDifficulty or
+GetLowerMeterFilter() ~= DefaultLowerMeter or
+GetUpperMeterFilter() ~= DefaultUpperMeter or
+GetShowDifficulty("Beginner") ~= DefaultDifficulty or
+GetShowDifficulty("Easy") ~= DefaultDifficulty or
+GetShowDifficulty("Medium") ~= DefaultDifficulty or
+GetShowDifficulty("Hard") ~= DefaultDifficulty or
+GetShowDifficulty("Challenge") ~= DefaultDifficulty or
+GetShowDifficulty("Edit") ~= DefaultDifficulty or
 GetLowerBPMFilter() ~= DefaultLowerBPM or
 GetUpperBPMFilter() ~= DefaultUpperBPM or
 GetLowerLengthFilter() ~= DefaultLowerLength or
 GetUpperLengthFilter() ~= DefaultUpperLength or
 GetGroovestatsFilter() ~= DefaultGroovestats or
 GetAutogenFilter() ~= DefaultAutogen then
-	SetLowerDifficultyFilter(DefaultLowerDifficulty)
-	SetUpperDifficultyFilter(DefaultUpperDifficulty)
+	SetLowerMeterFilter(DefaultLowerMeter)
+	SetUpperMeterFilter(DefaultUpperMeter)
+	SetShowDifficulty("Beginner")
+	SetShowDifficulty("Easy")
+	SetShowDifficulty("Medium")
+	SetShowDifficulty("Hard")
+	SetShowDifficulty("Challenge")
+	SetShowDifficulty("Edit")
 	SetLowerBPMFilter(DefaultLowerBPM)
 	SetUpperBPMFilter(DefaultUpperBPM)
 	SetLowerLengthFilter(DefaultLowerLength)

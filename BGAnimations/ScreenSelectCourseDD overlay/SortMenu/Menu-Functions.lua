@@ -29,21 +29,22 @@ local t = Def.ActorFrame{
 	DDResetSortsFiltersMessageCommand=function(self)
 		----- Default preference values
 		local DefaultMainCourseSort = 1
-		local DefaultLowerDifficulty = 0
-		local DefaultUpperDifficulty = 0
+		local DefaultSubSort = 2
+		local DefaultLowerMeter = 0
+		local DefaultUpperMeter = 0
 		local DefaultLowerBPM = 49
 		local DefaultUpperBPM = 49
 		local DefaultLowerLength = 0
 		local DefaultUpperLength = 0
-		local DefaultGroovestats = 'No'
-		local DefaultAutogen = 'No'
+		local DefaultGroovestats = 1
+		local DefaultAutogen = 1
 
 		if 
 		SongSearchWheelNeedsResetting == true or
 		SortMenuNeedsUpdating == true or
 		GetMainCourseSortPreference() ~= DefaultMainSort or
-		GetLowerDifficultyFilter() ~= DefaultLowerDifficulty or
-		GetUpperDifficultyFilter() ~= DefaultUpperDifficulty or
+		GetLowerMeterFilter() ~= DefaultLowerMeter or
+		GetUpperMeterFilter() ~= DefaultUpperMeter or
 		GetLowerBPMFilter() ~= DefaultLowerBPM or
 		GetUpperBPMFilter() ~= DefaultUpperBPM or
 		GetLowerLengthFilter() ~= DefaultLowerLength or
@@ -53,8 +54,8 @@ local t = Def.ActorFrame{
 		then
 			SetMainCourseSortPreference(DefaultMainCourseSort)
 			SetSubSortPreference(DefaultSubSort)
-			SetLowerDifficultyFilter(DefaultLowerDifficulty)
-			SetUpperDifficultyFilter(DefaultUpperDifficulty)
+			SetLowerMeterFilter(DefaultLowerMeter)
+			SetUpperMeterFilter(DefaultUpperMeter)
 			SetLowerBPMFilter(DefaultLowerBPM)
 			SetUpperBPMFilter(DefaultUpperBPM)
 			SetLowerLengthFilter(DefaultLowerLength)

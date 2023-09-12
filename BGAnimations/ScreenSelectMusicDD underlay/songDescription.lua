@@ -196,7 +196,11 @@ af[#af+1] = Def.ActorFrame{
 					end
 				end
 			end
-		end
+		end,
+		UpdateRateModTextMessageCommand=function(self)
+			self:stoptweening()
+				:queuecommand("Set")
+		end,
 	},
 
 	-- ----------------------------------------
@@ -244,7 +248,11 @@ af[#af+1] = Def.ActorFrame{
 			else
 				self:settext("")
 			end
-		end
+		end,
+		UpdateRateModTextMessageCommand=function(self)
+			self:stoptweening()
+				:queuecommand("Set")
+		end,
 	}
 }
 

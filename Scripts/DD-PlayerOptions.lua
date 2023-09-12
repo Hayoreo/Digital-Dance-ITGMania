@@ -34,6 +34,12 @@ local GetPlayableTrails = function(course)
 	return trails
 end
 
+-- shorthand function for setting an engine level modifier
+SetEngineMod = function(player, name, value)
+	local mods = GAMESTATE:GetPlayerState(player):GetPlayerOptions("ModsLevel_Preferred")
+    mods[name](mods, value)
+end
+
 -- -----------------------------------------------------------------------
 -- when to use Choices() vs. Values()
 --
@@ -275,9 +281,7 @@ local Overrides = {
 			-- (between songs, between screens, etc.) until you manually change them.  This is (probably)
 			-- not the desired behavior in EditMode, so when users change between different songs in EditMode,
 			-- always reset the musicrate mod.  See: ./BGAnimations/ScreenEditMeny underlay.lua
-			if topscreen == "ScreenEditOptions" then
-				GAMESTATE:ApplyGameCommand("mod," .. mods.MusicRateEdit .."xmusic")
-			else
+			if topscreen ~= "ScreenEditOptions" then
 				GAMESTATE:GetSongOptionsObject("ModsLevel_Preferred"):MusicRate( mods.MusicRate )
 			end
 
@@ -604,16 +608,6 @@ local Overrides = {
 			end
 			playeroptions:VisualDelay( mods.VisualDelay:gsub("ms","")/1000 )
 		end
-	},
-	-------------------------------------------------------------------------
-	ColumnCues = {
-		Values = {
-			"Off",
-			"0.5s", "0.6s", "0.7s", "0.8s", "0.9s",
-			"1.0s", "1.1s", "1.2s", "1.3s", "1.4s",
-			"1.5s", "1.6s", "1.7s", "1.8s", "1.9s",
-			"2.0s",
-		}
 	},
 	-------------------------------------------------------------------------
 	ColumnCueExtras = {

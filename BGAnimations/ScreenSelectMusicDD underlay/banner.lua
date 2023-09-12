@@ -89,10 +89,24 @@ local t = Def.ActorFrame{
 		InitCommand=function(self)
 			self:visible( SL.Global.ActiveModifiers.MusicRate ~= 1 ):y(BannerHeight)
 		end,
+		UpdateRateModTextMessageCommand=function(self)
+			if SL.Global.ActiveModifiers.MusicRate == 1 then
+				self:visible(false)
+			else
+				self:visible(true)
+			end
+		end,
 
 		--quad behind the music rate text
 		Def.Quad{
-			InitCommand=function(self) self:diffuse( color("#1E282FCC") ):zoomto(BannerWidth,14):vertalign(bottom) end
+			InitCommand=function(self) self:diffuse( color("#1E282FCC") ):zoomto(BannerWidth,14):vertalign(bottom) end,
+			UpdateRateModTextMessageCommand=function(self)
+				if SL.Global.ActiveModifiers.MusicRate == 1 then
+					self:visible(false)
+				else
+					self:visible(true)
+				end
+			end,
 		},
 
 		--the music rate text
@@ -100,7 +114,16 @@ local t = Def.ActorFrame{
 			InitCommand=function(self) self:shadowlength(1):zoom(0.7):vertalign(bottom):y(-1) end,
 			OnCommand=function(self)
 				self:settext(("%g"):format(SL.Global.ActiveModifiers.MusicRate) .. "x " .. THEME:GetString("OptionTitles", "MusicRate"))
-			end
+			end,
+			UpdateRateModTextMessageCommand=function(self)
+				if SL.Global.ActiveModifiers.MusicRate == 1 then
+					self:settext("")
+						:visible(false)
+				else
+					self:visible(true)
+						:settext(("%g"):format(SL.Global.ActiveModifiers.MusicRate) .. "x " .. THEME:GetString("OptionTitles", "MusicRate"))
+				end
+			end,
 		}
 	},
 	

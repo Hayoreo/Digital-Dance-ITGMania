@@ -25,37 +25,43 @@ end
 
 
 local t = Def.ActorFrame{
-
+	
+	ReloadSSMDDMessageCommand = function(self)
+		SCREENMAN:GetTopScreen():SetNextScreenName("ScreenReloadSSMDD")
+		SCREENMAN:GetTopScreen():StartTransitioningScreen("SM_GoToNextScreen")
+	end,
+	
 	DDResetSortsFiltersMessageCommand=function(self)
 		----- Default preference values
 		local DefaultMainSort = 1
 		local DefaultSubSort = 2
-		local DefaultLowerDifficulty = 0
-		local DefaultUpperDifficulty = 0
+		local DefaultSubSort2 = 2
+		local DefaultLowerMeter = 0
+		local DefaultUpperMeter = 0
+		local DefaultDifficulty = 1
 		local DefaultLowerBPM = 49
 		local DefaultUpperBPM = 49
 		local DefaultLowerLength = 0
 		local DefaultUpperLength = 0
-		local DefaultGroovestats = 'No'
-		local DefaultAutogen = 'No'
+		local DefaultGroovestats = 1
+		local DefaultAutogen = 1
 
 		if 
 		SongSearchWheelNeedsResetting == true or
-		SortMenuNeedsUpdating == true or
-		GetMainSortPreference() ~= DefaultMainSort or
-		GetSubSortPreference() ~= DefaultSubSort or
-		GetLowerDifficultyFilter() ~= DefaultLowerDifficulty or
-		GetUpperDifficultyFilter() ~= DefaultUpperDifficulty or
-		GetLowerBPMFilter() ~= DefaultLowerBPM or
-		GetUpperBPMFilter() ~= DefaultUpperBPM or
-		GetLowerLengthFilter() ~= DefaultLowerLength or
-		GetUpperLengthFilter() ~= DefaultUpperLength or
-		GetGroovestatsFilter() ~= DefaultGroovestats or
-		GetAutogenFilter() ~= DefaultAutogen then
+		IsUsingSorts() or
+		IsUsingFilters()
+		then
 			SetMainSortPreference(DefaultMainSort)
 			SetSubSortPreference(DefaultSubSort)
-			SetLowerDifficultyFilter(DefaultLowerDifficulty)
-			SetUpperDifficultyFilter(DefaultUpperDifficulty)
+			SetSubSort2Preference(DefaultSubSort2)
+			SetLowerMeterFilter(DefaultLowerMeter)
+			SetUpperMeterFilter(DefaultUpperMeter)
+			SetShowDifficulty("Beginner", DefaultDifficulty)
+			SetShowDifficulty("Easy", DefaultDifficulty)
+			SetShowDifficulty("Medium", DefaultDifficulty)
+			SetShowDifficulty("Hard", DefaultDifficulty)
+			SetShowDifficulty("Challenge", DefaultDifficulty)
+			SetShowDifficulty("Edit", DefaultDifficulty)
 			SetLowerBPMFilter(DefaultLowerBPM)
 			SetUpperBPMFilter(DefaultUpperBPM)
 			SetLowerLengthFilter(DefaultLowerLength)
@@ -63,13 +69,11 @@ local t = Def.ActorFrame{
 			SetGroovestatsFilter(DefaultGroovestats)
 			SetAutogenFilter(DefaultAutogen)
 			SongSearchWheelNeedsResetting = false
-			SortMenuNeedsUpdating = false
 			MESSAGEMAN:Broadcast("ReloadSSMDD")
 		else
 			SM("Nothing to reset!")
 		end
 	end,
-
 
 	DDSwitchStylesMessageCommand=function(self)
 		local current_style = GAMESTATE:GetCurrentStyle():GetStyleType()

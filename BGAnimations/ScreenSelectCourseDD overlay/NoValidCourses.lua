@@ -10,14 +10,14 @@ local DefaultLowerLength = 0
 local DefaultUpperLength = 0
 
 if 
-GetLowerDifficultyFilter() ~= DefaultLowerDifficulty or
-GetUpperDifficultyFilter() ~= DefaultUpperDifficulty or
+GetLowerMeterFilter() ~= DefaultLowerMeter or
+GetUpperMeterFilter() ~= DefaultUpperMeter or
 GetLowerBPMFilter() ~= DefaultLowerBPM or
 GetUpperBPMFilter() ~= DefaultUpperBPM or
 GetLowerLengthFilter() ~= DefaultLowerLength or
 GetUpperLengthFilter() ~= DefaultUpperLength then
-	SetLowerDifficultyFilter(DefaultLowerDifficulty)
-	SetUpperDifficultyFilter(DefaultUpperDifficulty)
+	SetLowerMeterFilter(DefaultLowerMeter)
+	SetUpperMeterFilter(DefaultUpperMeter)
 	SetLowerBPMFilter(DefaultLowerBPM)
 	SetUpperBPMFilter(DefaultUpperBPM)
 	SetLowerLengthFilter(DefaultLowerLength)

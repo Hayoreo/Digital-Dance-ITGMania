@@ -40,6 +40,11 @@ if TimingWindowScale ~= 1 then
 	optionslist = optionslist .. ", " .. (ScreenString("TimingWindowScale")):format(TimingWindowScale*100)
 end
 
+--- Add Haste if it's enabled.
+if GAMESTATE:GetSongOptionsObject("ModsLevel_Preferred"):Haste() ~= 0 then
+	optionslist = optionslist .. ", " .. "Haste"
+end
+
 local font_zoom = 0.7
 local width = THEME:GetMetric("GraphDisplay", "BodyWidth")
 

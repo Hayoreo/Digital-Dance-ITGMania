@@ -1,9 +1,11 @@
 local max_length_group = '1:00:00+'
-local max_difficulty_group = '40+'
-local max_bpm_group = '400+'
+local max_difficulty_group = '100+'
+local max_bpm_group = '500+'
 local NoSongs = false
 local AllSongs = SONGMAN:GetAllSongs()
 IsUntiedWR = false
+local HasDifficultyFilters =  IsUsingDifficultyFilters()
+
 
 local song_lengths = {}
 for i=0,90-1,30 do
@@ -55,7 +57,7 @@ local GetSongLengthGroup = function(song)
 end
 
 local song_bpms = {}
-for i=0,400,10 do
+for i=0,500,10 do
 	song_bpms[#song_bpms+1] = i
 end
 
@@ -172,7 +174,7 @@ end
 
 function GetStepsDifficultyGroup(steps)
 	local meter = steps:GetMeter()
-	if meter >= 40 then return max_difficulty_group end
+	if meter >= 100 then return max_difficulty_group end
 	return meter
 end
 
@@ -278,10 +280,21 @@ local UpdatePrunedSongs = function()
 		for song in ivalues(AllSongs) do
 			local meters_set = {}
 			for steps in ivalues(song:GetStepsByStepsType(steps_type)) do
-				if GetGroovestatsFilter() == 'No' or (
-					steps:GetDifficulty() ~= 'Difficulty_Beginner'
-					and steps:GetDifficulty() ~= 'Difficulty_Edit'
-				) then
+				local MeetsRequirements = false
+				if GetShowDifficulty("Beginner") == 1 and steps:GetDifficulty() == "Difficulty_Beginner" then
+					MeetsRequirements = true
+				elseif GetShowDifficulty("Easy") == 1 and steps:GetDifficulty() == "Difficulty_Easy" then
+					MeetsRequirements = true
+				elseif GetShowDifficulty("Medium") == 1 and steps:GetDifficulty() == "Difficulty_Medium" then
+					MeetsRequirements = true
+				elseif GetShowDifficulty("Hard") == 1 and steps:GetDifficulty() == "Difficulty_Hard" then
+					MeetsRequirements = true
+				elseif GetShowDifficulty("Challenge") == 1 and steps:GetDifficulty() == "Difficulty_Challenge" then
+					MeetsRequirements = true
+				elseif GetShowDifficulty("Edit") == 1 and steps:GetDifficulty() == "Difficulty_Edit" then
+					MeetsRequirements = true
+				end
+				if MeetsRequirements then
 					local meter = GetStepsDifficultyGroup(steps)
 					meters_set[meter] = true
 				end
@@ -332,14 +345,18 @@ local UpdatePrunedSongs = function()
 				end
 
 				---- Filter for Groovestats
-				if GetGroovestatsFilter() == 'Yes' then
+				if GetGroovestatsFilter() == 2 then
 					if not groovestats_groups_set[song:GetGroupName()] then
+						passesFilters = false
+					end
+				elseif GetGroovestatsFilter() == 3 then
+					if groovestats_groups_set[song:GetGroupName()] then
 						passesFilters = false
 					end
 				end
 
 				-- Filter for Autogen
-				if GetAutogenFilter() == 'Yes' then
+				if GetAutogenFilter() == 2 or GetAutogenFilter() == 3 then
 					local has_non_autogen = false
 					for steps in ivalues(song:GetStepsByStepsType(steps_type)) do
 						local is_auto = steps:GetDescription():match('^AUTO') or steps:GetAuthorCredit():match('^AUTO')
@@ -348,22 +365,56 @@ local UpdatePrunedSongs = function()
 							break
 						end
 					end
-					if not has_non_autogen then
+					
+					-- hide all autogen
+					if not has_non_autogen and GetAutogenFilter() == 3 then
+						passesFilters = false
+					-- only show autogen
+					elseif has_non_autogen and GetAutogenFilter() == 2 then
 						passesFilters = false
 					end
 				end
 
-				---- Filter for Difficulty
-				if GetLowerDifficultyFilter() ~= 0 or GetUpperDifficultyFilter() ~= 0 then
-					local hasPassingDifficulty = false
+				---- Filter for Meter
+				if GetLowerMeterFilter() ~= 0 or GetUpperMeterFilter() ~= 0 then
+					local hasPassingMeter = false
 					for steps in ivalues(song:GetStepsByStepsType(steps_type)) do
-						local passesLower = GetLowerDifficultyFilter() == 0 or steps:GetMeter() >= GetLowerDifficultyFilter()
-						local passesUpper = GetUpperDifficultyFilter() == 0 or steps:GetMeter() <= GetUpperDifficultyFilter()
+						local passesLower = GetLowerMeterFilter() == 0 or steps:GetMeter() >= GetLowerMeterFilter()
+						local passesUpper = GetUpperMeterFilter() == 0 or steps:GetMeter() <= GetUpperMeterFilter()
 						if passesLower and passesUpper then
-							hasPassingDifficulty = true
+							hasPassingMeter = true
 						end
 					end
-					if not hasPassingDifficulty then
+					if not hasPassingMeter then
+						passesFilters = false
+					end
+				end
+				
+				--Filter for difficulty
+				if HasDifficultyFilters then
+					local MeetsRequirements = false
+					for steps in ivalues(song:GetStepsByStepsType(steps_type)) do
+						if GetShowDifficulty("Beginner") == 1 and steps:GetDifficulty() == "Difficulty_Beginner" then
+							MeetsRequirements = true
+							break
+						elseif GetShowDifficulty("Easy") == 1 and steps:GetDifficulty() == "Difficulty_Easy" then
+							MeetsRequirements = true
+							break
+						elseif GetShowDifficulty("Medium") == 1 and steps:GetDifficulty() == "Difficulty_Medium" then
+							MeetsRequirements = true
+							break
+						elseif GetShowDifficulty("Hard") == 1 and steps:GetDifficulty() == "Difficulty_Hard" then
+							MeetsRequirements = true
+							break
+						elseif GetShowDifficulty("Challenge") == 1 and steps:GetDifficulty() == "Difficulty_Challenge" then
+							MeetsRequirements = true
+							break
+						elseif GetShowDifficulty("Edit") == 1 and steps:GetDifficulty() == "Difficulty_Edit" then
+							MeetsRequirements = true
+							break
+						end
+					end
+					if MeetsRequirements == false then
 						passesFilters = false
 					end
 				end
@@ -428,15 +479,23 @@ local UpdatePrunedSongs = function()
 
 		local main_sort_func = main_sort_funcs[GetMainSortPreference()]
 		local sub_sort_func = subsort_funcs[GetSubSortPreference()]
+		local sub_sort2_func = subsort_funcs[GetSubSort2Preference()]
 
 		table.sort(songs, function(a, b)
 			local main_a = main_sort_func(group, a)
 			local main_b = main_sort_func(group, b)
+			-- do main sort if no overlap
 			if main_a ~= main_b then
 				return main_a < main_b
 			end
-
-			return sub_sort_func(group, a) < sub_sort_func(group, b)
+			
+			-- do sub sort if main sort overlaps, but sub sort doesn't
+			if sub_sort_func(group, a) ~= sub_sort_func(group, b) then
+				return sub_sort_func(group, a) < sub_sort_func(group, b)
+			end
+			
+			-- otherwise do the 2nd subsort
+			return sub_sort2_func(group, a) < sub_sort2_func(group, b)
 		end)
 
 		pruned_songs_by_group[group] = songs

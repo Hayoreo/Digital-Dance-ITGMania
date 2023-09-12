@@ -2,8 +2,8 @@ SortMenuNeedsUpdating = false
 
 ----- Option names for each dynamic sort/filter value
 local MainCourseSortIndex = GetMainCourseSortPreference()
-local CurrentLowerDifficulty = GetLowerDifficultyFilter()
-local CurrentUpperDifficulty = GetUpperDifficultyFilter()
+local CurrentLowerMeter = GetLowerMeterFilter()
+local CurrentUpperMeter = GetUpperMeterFilter()
 local CurrentLowerBPM = GetLowerBPMFilter()
 local CurrentUpperBPM = GetUpperBPMFilter()
 local CurrentLowerLength = GetLowerLengthFilter()
@@ -15,7 +15,7 @@ local MainSort = {
 	"TITLE",
 	"LENGTH",
 	"BPM",
-	"DIFFICULTY",
+	"METER",
 }
 
 ---------- The text/number values and how they change based on scroll ----------
@@ -28,8 +28,8 @@ local t = Def.ActorFrame {
 ----- if it needs to refresh or not.
 InitializeDDSortMenuMessageCommand=function(self)
 	self:queuecommand("RefreshMainSort")
-	self:queuecommand("RefreshLowerDifficulty")
-	self:queuecommand("RefreshUpperDifficulty")
+	self:queuecommand("RefreshLowerMeter")
+	self:queuecommand("RefreshUpperMeter")
 	self:queuecommand("RefreshLowerBPM")
 	self:queuecommand("RefreshUpperBPM")
 	self:queuecommand("RefreshLowerLength")
@@ -45,10 +45,10 @@ SetSortMenuTopStatsMessageCommand = function(self)
 			SetMainCourseSortPreference(MainCourseSortIndex)
 		end
 		if DDSortMenuCursorPosition == 2 then
-			SetLowerDifficultyFilter(CurrentLowerDifficulty)
+			SetLowerMeterFilter(CurrentLowerMeter)
 		end	
 		if DDSortMenuCursorPosition == 3 then
-			SetUpperDifficultyFilter(CurrentUpperDifficulty)
+			SetUpperMeterFilter(CurrentUpperMeter)
 		end	
 		if DDSortMenuCursorPosition == 4 then
 			SetLowerBPMFilter(CurrentLowerBPM)
@@ -80,25 +80,25 @@ end,
 			end
 		end
 		if DDSortMenuCursorPosition == 2 then
-			if tonumber(CurrentLowerDifficulty) <= 0 then
-				CurrentLowerDifficulty = 30
-				self:queuecommand('UpdateLowerDifficulty')
+			if tonumber(CurrentLowerMeter) <= 0 then
+				CurrentLowerMeter = 30
+				self:queuecommand('UpdateLowerMeter')
 			else
-				CurrentLowerDifficulty = CurrentLowerDifficulty - 1
-				self:queuecommand('UpdateLowerDifficulty')
+				CurrentLowerMeter = CurrentLowerMeter - 1
+				self:queuecommand('UpdateLowerMeter')
 			end
 			if IsTopSortActive == true then
-				SetUpperDifficultyFilter(CurrentUpperDifficulty)
+				SetUpperMeterFilter(CurrentUpperMeter)
 			end
 			
 		end	
 		if DDSortMenuCursorPosition == 3 then
-			if tonumber(CurrentUpperDifficulty) <= 0 then
-				CurrentUpperDifficulty = 30
-				self:queuecommand('UpdateUpperDifficulty')
+			if tonumber(CurrentUpperMeter) <= 0 then
+				CurrentUpperMeter = 30
+				self:queuecommand('UpdateUpperMeter')
 			else
-				CurrentUpperDifficulty = CurrentUpperDifficulty - 1
-				self:queuecommand('UpdateUpperDifficulty')
+				CurrentUpperMeter = CurrentUpperMeter - 1
+				self:queuecommand('UpdateUpperMeter')
 			end
 		end	
 		if DDSortMenuCursorPosition == 4 then
@@ -177,21 +177,21 @@ end,
 			end
 		end
 		if DDSortMenuCursorPosition == 2 then
-			if tonumber(CurrentLowerDifficulty) >= 30 then
-				CurrentLowerDifficulty = 0
-				self:queuecommand('UpdateLowerDifficulty')
+			if tonumber(CurrentLowerMeter) >= 30 then
+				CurrentLowerMeter = 0
+				self:queuecommand('UpdateLowerMeter')
 			else
-				CurrentLowerDifficulty = CurrentLowerDifficulty + 1
-				self:queuecommand('UpdateLowerDifficulty')
+				CurrentLowerMeter = CurrentLowerMeter + 1
+				self:queuecommand('UpdateLowerMeter')
 			end
 		end	
 		if DDSortMenuCursorPosition == 3 then
-			if tonumber(CurrentUpperDifficulty) >= 30 then
-				CurrentUpperDifficulty = 0
-				self:queuecommand('UpdateUpperDifficulty')
+			if tonumber(CurrentUpperMeter) >= 30 then
+				CurrentUpperMeter = 0
+				self:queuecommand('UpdateUpperMeter')
 			else
-				CurrentUpperDifficulty = CurrentUpperDifficulty + 1
-				self:queuecommand('UpdateUpperDifficulty')
+				CurrentUpperMeter = CurrentUpperMeter + 1
+				self:queuecommand('UpdateUpperMeter')
 			end
 		end	
 		if DDSortMenuCursorPosition == 4 then
@@ -307,7 +307,7 @@ end,
 			end,
 		},
 	
-	----- Lower bound Difficulty Filter -----
+	----- Lower bound Meter Filter -----
 		Def.BitmapText{
 			Font="Miso/_miso",
 			InitCommand=function(self)
@@ -315,31 +315,31 @@ end,
 				self:horizalign(center)
 				self:xy(SCREEN_CENTER_X + 34,SCREEN_CENTER_Y - 110)
 				self:zoom(1.1)
-				if tonumber(GetLowerDifficultyFilter()) == 0 then
+				if tonumber(GetLowerMeterFilter()) == 0 then
 					self:settext("none")
 				else
-					self:settext(GetLowerDifficultyFilter())
+					self:settext(GetLowerMeterFilter())
 				end
 			end,
 			
-			RefreshLowerDifficultyCommand=function(self)
-				if tonumber(GetLowerDifficultyFilter()) == 0 then
+			RefreshLowerMeterCommand=function(self)
+				if tonumber(GetLowerMeterFilter()) == 0 then
 					self:settext("none")
 				else
-					self:settext(GetLowerDifficultyFilter())
+					self:settext(GetLowerMeterFilter())
 				end
 			end,
 		
-			UpdateLowerDifficultyCommand=function(self)
-				if tonumber(CurrentLowerDifficulty) == 0 then
+			UpdateLowerMeterCommand=function(self)
+				if tonumber(CurrentLowerMeter) == 0 then
 					self:settext("none")
 				else
-					self:settext(CurrentLowerDifficulty)
+					self:settext(CurrentLowerMeter)
 				end
 			end,
 		},
 		
-		----- Upper bound Difficulty Filter -----
+		----- Upper bound Meter Filter -----
 		Def.BitmapText{
 			Font="Miso/_miso",
 			InitCommand=function(self)
@@ -347,27 +347,27 @@ end,
 				self:horizalign(center)
 				self:xy(SCREEN_CENTER_X + 115,SCREEN_CENTER_Y - 110)
 				self:zoom(1.1)
-				if tonumber(GetUpperDifficultyFilter()) == 0 then
+				if tonumber(GetUpperMeterFilter()) == 0 then
 					self:settext("none")
 				else
-					self:settext(GetUpperDifficultyFilter())
+					self:settext(GetUpperMeterFilter())
 				end
 			end,
 		
-			RefreshUpperDifficultyCommand=function(self)
-				if tonumber(GetUpperDifficultyFilter()) == 0 then
+			RefreshUpperMeterCommand=function(self)
+				if tonumber(GetUpperMeterFilter()) == 0 then
 					self:settext("none")
 				else
-					self:settext(GetUpperDifficultyFilter())
+					self:settext(GetUpperMeterFilter())
 				end
 			end,
 		
 		
-			UpdateUpperDifficultyCommand=function(self)
-				if tonumber(CurrentUpperDifficulty) == 0 then
+			UpdateUpperMeterCommand=function(self)
+				if tonumber(CurrentUpperMeter) == 0 then
 					self:settext("none")
 				else
-					self:settext(CurrentUpperDifficulty)
+					self:settext(CurrentUpperMeter)
 				end
 			end,
 		},

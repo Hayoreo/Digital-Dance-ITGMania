@@ -8,7 +8,7 @@
 play_sample_music = function()
 	if GAMESTATE:IsCourseMode() then 
 		if isSortMenuVisible == false then
-			local musicpath = THEME:GetPathS("ScreenSelectMusic", "course music (loop).ogg")
+			local musicpath = THEME:GetPathS("", "OfCourse.ogg")
 			local sample_start = 0
 			local sample_len = 32
 			SOUND:DimMusic(PREFSMAN:GetPreference("SoundVolume")/2, math.huge)
