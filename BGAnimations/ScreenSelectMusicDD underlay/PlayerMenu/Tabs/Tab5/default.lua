@@ -1787,7 +1787,7 @@ af[#af+1] = Def.Quad{
 	end,
 }
 
--- The lower length text
+-- The upper length text
 af[#af+1] = Def.BitmapText{
 	Font="Miso/_miso",
 	Name=pn.."LowerLengthText",
@@ -1798,13 +1798,13 @@ af[#af+1] = Def.BitmapText{
 		local TextY = Parent:GetY()
 		local QuadWidth = Parent:GetZoomX()
 		local QuadHeight = Parent:GetZoomY()
-		if CurrentLowerLength == 0 then
+		if CurrentUpperLength == 0 then
 			self:settext("none")
-		elseif CurrentLowerLength > 0 and CurrentLowerLength < 600 then
-			self:settext(SecondsToMSS(CurrentLowerLength))
-		elseif CurrentLowerLength >= 600 and CurrentLowerLength < 3600 then
-			self:settext(SecondsToMMSS(CurrentLowerLength))
-		elseif CurrentLowerLength == 3600 then
+		elseif CurrentUpperLength > 0 and CurrentUpperLength < 600 then
+			self:settext(SecondsToMSS(CurrentUpperLength))
+		elseif CurrentUpperLength >= 600 and CurrentUpperLength < 3600 then
+			self:settext(SecondsToMMSS(CurrentUpperLength))
+		elseif CurrentUpperLength == 3600 then
 			self:settext("1:00:00")
 		end
 		self:horizalign(center):vertalign(middle):shadowlength(1)
