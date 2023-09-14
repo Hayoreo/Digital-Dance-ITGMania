@@ -4,7 +4,6 @@
 
 local setup = LoadActor("./Setup.lua")
 local ChartUpdater = LoadActor("./UpdateChart.lua")
-local LeavingScreenSelectMusicDD = false
 SearchInput = false
 ChartUpdater.UpdateCharts()
 
@@ -80,19 +79,14 @@ local t = Def.ActorFrame {
 		-- It should be safe to enable input for players now
 		self:queuecommand("EnableInput")
 	end,
-	ShowOptionsJawnMessageCommand=function(self)
-		if LeavingScreenSelectMusicDD == false then
-			LeavingScreenSelectMusicDD = true
-		end
-	end,
 	CodeMessageCommand=function(self, params)
 		-- I'm using Metrics-based code detection because the engine is already good at handling
 		-- simultaneous button presses,
 		-- as well as long input patterns (Exit from EventMode) and I see no need to
 		-- reinvent that functionality for the Lua InputCallback that I'm using otherwise.
 		
-		-- Don't do these codes if the sort menu is open or if going to the options screen
-		if not LeavingScreenSelectMusicDD and not LeadboardHasFocus and not IsSearchMenuVisible and not InputMenuHasFocus and not PlayerMenuP1 and not PlayerMenuP2 then
+		-- Don't do these codes if the player menu, test input, or leaderboard menu is open.
+		if not LeadboardHasFocus and not IsSearchMenuVisible and not InputMenuHasFocus and not PlayerMenuP1 and not PlayerMenuP2 then
 			if params.Name == "CloseCurrentFolder" or params.Name == "CloseCurrentFolder2" then
 				if Input.WheelWithFocus == SongWheel and GAMESTATE:IsPlayerEnabled(params.PlayerNumber) then
 					stop_music()
@@ -157,8 +151,6 @@ local t = Def.ActorFrame {
 	LoadActor("./SearchMenu/default.lua"),
 	-- For backing out of SSMDD.
 	LoadActor('./EscapeFromEventMode.lua'),
-	-- For transitioning to either gameplay or player options.
-	LoadActor('./OptionsMessage.lua'),
 }
 
 return t

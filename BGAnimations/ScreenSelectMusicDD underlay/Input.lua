@@ -13,8 +13,6 @@ local screen = SCREENMAN:GetTopScreen()
 -- we'll update this later via latejoin if needed
 local Players = GAMESTATE:GetHumanPlayers()
 
-local didSelectSong = false
-local PressStartForOptions = false
 IsSearchMenuVisible = false
 InputMenuHasFocus = false
 LeadboardHasFocus = false
@@ -32,23 +30,17 @@ local SwitchInputFocus = function(button)
 	if button == "Start" or "DeviceButton_left mouse button" and not IsSearchMenuVisible then
 		if t.WheelWithFocus == GroupWheel then
 			if NameOfGroup == "RANDOM-PORTAL" then
-				didSelectSong = true
-				TransitionTime = 0
-				PressStartForOptions = true
 				SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
-				MESSAGEMAN:Broadcast('ShowOptionsJawn')
 				t.WheelWithFocus = SongWheel
+				SCREENMAN:SetNewScreen("ScreenGameplay")
 			else
 				MESSAGEMAN:Broadcast("SwitchFocusToSongs")
 				t.WheelWithFocus = SongWheel
 			end
 
 		elseif t.WheelWithFocus == SongWheel then
-			didSelectSong = true
-			TransitionTime = 0
-			PressStartForOptions = true
 			SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
-			MESSAGEMAN:Broadcast('ShowOptionsJawn')
+			SCREENMAN:SetNewScreen("ScreenGameplay")
 		end
 	elseif button == "Select" or button == "Back" then
 		if t.WheelWithFocus == SongWheel and not IsSearchMenuVisible then
@@ -153,7 +145,7 @@ t.Handler = function(event)
 		if IsMouseOnScreen() and ThemePrefs.Get("MouseInput") then
 			if not LeadboardHasFocus and not InputMenuHasFocus then
 				-- Close the song folder and switch to group wheel if mouse wheel is pressed.
-				if event.DeviceInput.button == "DeviceButton_middle mouse button" and t.WheelWithFocus == SongWheel and not didSelectSong then
+				if event.DeviceInput.button == "DeviceButton_middle mouse button" and t.WheelWithFocus == SongWheel then
 					stop_music()
 					SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "expand.ogg") )
 					MESSAGEMAN:Broadcast("CloseCurrentFolder")
@@ -161,7 +153,7 @@ t.Handler = function(event)
 				end
 				
 				-- Scroll the song wheel up/down with the mouse wheel.
-				if event.DeviceInput.button == "DeviceButton_mousewheel up" and not PressStartForOptions then
+				if event.DeviceInput.button == "DeviceButton_mousewheel up" then
 					-- don't scroll the wheel for P1 difficulty select if they are enabled
 					if IsMouseGucci(0, _screen.h - 152, SCREEN_WIDTH/3, 50, "left", "bottom") and not PlayerMenuP1 then
 						if GAMESTATE:IsHumanPlayer("PlayerNumber_P1") then
@@ -200,7 +192,7 @@ t.Handler = function(event)
 						stop_music()
 						ChartUpdater.UpdateCharts()
 					end
-				elseif event.DeviceInput.button == "DeviceButton_mousewheel down" and not PressStartForOptions then
+				elseif event.DeviceInput.button == "DeviceButton_mousewheel down" then
 					-- don't scroll the wheel for P1 difficulty select if they are enabled
 					if IsMouseGucci(0, _screen.h - 152, SCREEN_WIDTH/3, 50, "left", "bottom") and not PlayerMenuP1 then
 						if GAMESTATE:IsHumanPlayer("PlayerNumber_P1") then
@@ -242,7 +234,7 @@ t.Handler = function(event)
 				end
 				
 				-- Jump the songwheel to a song/group clicked on by the left mouse button. Or toggle player menu on.
-				if event.DeviceInput.button == "DeviceButton_left mouse button" and not PressStartForOptions then
+				if event.DeviceInput.button == "DeviceButton_left mouse button" then
 					for i=1, 5 do
 						if IsMouseGucci(_screen.cx, (_screen.cy + 45) - (i*25), WheelWidth, 24) then
 							t.WheelWithFocus:scroll_by_amount(-i)
@@ -264,11 +256,8 @@ t.Handler = function(event)
 					if IsMouseGucci(_screen.cx, (_screen.cy + 45), WheelWidth, 24) then
 						if t.WheelWithFocus == SongWheel and (not PlayerMenuP1 and not PlayerMenuP2) then
 							if t.WheelWithFocus:get_info_at_focus_pos() ~= "CloseThisFolder" then
-								didSelectSong = true
-								TransitionTime = 0
-								PressStartForOptions = true
 								SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
-								MESSAGEMAN:Broadcast('ShowOptionsJawn')
+								SCREENMAN:SetNewScreen("ScreenGameplay")
 							elseif t.WheelWithFocus:get_info_at_focus_pos() == "CloseThisFolder" then
 								SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "expand.ogg") )
 								MESSAGEMAN:Broadcast("CloseCurrentFolder")
@@ -277,11 +266,8 @@ t.Handler = function(event)
 							end
 						elseif t.WheelWithFocus == GroupWheel then
 							if NameOfGroup == "RANDOM-PORTAL" then
-								didSelectSong = true
-								TransitionTime = 0
-								PressStartForOptions = true
 								SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
-								MESSAGEMAN:Broadcast('ShowOptionsJawn')
+								SCREENMAN:SetNewScreen("ScreenGameplay")
 								t.WheelWithFocus = SongWheel
 							else
 								SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "expand.ogg") )
@@ -388,10 +374,6 @@ t.Handler = function(event)
 							end
 						end
 					end
-				elseif event.DeviceInput.button == "DeviceButton_left mouse button" and PressStartForOptions then
-					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
-					SCREENMAN:SetNewScreen("ScreenPlayerOptions")
-					return false
 				end
 			--- Test input mouse controls
 			elseif InputMenuHasFocus and not LeadboardHasFocus then
@@ -575,19 +557,12 @@ t.Handler = function(event)
 
 		if event.GameButton == "Back" and event.type == "InputEventType_FirstPress" and event.type ~= "InputEventType_Repeat" then
 			if not PlayerMenuP1 and not PlayerMenuP2 then
-				if didSelectSong then
-					didSelectSong = false
-					PressStartForOptions = false
-					MESSAGEMAN:Broadcast('HideOptionsJawn')
+				if event.PlayerNumber == "PlayerNumber_P1" and PlayerMenuP1 == nil then
+					PlayerMenuP1 = false
 					return false
-				else
-					if event.PlayerNumber == "PlayerNumber_P1" and PlayerMenuP1 == nil then
-						PlayerMenuP1 = false
-						return false
-					elseif event.PlayerNumber == "PlayerNumber_P2" and PlayerMenuP2 == nil then
-						PlayerMenuP2 = false
-						return false
-					end
+				elseif event.PlayerNumber == "PlayerNumber_P2" and PlayerMenuP2 == nil then
+					PlayerMenuP2 = false
+					return false
 				end
 				SCREENMAN:GetTopScreen():SetNextScreenName( Branch.SSMCancel() ):StartTransitioningScreen("SM_GoToNextScreen")
 			end
@@ -601,17 +576,9 @@ t.Handler = function(event)
 		-- proceed to the next wheel
 		if event.GameButton == "Start" and not IsSearchMenuVisible then
 			if event.type == "InputEventType_FirstPress" then
-				if didSelectSong then
-					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
-					SCREENMAN:SetNewScreen("ScreenPlayerOptions")
-					return false
-				end
-				
 				if NameOfGroup == "RANDOM-PORTAL" then
-					didSelectSong = true
-					PressStartForOptions = true
 					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
-					MESSAGEMAN:Broadcast('ShowOptionsJawn')
+					SCREENMAN:SetNewScreen("ScreenGameplay")
 					return
 				end
 
@@ -632,8 +599,6 @@ t.Handler = function(event)
 					t.WheelWithFocus.container:queuecommand("Unhide")
 				end
 			end
-		elseif didSelectSong then
-			return false
 		-- navigate the wheel left and right
 		elseif event.GameButton == "MenuRight" and not holdingCtrl then
 			t.WheelWithFocus:scroll_by_amount(1)
