@@ -189,19 +189,19 @@ af[#af+1] = Def.Quad{
 				if PlayerSpeedType ~= "C" then
 					PlayerSpeedType = "C"
 					mods.SpeedModType = "C"
-					MESSAGEMAN:Broadcast("SpeedTypeHasChanged", {PastSpeedType, PlayerSpeedType})
+					MESSAGEMAN:Broadcast("SpeedTypeHasChanged"..pn, {PastSpeedType, PlayerSpeedType})
 				end
 			elseif CurrentColumn == 2 then
 				if PlayerSpeedType ~= "M" then
 					PlayerSpeedType = "M"
 					mods.SpeedModType = "M"
-					MESSAGEMAN:Broadcast("SpeedTypeHasChanged", {PastSpeedType, PlayerSpeedType})
+					MESSAGEMAN:Broadcast("SpeedTypeHasChanged"..pn, {PastSpeedType, PlayerSpeedType})
 				end
 			elseif CurrentColumn == 3 then
 				if PlayerSpeedType ~= "X" then
 					PlayerSpeedType = "X"
 					mods.SpeedModType = "X"
-					MESSAGEMAN:Broadcast("SpeedTypeHasChanged", {PastSpeedType, PlayerSpeedType})
+					MESSAGEMAN:Broadcast("SpeedTypeHasChanged"..pn, {PastSpeedType, PlayerSpeedType})
 				end
 			end
 			local Parent = self:GetParent():GetChild(pn.."SpeedTypes"..CurrentColumn)
@@ -214,6 +214,79 @@ af[#af+1] = Def.Quad{
 			:x(TextXPosition)
 			:y(TextYPosition + TextHeight/3)
 		end
+	end,
+	LeftMouseClickUpdateMessageCommand=function(self)
+		local CurrentTab, CurrentRow, CurrentColumn
+		if pn == "P1" then
+			CurrentTab = CurrentTabP1
+			CurrentRow = CurrentRowP1
+			CurrentColumn = CurrentColumnP1
+		elseif pn == "P2" then
+			CurrentTab = CurrentTabP2
+			CurrentRow = CurrentRowP2
+			CurrentColumn = CurrentColumnP2
+		end
+		if CurrentTab ~= 1 then return end
+		for i=1, #SpeedTypes do
+			local Parent = self:GetParent():GetChild(pn.."SpeedTypes"..i)
+			local ObjectZoom = Parent:GetZoom()
+			local ObjectWidth = Parent:GetWidth() * ObjectZoom
+			local ObjectHeight = Parent:GetHeight()
+			local ObjectX = Parent:GetX()
+			local ObjectY = Parent:GetY()
+			local HAlign = Parent:GetHAlign()
+			local VAlign = Parent:GetVAlign()
+			ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+			ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+			
+			if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 1 then
+				if i == 1 then
+					CurrentRow = 1
+					CurrentColumn = 1
+					if PlayerSpeedType ~= "C" then
+						PlayerSpeedType = "C"
+						mods.SpeedModType = "C"
+						MESSAGEMAN:Broadcast("SpeedTypeHasChanged"..pn, {PastSpeedType, PlayerSpeedType})
+					end
+				elseif i == 2 then
+					CurrentRow = 1
+					CurrentColumn = 2
+					if PlayerSpeedType ~= "M" then
+						PlayerSpeedType = "M"
+						mods.SpeedModType = "M"
+						MESSAGEMAN:Broadcast("SpeedTypeHasChanged"..pn, {PastSpeedType, PlayerSpeedType})
+					end
+				elseif i == 3 then
+					CurrentRow = 1
+					CurrentColumn = 3
+					if PlayerSpeedType ~= "X" then
+						PlayerSpeedType = "X"
+						mods.SpeedModType = "X"
+						MESSAGEMAN:Broadcast("SpeedTypeHasChanged"..pn, {PastSpeedType, PlayerSpeedType})
+					end
+				end
+				local Parent2 = self:GetParent():GetChild(pn.."SpeedTypes"..i)
+				local TextZoom = Parent2:GetZoom()
+				local TextXPosition = Parent2:GetX()
+				local TextYPosition = Parent2:GetY()
+				local TextHeight = Parent2:GetHeight()
+				local TextWidth = Parent2:GetWidth() * TextZoom
+				if pn == "P1" then
+					CurrentTabP1 = CurrentTab
+					CurrentRowP1 = CurrentRow
+					CurrentColumnP1 = CurrentColumn
+				elseif pn == "P2" then
+					CurrentTabP2 = CurrentTab
+					CurrentRowP2 = CurrentRow
+					CurrentColumnP2 = CurrentColumn
+				end
+				self:zoomto(TextWidth, 3)
+				:x(TextXPosition)
+				:y(TextYPosition + TextHeight/3)
+				MESSAGEMAN:Broadcast("UpdateMenuCursorPosition"..pn)
+			end
+		end
+	
 	end,
 }
 
@@ -249,6 +322,44 @@ af[#af+1] = Def.Quad{
 				self:visible(false)
 			end
 		end
+	end,
+	LeftMouseClickUpdateMessageCommand=function(self)
+		local CurrentTab, CurrentRow, CurrentColumn
+		if pn == "P1" then
+			CurrentTab = CurrentTabP1
+			CurrentRow = CurrentRowP1
+			CurrentColumn = CurrentColumnP1
+		elseif pn == "P2" then
+			CurrentTab = CurrentTabP2
+			CurrentRow = CurrentRowP2
+			CurrentColumn = CurrentColumnP2
+		end
+		if CurrentTab ~= 1 then return end
+		local Parent = self:GetParent():GetChild(pn.."SpeedModBox1")
+		local ObjectWidth = Parent:GetZoomX()
+		local ObjectHeight = Parent:GetZoomY()
+		local ObjectX = Parent:GetX()
+		local ObjectY = Parent:GetY()
+		local HAlign = Parent:GetHAlign()
+		local VAlign = Parent:GetVAlign()
+		ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+		ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+		
+		if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 1 then
+			CurrentRow = 2
+			CurrentColumn = 1
+			if pn == "P1" then
+				CurrentTabP1 = CurrentTab
+				CurrentRowP1 = CurrentRow
+				CurrentColumnP1 = CurrentColumn
+			elseif pn == "P2" then
+				CurrentTabP2 = CurrentTab
+				CurrentRowP2 = CurrentRow
+				CurrentColumnP2 = CurrentColumn
+			end
+			MESSAGEMAN:Broadcast("UpdateMenuCursorPosition"..pn, {})
+		end
+	
 	end,
 }
 
@@ -359,7 +470,7 @@ af[#af+1] = Def.BitmapText{
 			end
 		end
 	end,
-	SpeedTypeHasChangedMessageCommand=function(self, params)
+	["SpeedTypeHasChanged"..pn.."MessageCommand"]=function(self, params)
 		PastSpeedType = PlayerSpeedType
 		local CurBPM = 150
 		if GAMESTATE:GetCurrentSong() ~= nil then
@@ -643,6 +754,44 @@ af[#af+1] = Def.Quad{
 			end
 		end
 	end,
+	LeftMouseClickUpdateMessageCommand=function(self)
+		local CurrentTab, CurrentRow, CurrentColumn
+		if pn == "P1" then
+			CurrentTab = CurrentTabP1
+			CurrentRow = CurrentRowP1
+			CurrentColumn = CurrentColumnP1
+		elseif pn == "P2" then
+			CurrentTab = CurrentTabP2
+			CurrentRow = CurrentRowP2
+			CurrentColumn = CurrentColumnP2
+		end
+		if CurrentTab ~= 1 then return end
+		local Parent = self:GetParent():GetChild(pn.."MiniBox1")
+		local ObjectWidth = Parent:GetZoomX()
+		local ObjectHeight = Parent:GetZoomY()
+		local ObjectX = Parent:GetX()
+		local ObjectY = Parent:GetY()
+		local HAlign = Parent:GetHAlign()
+		local VAlign = Parent:GetVAlign()
+		ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+		ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+		
+		if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 1 then
+			CurrentRow = 3
+			CurrentColumn = 1
+			if pn == "P1" then
+				CurrentTabP1 = CurrentTab
+				CurrentRowP1 = CurrentRow
+				CurrentColumnP1 = CurrentColumn
+			elseif pn == "P2" then
+				CurrentTabP2 = CurrentTab
+				CurrentRowP2 = CurrentRow
+				CurrentColumnP2 = CurrentColumn
+			end
+			MESSAGEMAN:Broadcast("UpdateMenuCursorPosition"..pn, {})
+		end
+	
+	end,
 }
 
 local PlayerMini = mods.Mini:gsub("%%","")
@@ -833,7 +982,7 @@ for i=1,#Turns do
 		Font="Common Normal",
 		Name=pn.."TurnCheck"..i,
 		InitCommand=function(self)
-			local zoom = 0.37
+			local zoom = 0.38
 			local Parent = self:GetParent():GetChild(pn.."TurnBox"..i)
 			local QuadWidth = Parent:GetZoomX()
 			local QuadHeight = Parent:GetZoomY()
@@ -957,6 +1106,110 @@ for i=1,#Turns do
 				end
 			end
 		end,
+		LeftMouseClickUpdateMessageCommand=function(self)
+			local CurrentTab, CurrentRow, CurrentColumn
+			if pn == "P1" then
+				CurrentTab = CurrentTabP1
+				CurrentRow = CurrentRowP1
+				CurrentColumn = CurrentColumnP1
+			elseif pn == "P2" then
+				CurrentTab = CurrentTabP2
+				CurrentRow = CurrentRowP2
+				CurrentColumn = CurrentColumnP2
+			end
+			if CurrentTab ~= 1 then return end
+			-- yooooooo the j!!!!
+			for j=1, #Turns do
+				local Parent = self:GetParent():GetChild(pn.."TurnBox"..i)
+				local ObjectWidth = Parent:GetZoomX()
+				local ObjectHeight = Parent:GetZoomY()
+				local ObjectX = Parent:GetX()
+				local ObjectY = Parent:GetY()
+				local HAlign = Parent:GetHAlign()
+				local VAlign = Parent:GetVAlign()
+				ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+				ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+				
+				if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 1 then
+					if j == 1 and j == i then
+						CurrentRow = 4
+						CurrentColumn = 1
+						if IsMirror then
+							IsMirror = false
+							SetEngineMod(player, "Mirror", IsMirror)
+							self:settext("")
+						elseif not IsMirror then
+							IsMirror = true
+							SetEngineMod(player, "Mirror", IsMirror)
+							self:settext("✅")
+						end
+						break
+					elseif j == 2 and j == i then
+						CurrentRow = 4
+						CurrentColumn = 2
+						if IsLeft then
+							IsLeft = false
+							SetEngineMod(player, "Left", IsLeft)
+							self:settext("")
+						elseif not IsLeft then
+							IsLeft = true
+							SetEngineMod(player, "Left", IsLeft)
+							self:settext("✅")
+						end
+						break
+					elseif j == 3 and j == i then
+						CurrentRow = 4
+						CurrentColumn = 3
+						if IsRight then
+							IsRight = false
+							SetEngineMod(player, "Right", IsRight)
+							self:settext("")
+						elseif not IsRight then
+							IsRight = true
+							SetEngineMod(player, "Right", IsRight)
+							self:settext("✅")
+						end
+						break
+					elseif j == 4 and j == i then
+						CurrentRow = 4
+						CurrentColumn = 4
+						if IsShuffle then
+							IsShuffle = false
+							SetEngineMod(player, "Shuffle", IsShuffle)
+							self:settext("")
+						elseif not IsShuffle then
+							IsShuffle = true
+							SetEngineMod(player, "Shuffle", IsShuffle)
+							self:settext("✅")
+						end
+						break
+					elseif j == 5 and j == i then
+						CurrentRow = 4
+						CurrentColumn = 5
+						if IsBlender then
+							IsBlender = false
+							SetEngineMod(player, "SuperShuffle", IsBlender)
+							self:settext("")
+						elseif not IsBlender then
+							IsBlender = true
+							SetEngineMod(player, "SuperShuffle",IsBlender)
+							self:settext("✅")
+						end
+						break
+					end
+				end
+			end
+			if pn == "P1" then
+				CurrentTabP1 = CurrentTab
+				CurrentRowP1 = CurrentRow
+				CurrentColumnP1 = CurrentColumn
+			elseif pn == "P2" then
+				CurrentTabP2 = CurrentTab
+				CurrentRowP2 = CurrentRow
+				CurrentColumnP2 = CurrentColumn
+			end
+			MESSAGEMAN:Broadcast("UpdateMenuCursorPosition"..pn, {})
+		end,
 	}
 end
 
@@ -993,6 +1246,44 @@ af[#af+1] = Def.Quad{
 				self:visible(false)
 			end
 		end
+	end,
+	LeftMouseClickUpdateMessageCommand=function(self)
+		local CurrentTab, CurrentRow, CurrentColumn
+		if pn == "P1" then
+			CurrentTab = CurrentTabP1
+			CurrentRow = CurrentRowP1
+			CurrentColumn = CurrentColumnP1
+		elseif pn == "P2" then
+			CurrentTab = CurrentTabP2
+			CurrentRow = CurrentRowP2
+			CurrentColumn = CurrentColumnP2
+		end
+		if CurrentTab ~= 1 then return end
+		local Parent = self:GetParent():GetChild(pn.."MusicRateBox1")
+		local ObjectWidth = Parent:GetZoomX()
+		local ObjectHeight = Parent:GetZoomY()
+		local ObjectX = Parent:GetX()
+		local ObjectY = Parent:GetY()
+		local HAlign = Parent:GetHAlign()
+		local VAlign = Parent:GetVAlign()
+		ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+		ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+		
+		if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 1 then
+			CurrentRow = 5
+			CurrentColumn = 1
+			if pn == "P1" then
+				CurrentTabP1 = CurrentTab
+				CurrentRowP1 = CurrentRow
+				CurrentColumnP1 = CurrentColumn
+			elseif pn == "P2" then
+				CurrentTabP2 = CurrentTab
+				CurrentRowP2 = CurrentRow
+				CurrentColumnP2 = CurrentColumn
+			end
+			MESSAGEMAN:Broadcast("UpdateMenuCursorPosition"..pn, {})
+		end
+	
 	end,
 }
 
@@ -1054,17 +1345,17 @@ af[#af+1] = Def.BitmapText{
 		if CurrentTab == 1 and CurrentRow == 5 then
 			if params[1] == "left" then
 				if CurrentRateMod <= MinRate then
-					CurrentRateMod = MaxRate
+					CurrentRateMod = round(MaxRate)
 				else
-					CurrentRateMod = CurrentRateMod - 0.01
+					CurrentRateMod = round(CurrentRateMod - 0.01, 2)
 				end
 				self:settext(CurrentRateMod)
 					:queuecommand("SetMod")
 			elseif params[1] == "right" then
 				if CurrentRateMod >= MaxRate then
-					CurrentRateMod = MinRate
+					CurrentRateMod = round(MinRate)
 				else
-					CurrentRateMod = CurrentRateMod + 0.01
+					CurrentRateMod = round(CurrentRateMod + 0.01, 2)
 				end
 				self:settext(CurrentRateMod)
 					:queuecommand("SetMod")

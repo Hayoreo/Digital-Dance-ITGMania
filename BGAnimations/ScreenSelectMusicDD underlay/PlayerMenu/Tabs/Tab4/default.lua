@@ -291,6 +291,97 @@ for i=1,#InsertMods do
 				end
 			end
 		end,
+		LeftMouseClickUpdateMessageCommand=function(self)
+			local CurrentTab, CurrentRow, CurrentColumn
+			if pn == "P1" then
+				CurrentTab = CurrentTabP1
+				CurrentRow = CurrentRowP1
+				CurrentColumn = CurrentColumnP1
+			elseif pn == "P2" then
+				CurrentTab = CurrentTabP2
+				CurrentRow = CurrentRowP2
+				CurrentColumn = CurrentColumnP2
+			end
+			if CurrentTab ~= 4 then return end
+			-- yooooooo the j!!!!
+			for j=1, #InsertMods do
+				local Parent = self:GetParent():GetChild(pn.."InsertBox"..i)
+				local ObjectWidth = Parent:GetZoomX()
+				local ObjectHeight = Parent:GetZoomY()
+				local ObjectX = Parent:GetX()
+				local ObjectY = Parent:GetY()
+				local HAlign = Parent:GetHAlign()
+				local VAlign = Parent:GetVAlign()
+				ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+				ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+				
+				if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 4 then
+					if j == 1 and j == i then
+						CurrentRow = 1
+						CurrentColumn = 1
+						if IsWide == true then
+							IsWide = false
+							SetEngineMod(player, "Wide", false)
+							self:settext("")
+						elseif IsWide == false then
+							IsWide = true
+							SetEngineMod(player, "Wide", true)
+							self:settext("✅")
+						end
+						break
+					elseif j == 2 and j == i then
+						CurrentRow = 1
+						CurrentColumn = 2
+						if IsBig then
+							IsBig = false
+							SetEngineMod(player, "Big", false)
+							self:settext("")
+						elseif not IsBig then
+							IsBig = true
+							SetEngineMod(player, "Big", true)
+							self:settext("✅")
+						end
+						break
+					elseif j == 3 and j == i then
+						CurrentRow = 1
+						CurrentColumn = 3
+						if IsQuick then
+							IsQuick = false
+							SetEngineMod(player, "Quick", false)
+							self:settext("")
+						elseif not IsQuick then
+							IsQuick = true
+							SetEngineMod(player, "Quick", true)
+							self:settext("✅")
+						end
+						break
+					elseif j == 4 and j == i then
+						CurrentRow = 1
+						CurrentColumn = 4
+						if IsBMRize then
+							IsBMRize = false
+							SetEngineMod(player, "BMRize", false)
+							self:settext("")
+						elseif not IsBMRize then
+							IsBMRize = true
+							SetEngineMod(player, "BMRize", true)
+							self:settext("✅")
+						end
+						break
+					end
+				end
+			end
+			if pn == "P1" then
+				CurrentTabP1 = CurrentTab
+				CurrentRowP1 = CurrentRow
+				CurrentColumnP1 = CurrentColumn
+			elseif pn == "P2" then
+				CurrentTabP2 = CurrentTab
+				CurrentRowP2 = CurrentRow
+				CurrentColumnP2 = CurrentColumn
+			end
+			MESSAGEMAN:Broadcast("UpdateMenuCursorPosition"..pn, {})
+		end,
 	}
 end
 
@@ -486,6 +577,84 @@ for i=1,#InsertMods2 do
 					end
 				end
 			end
+		end,
+		LeftMouseClickUpdateMessageCommand=function(self)
+			local CurrentTab, CurrentRow, CurrentColumn
+			if pn == "P1" then
+				CurrentTab = CurrentTabP1
+				CurrentRow = CurrentRowP1
+				CurrentColumn = CurrentColumnP1
+			elseif pn == "P2" then
+				CurrentTab = CurrentTabP2
+				CurrentRow = CurrentRowP2
+				CurrentColumn = CurrentColumnP2
+			end
+			if CurrentTab ~= 4 then return end
+			-- yooooooo the j!!!!
+			for j=1, #InsertMods2 do
+				local Parent = self:GetParent():GetChild(pn.."InsertBox2_"..i)
+				local ObjectWidth = Parent:GetZoomX()
+				local ObjectHeight = Parent:GetZoomY()
+				local ObjectX = Parent:GetX()
+				local ObjectY = Parent:GetY()
+				local HAlign = Parent:GetHAlign()
+				local VAlign = Parent:GetVAlign()
+				ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+				ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+				
+				if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 4 then
+					if j == 1 and j == i then
+						CurrentRow = 2
+						CurrentColumn = 1
+						if IsSkippy == true then
+							IsSkippy = false
+							SetEngineMod(player, "Skippy", IsSkippy)
+							self:settext("")
+						elseif IsSkippy == false then
+							IsSkippy = true
+							SetEngineMod(player, "Skippy", IsSkippy)
+							self:settext("✅")
+						end
+						break
+					elseif j == 2 and j == i then
+						CurrentRow = 2
+						CurrentColumn = 2
+						if IsEcho then
+							IsEcho = false
+							SetEngineMod(player, "Echo", IsEcho)
+							self:settext("")
+						elseif not IsEcho then
+							IsEcho = true
+							SetEngineMod(player, "Echo", IsEcho)
+							self:settext("✅")
+						end
+						break
+					elseif j == 3 and j == i then
+						CurrentRow = 2
+						CurrentColumn = 3
+						if IsStomp then
+							IsStomp = false
+							SetEngineMod(player, "Stomp", IsStomp)
+							self:settext("")
+						elseif not IsStomp then
+							IsStomp = true
+							SetEngineMod(player, "Stomp", IsStomp)
+							self:settext("✅")
+						end
+						break
+					end
+				end
+			end
+			if pn == "P1" then
+				CurrentTabP1 = CurrentTab
+				CurrentRowP1 = CurrentRow
+				CurrentColumnP1 = CurrentColumn
+			elseif pn == "P2" then
+				CurrentTabP2 = CurrentTab
+				CurrentRowP2 = CurrentRow
+				CurrentColumnP2 = CurrentColumn
+			end
+			MESSAGEMAN:Broadcast("UpdateMenuCursorPosition"..pn, {})
 		end,
 	}
 end
@@ -712,6 +881,97 @@ for i=1,#RemoveMods do
 				end
 			end
 		end,
+		LeftMouseClickUpdateMessageCommand=function(self)
+			local CurrentTab, CurrentRow, CurrentColumn
+			if pn == "P1" then
+				CurrentTab = CurrentTabP1
+				CurrentRow = CurrentRowP1
+				CurrentColumn = CurrentColumnP1
+			elseif pn == "P2" then
+				CurrentTab = CurrentTabP2
+				CurrentRow = CurrentRowP2
+				CurrentColumn = CurrentColumnP2
+			end
+			if CurrentTab ~= 4 then return end
+			-- yooooooo the j!!!!
+			for j=1, #RemoveMods do
+				local Parent = self:GetParent():GetChild(pn.."RemoveBox"..i)
+				local ObjectWidth = Parent:GetZoomX()
+				local ObjectHeight = Parent:GetZoomY()
+				local ObjectX = Parent:GetX()
+				local ObjectY = Parent:GetY()
+				local HAlign = Parent:GetHAlign()
+				local VAlign = Parent:GetVAlign()
+				ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+				ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+				
+				if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 4 then
+					if j == 1 and j == i then
+						CurrentRow = 3
+						CurrentColumn = 1
+						if Little == true then
+							Little = false
+							SetEngineMod(player, "Little", Little)
+							self:settext("")
+						elseif Little == false then
+							Little = true
+							SetEngineMod(player, "Little", Little)
+							self:settext("✅")
+						end
+						break
+					elseif j == 2 and j == i then
+						CurrentRow = 3
+						CurrentColumn = 2
+						if NoMines then
+							NoMines = false
+							SetEngineMod(player, "NoMines", NoMines)
+							self:settext("")
+						elseif not NoMines then
+							NoMines = true
+							SetEngineMod(player, "NoMines", NoMines)
+							self:settext("✅")
+						end
+						break
+					elseif j == 3 and j == i then
+						CurrentRow = 3
+						CurrentColumn = 3
+						if NoHolds then
+							NoHolds = false
+							SetEngineMod(player, "NoHolds", NoHolds)
+							self:settext("")
+						elseif not NoHolds then
+							NoHolds = true
+							SetEngineMod(player, "NoHolds", NoHolds)
+							self:settext("✅")
+						end
+						break
+					elseif j == 4 and j == i then
+						CurrentRow = 3
+						CurrentColumn = 4
+						if NoJumps then
+							NoJumps = false
+							SetEngineMod(player, "NoJumps", NoJumps)
+							self:settext("")
+						elseif not NoJumps then
+							NoJumps = true
+							SetEngineMod(player, "NoJumps", NoJumps)
+							self:settext("✅")
+						end
+						break
+					end
+				end
+			end
+			if pn == "P1" then
+				CurrentTabP1 = CurrentTab
+				CurrentRowP1 = CurrentRow
+				CurrentColumnP1 = CurrentColumn
+			elseif pn == "P2" then
+				CurrentTabP2 = CurrentTab
+				CurrentRowP2 = CurrentRow
+				CurrentColumnP2 = CurrentColumn
+			end
+			MESSAGEMAN:Broadcast("UpdateMenuCursorPosition"..pn, {})
+		end,
 	}
 end
 
@@ -922,6 +1182,97 @@ for i=1,#RemoveMods2 do
 				end
 			end
 		end,
+		LeftMouseClickUpdateMessageCommand=function(self)
+			local CurrentTab, CurrentRow, CurrentColumn
+			if pn == "P1" then
+				CurrentTab = CurrentTabP1
+				CurrentRow = CurrentRowP1
+				CurrentColumn = CurrentColumnP1
+			elseif pn == "P2" then
+				CurrentTab = CurrentTabP2
+				CurrentRow = CurrentRowP2
+				CurrentColumn = CurrentColumnP2
+			end
+			if CurrentTab ~= 4 then return end
+			-- yooooooo the j!!!!
+			for j=1, #RemoveMods2 do
+				local Parent = self:GetParent():GetChild(pn.."RemoveBox2_"..i)
+				local ObjectWidth = Parent:GetZoomX()
+				local ObjectHeight = Parent:GetZoomY()
+				local ObjectX = Parent:GetX()
+				local ObjectY = Parent:GetY()
+				local HAlign = Parent:GetHAlign()
+				local VAlign = Parent:GetVAlign()
+				ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+				ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+				
+				if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 4 then
+					if j == 1 and j == i then
+						CurrentRow = 4
+						CurrentColumn = 1
+						if NoHands == true then
+							NoHands = false
+							SetEngineMod(player, "NoHands", NoHands)
+							self:settext("")
+						elseif NoHands == false then
+							NoHands = true
+							SetEngineMod(player, "NoHands", NoHands)
+							self:settext("✅")
+						end
+						break
+					elseif j == 2 and j == i then
+						CurrentRow = 4
+						CurrentColumn = 2
+						if NoQuads then
+							NoQuads = false
+							SetEngineMod(player, "NoQuads", NoQuads)
+							self:settext("")
+						elseif not NoQuads then
+							NoQuads = true
+							SetEngineMod(player, "NoQuads", NoQuads)
+							self:settext("✅")
+						end
+						break
+					elseif j == 3 and j == i then
+						CurrentRow = 4
+						CurrentColumn = 3
+						if NoLifts then
+							NoLifts = false
+							SetEngineMod(player, "NoLifts", NoLifts)
+							self:settext("")
+						elseif not NoLifts then
+							NoLifts = true
+							SetEngineMod(player, "NoLifts", NoLifts)
+							self:settext("✅")
+						end
+						break
+					elseif j == 4 and j == i then
+						CurrentRow = 4
+						CurrentColumn = 4
+						if NoFakes then
+							NoFakes = false
+							SetEngineMod(player, "NoFakes", NoFakes)
+							self:settext("")
+						elseif not NoFakes then
+							NoFakes = true
+							SetEngineMod(player, "NoFakes", NoFakes)
+							self:settext("✅")
+						end
+						break
+					end
+				end
+			end
+			if pn == "P1" then
+				CurrentTabP1 = CurrentTab
+				CurrentRowP1 = CurrentRow
+				CurrentColumnP1 = CurrentColumn
+			elseif pn == "P2" then
+				CurrentTabP2 = CurrentTab
+				CurrentRowP2 = CurrentRow
+				CurrentColumnP2 = CurrentColumn
+			end
+			MESSAGEMAN:Broadcast("UpdateMenuCursorPosition"..pn, {})
+		end,
 	}
 end
 
@@ -1108,6 +1459,71 @@ for i=1,#Notes2HoldsMods do
 				end
 			end
 		end,
+		LeftMouseClickUpdateMessageCommand=function(self)
+			local CurrentTab, CurrentRow, CurrentColumn
+			if pn == "P1" then
+				CurrentTab = CurrentTabP1
+				CurrentRow = CurrentRowP1
+				CurrentColumn = CurrentColumnP1
+			elseif pn == "P2" then
+				CurrentTab = CurrentTabP2
+				CurrentRow = CurrentRowP2
+				CurrentColumn = CurrentColumnP2
+			end
+			if CurrentTab ~= 4 then return end
+			-- yooooooo the j!!!!
+			for j=1, #Notes2HoldsMods do
+				local Parent = self:GetParent():GetChild(pn.."Notes2HoldsBox"..i)
+				local ObjectWidth = Parent:GetZoomX()
+				local ObjectHeight = Parent:GetZoomY()
+				local ObjectX = Parent:GetX()
+				local ObjectY = Parent:GetY()
+				local HAlign = Parent:GetHAlign()
+				local VAlign = Parent:GetVAlign()
+				ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+				ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+				
+				if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 4 then
+					if j == 1 and j == i then
+						CurrentRow = 5
+						CurrentColumn = 1
+						if Planted == true then
+							Planted = false
+							SetEngineMod(player, "Planted", Planted)
+							self:settext("")
+						elseif Planted == false then
+							Planted = true
+							SetEngineMod(player, "Planted", Planted)
+							self:settext("✅")
+						end
+						break
+					elseif j == 2 and j == i then
+						CurrentRow = 5
+						CurrentColumn = 2
+						if Floored then
+							Floored = false
+							SetEngineMod(player, "Floored", Floored)
+							self:settext("")
+						elseif not Floored then
+							Floored = true
+							SetEngineMod(player, "Floored", Floored)
+							self:settext("✅")
+						end
+						break
+					end
+				end
+			end
+			if pn == "P1" then
+				CurrentTabP1 = CurrentTab
+				CurrentRowP1 = CurrentRow
+				CurrentColumnP1 = CurrentColumn
+			elseif pn == "P2" then
+				CurrentTabP2 = CurrentTab
+				CurrentRowP2 = CurrentRow
+				CurrentColumnP2 = CurrentColumn
+			end
+			MESSAGEMAN:Broadcast("UpdateMenuCursorPosition"..pn, {})
+		end,
 	}
 end
 
@@ -1203,7 +1619,7 @@ local Twister = PlayerState:GetPlayerOptions(0):Twister()
 local HoldRolls = PlayerState:GetPlayerOptions(0):HoldRolls()
 
 --- Notes>Holds 2 check boxes
-for i=1,#Notes2HoldsMods do
+for i=1,#Notes2HoldsMods2 do
 	af[#af+1] = Def.BitmapText{
 		Font="Common Normal",
 		Name=pn.."Notes2Holds2Check"..i,
@@ -1283,6 +1699,71 @@ for i=1,#Notes2HoldsMods do
 					end
 				end
 			end
+		end,
+		LeftMouseClickUpdateMessageCommand=function(self)
+			local CurrentTab, CurrentRow, CurrentColumn
+			if pn == "P1" then
+				CurrentTab = CurrentTabP1
+				CurrentRow = CurrentRowP1
+				CurrentColumn = CurrentColumnP1
+			elseif pn == "P2" then
+				CurrentTab = CurrentTabP2
+				CurrentRow = CurrentRowP2
+				CurrentColumn = CurrentColumnP2
+			end
+			if CurrentTab ~= 4 then return end
+			-- yooooooo the j!!!!
+			for j=1, #Notes2HoldsMods2 do
+				local Parent = self:GetParent():GetChild(pn.."Notes2HoldsBox2_"..i)
+				local ObjectWidth = Parent:GetZoomX()
+				local ObjectHeight = Parent:GetZoomY()
+				local ObjectX = Parent:GetX()
+				local ObjectY = Parent:GetY()
+				local HAlign = Parent:GetHAlign()
+				local VAlign = Parent:GetVAlign()
+				ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+				ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+				
+				if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 4 then
+					if j == 1 and j == i then
+						CurrentRow = 6
+						CurrentColumn = 1
+						if Twister == true then
+							Twister = false
+							SetEngineMod(player, "Twister", Twister)
+							self:settext("")
+						elseif Twister == false then
+							Twister = true
+							SetEngineMod(player, "Twister", Twister)
+							self:settext("✅")
+						end
+						break
+					elseif j == 2 and j == i then
+						CurrentRow = 6
+						CurrentColumn = 2
+						if HoldRolls then
+							HoldRolls = false
+							SetEngineMod(player, "HoldRolls", HoldRolls)
+							self:settext("")
+						elseif not HoldRolls then
+							HoldRolls = true
+							SetEngineMod(player, "HoldRolls", HoldRolls)
+							self:settext("✅")
+						end
+						break
+					end
+				end
+			end
+			if pn == "P1" then
+				CurrentTabP1 = CurrentTab
+				CurrentRowP1 = CurrentRow
+				CurrentColumnP1 = CurrentColumn
+			elseif pn == "P2" then
+				CurrentTabP2 = CurrentTab
+				CurrentRowP2 = CurrentRow
+				CurrentColumnP2 = CurrentColumn
+			end
+			MESSAGEMAN:Broadcast("UpdateMenuCursorPosition"..pn, {})
 		end,
 	}
 end
@@ -1488,6 +1969,84 @@ for i=1,#AccelMods do
 				end
 			end
 		end,
+		LeftMouseClickUpdateMessageCommand=function(self)
+			local CurrentTab, CurrentRow, CurrentColumn
+			if pn == "P1" then
+				CurrentTab = CurrentTabP1
+				CurrentRow = CurrentRowP1
+				CurrentColumn = CurrentColumnP1
+			elseif pn == "P2" then
+				CurrentTab = CurrentTabP2
+				CurrentRow = CurrentRowP2
+				CurrentColumn = CurrentColumnP2
+			end
+			if CurrentTab ~= 4 then return end
+			-- yooooooo the j!!!!
+			for j=1, #AccelMods do
+				local Parent = self:GetParent():GetChild(pn.."AccelModBox"..i)
+				local ObjectWidth = Parent:GetZoomX()
+				local ObjectHeight = Parent:GetZoomY()
+				local ObjectX = Parent:GetX()
+				local ObjectY = Parent:GetY()
+				local HAlign = Parent:GetHAlign()
+				local VAlign = Parent:GetVAlign()
+				ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+				ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+				
+				if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 4 then
+					if j == 1 and j == i then
+						CurrentRow = 7
+						CurrentColumn = 1
+						if Boost == 1 then
+							Boost = 0
+							SetEngineMod(player, "Boost", Boost)
+							self:settext("")
+						elseif Boost == 0 then
+							Boost = 1
+							SetEngineMod(player, "Boost", Boost)
+							self:settext("✅")
+						end
+						break
+					elseif j == 2 and j == i then
+						CurrentRow = 7
+						CurrentColumn = 2
+						if Brake == 1 then
+							Brake = 0
+							SetEngineMod(player, "Brake", Brake)
+							self:settext("")
+						elseif Brake == 0 then
+							Brake = 1
+							SetEngineMod(player, "Brake", Brake)
+							self:settext("✅")
+						end
+						break
+					elseif j == 3 and j == i then
+						CurrentRow = 7
+						CurrentColumn = 3
+						if Wave == 1 then
+							Wave = 0
+							SetEngineMod(player, "Wave", Wave)
+							self:settext("")
+						elseif Wave == 0 then
+							Wave = 1
+							SetEngineMod(player, "Wave", Wave)
+							self:settext("✅")
+						end
+						break
+					end
+				end
+			end
+			if pn == "P1" then
+				CurrentTabP1 = CurrentTab
+				CurrentRowP1 = CurrentRow
+				CurrentColumnP1 = CurrentColumn
+			elseif pn == "P2" then
+				CurrentTabP2 = CurrentTab
+				CurrentRowP2 = CurrentRow
+				CurrentColumnP2 = CurrentColumn
+			end
+			MESSAGEMAN:Broadcast("UpdateMenuCursorPosition"..pn, {})
+		end,
 	}
 end
 
@@ -1663,6 +2222,71 @@ for i=1,#AccelMods2 do
 					end
 				end
 			end
+		end,
+		LeftMouseClickUpdateMessageCommand=function(self)
+			local CurrentTab, CurrentRow, CurrentColumn
+			if pn == "P1" then
+				CurrentTab = CurrentTabP1
+				CurrentRow = CurrentRowP1
+				CurrentColumn = CurrentColumnP1
+			elseif pn == "P2" then
+				CurrentTab = CurrentTabP2
+				CurrentRow = CurrentRowP2
+				CurrentColumn = CurrentColumnP2
+			end
+			if CurrentTab ~= 4 then return end
+			-- yooooooo the j!!!!
+			for j=1, #AccelMods2 do
+				local Parent = self:GetParent():GetChild(pn.."AccelModBox2_"..i)
+				local ObjectWidth = Parent:GetZoomX()
+				local ObjectHeight = Parent:GetZoomY()
+				local ObjectX = Parent:GetX()
+				local ObjectY = Parent:GetY()
+				local HAlign = Parent:GetHAlign()
+				local VAlign = Parent:GetVAlign()
+				ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+				ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+				
+				if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 4 then
+					if j == 1 and j == i then
+						CurrentRow = 8
+						CurrentColumn = 1
+						if Expand == 1 then
+							Expand = 0
+							SetEngineMod(player, "Expand", Expand)
+							self:settext("")
+						elseif Expand == 0 then
+							Expand = 1
+							SetEngineMod(player, "Expand", Expand)
+							self:settext("✅")
+						end
+						break
+					elseif j == 2 and j == i then
+						CurrentRow = 8
+						CurrentColumn = 2
+						if Boomerang == 1 then
+							Boomerang = 0
+							SetEngineMod(player, "Boomerang", Boomerang)
+							self:settext("")
+						elseif Boomerang == 0 then
+							Boomerang = 1
+							SetEngineMod(player, "Boomerang", Boomerang)
+							self:settext("✅")
+						end
+						break
+					end
+				end
+			end
+			if pn == "P1" then
+				CurrentTabP1 = CurrentTab
+				CurrentRowP1 = CurrentRow
+				CurrentColumnP1 = CurrentColumn
+			elseif pn == "P2" then
+				CurrentTabP2 = CurrentTab
+				CurrentRowP2 = CurrentRow
+				CurrentColumnP2 = CurrentColumn
+			end
+			MESSAGEMAN:Broadcast("UpdateMenuCursorPosition"..pn, {})
 		end,
 	}
 end
@@ -1889,6 +2513,97 @@ for i=1,#EffectMods do
 					end
 				end
 			end
+		end,
+		LeftMouseClickUpdateMessageCommand=function(self)
+			local CurrentTab, CurrentRow, CurrentColumn
+			if pn == "P1" then
+				CurrentTab = CurrentTabP1
+				CurrentRow = CurrentRowP1
+				CurrentColumn = CurrentColumnP1
+			elseif pn == "P2" then
+				CurrentTab = CurrentTabP2
+				CurrentRow = CurrentRowP2
+				CurrentColumn = CurrentColumnP2
+			end
+			if CurrentTab ~= 4 then return end
+			-- yooooooo the j!!!!
+			for j=1, #EffectMods do
+				local Parent = self:GetParent():GetChild(pn.."EffectModBox"..i)
+				local ObjectWidth = Parent:GetZoomX()
+				local ObjectHeight = Parent:GetZoomY()
+				local ObjectX = Parent:GetX()
+				local ObjectY = Parent:GetY()
+				local HAlign = Parent:GetHAlign()
+				local VAlign = Parent:GetVAlign()
+				ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+				ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+				
+				if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 4 then
+					if j == 1 and j == i then
+						CurrentRow = 9
+						CurrentColumn = 1
+						if Drunk == 1 then
+							Drunk = 0
+							SetEngineMod(player, "Drunk", Drunk)
+							self:settext("")
+						elseif Drunk == 0 then
+							Drunk = 1
+							SetEngineMod(player, "Drunk", Drunk)
+							self:settext("✅")
+						end
+						break
+					elseif j == 2 and j == i then
+						CurrentRow = 9
+						CurrentColumn = 2
+						if Dizzy == 1 then
+							Dizzy = 0
+							SetEngineMod(player, "Dizzy", Dizzy)
+							self:settext("")
+						elseif Dizzy == 0 then
+							Dizzy = 1
+							SetEngineMod(player, "Dizzy", Dizzy)
+							self:settext("✅")
+						end
+						break
+					elseif j == 3 and j == i then
+						CurrentRow = 9
+						CurrentColumn = 3
+						if Confusion == 1 then
+							Confusion = 0
+							SetEngineMod(player, "Confusion", Confusion)
+							self:settext("")
+						elseif Confusion == 0 then
+							Confusion = 1
+							SetEngineMod(player, "Confusion", Confusion)
+							self:settext("✅")
+						end
+						break
+					elseif j == 4 and j == i then
+						CurrentRow = 9
+						CurrentColumn = 4
+						if Flip == 1 then
+							Flip = 0
+							SetEngineMod(player, "Flip", Flip)
+							self:settext("")
+						elseif Flip == 0 then
+							Flip = 1
+							SetEngineMod(player, "Flip", Flip)
+							self:settext("✅")
+						end
+						break
+					end
+				end
+			end
+			if pn == "P1" then
+				CurrentTabP1 = CurrentTab
+				CurrentRowP1 = CurrentRow
+				CurrentColumnP1 = CurrentColumn
+			elseif pn == "P2" then
+				CurrentTabP2 = CurrentTab
+				CurrentRowP2 = CurrentRow
+				CurrentColumnP2 = CurrentColumn
+			end
+			MESSAGEMAN:Broadcast("UpdateMenuCursorPosition"..pn, {})
 		end,
 	}
 end
@@ -2117,6 +2832,110 @@ for i=1,#EffectMods2 do
 				end
 			end
 		end,
+		LeftMouseClickUpdateMessageCommand=function(self)
+			local CurrentTab, CurrentRow, CurrentColumn
+			if pn == "P1" then
+				CurrentTab = CurrentTabP1
+				CurrentRow = CurrentRowP1
+				CurrentColumn = CurrentColumnP1
+			elseif pn == "P2" then
+				CurrentTab = CurrentTabP2
+				CurrentRow = CurrentRowP2
+				CurrentColumn = CurrentColumnP2
+			end
+			if CurrentTab ~= 4 then return end
+			-- yooooooo the j!!!!
+			for j=1, #EffectMods2 do
+				local Parent = self:GetParent():GetChild(pn.."EffectModBox2_"..i)
+				local ObjectWidth = Parent:GetZoomX()
+				local ObjectHeight = Parent:GetZoomY()
+				local ObjectX = Parent:GetX()
+				local ObjectY = Parent:GetY()
+				local HAlign = Parent:GetHAlign()
+				local VAlign = Parent:GetVAlign()
+				ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+				ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+				
+				if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 4 then
+					if j == 1 and j == i then
+						CurrentRow = 10
+						CurrentColumn = 1
+						if Invert == 1 then
+							Invert = 0
+							SetEngineMod(player, "Invert", Invert)
+							self:settext("")
+						elseif Invert == 0 then
+							Invert = 1
+							SetEngineMod(player, "Invert", Invert)
+							self:settext("✅")
+						end
+						break
+					elseif j == 2 and j == i then
+						CurrentRow = 10
+						CurrentColumn = 2
+						if Tornado == 1 then
+							Tornado = 0
+							SetEngineMod(player, "Tornado", Tornado)
+							self:settext("")
+						elseif Tornado == 0 then
+							Tornado = 1
+							SetEngineMod(player, "Tornado", Tornado)
+							self:settext("✅")
+						end
+						break
+					elseif j == 3 and j == i then
+						CurrentRow = 10
+						CurrentColumn = 3
+						if Tipsy == 1 then
+							Tipsy = 0
+							SetEngineMod(player, "Tipsy", Tipsy)
+							self:settext("")
+						elseif Tipsy == 0 then
+							Tipsy = 1
+							SetEngineMod(player, "Tipsy", Tipsy)
+							self:settext("✅")
+						end
+						break
+					elseif j == 4 and j == i then
+						CurrentRow = 10
+						CurrentColumn = 4
+						if Bumpy == 1 then
+							Bumpy = 0
+							SetEngineMod(player, "Bumpy", Bumpy)
+							self:settext("")
+						elseif Bumpy == 0 then
+							Bumpy = 1
+							SetEngineMod(player, "Bumpy", Bumpy)
+							self:settext("✅")
+						end
+						break
+					elseif j == 5 and j == i then
+						CurrentRow = 10
+						CurrentColumn = 5
+						if Beat == 1 then
+							Beat = 0
+							SetEngineMod(player, "Beat", Beat)
+							self:settext("")
+						elseif Beat == 0 then
+							Beat = 1
+							SetEngineMod(player, "Beat", Beat)
+							self:settext("✅")
+						end
+						break
+					end
+				end
+			end
+			if pn == "P1" then
+				CurrentTabP1 = CurrentTab
+				CurrentRowP1 = CurrentRow
+				CurrentColumnP1 = CurrentColumn
+			elseif pn == "P2" then
+				CurrentTabP2 = CurrentTab
+				CurrentRowP2 = CurrentRow
+				CurrentColumnP2 = CurrentColumn
+			end
+			MESSAGEMAN:Broadcast("UpdateMenuCursorPosition"..pn, {})
+		end,
 	}
 end
 
@@ -2335,6 +3154,97 @@ for i=1,#AppearanceMods do
 				end
 			end
 		end,
+		LeftMouseClickUpdateMessageCommand=function(self)
+			local CurrentTab, CurrentRow, CurrentColumn
+			if pn == "P1" then
+				CurrentTab = CurrentTabP1
+				CurrentRow = CurrentRowP1
+				CurrentColumn = CurrentColumnP1
+			elseif pn == "P2" then
+				CurrentTab = CurrentTabP2
+				CurrentRow = CurrentRowP2
+				CurrentColumn = CurrentColumnP2
+			end
+			if CurrentTab ~= 4 then return end
+			-- yooooooo the j!!!!
+			for j=1, #AppearanceMods do
+				local Parent = self:GetParent():GetChild(pn.."AppearanceModBox"..i)
+				local ObjectWidth = Parent:GetZoomX()
+				local ObjectHeight = Parent:GetZoomY()
+				local ObjectX = Parent:GetX()
+				local ObjectY = Parent:GetY()
+				local HAlign = Parent:GetHAlign()
+				local VAlign = Parent:GetVAlign()
+				ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+				ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+				
+				if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 4 then
+					if j == 1 and j == i then
+						CurrentRow = 11
+						CurrentColumn = 1
+						if Hidden == 1 then
+							Hidden = 0
+							SetEngineMod(player, "Hidden", Hidden)
+							self:settext("")
+						elseif Hidden == 0 then
+							Hidden = 1
+							SetEngineMod(player, "Hidden", Hidden)
+							self:settext("✅")
+						end
+						break
+					elseif j == 2 and j == i then
+						CurrentRow = 11
+						CurrentColumn = 2
+						if Sudden == 1 then
+							Sudden = 0
+							SetEngineMod(player, "Sudden", Sudden)
+							self:settext("")
+						elseif Sudden == 0 then
+							Sudden = 1
+							SetEngineMod(player, "Sudden", Sudden)
+							self:settext("✅")
+						end
+						break
+					elseif j == 3 and j == i then
+						CurrentRow = 11
+						CurrentColumn = 3
+						if Stealth == 1 then
+							Stealth = 0
+							SetEngineMod(player, "Stealth", Stealth)
+							self:settext("")
+						elseif Stealth == 0 then
+							Stealth = 1
+							SetEngineMod(player, "Stealth", Stealth)
+							self:settext("✅")
+						end
+						break
+					elseif j == 4 and j == i then
+						CurrentRow = 11
+						CurrentColumn = 4
+							if RandomVanish == 1 then
+							RandomVanish = 0
+							SetEngineMod(player, "RandomVanish", RandomVanish)
+							self:settext("")
+						elseif RandomVanish == 0 then
+							RandomVanish = 1
+							SetEngineMod(player, "RandomVanish", RandomVanish)
+							self:settext("✅")
+						end
+						break
+					end
+				end
+			end
+			if pn == "P1" then
+				CurrentTabP1 = CurrentTab
+				CurrentRowP1 = CurrentRow
+				CurrentColumnP1 = CurrentColumn
+			elseif pn == "P2" then
+				CurrentTabP2 = CurrentTab
+				CurrentRowP2 = CurrentRow
+				CurrentColumnP2 = CurrentColumn
+			end
+			MESSAGEMAN:Broadcast("UpdateMenuCursorPosition"..pn, {})
+		end,
 	}
 end
 
@@ -2474,6 +3384,74 @@ af[#af+1] = Def.Quad{
 			:y(TextYPosition + TextHeight/3)
 		end
 	end,
+	LeftMouseClickUpdateMessageCommand=function(self)
+		local CurrentTab, CurrentRow, CurrentColumn
+		local MadeSelection = false
+		if pn == "P1" then
+			CurrentTab = CurrentTabP1
+			CurrentRow = CurrentRowP1
+			CurrentColumn = CurrentColumnP1
+		elseif pn == "P2" then
+			CurrentTab = CurrentTabP2
+			CurrentRow = CurrentRowP2
+			CurrentColumn = CurrentColumnP2
+		end
+		if CurrentTab ~= 4 then return end
+		for j=1,#AttackMods do
+			local Parent = self:GetParent():GetChild(pn.."AttackMod"..j)
+			local ObjectZoom = Parent:GetZoom()
+			local ObjectWidth = Parent:GetWidth() * ObjectZoom
+			local ObjectHeight = Parent:GetHeight()
+			local ObjectX = Parent:GetX()
+			local ObjectY = Parent:GetY()
+			local HAlign = Parent:GetHAlign()
+			local VAlign = Parent:GetVAlign()
+			ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+			ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+			
+			if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 4 then
+				if j == 1 then
+					CurrentRow = 12
+					CurrentColumn = 1
+					-- attacks are on by default so disable the other mods
+					SetEngineMod(player, "RandAttack", 0)
+					SetEngineMod(player, "NoAttack", 0)
+				elseif j == 2 then
+					CurrentRow = 12
+					CurrentColumn = 2
+					SetEngineMod(player, "NoAttack", 0)
+					SetEngineMod(player, "RandAttack", 1)
+				elseif j == 3 then
+					CurrentRow = 12
+					CurrentColumn = 3
+					SetEngineMod(player, "RandAttack", 0)
+					SetEngineMod(player, "NoAttack", 1)
+				end
+				MadeSelection = true
+			end
+		end
+		if MadeSelection then
+			local Parent2 = self:GetParent():GetChild(pn.."AttackMod"..CurrentColumn)
+			local TextZoom = Parent2:GetZoom()
+			local TextXPosition = Parent2:GetX()
+			local TextYPosition = Parent2:GetY()
+			local TextHeight = Parent2:GetHeight()
+			local TextWidth = Parent2:GetWidth() * TextZoom
+			if pn == "P1" then
+				CurrentTabP1 = CurrentTab
+				CurrentRowP1 = CurrentRow
+				CurrentColumnP1 = CurrentColumn
+			elseif pn == "P2" then
+				CurrentTabP2 = CurrentTab
+				CurrentRowP2 = CurrentRow
+				CurrentColumnP2 = CurrentColumn
+			end
+			self:zoomto(TextWidth, 3)
+					:x(TextXPosition)
+					:y(TextYPosition + TextHeight/3)
+			MESSAGEMAN:Broadcast("UpdateMenuCursorPosition"..pn, {})
+		end
+	end,
 }
 
 --- Haste Mods
@@ -2582,9 +3560,9 @@ af[#af+1] = Def.Quad{
 		end
 		if CurrentTab == 4 and CurrentRow == 13 then
 			if CurrentColumn == 1 then
-				GAMESTATE:GetSongOptionsObject("ModsLevel_Preferred"):Haste(0)
+				GAMESTATE:GetSongOptionsObject(0):Haste(0)
 			elseif CurrentColumn == 2 then
-				GAMESTATE:GetSongOptionsObject("ModsLevel_Preferred"):Haste(1)
+				GAMESTATE:GetSongOptionsObject(0):Haste(1)
 			end
 			local Parent = self:GetParent():GetChild(pn.."HasteMod"..CurrentColumn)
 			local TextZoom = Parent:GetZoom()
@@ -2604,7 +3582,7 @@ af[#af+1] = Def.Quad{
 	end,
 	["UpdateHaste"..pn.."MessageCommand"]=function(self)
 		local Parent
-		if GAMESTATE:GetSongOptionsObject("ModsLevel_Preferred"):Haste(0) ~= 0 then
+		if GAMESTATE:GetSongOptionsObject("ModsLevel_Preferred"):Haste() ~= 0 then
 			Parent = self:GetParent():GetChild(pn.."HasteMod"..2)
 		else
 			Parent = self:GetParent():GetChild(pn.."HasteMod"..1)
@@ -2618,6 +3596,71 @@ af[#af+1] = Def.Quad{
 			:x(TextXPosition)
 			:y(TextYPosition + TextHeight/3)
 		
+	end,
+	LeftMouseClickUpdateMessageCommand=function(self)
+		local CurrentTab, CurrentRow, CurrentColumn
+		local MadeSelection = false
+		if pn == "P1" then
+			CurrentTab = CurrentTabP1
+			CurrentRow = CurrentRowP1
+			CurrentColumn = CurrentColumnP1
+		elseif pn == "P2" then
+			CurrentTab = CurrentTabP2
+			CurrentRow = CurrentRowP2
+			CurrentColumn = CurrentColumnP2
+		end
+		if CurrentTab ~= 4 then return end
+		for j=1,#HasteMods do
+			local Parent = self:GetParent():GetChild(pn.."HasteMod"..j)
+			local ObjectZoom = Parent:GetZoom()
+			local ObjectWidth = Parent:GetWidth() * ObjectZoom
+			local ObjectHeight = Parent:GetHeight()
+			local ObjectX = Parent:GetX()
+			local ObjectY = Parent:GetY()
+			local HAlign = Parent:GetHAlign()
+			local VAlign = Parent:GetVAlign()
+			ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+			ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+			
+			if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 4 then
+				if j == 1 then
+					CurrentRow = 13
+					CurrentColumn = 1
+					GAMESTATE:GetSongOptionsObject(0):Haste(0)
+				elseif j == 2 then
+					CurrentRow = 13
+					CurrentColumn = 2
+					GAMESTATE:GetSongOptionsObject(0):Haste(1)
+				end
+				MadeSelection = true
+			end
+		end
+		if MadeSelection then
+			local Parent2 = self:GetParent():GetChild(pn.."HasteMod"..CurrentColumn)
+			local TextZoom = Parent2:GetZoom()
+			local TextXPosition = Parent2:GetX()
+			local TextYPosition = Parent2:GetY()
+			local TextHeight = Parent2:GetHeight()
+			local TextWidth = Parent2:GetWidth() * TextZoom
+			if pn == "P1" then
+				CurrentTabP1 = CurrentTab
+				CurrentRowP1 = CurrentRow
+				CurrentColumnP1 = CurrentColumn
+			elseif pn == "P2" then
+				CurrentTabP2 = CurrentTab
+				CurrentRowP2 = CurrentRow
+				CurrentColumnP2 = CurrentColumn
+			end
+			self:zoomto(TextWidth, 3)
+					:x(TextXPosition)
+					:y(TextYPosition + TextHeight/3)
+			MESSAGEMAN:Broadcast("UpdateMenuCursorPosition"..pn, {})
+			if pn == "P1" then
+				MESSAGEMAN:Broadcast("UpdateHasteP2")
+			elseif pn == "P2" then
+				MESSAGEMAN:Broadcast("UpdateHasteP1")
+			end
+		end
 	end,
 }
 

@@ -152,7 +152,84 @@ for i=1, #SystemNames do
 					end
 				end
 			end
-		end
+		end,
+		LeftMouseClickUpdateMessageCommand=function(self)
+			local CurrentTab, CurrentRow, CurrentColumn
+			if pn == "P1" then
+				CurrentTab = CurrentTabP1
+				CurrentRow = CurrentRowP1
+				CurrentColumn = CurrentColumnP1
+			elseif pn == "P2" then
+				CurrentTab = CurrentTabP2
+				CurrentRow = CurrentRowP2
+				CurrentColumn = CurrentColumnP2
+			end
+			if CurrentTab ~= 6 then return end
+			for j=1, #SystemNames do
+				local Parent = self:GetParent():GetChild(pn.."System"..j)
+				local ObjectZoom = Parent:GetZoom()
+				local ObjectWidth = Parent:GetWidth() * ObjectZoom
+				local ObjectHeight = Parent:GetHeight()
+				local ObjectX = Parent:GetX()
+				local ObjectY = Parent:GetY()
+				local HAlign = Parent:GetHAlign()
+				local VAlign = Parent:GetVAlign()
+				ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+				ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+				
+				if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 6 then
+					CurrentRow = j
+					local CurrentText
+					if CurrentRow ~= 0 then
+						CurrentText = self:GetParent():GetChild(pn.."System"..j):GetText()
+					else
+						CurrentText = ""
+					end
+					
+					if CurrentText == THEME:GetString("DDPlayerMenu","LoadNewSongs") then
+						SCREENMAN:GetTopScreen():SetNextScreenName("ScreenReloadSongsSSM")
+						SCREENMAN:GetTopScreen():StartTransitioningScreen("SM_GoToNextScreen")
+					elseif CurrentText == THEME:GetString("DDPlayerMenu","Downloads") then
+						SCREENMAN:GetTopScreen():SetNextScreenName("ScreenViewDownloads")
+						SCREENMAN:GetTopScreen():StartTransitioningScreen("SM_GoToNextScreen")
+					elseif CurrentText == THEME:GetString("DDPlayerMenu","SwitchStyle").." "..Style then
+						MESSAGEMAN:Broadcast("DDSwitchStyles")
+					elseif CurrentText == THEME:GetString("DDPlayerMenu","SwitchMode").." "..Mode then
+						MESSAGEMAN:Broadcast("SwitchSongCourseSelect")
+					elseif CurrentText == THEME:GetString("DDPlayerMenu","Leaderboards") then
+						local curSong = GAMESTATE:GetCurrentSong()
+						if curSong then
+							LeadboardHasFocus = true
+							MESSAGEMAN:Broadcast("ShowLeaderboard")
+						else
+							SM("No song selected!")
+						end
+					elseif CurrentText == THEME:GetString("DDPlayerMenu","TestInput") then
+						InputMenuHasFocus = true
+						MESSAGEMAN:Broadcast("ShowTestInput")
+					elseif CurrentText == THEME:GetString("DDPlayerMenu","Practice") then
+						if GAMESTATE:GetCurrentSong() ~= nil then
+							SCREENMAN:GetTopScreen():SetNextScreenName("ScreenPractice")
+							SCREENMAN:GetTopScreen():StartTransitioningScreen("SM_GoToNextScreen")
+						else
+							SM("No song selected!")
+						end
+					end
+					
+				end
+			end
+			if pn == "P1" then
+				CurrentTabP1 = CurrentTab
+				CurrentRowP1 = CurrentRow
+				CurrentColumnP1 = CurrentColumn
+			elseif pn == "P2" then
+				CurrentTabP2 = CurrentTab
+				CurrentRowP2 = CurrentRow
+				CurrentColumnP2 = CurrentColumn
+			end
+			MESSAGEMAN:Broadcast("UpdateMenuCursorPosition"..pn, {})
+		
+		end,
 	}
 end
 

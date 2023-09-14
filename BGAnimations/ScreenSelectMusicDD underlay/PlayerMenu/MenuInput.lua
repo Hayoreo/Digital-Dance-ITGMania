@@ -134,6 +134,16 @@ local TabsTable = {
 
 -- Thank god I can move this input here.
 local InputHandler = function( event )
+	
+	-- Allow Mouse Input here
+	if event.type == "InputEventType_FirstPress" and event.type ~= "InputEventType_Release" and not IsSearchMenuVisible and IsMouseOnScreen() then
+		if not LeadboardHasFocus and not InputMenuHasFocus then
+			if event.DeviceInput.button == "DeviceButton_left mouse button" then
+				MESSAGEMAN:Broadcast("LeftMouseClickUpdate")
+			end
+		end
+	end
+	
 	if not ((event.PlayerNumber == "PlayerNumber_P1" and PlayerMenuP1) or (event.PlayerNumber == "PlayerNumber_P2" and PlayerMenuP2)) then return end
 	local CurrentTab, CurrentRow, CurrentColumn
 	local MaxRow, MaxColumn

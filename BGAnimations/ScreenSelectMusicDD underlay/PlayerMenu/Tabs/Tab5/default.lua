@@ -176,6 +176,44 @@ af[#af+1] = Def.Quad{
 			end
 		end
 	end,
+	LeftMouseClickUpdateMessageCommand=function(self)
+		local CurrentTab, CurrentRow, CurrentColumn
+		if pn == "P1" then
+			CurrentTab = CurrentTabP1
+			CurrentRow = CurrentRowP1
+			CurrentColumn = CurrentColumnP1
+		elseif pn == "P2" then
+			CurrentTab = CurrentTabP2
+			CurrentRow = CurrentRowP2
+			CurrentColumn = CurrentColumnP2
+		end
+		if CurrentTab ~= 5 then return end
+		local Parent = self:GetParent():GetChild(pn.."MainSortBox1")
+		local ObjectWidth = Parent:GetZoomX()
+		local ObjectHeight = Parent:GetZoomY()
+		local ObjectX = Parent:GetX()
+		local ObjectY = Parent:GetY()
+		local HAlign = Parent:GetHAlign()
+		local VAlign = Parent:GetVAlign()
+		ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+		ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+		
+		if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 5 then
+			CurrentRow = 1
+			CurrentColumn = 1
+			if pn == "P1" then
+				CurrentTabP1 = CurrentTab
+				CurrentRowP1 = CurrentRow
+				CurrentColumnP1 = CurrentColumn
+			elseif pn == "P2" then
+				CurrentTabP2 = CurrentTab
+				CurrentRowP2 = CurrentRow
+				CurrentColumnP2 = CurrentColumn
+			end
+			MESSAGEMAN:Broadcast("UpdateMenuCursorPosition"..pn, {})
+		end
+	
+	end,
 }
 
 
@@ -316,6 +354,44 @@ af[#af+1] = Def.Quad{
 				self:visible(false)
 			end
 		end
+	end,
+	LeftMouseClickUpdateMessageCommand=function(self)
+		local CurrentTab, CurrentRow, CurrentColumn
+		if pn == "P1" then
+			CurrentTab = CurrentTabP1
+			CurrentRow = CurrentRowP1
+			CurrentColumn = CurrentColumnP1
+		elseif pn == "P2" then
+			CurrentTab = CurrentTabP2
+			CurrentRow = CurrentRowP2
+			CurrentColumn = CurrentColumnP2
+		end
+		if CurrentTab ~= 5 then return end
+		local Parent = self:GetParent():GetChild(pn.."SubSort1Box1")
+		local ObjectWidth = Parent:GetZoomX()
+		local ObjectHeight = Parent:GetZoomY()
+		local ObjectX = Parent:GetX()
+		local ObjectY = Parent:GetY()
+		local HAlign = Parent:GetHAlign()
+		local VAlign = Parent:GetVAlign()
+		ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+		ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+		
+		if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 5 then
+			CurrentRow = 2
+			CurrentColumn = 1
+			if pn == "P1" then
+				CurrentTabP1 = CurrentTab
+				CurrentRowP1 = CurrentRow
+				CurrentColumnP1 = CurrentColumn
+			elseif pn == "P2" then
+				CurrentTabP2 = CurrentTab
+				CurrentRowP2 = CurrentRow
+				CurrentColumnP2 = CurrentColumn
+			end
+			MESSAGEMAN:Broadcast("UpdateMenuCursorPosition"..pn, {})
+		end
+	
 	end,
 }
 
@@ -458,6 +534,44 @@ af[#af+1] = Def.Quad{
 			end
 		end
 	end,
+	LeftMouseClickUpdateMessageCommand=function(self)
+		local CurrentTab, CurrentRow, CurrentColumn
+		if pn == "P1" then
+			CurrentTab = CurrentTabP1
+			CurrentRow = CurrentRowP1
+			CurrentColumn = CurrentColumnP1
+		elseif pn == "P2" then
+			CurrentTab = CurrentTabP2
+			CurrentRow = CurrentRowP2
+			CurrentColumn = CurrentColumnP2
+		end
+		if CurrentTab ~= 5 then return end
+		local Parent = self:GetParent():GetChild(pn.."SubSort2Box1")
+		local ObjectWidth = Parent:GetZoomX()
+		local ObjectHeight = Parent:GetZoomY()
+		local ObjectX = Parent:GetX()
+		local ObjectY = Parent:GetY()
+		local HAlign = Parent:GetHAlign()
+		local VAlign = Parent:GetVAlign()
+		ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+		ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+		
+		if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 5 then
+			CurrentRow = 3
+			CurrentColumn = 1
+			if pn == "P1" then
+				CurrentTabP1 = CurrentTab
+				CurrentRowP1 = CurrentRow
+				CurrentColumnP1 = CurrentColumn
+			elseif pn == "P2" then
+				CurrentTabP2 = CurrentTab
+				CurrentRowP2 = CurrentRow
+				CurrentColumnP2 = CurrentColumn
+			end
+			MESSAGEMAN:Broadcast("UpdateMenuCursorPosition"..pn, {})
+		end
+	
+	end,
 }
 
 -- The Sub Sort2 Text
@@ -589,6 +703,44 @@ af[#af+1] = Def.Quad{
 				self:visible(false)
 			end
 		end
+	end,
+	LeftMouseClickUpdateMessageCommand=function(self)
+		local CurrentTab, CurrentRow, CurrentColumn
+		if pn == "P1" then
+			CurrentTab = CurrentTabP1
+			CurrentRow = CurrentRowP1
+			CurrentColumn = CurrentColumnP1
+		elseif pn == "P2" then
+			CurrentTab = CurrentTabP2
+			CurrentRow = CurrentRowP2
+			CurrentColumn = CurrentColumnP2
+		end
+		if CurrentTab ~= 5 then return end
+		local Parent = self:GetParent():GetChild(pn.."MeterFilter1Box1")
+		local ObjectWidth = Parent:GetZoomX()
+		local ObjectHeight = Parent:GetZoomY()
+		local ObjectX = Parent:GetX()
+		local ObjectY = Parent:GetY()
+		local HAlign = Parent:GetHAlign()
+		local VAlign = Parent:GetVAlign()
+		ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+		ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+		
+		if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 5 then
+			CurrentRow = 4
+			CurrentColumn = 1
+			if pn == "P1" then
+				CurrentTabP1 = CurrentTab
+				CurrentRowP1 = CurrentRow
+				CurrentColumnP1 = CurrentColumn
+			elseif pn == "P2" then
+				CurrentTabP2 = CurrentTab
+				CurrentRowP2 = CurrentRow
+				CurrentColumnP2 = CurrentColumn
+			end
+			MESSAGEMAN:Broadcast("UpdateMenuCursorPosition"..pn, {})
+		end
+	
 	end,
 }
 
@@ -756,6 +908,44 @@ af[#af+1] = Def.Quad{
 				self:visible(false)
 			end
 		end
+	end,
+	LeftMouseClickUpdateMessageCommand=function(self)
+		local CurrentTab, CurrentRow, CurrentColumn
+		if pn == "P1" then
+			CurrentTab = CurrentTabP1
+			CurrentRow = CurrentRowP1
+			CurrentColumn = CurrentColumnP1
+		elseif pn == "P2" then
+			CurrentTab = CurrentTabP2
+			CurrentRow = CurrentRowP2
+			CurrentColumn = CurrentColumnP2
+		end
+		if CurrentTab ~= 5 then return end
+		local Parent = self:GetParent():GetChild(pn.."MeterFilter2Box1")
+		local ObjectWidth = Parent:GetZoomX()
+		local ObjectHeight = Parent:GetZoomY()
+		local ObjectX = Parent:GetX()
+		local ObjectY = Parent:GetY()
+		local HAlign = Parent:GetHAlign()
+		local VAlign = Parent:GetVAlign()
+		ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+		ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+		
+		if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 5 then
+			CurrentRow = 5
+			CurrentColumn = 1
+			if pn == "P1" then
+				CurrentTabP1 = CurrentTab
+				CurrentRowP1 = CurrentRow
+				CurrentColumnP1 = CurrentColumn
+			elseif pn == "P2" then
+				CurrentTabP2 = CurrentTab
+				CurrentRowP2 = CurrentRow
+				CurrentColumnP2 = CurrentColumn
+			end
+			MESSAGEMAN:Broadcast("UpdateMenuCursorPosition"..pn, {})
+		end
+	
 	end,
 }
 
@@ -1065,6 +1255,107 @@ for i=1,#Difficulties do
 				end
 			end
 		end,
+		LeftMouseClickUpdateMessageCommand=function(self)
+			local CurrentTab, CurrentRow, CurrentColumn
+			if pn == "P1" then
+				CurrentTab = CurrentTabP1
+				CurrentRow = CurrentRowP1
+				CurrentColumn = CurrentColumnP1
+			elseif pn == "P2" then
+				CurrentTab = CurrentTabP2
+				CurrentRow = CurrentRowP2
+				CurrentColumn = CurrentColumnP2
+			end
+			if CurrentTab ~= 5 then return end
+			-- yooooooo the j!!!!
+			for j=1, #Difficulties do
+				local Parent = self:GetParent():GetChild(pn.."DifficultyModBox"..i)
+				local ObjectWidth = Parent:GetZoomX()
+				local ObjectHeight = Parent:GetZoomY()
+				local ObjectX = Parent:GetX()
+				local ObjectY = Parent:GetY()
+				local HAlign = Parent:GetHAlign()
+				local VAlign = Parent:GetVAlign()
+				ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+				ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+				
+				if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 5 then
+					if j == 1 and j == i then
+						CurrentRow = 6
+						CurrentColumn = 1
+						if CurrentEasy == 1 then
+							CurrentEasy = 0
+							SetShowDifficulty("Easy", CurrentEasy)
+							self:settext("")
+						elseif CurrentEasy == 0 then
+							CurrentEasy = 1
+							SetShowDifficulty("Easy", CurrentEasy)
+							self:settext("✅")
+						end
+						break
+					elseif j == 2 and j == i then
+						CurrentRow = 6
+						CurrentColumn = 2
+						if CurrentMedium == 1 then
+							CurrentMedium = 0
+							SetShowDifficulty("Medium", CurrentMedium)
+							self:settext("")
+						elseif CurrentMedium == 0 then
+							CurrentMedium = 1
+							SetShowDifficulty("Medium", CurrentMedium)
+							self:settext("✅")
+						end
+						break
+					elseif j == 3 and j == i then
+						CurrentRow = 6
+						CurrentColumn = 3
+						if CurrentHard == 1 then
+							CurrentHard = 0
+							SetShowDifficulty("Hard", CurrentHard)
+							self:settext("")
+						elseif CurrentHard == 0 then
+							CurrentHard = 1
+							SetShowDifficulty("Hard", CurrentHard)
+							self:settext("✅")
+						end
+						break
+					elseif j == 4 and j == i then
+						CurrentRow = 6
+						CurrentColumn = 4
+						if CurrentChallenge == 1 then
+							CurrentChallenge = 0
+							SetShowDifficulty("Challenge", CurrentChallenge)
+							self:settext("")
+						elseif CurrentChallenge == 0 then
+							CurrentChallenge = 1
+							SetShowDifficulty("Challenge", CurrentChallenge)
+							self:settext("✅")
+						end
+						break
+					end
+				end
+			end
+			if pn == "P1" then
+				CurrentTabP1 = CurrentTab
+				CurrentRowP1 = CurrentRow
+				CurrentColumnP1 = CurrentColumn
+			elseif pn == "P2" then
+				CurrentTabP2 = CurrentTab
+				CurrentRowP2 = CurrentRow
+				CurrentColumnP2 = CurrentColumn
+			end
+			if HaveSortsFiltersChanged() then
+				MusicWheelNeedsResetting = true
+			else
+				MusicWheelNeedsResetting = false
+			end
+			if IsUsingFilters() or IsUsingSorts() then
+				MESSAGEMAN:Broadcast("UpdateResetColor", {"green"})
+			else
+				MESSAGEMAN:Broadcast("UpdateResetColor", {"red"})
+			end
+			MESSAGEMAN:Broadcast("UpdateMenuCursorPosition"..pn, {})
+		end,
 	}
 end
 
@@ -1239,6 +1530,81 @@ for i=1,#Difficulties2 do
 				end
 			end
 		end,
+		LeftMouseClickUpdateMessageCommand=function(self)
+			local CurrentTab, CurrentRow, CurrentColumn
+			if pn == "P1" then
+				CurrentTab = CurrentTabP1
+				CurrentRow = CurrentRowP1
+				CurrentColumn = CurrentColumnP1
+			elseif pn == "P2" then
+				CurrentTab = CurrentTabP2
+				CurrentRow = CurrentRowP2
+				CurrentColumn = CurrentColumnP2
+			end
+			if CurrentTab ~= 5 then return end
+			-- yooooooo the j!!!!
+			for j=1, #Difficulties2 do
+				local Parent = self:GetParent():GetChild(pn.."Difficulty2ModBox"..i)
+				local ObjectWidth = Parent:GetZoomX()
+				local ObjectHeight = Parent:GetZoomY()
+				local ObjectX = Parent:GetX()
+				local ObjectY = Parent:GetY()
+				local HAlign = Parent:GetHAlign()
+				local VAlign = Parent:GetVAlign()
+				ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+				ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+				
+				if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 5 then
+					if j == 1 and j == i then
+						CurrentRow = 7
+						CurrentColumn = 1
+						if CurrentBeginner == 1 then
+							CurrentBeginner = 0
+							SetShowDifficulty("Beginner", CurrentBeginner)
+							self:settext("")
+						elseif CurrentBeginner == 0 then
+							CurrentBeginner = 1
+							SetShowDifficulty("Beginner", CurrentBeginner)
+							self:settext("✅")
+						end
+						break
+					elseif j == 2 and j == i then
+						CurrentRow = 7
+						CurrentColumn = 2
+						if CurrentEdit == 1 then
+							CurrentEdit = 0
+							SetShowDifficulty("Edit", CurrentEdit)
+							self:settext("")
+						elseif CurrentEdit == 0 then
+							CurrentEdit = 1
+							SetShowDifficulty("Edit", CurrentEdit)
+							self:settext("✅")
+						end
+						break
+					end
+				end
+			end
+			if pn == "P1" then
+				CurrentTabP1 = CurrentTab
+				CurrentRowP1 = CurrentRow
+				CurrentColumnP1 = CurrentColumn
+			elseif pn == "P2" then
+				CurrentTabP2 = CurrentTab
+				CurrentRowP2 = CurrentRow
+				CurrentColumnP2 = CurrentColumn
+			end
+			if HaveSortsFiltersChanged() then
+				MusicWheelNeedsResetting = true
+			else
+				MusicWheelNeedsResetting = false
+			end
+			if IsUsingFilters() or IsUsingSorts() then
+				MESSAGEMAN:Broadcast("UpdateResetColor", {"green"})
+			else
+				MESSAGEMAN:Broadcast("UpdateResetColor", {"red"})
+			end
+			MESSAGEMAN:Broadcast("UpdateMenuCursorPosition"..pn, {})
+		end,
 	}
 end
 
@@ -1268,21 +1634,59 @@ af[#af+1] = Def.Quad{
 			:y(TextYPosition - (TextHeight*TextZoom)/4)
 			:queuecommand("UpdateDisplayedTab")
 	end,
-		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 5 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 5 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
+	UpdateDisplayedTabCommand=function(self)
+		if pn == "P1" then
+			if CurrentTabP1 == 5 then
+				self:visible(true)
+			else
+				self:visible(false)
 			end
-		end,
+		elseif pn == "P2" then
+			if CurrentTabP2 == 5 then
+				self:visible(true)
+			else
+				self:visible(false)
+			end
+		end
+	end,
+	LeftMouseClickUpdateMessageCommand=function(self)
+		local CurrentTab, CurrentRow, CurrentColumn
+		if pn == "P1" then
+			CurrentTab = CurrentTabP1
+			CurrentRow = CurrentRowP1
+			CurrentColumn = CurrentColumnP1
+		elseif pn == "P2" then
+			CurrentTab = CurrentTabP2
+			CurrentRow = CurrentRowP2
+			CurrentColumn = CurrentColumnP2
+		end
+		if CurrentTab ~= 5 then return end
+		local Parent = self:GetParent():GetChild(pn.."BPMFilter1Box1")
+		local ObjectWidth = Parent:GetZoomX()
+		local ObjectHeight = Parent:GetZoomY()
+		local ObjectX = Parent:GetX()
+		local ObjectY = Parent:GetY()
+		local HAlign = Parent:GetHAlign()
+		local VAlign = Parent:GetVAlign()
+		ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+		ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+		
+		if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 5 then
+			CurrentRow = 8
+			CurrentColumn = 1
+			if pn == "P1" then
+				CurrentTabP1 = CurrentTab
+				CurrentRowP1 = CurrentRow
+				CurrentColumnP1 = CurrentColumn
+			elseif pn == "P2" then
+				CurrentTabP2 = CurrentTab
+				CurrentRowP2 = CurrentRow
+				CurrentColumnP2 = CurrentColumn
+			end
+			MESSAGEMAN:Broadcast("UpdateMenuCursorPosition"..pn, {})
+		end
+	
+	end,
 }
 
 -- The lower bpm text
@@ -1448,6 +1852,44 @@ af[#af+1] = Def.Quad{
 			end
 		end
 	end,
+	LeftMouseClickUpdateMessageCommand=function(self)
+		local CurrentTab, CurrentRow, CurrentColumn
+		if pn == "P1" then
+			CurrentTab = CurrentTabP1
+			CurrentRow = CurrentRowP1
+			CurrentColumn = CurrentColumnP1
+		elseif pn == "P2" then
+			CurrentTab = CurrentTabP2
+			CurrentRow = CurrentRowP2
+			CurrentColumn = CurrentColumnP2
+		end
+		if CurrentTab ~= 5 then return end
+		local Parent = self:GetParent():GetChild(pn.."BPMFilter2Box1")
+		local ObjectWidth = Parent:GetZoomX()
+		local ObjectHeight = Parent:GetZoomY()
+		local ObjectX = Parent:GetX()
+		local ObjectY = Parent:GetY()
+		local HAlign = Parent:GetHAlign()
+		local VAlign = Parent:GetVAlign()
+		ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+		ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+		
+		if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 5 then
+			CurrentRow = 9
+			CurrentColumn = 1
+			if pn == "P1" then
+				CurrentTabP1 = CurrentTab
+				CurrentRowP1 = CurrentRow
+				CurrentColumnP1 = CurrentColumn
+			elseif pn == "P2" then
+				CurrentTabP2 = CurrentTab
+				CurrentRowP2 = CurrentRow
+				CurrentColumnP2 = CurrentColumn
+			end
+			MESSAGEMAN:Broadcast("UpdateMenuCursorPosition"..pn, {})
+		end
+	
+	end,
 }
 
 -- The upper bpm text
@@ -1576,6 +2018,44 @@ af[#af+1] = Def.Quad{
 				self:visible(false)
 			end
 		end
+	end,
+	LeftMouseClickUpdateMessageCommand=function(self)
+		local CurrentTab, CurrentRow, CurrentColumn
+		if pn == "P1" then
+			CurrentTab = CurrentTabP1
+			CurrentRow = CurrentRowP1
+			CurrentColumn = CurrentColumnP1
+		elseif pn == "P2" then
+			CurrentTab = CurrentTabP2
+			CurrentRow = CurrentRowP2
+			CurrentColumn = CurrentColumnP2
+		end
+		if CurrentTab ~= 5 then return end
+		local Parent = self:GetParent():GetChild(pn.."LengthFilter1Box1")
+		local ObjectWidth = Parent:GetZoomX()
+		local ObjectHeight = Parent:GetZoomY()
+		local ObjectX = Parent:GetX()
+		local ObjectY = Parent:GetY()
+		local HAlign = Parent:GetHAlign()
+		local VAlign = Parent:GetVAlign()
+		ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+		ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+		
+		if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 5 then
+			CurrentRow = 10
+			CurrentColumn = 1
+			if pn == "P1" then
+				CurrentTabP1 = CurrentTab
+				CurrentRowP1 = CurrentRow
+				CurrentColumnP1 = CurrentColumn
+			elseif pn == "P2" then
+				CurrentTabP2 = CurrentTab
+				CurrentRowP2 = CurrentRow
+				CurrentColumnP2 = CurrentColumn
+			end
+			MESSAGEMAN:Broadcast("UpdateMenuCursorPosition"..pn, {})
+		end
+	
 	end,
 }
 
@@ -1784,6 +2264,44 @@ af[#af+1] = Def.Quad{
 				self:visible(false)
 			end
 		end
+	end,
+	LeftMouseClickUpdateMessageCommand=function(self)
+		local CurrentTab, CurrentRow, CurrentColumn
+		if pn == "P1" then
+			CurrentTab = CurrentTabP1
+			CurrentRow = CurrentRowP1
+			CurrentColumn = CurrentColumnP1
+		elseif pn == "P2" then
+			CurrentTab = CurrentTabP2
+			CurrentRow = CurrentRowP2
+			CurrentColumn = CurrentColumnP2
+		end
+		if CurrentTab ~= 5 then return end
+		local Parent = self:GetParent():GetChild(pn.."LengthFilter2Box1")
+		local ObjectWidth = Parent:GetZoomX()
+		local ObjectHeight = Parent:GetZoomY()
+		local ObjectX = Parent:GetX()
+		local ObjectY = Parent:GetY()
+		local HAlign = Parent:GetHAlign()
+		local VAlign = Parent:GetVAlign()
+		ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+		ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+		
+		if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 5 then
+			CurrentRow = 11
+			CurrentColumn = 1
+			if pn == "P1" then
+				CurrentTabP1 = CurrentTab
+				CurrentRowP1 = CurrentRow
+				CurrentColumnP1 = CurrentColumn
+			elseif pn == "P2" then
+				CurrentTabP2 = CurrentTab
+				CurrentRowP2 = CurrentRow
+				CurrentColumnP2 = CurrentColumn
+			end
+			MESSAGEMAN:Broadcast("UpdateMenuCursorPosition"..pn, {})
+		end
+	
 	end,
 }
 
@@ -2048,6 +2566,83 @@ af[#af+1] = Def.Quad{
 			MESSAGEMAN:Broadcast("UpdateResetColor", {"red"})
 		end
 	end,
+	LeftMouseClickUpdateMessageCommand=function(self)
+		local CurrentTab, CurrentRow, CurrentColumn
+		local MadeSelection = false
+		if pn == "P1" then
+			CurrentTab = CurrentTabP1
+			CurrentRow = CurrentRowP1
+			CurrentColumn = CurrentColumnP1
+		elseif pn == "P2" then
+			CurrentTab = CurrentTabP2
+			CurrentRow = CurrentRowP2
+			CurrentColumn = CurrentColumnP2
+		end
+		if CurrentTab ~= 5 then return end
+		for j=1,#FilterOptions do
+			local Parent = self:GetParent():GetChild(pn.."Groovestats"..j)
+			local ObjectZoom = Parent:GetZoom()
+			local ObjectWidth = Parent:GetWidth() * ObjectZoom
+			local ObjectHeight = Parent:GetHeight()
+			local ObjectX = Parent:GetX()
+			local ObjectY = Parent:GetY()
+			local HAlign = Parent:GetHAlign()
+			local VAlign = Parent:GetVAlign()
+			ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+			ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+			
+			if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 5 then
+				if j == 1 then
+					CurrentRow = 12
+					CurrentColumn = 1
+					CurrentGroovestats = 1
+					SetGroovestatsFilter(CurrentGroovestats)
+				elseif j == 2 then
+					CurrentRow = 12
+					CurrentColumn = 2
+					CurrentGroovestats = 2
+					SetGroovestatsFilter(CurrentGroovestats)
+				elseif j == 3 then
+					CurrentRow = 12
+					CurrentColumn = 3
+					CurrentGroovestats = 3
+					SetGroovestatsFilter(CurrentGroovestats)
+				end
+				MadeSelection = true
+			end
+		end
+		if MadeSelection then
+			local Parent2 = self:GetParent():GetChild(pn.."Groovestats"..CurrentColumn)
+			local TextZoom = Parent2:GetZoom()
+			local TextXPosition = Parent2:GetX()
+			local TextYPosition = Parent2:GetY()
+			local TextHeight = Parent2:GetHeight()
+			local TextWidth = Parent2:GetWidth() * TextZoom
+			if pn == "P1" then
+				CurrentTabP1 = CurrentTab
+				CurrentRowP1 = CurrentRow
+				CurrentColumnP1 = CurrentColumn
+			elseif pn == "P2" then
+				CurrentTabP2 = CurrentTab
+				CurrentRowP2 = CurrentRow
+				CurrentColumnP2 = CurrentColumn
+			end
+			self:zoomto(TextWidth, 3)
+					:x(TextXPosition)
+					:y(TextYPosition + TextHeight/3)
+			if HaveSortsFiltersChanged() then
+				MusicWheelNeedsResetting = true
+			else
+				MusicWheelNeedsResetting = false
+			end
+			if IsUsingFilters() or IsUsingSorts() then
+				MESSAGEMAN:Broadcast("UpdateResetColor", {"green"})
+			else
+				MESSAGEMAN:Broadcast("UpdateResetColor", {"red"})
+			end
+			MESSAGEMAN:Broadcast("UpdateMenuCursorPosition"..pn, {})
+		end
+	end,
 }
 
 
@@ -2178,6 +2773,83 @@ af[#af+1] = Def.Quad{
 			MESSAGEMAN:Broadcast("UpdateResetColor", {"red"})
 		end
 	end,
+	LeftMouseClickUpdateMessageCommand=function(self)
+		local CurrentTab, CurrentRow, CurrentColumn
+		local MadeSelection = false
+		if pn == "P1" then
+			CurrentTab = CurrentTabP1
+			CurrentRow = CurrentRowP1
+			CurrentColumn = CurrentColumnP1
+		elseif pn == "P2" then
+			CurrentTab = CurrentTabP2
+			CurrentRow = CurrentRowP2
+			CurrentColumn = CurrentColumnP2
+		end
+		if CurrentTab ~= 5 then return end
+		for j=1,#FilterOptions do
+			local Parent = self:GetParent():GetChild(pn.."Autogen"..j)
+			local ObjectZoom = Parent:GetZoom()
+			local ObjectWidth = Parent:GetWidth() * ObjectZoom
+			local ObjectHeight = Parent:GetHeight()
+			local ObjectX = Parent:GetX()
+			local ObjectY = Parent:GetY()
+			local HAlign = Parent:GetHAlign()
+			local VAlign = Parent:GetVAlign()
+			ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+			ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+			
+			if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 5 then
+				if j == 1 then
+					CurrentRow = 13
+					CurrentColumn = 1
+					CurrentAutogen = 1
+					SetAutogenFilter(CurrentAutogen)
+				elseif j == 2 then
+					CurrentRow = 13
+					CurrentColumn = 2
+					CurrentAutogen = 2
+					SetAutogenFilter(CurrentAutogen)
+				elseif j == 3 then
+					CurrentRow = 13
+					CurrentColumn = 3
+					CurrentAutogen = 3
+					SetAutogenFilter(CurrentAutogen)
+				end
+				MadeSelection = true
+			end
+		end
+		if MadeSelection then
+			local Parent2 = self:GetParent():GetChild(pn.."Autogen"..CurrentColumn)
+			local TextZoom = Parent2:GetZoom()
+			local TextXPosition = Parent2:GetX()
+			local TextYPosition = Parent2:GetY()
+			local TextHeight = Parent2:GetHeight()
+			local TextWidth = Parent2:GetWidth() * TextZoom
+			if pn == "P1" then
+				CurrentTabP1 = CurrentTab
+				CurrentRowP1 = CurrentRow
+				CurrentColumnP1 = CurrentColumn
+			elseif pn == "P2" then
+				CurrentTabP2 = CurrentTab
+				CurrentRowP2 = CurrentRow
+				CurrentColumnP2 = CurrentColumn
+			end
+			self:zoomto(TextWidth, 3)
+					:x(TextXPosition)
+					:y(TextYPosition + TextHeight/3)
+			if HaveSortsFiltersChanged() then
+				MusicWheelNeedsResetting = true
+			else
+				MusicWheelNeedsResetting = false
+			end
+			if IsUsingFilters() or IsUsingSorts() then
+				MESSAGEMAN:Broadcast("UpdateResetColor", {"green"})
+			else
+				MESSAGEMAN:Broadcast("UpdateResetColor", {"red"})
+			end
+			MESSAGEMAN:Broadcast("UpdateMenuCursorPosition"..pn, {})
+		end
+	end,
 }
 
 -- Reset text
@@ -2272,6 +2944,45 @@ af[#af+1] = Def.Quad{
 		if CurrentTab == 5 and CurrentRow == #SortsFiltersNames then
 			MESSAGEMAN:Broadcast("DDResetSortsFilters")
 		end
+	end,
+	LeftMouseClickUpdateMessageCommand=function(self)
+		local CurrentTab, CurrentRow, CurrentColumn
+		if pn == "P1" then
+			CurrentTab = CurrentTabP1
+			CurrentRow = CurrentRowP1
+			CurrentColumn = CurrentColumnP1
+		elseif pn == "P2" then
+			CurrentTab = CurrentTabP2
+			CurrentRow = CurrentRowP2
+			CurrentColumn = CurrentColumnP2
+		end
+		if CurrentTab ~= 5 then return end
+		local Parent = self:GetParent():GetChild(pn.."ResetButton")
+		local ObjectWidth = Parent:GetZoomX()
+		local ObjectHeight = Parent:GetZoomY()
+		local ObjectX = Parent:GetX()
+		local ObjectY = Parent:GetY()
+		local HAlign = Parent:GetHAlign()
+		local VAlign = Parent:GetVAlign()
+		ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+		ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+		
+		if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 5 then
+			CurrentRow = 14
+			CurrentColumn = 1
+			MESSAGEMAN:Broadcast("DDResetSortsFilters")
+			if pn == "P1" then
+				CurrentTabP1 = CurrentTab
+				CurrentRowP1 = CurrentRow
+				CurrentColumnP1 = CurrentColumn
+			elseif pn == "P2" then
+				CurrentTabP2 = CurrentTab
+				CurrentRowP2 = CurrentRow
+				CurrentColumnP2 = CurrentColumn
+			end
+			MESSAGEMAN:Broadcast("UpdateMenuCursorPosition"..pn, {})
+		end
+	
 	end,
 }
 

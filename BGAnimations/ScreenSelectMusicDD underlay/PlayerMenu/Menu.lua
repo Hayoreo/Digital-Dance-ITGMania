@@ -163,6 +163,68 @@ for i=1,6 do
 				end
 			end
 		end,
+		LeftMouseClickUpdateMessageCommand=function(self)
+			local CurrentTab, CurrentRow, CurrentColumn
+			if pn == "P1" then
+				CurrentTab = CurrentTabP1
+				CurrentRow = CurrentRowP1
+				CurrentColumn = CurrentColumnP1
+			elseif pn == "P2" then
+				CurrentTab = CurrentTabP2
+				CurrentRow = CurrentRowP2
+				CurrentColumn = CurrentColumnP2
+			end
+			for j=1, 6 do
+				local Parent = self:GetParent():GetChild(pn.."MenuTabs"..i)
+				local ObjectWidth = Parent:GetZoomX()
+				local ObjectHeight = Parent:GetZoomY()
+				local ObjectX = Parent:GetX()
+				local ObjectY = Parent:GetY()
+				local HAlign = Parent:GetHAlign()
+				local VAlign = Parent:GetVAlign()
+				ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+				ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+				
+				if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) then
+					CurrentTab = i
+					CurrentRow = 0
+					CurrentColumn = 1
+					if pn == "P1" then
+						if i == CurrentTabP1 then
+							local color = PlayerColor(player)
+							color[4] = 1
+							color[1] = 0.3 * color[1] + 0.2
+							color[2] = 0.3 * color[2] + 0.2
+							color[3] = 0.3 * color[3] + 0.2
+							self:GetParent():GetChild(pn.."MenuTabs"..CurrentTabP1):linear(0.1):diffuse(color)
+						else
+							self:GetParent():GetChild(pn.."MenuTabs"..i):linear(0.1):diffuse(color("#171717"))
+						end
+					elseif pn == "P2" then
+						if i == CurrentTabP2 then
+							local color = PlayerColor(player)
+							color[4] = 1
+							color[1] = 0.3 * color[1] + 0.2
+							color[2] = 0.3 * color[2] + 0.2
+							color[3] = 0.3 * color[3] + 0.2
+							self:GetParent():GetChild(pn.."MenuTabs"..CurrentTabP2):linear(0.1):diffuse(color)
+						else
+							self:GetParent():GetChild(pn.."MenuTabs"..i):linear(0.1):diffuse(color("#171717"))
+						end
+					end
+				end
+			end
+			if pn == "P1" then
+				CurrentTabP1 = CurrentTab
+				CurrentRowP1 = CurrentRow
+				CurrentColumnP1 = CurrentColumn
+			elseif pn == "P2" then
+				CurrentTabP2 = CurrentTab
+				CurrentRowP2 = CurrentRow
+				CurrentColumnP2 = CurrentColumn
+			end
+			MESSAGEMAN:Broadcast("UpdateMenuCursorPosition"..pn, {})
+		end,
 	}
 end
 
