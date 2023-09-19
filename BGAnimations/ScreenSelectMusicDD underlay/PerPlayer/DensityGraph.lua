@@ -163,7 +163,13 @@ af2[#af2+1] = LoadFont("Miso/_miso")..{
 		if SL[pn].Streams.PeakNPS ~= 0 then
 			self:settext(("Peak NPS: %.1f"):format(SL[pn].Streams.PeakNPS * SL.Global.ActiveModifiers.MusicRate).. " ("..npsBPM..")")
 		end
-	end
+	end,
+	UpdateRateModTextMessageCommand=function(self)
+		local npsBPM = round((SL[pn].Streams.PeakNPS * SL.Global.ActiveModifiers.MusicRate) * 15, 2)
+		if SL[pn].Streams.PeakNPS ~= 0 then
+			self:settext(("Peak NPS: %.1f"):format(SL[pn].Streams.PeakNPS * SL.Global.ActiveModifiers.MusicRate).. " ("..npsBPM..")")
+		end
+	end,
 }
 
 -- Breakdown
