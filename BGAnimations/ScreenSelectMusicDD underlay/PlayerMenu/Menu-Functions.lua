@@ -1,4 +1,11 @@
 -- Move as many functions that make sense here to clean up Input.lua
+local current_style = GAMESTATE:GetCurrentStyle():GetStyleType()
+local style
+if current_style == "StyleType_OnePlayerOneSide" then
+	style = "Double"
+elseif current_style == "StyleType_OnePlayerTwoSides" then
+	style = "Single"
+end
 
 local function GetLastStyle()
 	local value
@@ -76,17 +83,10 @@ local t = Def.ActorFrame{
 	end,
 
 	DDSwitchStylesMessageCommand=function(self)
-		local current_style = GAMESTATE:GetCurrentStyle():GetStyleType()
-		if current_style == "StyleType_OnePlayerOneSide" then
-			SetLastStyle("Double")
-			GAMESTATE:SetCurrentStyle("Double")
-		else
-			SetLastStyle("Single")
-			GAMESTATE:SetCurrentStyle("Single")
-		end
+		SetLastStyle(style)
+		GAMESTATE:SetCurrentStyle(style)
 		SongSearchWheelNeedsResetting = false
 		MESSAGEMAN:Broadcast("ReloadSSMDD")
-
 	end,
 	
 	SwitchSongCourseSelectMessageCommand=function(self)
