@@ -1,12 +1,12 @@
 -- Currently the Density Graph in SSM doesn't work for Courses.
 -- Disable the functionality.
--- Also disable if in 4:3 and on 2 player (there is not enough room)
 local nsj = GAMESTATE:GetNumSidesJoined()
 
 if GAMESTATE:IsCourseMode() then return end
 
 local player = ...
 local pn = ToEnumShortString(player)
+if not GAMESTATE:IsHumanPlayer(pn) then return end
 
 -- Get the Y position for this section
 local FooterHeight = 32
@@ -165,10 +165,7 @@ af2[#af2+1] = LoadFont("Miso/_miso")..{
 		end
 	end,
 	UpdateRateModTextMessageCommand=function(self)
-		local npsBPM = round((SL[pn].Streams.PeakNPS * SL.Global.ActiveModifiers.MusicRate) * 15, 2)
-		if SL[pn].Streams.PeakNPS ~= 0 then
-			self:settext(("Peak NPS: %.1f"):format(SL[pn].Streams.PeakNPS * SL.Global.ActiveModifiers.MusicRate).. " ("..npsBPM..")")
-		end
+		self:queuecommand("Redraw")
 	end,
 }
 
