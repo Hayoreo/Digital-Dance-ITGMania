@@ -66,20 +66,66 @@ af[#af+1] = Def.Quad{
 	end,
 }
 
--- Menu Outline
-af[#af+1] = Def.Quad{
+-- Menu Outline stuff
+local MenuOutlineTheta = 0
+
+local x0 = 0
+local x1 = width
+local y0 = -height/2
+local y1 = height/2
+local MenuOutlineSpeed = 5
+local MenuOutlineFPS = PREFSMAN:GetPreference("RefreshRate") ~= 0 and PREFSMAN:GetPreference("RefreshRate") or 120
+local PlayerWhiteness = pn == "P1" and 0.5 or 0.7
+
+
+local MenuOutlineVerts = {
+	{ { x0, y0, 0 }, { 0, 0, 0, 0 } },
+	{ { x1, y0, 0 }, { 1, 0, 0, 1 } },
+	{ { x1, y1, 0 }, { 0, 1, 0, 1 } },
+	{ { x0, y1, 0 }, { 0, 0, 1, 1 } },
+}
+
+local function ColorAtAngle(angle)
+	local color = PlayerColor(player)
+	local whiteness = PlayerWhiteness*(math.sin(angle)+1)/2
+	local playerness = 1 - whiteness
+
+	color[4] = 1
+	color[1] = playerness * color[1] + whiteness
+	color[2] = playerness * color[2] + whiteness
+	color[3] = playerness * color[3] + whiteness
+	
+	return color
+end
+
+local function RotateMenuOutlineColors()
+	MenuOutlineTheta = MenuOutlineTheta + MenuOutlineSpeed / MenuOutlineFPS
+
+	MenuOutlineVerts[1][2] = ColorAtAngle(MenuOutlineTheta)
+	MenuOutlineVerts[2][2] = ColorAtAngle(MenuOutlineTheta + 1.5*math.pi)
+	MenuOutlineVerts[3][2] = ColorAtAngle(MenuOutlineTheta + math.pi)
+	MenuOutlineVerts[4][2] = ColorAtAngle(MenuOutlineTheta + 0.5*math.pi)
+end
+
+RotateMenuOutlineColors()
+-- the actual menu outline
+af[#af+1] = Def.ActorMultiVertex {
 	Name="MenuOutline"..pn,
 	InitCommand=function(self)
-		local color = PlayerColor(player)
-		color[4] = 1
-		color[1] = 0.8 * color[1] + 0.2
-		color[2] = 0.8 * color[2] + 0.2
-		color[3] = 0.8 * color[3] + 0.2
-		self:diffuse(color)
-			:zoomto(width, height)
-			:vertalign(middle):horizalign(left)
-			:x(XPos + padding/2)
+		self:SetDrawState({Mode="DrawMode_Quads", First=1, Num=-1})
+		self:SetVertices(MenuOutlineVerts)
+
+		self:x(XPos + padding/2)
 			:y(YPos)
+			:queuecommand('RotateColor')
+	end,
+	RotateColorCommand=function(self)
+		self:linear(1/MenuOutlineFPS)
+		self:SetDrawState({Mode="DrawMode_Quads", First=1, Num=-1})
+		RotateMenuOutlineColors()
+		self:visible(true):SetVertices(MenuOutlineVerts)
+
+		self:queuecommand('RotateColor')
 	end,
 }
 

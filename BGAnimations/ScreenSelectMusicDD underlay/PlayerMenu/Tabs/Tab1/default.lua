@@ -1345,7 +1345,7 @@ af[#af+1] = Def.BitmapText{
 		if CurrentTab == 1 and CurrentRow == 5 then
 			if params[1] == "left" then
 				if CurrentRateMod <= MinRate then
-					CurrentRateMod = round(MaxRate)
+					CurrentRateMod = round(MaxRate, 2)
 				else
 					CurrentRateMod = round(CurrentRateMod - 0.01, 2)
 				end

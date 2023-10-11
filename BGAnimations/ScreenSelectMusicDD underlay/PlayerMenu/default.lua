@@ -12,8 +12,8 @@ end
 
 -- Input to control the menu, oh no.
 t[#t+1] = LoadActor("./MenuInput.lua", player)
--- Some functions used in the system table.concat
-t[#t+1] = LoadActor("./Menu-Functions.lua", player)
+-- Some functions used in the player menu
+t[#t+1] = LoadActor("./Menu-Functions.lua")
 
 
 return t

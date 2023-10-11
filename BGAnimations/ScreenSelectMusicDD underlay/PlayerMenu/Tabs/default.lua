@@ -13,6 +13,9 @@ local YPos = args.YPos
 local TabWidth = args.TabWidth
 local af = args.af
 
+local pn = ToEnumShortString(player)
+if not GAMESTATE:IsHumanPlayer(pn) then return end
+
 for i=1, NumTabs do
 	af[#af+1] = LoadActor("Tab"..i.."/default.lua", {player = player, padding = padding, border = border, width = width, height = height, XPos = XPos, YPos = YPos, TabWidth = TabWidth, af = af})
 end
