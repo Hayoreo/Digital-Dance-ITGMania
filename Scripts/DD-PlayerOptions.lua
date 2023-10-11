@@ -92,7 +92,7 @@ local Overrides = {
 
 	-------------------------------------------------------------------------
 	SpeedModType = {
-		Choices = { "X", "C", "M" },
+		Values = { "X", "C", "M" },
 		ExportOnChange = true,
 		LayoutType = "ShowOneInRow",
 		SaveSelections = function(self, list, pn)
@@ -100,7 +100,7 @@ local Overrides = {
 				if list[i] then
 					-- Broadcast a message that ./BGAnimations/ScreenPlayerOptions overlay.lua will be listening for
 					-- so it can hackishly modify the single BitmapText actor used in the SpeedMod optionrow
-					MESSAGEMAN:Broadcast('SpeedModType'..ToEnumShortString(pn)..'Set', {SpeedModType=self.Choices[i], Player=pn})
+					MESSAGEMAN:Broadcast('SpeedModType'..ToEnumShortString(pn)..'Set', {SpeedModType=self.Values[i], Player=pn})
 				end
 			end
 		end
@@ -250,7 +250,7 @@ local Overrides = {
 	MusicRate = {
 		Choices = function()
 			local first	= 1
-			local last 	= 2.8
+			local last 	= 3
 			local step 	= 0.01
 
 			return stringify( range(first, last, step), "%g")
