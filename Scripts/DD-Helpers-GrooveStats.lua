@@ -519,7 +519,7 @@ CreateCommentString = function(player)
 		if #comment ~= 0 then
 			comment = comment .. ", "
 		end
-		comment = comment.."Early Recores enabled"
+		comment = comment.."Early Rescores enabled"
 	end
 	
 	--- This currently doesn't work, I probably need to completely change the structure of the Autosubmit code.
