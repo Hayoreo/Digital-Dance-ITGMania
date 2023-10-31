@@ -99,7 +99,7 @@ local lastMenuDownPressTime = 0
 t.Handler = function(event)
 	-- Input to open the song search menu or reload a single song on the wheel. Keep track of both left and right Ctrl being held.
 	if event.type == "InputEventType_FirstPress" and event.type ~= "InputEventType_Release" then
-		if not IsSearchMenuVisible then
+		if not IsSearchMenuVisible and not EscapeFromEventMode then
 			if event.DeviceInput.button == "DeviceButton_left ctrl" or event.DeviceInput.button == "DeviceButton_right ctrl" then
 				CtrlHeld = CtrlHeld + 1
 			end
@@ -122,7 +122,7 @@ t.Handler = function(event)
 			end
 		end
 		
-		if event.DeviceInput.button == "DeviceButton_escape" and IsSearchMenuVisible then
+		if event.DeviceInput.button == "DeviceButton_escape" and IsSearchMenuVisible and not EscapeFromEventMode then
 			SOUND:PlayOnce( THEME:GetPathS("ScreenPlayerOptions", "cancel all.ogg") )
 			MESSAGEMAN:Broadcast("ToggleSearchMenu")
 		end
@@ -143,7 +143,7 @@ t.Handler = function(event)
 	-- Allow Mouse Input here
 	if event.type == "InputEventType_FirstPress" and event.type ~= "InputEventType_Release" and not IsSearchMenuVisible then
 		if IsMouseOnScreen() and ThemePrefs.Get("MouseInput") then
-			if not LeadboardHasFocus and not InputMenuHasFocus then
+			if not LeadboardHasFocus and not InputMenuHasFocus and not EscapeFromEventMode then
 				-- Close the song folder and switch to group wheel if mouse wheel is pressed.
 				if event.DeviceInput.button == "DeviceButton_middle mouse button" and t.WheelWithFocus == SongWheel then
 					stop_music()
@@ -460,7 +460,7 @@ t.Handler = function(event)
 	end
 	
 	-- if any of these, don't attempt to handle input
-	if t.Enabled == false or not event or not event.PlayerNumber or not event.button or IsSearchMenuVisible then
+	if t.Enabled == false or not event or not event.PlayerNumber or not event.button or IsSearchMenuVisible or EscapeFromEventMode then
 		return false
 	end
 
@@ -534,11 +534,6 @@ t.Handler = function(event)
 	-- Don't allow input if a player has their Menu open.
 	if event.PlayerNumber == "PlayerNumber_P1" and PlayerMenuP1 == true then return false end
 	if event.PlayerNumber == "PlayerNumber_P2" and PlayerMenuP2 == true then return false end
-	
-	-- Disable input if EscapeFromEventMode is active
-	if EscapeFromEventMode then
-		t.enabled = false
-	end
 	
 	if not GAMESTATE:IsSideJoined(event.PlayerNumber) then
 		if not t.AllowLateJoin() then return false end

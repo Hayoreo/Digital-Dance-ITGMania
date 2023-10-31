@@ -28,7 +28,6 @@ local af = Def.ActorFrame{
 	-- the SM5 engine has broadcast that the player input a Metrics-based button code
 	CodeMessageCommand=function(self, params)
 		if params.Name == "EscapeFromEventMode" then
-			EscapeFromEventMode = true
 			self:queuecommand("Show")
 		end
 	end,
@@ -49,7 +48,7 @@ local af = Def.ActorFrame{
 			topscreen:AddInputCallback(InputHandler)
 
 			-- disable the engine's input handling
-			InputMenuHasFocus = true
+			EscapeFromEventMode = true
 			-- make this overlay visible
 			self:visible(true)
 		end
@@ -77,7 +76,6 @@ local af = Def.ActorFrame{
 			topscreen:RemoveInputCallback(InputHandler)
 			-- return input handling to input.lua so players can continune choosing a song
 			EscapeFromEventMode = false
-			InputMenuHasFocus = false
 			-- hide this overlay
 			self:visible(false)
 		end
@@ -90,7 +88,6 @@ local af = Def.ActorFrame{
 			sfx.start:play()
 			-- return input handling to the input.lua before leaving ScreenSelectMusic
 			EscapeFromEventMode = false
-			InputMenuHasFocus = false
 			-- determine what the previous screen would be (because next screen is normally PlayerOptions or Gameplay)
 			-- make that the next screen, and transition to it
 			topscreen:SetNextScreenName( topscreen:GetPrevScreenName() ):StartTransitioningScreen("SM_GoToNextScreen")

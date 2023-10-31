@@ -136,7 +136,7 @@ local TabsTable = {
 local InputHandler = function( event )
 	
 	-- Allow Mouse Input here
-	if event.type == "InputEventType_FirstPress" and event.type ~= "InputEventType_Release" and not IsSearchMenuVisible and IsMouseOnScreen() then
+	if event.type == "InputEventType_FirstPress" and event.type ~= "InputEventType_Release" and not IsSearchMenuVisible and not EscapeFromEventMode and IsMouseOnScreen() then
 		if not LeadboardHasFocus and not InputMenuHasFocus then
 			if event.DeviceInput.button == "DeviceButton_left mouse button" then
 				MESSAGEMAN:Broadcast("LeftMouseClickUpdate")
@@ -159,7 +159,7 @@ local InputHandler = function( event )
 		CurrentColumn = CurrentColumnP2
 	end
 	
-	if event.type ~= "InputEventType_Release" and not IsSearchMenuVisible and not LeadboardHasFocus and not InputMenuHasFocus then
+	if event.type ~= "InputEventType_Release" and not IsSearchMenuVisible and not LeadboardHasFocus and not InputMenuHasFocus and not EscapeFromEventMode then
 		if event.GameButton == "MenuRight" then
 			if CurrentRow == 0 then
 				if CurrentTab == 6 then
