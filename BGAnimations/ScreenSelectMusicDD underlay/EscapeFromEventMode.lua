@@ -77,6 +77,7 @@ local af = Def.ActorFrame{
 			topscreen:RemoveInputCallback(InputHandler)
 			-- return input handling to input.lua so players can continune choosing a song
 			EscapeFromEventMode = false
+			InputMenuHasFocus = false
 			-- hide this overlay
 			self:visible(false)
 		end
@@ -89,6 +90,7 @@ local af = Def.ActorFrame{
 			sfx.start:play()
 			-- return input handling to the input.lua before leaving ScreenSelectMusic
 			EscapeFromEventMode = false
+			InputMenuHasFocus = false
 			-- determine what the previous screen would be (because next screen is normally PlayerOptions or Gameplay)
 			-- make that the next screen, and transition to it
 			topscreen:SetNextScreenName( topscreen:GetPrevScreenName() ):StartTransitioningScreen("SM_GoToNextScreen")
