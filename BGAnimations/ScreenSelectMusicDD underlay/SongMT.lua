@@ -243,7 +243,7 @@ local song_mt = {
 			if type(song) == "string" then
 				if song == "CloseThisFolder" then
 					self.song = song
-					self.title_bmt:settext(NameOfGroup):diffuse(color("#4ffff3")):shadowlength(1.1):horizalign(center):valign(0.5):x(0)
+					self.title_bmt:settext(NameOfGroup):maxwidth(280):diffuse(color("#4ffff3")):shadowlength(1.1):horizalign(center):valign(0.5):x(0)
 					self.QuadColor:diffuse(color("#363d42"))
 					self.subtitle_bmt:settext("")
 				else
