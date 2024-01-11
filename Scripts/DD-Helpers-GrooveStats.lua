@@ -408,7 +408,6 @@ ValidForGrooveStats = function(player)
 	for _, passed_check in ipairs(valid) do
 		if not passed_check then allChecksValid = false break end
 	end
-
 	return valid, allChecksValid
 end
 
@@ -470,7 +469,7 @@ CreateCommentString = function(player)
 	end
 	
 	--If the player got a quint, first of all nice, but let other people know here.
-	if IsQuint and IsQuad then
+	if IsQuint then
 		if #comment ~= 0 then
 			comment = comment .. ", "
 		end
@@ -511,7 +510,7 @@ CreateCommentString = function(player)
 			comment = comment .. ", "
 		end
 		local EXScore = ("%.2f"):format(CalculateExScore(player))
-		comment = comment.."EX Score: "..EXScore.."%"
+		comment = comment.."EX Score: "..EXScore
 	end
 	
 	-- Let's show if people are playing with Early Rescores on or not.
