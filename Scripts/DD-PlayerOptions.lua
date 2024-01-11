@@ -477,7 +477,7 @@ local Overrides = {
 	TargetScore = {
 		Values = { 'C-', 'C', 'C+', 'B-', 'B', 'B+', 'A-', 'A', 'A+', 'S-', 'S', 'S+', '☆', '☆☆', '☆☆☆', '☆☆☆☆', 'Machine best', 'Personal best' },
 		LoadSelections = function(self, list, pn)
-			local i = tonumber(SL[ToEnumShortString(pn)].ActiveModifiers.TargetScore) or 11
+			local i = tonumber(SL[ToEnumShortString(pn)].ActiveModifiers.TargetScore) or 101
 			list[i] = true
 			return list
 		end,
