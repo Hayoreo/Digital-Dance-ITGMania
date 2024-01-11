@@ -801,10 +801,8 @@ GetExJudgmentCounts = function(player)
 	for RCType in ivalues(RadarCategory) do
 		local number = stats:GetRadarActual():GetValue( "RadarCategory_"..RCType )
 		local possible = StepsOrTrail:GetRadarValues(player):GetValue( "RadarCategory_"..RCType )
-		-- We want to keep track of mines hit.
-		if RCType == "Mines" then
-			counts[RCType] = possible - number
 
+		if RCType == "Mines" then
 			-- NoMines still report the total number of mines that exist in a chart, even if they weren't played in the chart.
 			-- If NoMines was set, report 0 for the number of mines as the chart actually didn't have any.
 			-- TODO(teejusb): Track AvoidMine in the future. This is fine for now as ITL compares serverside.
