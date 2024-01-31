@@ -2554,7 +2554,9 @@ af[#af+1] = Def.BitmapText{
 		if CurrentTab == 2 and CurrentRow == 10 then
 			if params[1] == "left" then
 				if PlayerNotefieldX <= MinNotefield then
-					PlayerNotefieldX = MaxNotefield
+					if not params[2] == true then
+						PlayerNotefieldX = MaxNotefield
+					end
 				else
 					PlayerNotefieldX = PlayerNotefieldX - 1
 				end
@@ -2562,7 +2564,9 @@ af[#af+1] = Def.BitmapText{
 				self:settext(PlayerNotefieldX)
 			elseif params[1] == "right" then
 				if PlayerNotefieldX >= MaxNotefield then
-					PlayerNotefieldX = MinNotefield
+					if not params[2] == true then
+						PlayerNotefieldX = MinNotefield
+					end
 				else
 					PlayerNotefieldX = PlayerNotefieldX + 1
 				end
@@ -2700,7 +2704,9 @@ af[#af+1] = Def.BitmapText{
 		if CurrentTab == 2 and CurrentRow == 11 then
 			if params[1] == "left" then
 				if PlayerNotefieldY <= MinNotefield then
-					PlayerNotefieldY = MaxNotefield
+					if not params[2] == true then
+						PlayerNotefieldY = MaxNotefield
+					end
 				else
 					PlayerNotefieldY = PlayerNotefieldY - 1
 				end
@@ -2708,7 +2714,9 @@ af[#af+1] = Def.BitmapText{
 				self:settext(PlayerNotefieldY)
 			elseif params[1] == "right" then
 				if PlayerNotefieldY >= MaxNotefield then
-					PlayerNotefieldY = MinNotefield
+					if not params[2] == true then
+						PlayerNotefieldY = MinNotefield
+					end
 				else
 					PlayerNotefieldY = PlayerNotefieldY + 1
 				end
@@ -2851,7 +2859,9 @@ af[#af+1] = Def.BitmapText{
 		if CurrentTab == 2 and CurrentRow == 12 then
 			if params[1] == "left" then
 				if PlayerVisualDelay <= MinVisualDelay then
-					PlayerVisualDelay = MaxVisualDelay
+					if not params[2] == true then
+						PlayerVisualDelay = MaxVisualDelay
+					end
 				else
 					PlayerVisualDelay = PlayerVisualDelay - 1
 				end
@@ -2860,7 +2870,9 @@ af[#af+1] = Def.BitmapText{
 				self:settext(PlayerVisualDelay.."ms")
 			elseif params[1] == "right" then
 				if PlayerVisualDelay >= MaxVisualDelay then
-					PlayerVisualDelay = MinVisualDelay
+					if not params[2] == true then
+						PlayerVisualDelay = MinVisualDelay
+					end
 				else
 					PlayerVisualDelay = PlayerVisualDelay + 1
 				end

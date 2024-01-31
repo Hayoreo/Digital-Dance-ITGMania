@@ -422,13 +422,17 @@ af[#af+1] = Def.BitmapText{
 			if params[1] == "left" then
 				if PlayerSpeedType == "X" then
 					if PlayerSpeedMod <= MinXMod then
-						PlayerSpeedMod = MaxXMod
+						if not params[2] == true then
+							PlayerSpeedMod = MaxXMod
+						end
 					else
 						PlayerSpeedMod = PlayerSpeedMod - 0.05
 					end
 				elseif PlayerSpeedType == "C" or PlayerSpeedType == "M" then
 					if PlayerSpeedMod <= MinCMod then
-						PlayerSpeedMod = MaxCMod
+						if not params[2] == true then
+							PlayerSpeedMod = MaxCMod
+						end
 					else
 						PlayerSpeedMod = PlayerSpeedMod - 5
 					end
@@ -446,13 +450,17 @@ af[#af+1] = Def.BitmapText{
 			elseif params[1] == "right" then
 				if PlayerSpeedType == "X" then
 					if PlayerSpeedMod >= MaxXMod then
-						PlayerSpeedMod = MinXMod
+						if not params[2] == true then
+							PlayerSpeedMod = MinXMod
+						end
 					else
 						PlayerSpeedMod = PlayerSpeedMod + 0.05
 					end
 				elseif PlayerSpeedType == "C" or PlayerSpeedType == "M" then
 					if PlayerSpeedMod >= MaxCMod then
-						PlayerSpeedMod = MinCMod
+						if not params[2] == true then
+							PlayerSpeedMod = MinCMod
+						end
 					else
 						PlayerSpeedMod = PlayerSpeedMod + 5
 					end
@@ -852,7 +860,9 @@ af[#af+1] = Def.BitmapText{
 		if CurrentTab == 1 and CurrentRow == 3 then
 			if params[1] == "left" then
 				if PlayerMini == MinMini then
-					PlayerMini = MaxMini
+					if not params[2] == true then
+						PlayerMini = MaxMini
+					end
 				else
 					PlayerMini = PlayerMini - 1
 				end
@@ -861,7 +871,9 @@ af[#af+1] = Def.BitmapText{
 					:queuecommand("SetMod")
 			elseif params[1] == "right" then
 				if PlayerMini == MaxMini then
-					PlayerMini = MinMini
+					if not params[2] == true then
+						PlayerMini = MinMini
+					end
 				else
 					PlayerMini = PlayerMini + 1
 				end
@@ -1345,7 +1357,9 @@ af[#af+1] = Def.BitmapText{
 		if CurrentTab == 1 and CurrentRow == 5 then
 			if params[1] == "left" then
 				if CurrentRateMod <= MinRate then
-					CurrentRateMod = round(MaxRate, 2)
+					if not params[2] == true then
+						CurrentRateMod = round(MaxRate, 2)
+					end
 				else
 					CurrentRateMod = round(CurrentRateMod - 0.01, 2)
 				end
@@ -1353,7 +1367,9 @@ af[#af+1] = Def.BitmapText{
 					:queuecommand("SetMod")
 			elseif params[1] == "right" then
 				if CurrentRateMod >= MaxRate then
-					CurrentRateMod = round(MinRate)
+					if not params[2] == true then
+						CurrentRateMod = round(MinRate)
+					end
 				else
 					CurrentRateMod = round(CurrentRateMod + 0.01, 2)
 				end

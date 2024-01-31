@@ -160,6 +160,7 @@ local InputHandler = function( event )
 	end
 	
 	if event.type ~= "InputEventType_Release" and not IsSearchMenuVisible and not LeadboardHasFocus and not InputMenuHasFocus and not EscapeFromEventMode then
+		local IsHeld = false
 		if event.GameButton == "MenuRight" then
 			if CurrentRow == 0 then
 				if CurrentTab == 6 then
@@ -217,17 +218,20 @@ local InputHandler = function( event )
 				MESSAGEMAN:Broadcast("PlayerMenuSelectionP2")
 			end
 		end
+		if event.type ~= "InputEventType_Release" and event.type ~= "InputEventType_FirstPress" then
+			IsHeld = true
+		end
 		
 		if event.PlayerNumber == "PlayerNumber_P1" then
 			CurrentTabP1 = CurrentTab
 			CurrentRowP1 = CurrentRow
 			CurrentColumnP1 = CurrentColumn
-			MESSAGEMAN:Broadcast("UpdateMenuCursorPositionP1", {Direction})
+			MESSAGEMAN:Broadcast("UpdateMenuCursorPositionP1", {Direction, IsHeld})
 		elseif event.PlayerNumber == "PlayerNumber_P2" then
 			CurrentTabP2 = CurrentTab
 			CurrentRowP2 = CurrentRow
 			CurrentColumnP2 = CurrentColumn
-			MESSAGEMAN:Broadcast("UpdateMenuCursorPositionP2", {Direction})
+			MESSAGEMAN:Broadcast("UpdateMenuCursorPositionP2", {Direction, IsHeld})
 		end
 	end
 end

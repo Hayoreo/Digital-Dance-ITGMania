@@ -795,9 +795,11 @@ af[#af+1] = Def.BitmapText{
 		if CurrentTab == 5 and CurrentRow == 4 then
 			if params[1] == "right" then
 				if CurrentLowerMeter == MaxMeter then
-					CurrentLowerMeter = 0
-					SetLowerMeterFilter(CurrentLowerMeter)
-					self:settext(CurrentLowerMeter == 0 and "none" or CurrentLowerMeter)
+					if not params[2] == true then
+						CurrentLowerMeter = 0
+						SetLowerMeterFilter(CurrentLowerMeter)
+						self:settext(CurrentLowerMeter == 0 and "none" or CurrentLowerMeter)
+					end
 				else
 					CurrentLowerMeter = CurrentLowerMeter + 1
 					SetLowerMeterFilter(CurrentLowerMeter)
@@ -815,9 +817,11 @@ af[#af+1] = Def.BitmapText{
 				end
 			elseif params[1] == "left" then
 				if CurrentLowerMeter == 0 then
-					CurrentLowerMeter = MaxMeter
-					SetLowerMeterFilter(CurrentLowerMeter)
-					self:settext(CurrentLowerMeter == 0 and "none" or CurrentLowerMeter)
+					if not params[2] == true then
+						CurrentLowerMeter = MaxMeter
+						SetLowerMeterFilter(CurrentLowerMeter)
+						self:settext(CurrentLowerMeter == 0 and "none" or CurrentLowerMeter)
+					end
 				else
 					CurrentLowerMeter = CurrentLowerMeter - 1
 					SetLowerMeterFilter(CurrentLowerMeter)
@@ -998,9 +1002,11 @@ af[#af+1] = Def.BitmapText{
 		if CurrentTab == 5 and CurrentRow == 5 then
 			if params[1] == "right" then
 				if CurrentUpperMeter == MaxMeter then
-					CurrentUpperMeter = 0
-					SetUpperMeterFilter(CurrentUpperMeter)
-					self:settext(CurrentUpperMeter == 0 and "none" or CurrentUpperMeter)
+					if not params[2] == true then
+						CurrentUpperMeter = 0
+						SetUpperMeterFilter(CurrentUpperMeter)
+						self:settext(CurrentUpperMeter == 0 and "none" or CurrentUpperMeter)
+					end
 				else
 					CurrentUpperMeter = CurrentUpperMeter + 1
 					SetUpperMeterFilter(CurrentUpperMeter)
@@ -1018,9 +1024,11 @@ af[#af+1] = Def.BitmapText{
 				end
 			elseif params[1] == "left" then
 				if CurrentUpperMeter == 0 then
-					CurrentUpperMeter = MaxMeter
-					SetUpperMeterFilter(CurrentUpperMeter)
-					self:settext(CurrentUpperMeter == 0 and "none" or CurrentUpperMeter)
+					if not params[2] == true then
+						CurrentUpperMeter = MaxMeter
+						SetUpperMeterFilter(CurrentUpperMeter)
+						self:settext(CurrentUpperMeter == 0 and "none" or CurrentUpperMeter)
+					end
 				else
 					CurrentUpperMeter = CurrentUpperMeter - 1
 					SetUpperMeterFilter(CurrentUpperMeter)
@@ -1738,9 +1746,11 @@ af[#af+1] = Def.BitmapText{
 		if CurrentTab == 5 and CurrentRow == 8 then
 			if params[1] == "right" then
 				if CurrentLowerBPM == MaxBPM then
-					CurrentLowerBPM = 49
-					SetLowerBPMFilter(CurrentLowerBPM)
-					self:settext(CurrentLowerBPM == 49 and "none" or CurrentLowerBPM)
+					if not params[2] == true then
+						CurrentLowerBPM = 49
+						SetLowerBPMFilter(CurrentLowerBPM)
+						self:settext(CurrentLowerBPM == 49 and "none" or CurrentLowerBPM)
+					end
 				else
 					CurrentLowerBPM = CurrentLowerBPM + 1
 					SetLowerBPMFilter(CurrentLowerBPM)
@@ -1758,9 +1768,11 @@ af[#af+1] = Def.BitmapText{
 				end
 			elseif params[1] == "left" then
 				if CurrentLowerBPM == 49 then
-					CurrentLowerBPM = MaxBPM
-					SetLowerBPMFilter(CurrentLowerBPM)
-					self:settext(CurrentLowerBPM == 49 and "none" or CurrentLowerBPM)
+					if not params[2] == true then
+						CurrentLowerBPM = MaxBPM
+						SetLowerBPMFilter(CurrentLowerBPM)
+						self:settext(CurrentLowerBPM == 49 and "none" or CurrentLowerBPM)
+					end
 				else
 					CurrentLowerBPM = CurrentLowerBPM - 1
 					SetLowerBPMFilter(CurrentLowerBPM)
@@ -1941,9 +1953,11 @@ af[#af+1] = Def.BitmapText{
 		if CurrentTab == 5 and CurrentRow == 9 then
 			if params[1] == "right" then
 				if CurrentUpperBPM == MaxBPM then
-					CurrentUpperBPM = 49
-					SetUpperBPMFilter(CurrentUpperBPM)
-					self:settext(CurrentUpperBPM == 49 and "none" or CurrentUpperBPM)
+					if not params[2] == true then
+						CurrentUpperBPM = 49
+						SetUpperBPMFilter(CurrentUpperBPM)
+						self:settext(CurrentUpperBPM == 49 and "none" or CurrentUpperBPM)
+					end
 				else
 					CurrentUpperBPM = CurrentUpperBPM + 1
 					SetUpperBPMFilter(CurrentUpperBPM)
@@ -1961,9 +1975,11 @@ af[#af+1] = Def.BitmapText{
 				end
 			elseif params[1] == "left" then
 				if CurrentUpperBPM == 49 then
-					CurrentUpperBPM = MaxBPM
-					SetUpperBPMFilter(CurrentUpperBPM)
-					self:settext(CurrentUpperBPM == 49 and "none" or CurrentUpperBPM)
+					if not params[2] == true then
+						CurrentUpperBPM = MaxBPM
+						SetUpperBPMFilter(CurrentUpperBPM)
+						self:settext(CurrentUpperBPM == 49 and "none" or CurrentUpperBPM)
+					end
 				else
 					CurrentUpperBPM = CurrentUpperBPM - 1
 					SetUpperBPMFilter(CurrentUpperBPM)
@@ -2117,8 +2133,10 @@ af[#af+1] = Def.BitmapText{
 		if CurrentTab == 5 and CurrentRow == 10 then
 			if params[1] == "right" then
 				if CurrentLowerLength == 3600 then
-					CurrentLowerLength = 0
-					self:queuecommand('UpdateLowerLength')
+					if not params[2] == true then
+						CurrentLowerLength = 0
+						self:queuecommand('UpdateLowerLength')
+					end
 				--- go in increments of 30sec for songs less than 1 minute
 				elseif CurrentLowerLength >= 0 and CurrentLowerLength < 60 then
 					CurrentLowerLength = CurrentLowerLength + 30
@@ -2148,8 +2166,10 @@ af[#af+1] = Def.BitmapText{
 				end
 			elseif params[1] == "left" then
 				if CurrentLowerLength == 0 then
-					CurrentLowerLength = 3600
-					self:queuecommand('UpdateLowerLength')
+					if not params[2] == true then
+						CurrentLowerLength = 3600
+						self:queuecommand('UpdateLowerLength')
+					end
 				--- go in increments of 30sec for songs less than 1 minute
 				elseif CurrentLowerLength > 0 and CurrentLowerLength <= 60 then
 					CurrentLowerLength = CurrentLowerLength - 30
@@ -2363,8 +2383,10 @@ af[#af+1] = Def.BitmapText{
 		if CurrentTab == 5 and CurrentRow == 11 then
 			if params[1] == "right" then
 				if CurrentUpperLength == 3600 then
-					CurrentUpperLength = 0
-					self:queuecommand('UpdateUpperLength')
+					if not params[2] == true then
+						CurrentUpperLength = 0
+						self:queuecommand('UpdateUpperLength')
+					end
 				--- go in increments of 30sec for songs less than 1 minute
 				elseif CurrentUpperLength >= 0 and CurrentUpperLength < 60 then
 					CurrentUpperLength = CurrentUpperLength + 30
@@ -2384,8 +2406,10 @@ af[#af+1] = Def.BitmapText{
 				end
 			elseif params[1] == "left" then
 				if CurrentUpperLength == 0 then
-					CurrentUpperLength = 3600
-					self:queuecommand('UpdateUpperLength')
+					if not params[2] == true then
+						CurrentUpperLength = 3600
+						self:queuecommand('UpdateUpperLength')
+					end
 				--- go in increments of 30sec for songs less than 1 minute
 				elseif CurrentUpperLength > 0 and CurrentUpperLength <= 60 then
 					CurrentUpperLength = CurrentUpperLength - 30

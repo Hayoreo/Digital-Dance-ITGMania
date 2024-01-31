@@ -2951,7 +2951,9 @@ af[#af+1] = Def.BitmapText{
 		if CurrentTab == 3 and CurrentRow == 13 then
 			if params[1] == "left" then
 				if PlayerColumnCue <= MinColumnCue then
-					PlayerColumnCue = MaxColumnCue
+					if not params[2] == true then
+						PlayerColumnCue = MaxColumnCue
+					end
 				else
 					PlayerColumnCue = round(PlayerColumnCue - 0.1, 1)
 				end
@@ -2964,7 +2966,9 @@ af[#af+1] = Def.BitmapText{
 				self:settext(PlayerColumnCue == 0 and CueText or PlayerColumnCue.."s")
 			elseif params[1] == "right" then
 				if PlayerColumnCue >= MaxColumnCue then
-					PlayerColumnCue = MinColumnCue
+					if not params[2] == true then
+						PlayerColumnCue = MinColumnCue
+					end
 				else
 					PlayerColumnCue = round(PlayerColumnCue + 0.1, 1)
 				end
