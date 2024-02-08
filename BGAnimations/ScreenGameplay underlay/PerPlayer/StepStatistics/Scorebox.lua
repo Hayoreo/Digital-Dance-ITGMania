@@ -97,14 +97,7 @@ local LeaderboardRequestProcessor = function(res, master)
 	-- First check to see if the leaderboard even exists.
 	if data and data[playerStr] then
 		-- These will get overwritten if we have any entries in the leaderboard below.
-		if data[playerStr]["isRanked"] then
-			SetScoreData(1, 1, "", "No Scores", "", false, false, false)
-		else
-			if (not (data[playerStr]["rpg"] and data[playerStr]["rpg"]["rpgLeaderboard"]) and
-					not (data[playerStr]["itl"] and data[playerStr]["itl"]["itlLeaderboard"])) then
-				SetScoreData(1, 1, "", "Chart Not Ranked", "", false, false, false)
-			end
-		end
+		SetScoreData(1, 1, "", "No Scores", "", false, false, false)
 
 		if data[playerStr]["gsLeaderboard"] then
 			local numEntries = 0

@@ -196,14 +196,14 @@ local LeaderboardRequestProcessor = function(res, master)
 					SetScoreData(2, i, "", "", "", false, false, false)
 					SetScoreData(3, i, "", "", "", false, false, false)
 				end
-				SetScoreData(1, 1, "", "Chart Not Ranked", "", false, false, false)
+				SetScoreData(1, 1, "", "No Scores", "", false, false, false)
 				SetScoreData(2, 1, "", "Chart Not Ranked", "", false, false, false)
 				SetScoreData(3, 1, "", "Chart Not Ranked", "", false, false, false)
 				isRanked = false
 			end
 		end
 
-		if data[playerStr]["isRanked"] and data[playerStr]["gsLeaderboard"] then
+		if data[playerStr]["gsLeaderboard"] then
 			local entryCount = 0
 			for entry in ivalues(data[playerStr]["gsLeaderboard"]) do
 				entryCount = entryCount + 1
@@ -231,7 +231,7 @@ local LeaderboardRequestProcessor = function(res, master)
 			for i=1,num_scores do
 				SetScoreData(1, i, "", "", "", false, false, false)
 			end
-			SetScoreData(1, 1, "", "Chart Not Ranked", "", false, false, false)
+			SetScoreData(1, 1, "", "No Scores", "", false, false, false)
 		end
 
 		if data[playerStr]["rpg"] then
