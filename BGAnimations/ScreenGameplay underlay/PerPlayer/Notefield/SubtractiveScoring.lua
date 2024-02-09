@@ -172,7 +172,11 @@ bmt.SetScoreCommand=function(self, params)
 		score = math.floor(((possible_dp - score) / possible_dp) * 10000) / 100
 
 		-- specify percent away from 100%
-		self:settext( ("-%.2f%%"):format(100-score) )
+		if 100-score >= 0.01 then
+			self:settext( ("-%.2f%%"):format(100-score) )
+		else
+			self:settext("")
+		end
 	end
 end
 
