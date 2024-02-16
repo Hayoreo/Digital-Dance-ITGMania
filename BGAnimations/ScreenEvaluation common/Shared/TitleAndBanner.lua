@@ -26,9 +26,9 @@ if SongOrCourse and SongOrCourse:HasBanner() then
 		Name="Banner",
 		InitCommand=function(self)
 			if GAMESTATE:IsCourseMode() then
-				self:LoadFromCourse( GAMESTATE:GetCurrentCourse() )
+				self:LoadFromCourse( GAMESTATE:GetCurrentCourse() ):animate(false)
 			else
-				self:LoadFromSong( GAMESTATE:GetCurrentSong() )
+				self:LoadFromSong( GAMESTATE:GetCurrentSong() ):animate(false)
 			end
 		end,
 		OnCommand=cmd(xy, _screen.cx, 121.5; setsize,418,164; zoom, 0.7 )
