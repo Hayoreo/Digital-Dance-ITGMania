@@ -75,12 +75,6 @@ local t = Def.ActorFrame {
 		-- It should be safe to enable input for players now
 		self:queuecommand("EnableInput")
 	end,
-	
-	ShowOptionsJawnMessageCommand=function(self)
-		if LeavingScreenSelectMusicDD == false then
-			LeavingScreenSelectMusicDD = true
-		end
-	end,
 	CodeMessageCommand=function(self, params)
 		-- I'm using Metrics-based code detection because the engine is already good at handling
 		-- simultaneous button presses,
@@ -88,15 +82,13 @@ local t = Def.ActorFrame {
 		-- reinvent that functionality for the Lua InputCallback that I'm using otherwise.
 		
 		-- Don't do these codes if the sort menu is open or if going to the options screen
-		if LeavingScreenSelectMusicDD == false then
-			if isSortMenuVisible == false then
-				if InputMenuHasFocus == false then
-					if params.Name == "CloseCurrentFolder" or params.Name == "CloseCurrentFolder2" then
-						if Input.WheelWithFocus == CourseWheel and GAMESTATE:IsPlayerEnabled(params.PlayerNumber) then
-							SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "expand.ogg") )
-							MESSAGEMAN:Broadcast("CloseCurrentFolder")
-							CloseCurrentFolder()
-						end
+		if isSortMenuVisible == false then
+			if InputMenuHasFocus == false then
+				if params.Name == "CloseCurrentFolder" or params.Name == "CloseCurrentFolder2" then
+					if Input.WheelWithFocus == CourseWheel and GAMESTATE:IsPlayerEnabled(params.PlayerNumber) then
+						SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "expand.ogg") )
+						MESSAGEMAN:Broadcast("CloseCurrentFolder")
+						CloseCurrentFolder()
 					end
 				end
 			end
@@ -145,8 +137,6 @@ local t = Def.ActorFrame {
 	LoadActor("../ScreenSelectMusicDD underlay/TestInput.lua"),
 	-- For backing out of SSMDD.
 	LoadActor('../ScreenSelectMusicDD underlay/EscapeFromEventMode.lua'),
-	-- For transitioning to either gameplay or player options.
-	LoadActor('../ScreenSelectMusicDD underlay/OptionsMessage.lua'),
 }
 
 return t
