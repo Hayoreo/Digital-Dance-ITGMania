@@ -13,9 +13,9 @@ local tickDuration = 0.5
 local numTicks = mods.ErrorBarMultiTick and 10 or 1
 local currentTick = 1
 local judgmentToTrim = {
-    TapNoteScore_W3 = mods.ErrorBarTrim,
-    TapNoteScore_W4 = mods.ErrorBarTrim,
-    TapNoteScore_W5 = mods.ErrorBarTrim
+    TapNoteScore_W3 = mods.ErrorBarTrim == "Excellent",
+    TapNoteScore_W4 = mods.ErrorBarTrim ~= "Off",
+    TapNoteScore_W5 = mods.ErrorBarTrim ~= "Off"
 }
 
 local enabledTimingWindows = {}
@@ -33,14 +33,38 @@ local wscale = barWidth / 2 / maxTimingOffset
 local function DisplayTick(self, params)
     local score = ToEnumShortString(params.TapNoteScore)
     if score == "W1" or score == "W2" or score == "W3" or score == "W4" or score == "W5" then
+        local window = score
+        local isTopWindow = score == "W1"
+        if mods.ShowFaPlusWindow then
+            if IsW0Judgment(params, player) then
+                window = "W0"
+            else
+                isTopWindow = false
+            end
+        end
+        
         local tick = self:GetChild("Tick" .. currentTick)
         local bar = self:GetChild("Bar")
-
+        local earlysubbar = bar:GetChild("Early"..window)
+        local latesubbar = bar:GetChild("Late"..window)
+        
         currentTick = currentTick % numTicks + 1
-
+        
         tick:finishtweening()
         bar:finishtweening()
         bar:zoom(1)
+        
+        if isTopWindow then
+            earlysubbar:finishtweening()
+            latesubbar:finishtweening()
+            earlysubbar:diffusealpha(1):linear(tickDuration):diffusealpha(0.3)
+            latesubbar:diffusealpha(1):linear(tickDuration):diffusealpha(0.3)
+        else
+            local offset = params.TapNoteOffset and "Early" or "Late"
+            local subbar = offset == "Early" and earlysubbar or latesubbar
+            subbar:finishtweening()
+            subbar:diffusealpha(1):linear(tickDuration):diffusealpha(0.3)
+        end
 
         if numTicks > 1 then
             tick:diffusealpha(1)
@@ -76,8 +100,9 @@ local af = Def.ActorFrame{
     JudgmentMessageCommand = function(self, params)
         if params.Player ~= player then return end
         if params.HoldNoteScore then return end
-		if judgmentToTrim[params.TapNoteScore] then return end
-		if params.EarlyTapNoteScore ~= nil then
+        if judgmentToTrim[params.TapNoteScore] then return end
+
+        if params.EarlyTapNoteScore ~= nil then
             local tns = ToEnumShortString(params.TapNoteScore)
             local earlyTns = ToEnumShortString(params.EarlyTapNoteScore)
 
@@ -91,9 +116,9 @@ local af = Def.ActorFrame{
                         return
                     end
                 end
-        
             end
         end
+
 		DisplayTick(self, params)
     end,
 }
@@ -140,14 +165,18 @@ for i, window in ipairs(windows.timing) do
     local width = x - lastx
     local judgmentColor = windows.color[i]
 
+    local windowNum = mods.ShowFaPlusWindow and i - 1 or i
+
     bar_af[#bar_af+1] = Def.Quad{
+        Name="EarlyW" .. windowNum,
         InitCommand = function(self)
-            self:x(-x):horizalign("left"):zoomto(width, barHeight):diffuse(judgmentColor)
+            self:x(-x):horizalign("left"):zoomto(width, barHeight):diffuse(judgmentColor):diffusealpha(0.3)
         end
     }
     bar_af[#bar_af+1] = Def.Quad{
+        Name="LateW" .. windowNum,
         InitCommand = function(self)
-            self:x(x):horizalign("right"):zoomto(width, barHeight):diffuse(judgmentColor)
+            self:x(x):horizalign("right"):zoomto(width, barHeight):diffuse(judgmentColor):diffusealpha(0.3)
         end
     }
 
