@@ -8,13 +8,14 @@ end
 local n = player==PLAYER_1 and "1" or "2"
 local IsUltraWide = (GetScreenAspectRatio() > 21/9)
 local NoteFieldIsCentered = (GetNotefieldX(player) == _screen.cx)
+local NumEntries = 5
 
 local border = 5
 local width = NoteFieldIsCentered and 140 or 162
 local height = NoteFieldIsCentered and 68 or 80
 
 local cur_style = 0
-local num_styles = 3
+local num_styles = 4
 
 local GrooveStatsBlue = color("#007b85")
 local RpgYellow = color("1,0.972,0.792,1")
@@ -42,7 +43,7 @@ local ResetAllData = function()
 			["scores"]={}
 		}
 		local scores = data["scores"]
-		for i=1,5 do
+		for i=1,NumEntries do
 			scores[#scores+1] = {
 				["rank"]="",
 				["name"]="",
@@ -277,9 +278,9 @@ local af = Def.ActorFrame{
 			local sendRequest = false
 			local headers = {}
 			local query = {
-				maxLeaderboardResults=NoteFieldIsCentered and 4 or 5,
+				maxLeaderboardResults=NoteFieldIsCentered and NumEntries - 1 or NumEntries,
 			}
-			if SL[pn].ApiKey ~= "" then
+			if SL[pn].ApiKey ~= "" and SL[pn].Streams.Hash ~= "" then
 				query["chartHashP"..n] = SL[pn].Streams.Hash
 				headers["x-api-key-player-"..n] = SL[pn].ApiKey
 				sendRequest = true
@@ -341,6 +342,21 @@ local af = Def.ActorFrame{
 			end
 		end
 	},
+	-- EX Text
+	Def.BitmapText{
+		Font="Common Normal",
+		Text="EX",
+		InitCommand=function(self)
+			self:diffusealpha(0.3):x(2):y(-5)
+		end,
+		LoopScoreboxCommand=function(self)
+			if cur_style == 1 then
+				self:sleep(transition_seconds/2):linear(transition_seconds/2):diffusealpha(0.3)
+			else
+				self:linear(transition_seconds/2):diffusealpha(0)
+			end
+		end
+	},
 	-- SRPG Logo
 	Def.Sprite{
 		Texture=THEME:GetPathG("", "SRPG/logo_main (doubleres).png"),
@@ -373,7 +389,7 @@ local af = Def.ActorFrame{
 	},
 }
 
-for i=1,5 do
+for i=1,NumEntries do
 	local y = -height/2 + 16 * i - 8
 	local zoom = 0.87
 
