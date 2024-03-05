@@ -319,7 +319,7 @@ SL = {
 		-- *  and when GrooveStats backend is also      *
 		-- *   updated to properly consume this value.  *
 		-- **********************************************
-		ChartHashVersion = 4,
+		ChartHashVersion = 3,
 		
 		-- We want to cache the some of the requests/responses to prevent making the
 		-- same request multiple times in a small timeframe.
