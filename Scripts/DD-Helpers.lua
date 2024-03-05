@@ -839,14 +839,15 @@ end
 --          "LetGo" -> the number of holds/rolds dropped
 --        "HitMine" -> total number of mines hit
 -- }
-CalculateExScore = function(player, ex_counts)
+CalculateExScore = function(player, ex_counts, use_actual_w0_weight)
 	local StepsOrTrail = (GAMESTATE:IsCourseMode() and GAMESTATE:GetCurrentTrail(player)) or GAMESTATE:GetCurrentSteps(player)
 	
 	local totalSteps = StepsOrTrail:GetRadarValues(player):GetValue( "RadarCategory_TapsAndHolds" )
 	local totalHolds = StepsOrTrail:GetRadarValues(player):GetValue( "RadarCategory_Holds" )
 	local totalRolls = StepsOrTrail:GetRadarValues(player):GetValue( "RadarCategory_Rolls" )
-
-	local total_possible = totalSteps * SL.ExWeights["W0"] + (totalHolds + totalRolls) * SL.ExWeights["Held"]
+	
+	local W0Weight = use_actual_w0_weight and 3.5 or SL.ExWeights["W0"]
+	local total_possible = totalSteps * W0Weight + (totalHolds + totalRolls) * SL.ExWeights["Held"]
 
 	local total_points = 0
 	
@@ -864,11 +865,13 @@ CalculateExScore = function(player, ex_counts)
 	local counts = ex_counts or SL[ToEnumShortString(player)].Stages.Stats[SL.Global.Stages.PlayedThisGame + 1].ex_counts
 	-- Just for validation, but shouldn't happen in normal gameplay.
 	if counts == nil then return 0 end
+	
 	for key in ivalues(keys) do
 		local value = counts[key]
 		if value ~= nil then		
 			total_points = total_points + value * SL.ExWeights[key]
 		end
 	end
-		return math.max(0, math.floor(total_points/total_possible * 10000) / 100)
+	
+	return math.max(0, math.floor(total_points/total_possible * 10000) / 100), total_points, total_possible
 end
