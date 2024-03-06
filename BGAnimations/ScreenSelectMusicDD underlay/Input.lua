@@ -339,7 +339,7 @@ t.Handler = function(event)
 						if IsMouseGucci(2.5,_screen.h-149.5,33, 14,"left","top",1) then
 							MESSAGEMAN:Broadcast("TabClickedPlayerNumber_P1", {1})
 						end
-						for i=1,3 do
+						for i=1,4 do
 							if IsMouseGucci(3.5 + (i*32),_screen.h-149.5, i+1 == MaxTabs and 33 or 32, 14, "left", "top", 1) then
 								local TabCount = i + 1
 								if TabCount <= MaxTabs then
@@ -348,9 +348,9 @@ t.Handler = function(event)
 							end
 						end
 						-- the first and last tabs are slightly bigger than the middle tabs
-						if IsMouseGucci(131.5,_screen.h-149.5,33, 14,"left","top",1) then
-							if MaxTabs == 5 then
-								MESSAGEMAN:Broadcast("TabClickedPlayerNumber_P1", {5})
+						if IsMouseGucci(163.5,_screen.h-149.5,33, 14,"left","top",1) then
+							if MaxTabs == 6 then
+								MESSAGEMAN:Broadcast("TabClickedPlayerNumber_P1", {6})
 							end
 						end
 					end

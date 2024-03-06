@@ -22,6 +22,7 @@ TabText[#TabText+1] = "Steps"
 -- Only show the online tabs if they're available
 if IsServiceAllowed(SL.GrooveStats.GetScores) then
 	TabText[#TabText+1] = "GS"
+	TabText[#TabText+1] = "EX"
 	TabText[#TabText+1] = "RPG"
 	TabText[#TabText+1] = "ITL"
 end
@@ -35,7 +36,7 @@ local GetRealTab = function(TabClicked)
 	else
 		-- we only show the steps information and local scores if not online
 		if TabClicked == 2 then
-			RealTabClick = 5
+			RealTabClick = 6
 		else
 			RealTabClick = TabClicked
 		end
@@ -76,10 +77,11 @@ else
 	cur_style = CurrentTabNumber - 2
 end
 
-local num_styles = 4
+local num_styles = 5
 local num_scores = 6
 
 local GrooveStatsBlue = color("#007b85")
+local ExBlue =  SL.JudgmentColors["FA+"][1]
 local RpgYellow = color("1,0.972,0.792,1")
 local ItlPink = color("1,0.2,0.406,1")
 local MachinePurple = color("#4d0057")
@@ -93,9 +95,10 @@ end
 
 local style_color = {
 	[0] = GrooveStatsBlue,
-	[1] = RpgYellow,
-	[2] = ItlPink,
-	[3] = MachinePurple,
+	[1] = ExBlue,
+	[2] = RpgYellow,
+	[3] = ItlPink,
+	[4] = MachinePurple,
 }
 
 local self_color = color("#a1ff94")
@@ -233,6 +236,37 @@ local LeaderboardRequestProcessor = function(res, master)
 			end
 			SetScoreData(1, 1, "", "No Scores", "", false, false, false)
 		end
+		
+		if data[playerStr]["exLeaderboard"] then
+			local entryCount = 0
+			for entry in ivalues(data[playerStr]["exLeaderboard"]) do
+				entryCount = entryCount + 1
+				SetScoreData(2, entryCount,
+								tostring(entry["rank"]),
+								entry["name"],
+								string.format("%.2f", entry["score"]/100),
+								entry["isSelf"],
+								entry["isRival"],
+								entry["isFail"])
+			end
+			entryCount = entryCount + 1
+			if entryCount > 1 then
+				for i=entryCount,num_scores,1 do
+					SetScoreData(2, i,
+									"",
+									"",
+									"",
+									false,
+									false,
+									false)
+				end
+			else
+				for i=1,num_scores do
+					SetScoreData(2, i, "", "", "", false, false, false)
+				end
+				SetScoreData(2, 1, "", "No Scores", "", false, false, false)
+			end
+		end
 
 		if data[playerStr]["rpg"] then
 			local entryCount = 0
@@ -245,7 +279,7 @@ local LeaderboardRequestProcessor = function(res, master)
 			if data[playerStr]["rpg"]["rpgLeaderboard"] then
 				for entry in ivalues(data[playerStr]["rpg"]["rpgLeaderboard"]) do
 					entryCount = entryCount + 1
-					SetScoreData(2, entryCount,
+					SetScoreData(3, entryCount,
 									tostring(entry["rank"]),
 									entry["name"],
 									string.format("%.2f", entry["score"]/100),
@@ -256,48 +290,6 @@ local LeaderboardRequestProcessor = function(res, master)
 				end
 				entryCount = entryCount + 1
 				for i=entryCount,num_scores,1 do
-					SetScoreData(2, i,
-									"",
-									"",
-									"",
-									false,
-									false,
-									false)
-				end
-			end
-		else
-			for i=1,num_scores do
-				SetScoreData(2, i, "", "", "", false, false, false)
-			end
-			SetScoreData(2, 1, "", "Chart Not Ranked", "", false, false, false)
-		end
-
-		if data[playerStr]["itl"] then
-			local numEntries = 0
-			all_data[3].has_data = false
-			for i=1,num_scores do
-				SetScoreData(3, i, "", "", "", false, false, false)
-			end
-			SetScoreData(3, 1, "", "No Scores", "", false, false, false)
-
-			if data[playerStr]["itl"]["itlLeaderboard"] then
-				for entry in ivalues(data[playerStr]["itl"]["itlLeaderboard"]) do
-					if entry["isSelf"] then
-						UpdateItlExScore(player, SL[pn].Streams.Hash, entry["score"])
-						SL["P"..n].itlScore = entry["score"]
-					end
-					numEntries = numEntries + 1
-					SetScoreData(3, numEntries,
-									tostring(entry["rank"]),
-									entry["name"],
-									string.format("%.2f", entry["score"]/100),
-									entry["isSelf"],
-									entry["isRival"],
-									entry["isFail"]
-								)
-				end
-				numEntries = numEntries + 1
-				for i=numEntries,num_scores,1 do
 					SetScoreData(3, i,
 									"",
 									"",
@@ -312,6 +304,48 @@ local LeaderboardRequestProcessor = function(res, master)
 				SetScoreData(3, i, "", "", "", false, false, false)
 			end
 			SetScoreData(3, 1, "", "Chart Not Ranked", "", false, false, false)
+		end
+
+		if data[playerStr]["itl"] then
+			local entryCount = 0
+			all_data[3].has_data = false
+			for i=1,num_scores do
+				SetScoreData(4, i, "", "", "", false, false, false)
+			end
+			SetScoreData(4, 1, "", "No Scores", "", false, false, false)
+
+			if data[playerStr]["itl"]["itlLeaderboard"] then
+				for entry in ivalues(data[playerStr]["itl"]["itlLeaderboard"]) do
+					if entry["isSelf"] then
+						UpdateItlExScore(player, SL[pn].Streams.Hash, entry["score"])
+						SL["P"..n].itlScore = entry["score"]
+					end
+					entryCount = entryCount + 1
+					SetScoreData(4, num_scores,
+									tostring(entry["rank"]),
+									entry["name"],
+									string.format("%.2f", entry["score"]/100),
+									entry["isSelf"],
+									entry["isRival"],
+									entry["isFail"]
+								)
+				end
+				entryCount = entryCount + 1
+				for i=entryCount,num_scores,1 do
+					SetScoreData(4, i,
+									"",
+									"",
+									"",
+									false,
+									false,
+									false)
+				end
+			end
+		else
+			for i=1,num_scores do
+				SetScoreData(4, i, "", "", "", false, false, false)
+			end
+			SetScoreData(4, 1, "", "Chart Not Ranked", "", false, false, false)
 		end
 		
  	end
@@ -547,13 +581,29 @@ local af = Def.ActorFrame{
 		end,
 		UpdateScoreboxCommand=function(self)
 			self:stoptweening()
-			if cur_style == 0 then
+			if cur_style == 0 or  cur_style == 1 then
 				self:linear(transition_seconds/2):diffusealpha(0.5)
 			else
 				self:linear(transition_seconds/2):diffusealpha(0)
 			end
 		end,
 		OffCommand=function(self) self:stoptweening():stopeffect() end
+	},
+	-- EX Text
+	Def.BitmapText{
+		Font="Common Normal",
+		Text="EX",
+		InitCommand=function(self)
+			self:diffusealpha(1):x(80):y(-4)
+		end,
+		UpdateScoreboxCommand=function(self)
+			self:stoptweening()
+			if cur_style == 1 then
+				self:linear(transition_seconds/2):diffusealpha(0.8)
+			else
+				self:linear(transition_seconds/2):diffusealpha(0)
+			end
+		end
 	},
 	-- SRPG Logo
 	Def.Sprite{
@@ -564,7 +614,7 @@ local af = Def.ActorFrame{
 		end,
 		UpdateScoreboxCommand=function(self)
 			self:stoptweening()
-			if cur_style == 1 then
+			if cur_style == 2 then
 				self:linear(transition_seconds/2):diffusealpha(0.5)
 			else
 				self:linear(transition_seconds/2):diffusealpha(0)
@@ -581,7 +631,7 @@ local af = Def.ActorFrame{
 		end,
 		UpdateScoreboxCommand=function(self)
 			self:stoptweening()
-			if cur_style == 2 then
+			if cur_style == 3 then
 				self:linear(transition_seconds/2):diffusealpha(0.2)
 			else
 				self:linear(transition_seconds/2):diffusealpha(0)
@@ -598,7 +648,7 @@ local af = Def.ActorFrame{
 		end,
 		UpdateScoreboxCommand=function(self)
 			self:stoptweening()
-			if cur_style == 3 then
+			if cur_style == 4 then
 				self:linear(transition_seconds/2):diffusealpha(0.5)
 			else
 				self:linear(transition_seconds/2):diffusealpha(0)
@@ -720,7 +770,7 @@ for i=1,num_scores do
 				self:stoptweening():linear(transition_seconds/2):diffusealpha(0):queuecommand("SetMachineScores")
 			end,
 			SetMachineScoresCommand=function(self)
-				if cur_style == 3 and HasLocalScores and GAMESTATE:GetCurrentSong() then
+				if cur_style == 4 and HasLocalScores and GAMESTATE:GetCurrentSong() then
 					self:linear(transition_seconds/2):diffusealpha(1)
 				end
 			end,
@@ -736,7 +786,7 @@ for i=1,num_scores do
 				self:stoptweening():linear(transition_seconds/2):diffusealpha(0):queuecommand("SetMachineScores")
 			end,
 			SetMachineScoresCommand=function(self)
-				if cur_style == 3 and HasLocalScores and GAMESTATE:GetCurrentSong() then
+				if cur_style == 4 and HasLocalScores and GAMESTATE:GetCurrentSong() then
 					self:settext(MachineScores[i]["rank"])
 					self:linear(transition_seconds/2):diffusealpha(1)
 				end
@@ -755,10 +805,10 @@ for i=1,num_scores do
 			self:stoptweening():linear(transition_seconds/2):diffusealpha(0):queuecommand("SetMachineScores")
 		end,
 		SetMachineScoresCommand=function(self)
-			if cur_style == 3 and HasLocalScores and GAMESTATE:GetCurrentSong() then
+			if cur_style == 4 and HasLocalScores and GAMESTATE:GetCurrentSong() then
 				self:settext(MachineScores[i]["name"])
 				self:linear(transition_seconds/2):diffusealpha(1)
-			elseif cur_style == 3 and not HasLocalScores and i == 1 and GAMESTATE:GetCurrentSong() then
+			elseif cur_style == 4 and not HasLocalScores and i == 1 and GAMESTATE:GetCurrentSong() then
 				self:linear(transition_seconds/2):diffusealpha(1):settext("No Scores")
 			end
 		end,
@@ -775,7 +825,7 @@ for i=1,num_scores do
 			self:stoptweening():linear(transition_seconds/2):diffusealpha(0):queuecommand("SetMachineScores")
 		end,
 		SetMachineScoresCommand=function(self)
-			if cur_style == 3 and HasLocalScores and GAMESTATE:GetCurrentSong() then
+			if cur_style == 4 and HasLocalScores and GAMESTATE:GetCurrentSong() then
 				self:settext(MachineScores[i]["score"])
 				self:linear(transition_seconds/2):diffusealpha(1)
 			end

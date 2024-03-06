@@ -21,6 +21,7 @@ TabText[#TabText+1] = "Steps"
 -- Only show the online tabs if they're available
 if IsServiceAllowed(SL.GrooveStats.GetScores) then
 	TabText[#TabText+1] = "GS"
+	TabText[#TabText+1] = "EX"
 	TabText[#TabText+1] = "RPG"
 	TabText[#TabText+1] = "ITL"
 end
