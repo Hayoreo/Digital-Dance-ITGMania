@@ -122,6 +122,7 @@ local ResetAllData = function()
 				["rank"]="",
 				["name"]="",
 				["score"]="",
+				["date"]="",
 				["isSelf"]=false,
 				["isRival"]=false,
 				["isFail"]=false
@@ -139,13 +140,14 @@ local HasData = function(idx)
 	return all_data[idx+1] and all_data[idx+1].has_data
 end
 
-local SetScoreData = function(data_idx, score_idx, rank, name, score, isSelf, isRival, isFail)
+local SetScoreData = function(data_idx, score_idx, rank, name, score, date, isSelf, isRival, isFail)
 	all_data[data_idx].has_data = true
 
 	local score_data = all_data[data_idx]["scores"][score_idx]
 	score_data.rank = rank..((#rank > 0) and "." or "")
 	score_data.name = name
 	score_data.score = score
+	score_data.date = date
 	score_data.isSelf = isSelf
 	score_data.isRival = isRival
 	score_data.isFail = isFail
@@ -184,9 +186,9 @@ local LeaderboardRequestProcessor = function(res, master)
 			isRanked = true
 			all_data[1].has_data = false
 			for i=1,num_scores do
-				SetScoreData(1, i, "", "", "", false, false, false)
+				SetScoreData(1, i, "", "", "", "", false, false, false)
 			end
-			SetScoreData(1, 1, "", "No Scores", "", false, false, false)
+			SetScoreData(1, 1, "", "No Scores", "", "", false, false, false)
 		else
 			isRanked = true
 			all_data[1].has_data = false
@@ -195,13 +197,13 @@ local LeaderboardRequestProcessor = function(res, master)
 				all_data[2].has_data = false
 				all_data[3].has_data = false
 				for i=1,num_scores do
-					SetScoreData(1, i, "", "", "", false, false, false)
-					SetScoreData(2, i, "", "", "", false, false, false)
-					SetScoreData(3, i, "", "", "", false, false, false)
+					SetScoreData(1, i, "", "", "", "", false, false, false)
+					SetScoreData(2, i, "", "", "", "", false, false, false)
+					SetScoreData(3, i, "", "", "", "", false, false, false)
 				end
-				SetScoreData(1, 1, "", "No Scores", "", false, false, false)
-				SetScoreData(2, 1, "", "Chart Not Ranked", "", false, false, false)
-				SetScoreData(3, 1, "", "Chart Not Ranked", "", false, false, false)
+				SetScoreData(1, 1, "", "No Scores", "", "", false, false, false)
+				SetScoreData(2, 1, "", "Chart Not Ranked", "", "", false, false, false)
+				SetScoreData(3, 1, "", "Chart Not Ranked", "", "", false, false, false)
 				isRanked = false
 			end
 		end
@@ -214,6 +216,7 @@ local LeaderboardRequestProcessor = function(res, master)
 								tostring(entry["rank"]),
 								entry["name"],
 								string.format("%.2f", entry["score"]/100),
+								ParseGroovestatsDate(entry["date"]),
 								entry["isSelf"],
 								entry["isRival"],
 								entry["isFail"])
@@ -225,6 +228,7 @@ local LeaderboardRequestProcessor = function(res, master)
 									"",
 									"",
 									"",
+									"",
 									false,
 									false,
 									false)
@@ -232,9 +236,9 @@ local LeaderboardRequestProcessor = function(res, master)
 			end
 		else
 			for i=1,num_scores do
-				SetScoreData(1, i, "", "", "", false, false, false)
+				SetScoreData(1, i, "", "", "", "", false, false, false)
 			end
-			SetScoreData(1, 1, "", "No Scores", "", false, false, false)
+			SetScoreData(1, 1, "", "No Scores", "", "", false, false, false)
 		end
 		
 		if data[playerStr]["exLeaderboard"] then
@@ -245,6 +249,7 @@ local LeaderboardRequestProcessor = function(res, master)
 								tostring(entry["rank"]),
 								entry["name"],
 								string.format("%.2f", entry["score"]/100),
+								ParseGroovestatsDate(entry["date"]),
 								entry["isSelf"],
 								entry["isRival"],
 								entry["isFail"])
@@ -256,15 +261,16 @@ local LeaderboardRequestProcessor = function(res, master)
 									"",
 									"",
 									"",
+									"",
 									false,
 									false,
 									false)
 				end
 			else
 				for i=1,num_scores do
-					SetScoreData(2, i, "", "", "", false, false, false)
+					SetScoreData(2, i, "", "", "", "", false, false, false)
 				end
-				SetScoreData(2, 1, "", "No Scores", "", false, false, false)
+				SetScoreData(2, 1, "", "No Scores", "", "", false, false, false)
 			end
 		end
 
@@ -272,9 +278,9 @@ local LeaderboardRequestProcessor = function(res, master)
 			local entryCount = 0
 			all_data[3].has_data = false
 			for i=1,num_scores do
-				SetScoreData(3, i, "", "", "", false, false, false)
+				SetScoreData(3, i, "", "", "", "", false, false, false)
 			end
-			SetScoreData(3, 1, "", "No Scores", "", false, false, false)
+			SetScoreData(3, 1, "", "No Scores", "", "", false, false, false)
 
 			if data[playerStr]["rpg"]["rpgLeaderboard"] then
 				for entry in ivalues(data[playerStr]["rpg"]["rpgLeaderboard"]) do
@@ -283,6 +289,7 @@ local LeaderboardRequestProcessor = function(res, master)
 									tostring(entry["rank"]),
 									entry["name"],
 									string.format("%.2f", entry["score"]/100),
+									ParseGroovestatsDate(entry["date"]),
 									entry["isSelf"],
 									entry["isRival"],
 									entry["isFail"]
@@ -294,6 +301,7 @@ local LeaderboardRequestProcessor = function(res, master)
 									"",
 									"",
 									"",
+									"",
 									false,
 									false,
 									false)
@@ -301,18 +309,18 @@ local LeaderboardRequestProcessor = function(res, master)
 			end
 		else
 			for i=1,num_scores do
-				SetScoreData(3, i, "", "", "", false, false, false)
+				SetScoreData(3, i, "", "", "", "", false, false, false)
 			end
-			SetScoreData(3, 1, "", "Chart Not Ranked", "", false, false, false)
+			SetScoreData(3, 1, "", "Chart Not Ranked", "", "", false, false, false)
 		end
 
 		if data[playerStr]["itl"] then
 			local entryCount = 0
 			all_data[4].has_data = false
 			for i=1,num_scores do
-				SetScoreData(4, i, "", "", "", false, false, false)
+				SetScoreData(4, i, "", "", "", "", false, false, false)
 			end
-			SetScoreData(4, 1, "", "No Scores", "", false, false, false)
+			SetScoreData(4, 1, "", "No Scores", "", "", false, false, false)
 
 			if data[playerStr]["itl"]["itlLeaderboard"] then
 				for entry in ivalues(data[playerStr]["itl"]["itlLeaderboard"]) do
@@ -321,6 +329,7 @@ local LeaderboardRequestProcessor = function(res, master)
 									tostring(entry["rank"]),
 									entry["name"],
 									string.format("%.2f", entry["score"]/100),
+									ParseGroovestatsDate(entry["date"]),
 									entry["isSelf"],
 									entry["isRival"],
 									entry["isFail"]
@@ -332,6 +341,7 @@ local LeaderboardRequestProcessor = function(res, master)
 									"",
 									"",
 									"",
+									"",
 									false,
 									false,
 									false)
@@ -339,9 +349,9 @@ local LeaderboardRequestProcessor = function(res, master)
 			end
 		else
 			for i=1,num_scores do
-				SetScoreData(4, i, "", "", "", false, false, false)
+				SetScoreData(4, i, "", "", "", "", false, false, false)
 			end
-			SetScoreData(4, 1, "", "Chart Not Ranked", "", false, false, false)
+			SetScoreData(4, 1, "", "Chart Not Ranked", "", "", false, false, false)
 		end
 		
  	end
@@ -364,9 +374,10 @@ local af = Def.ActorFrame{
 		if GAMESTATE:GetCurrentSong() == nil then
 			for i=1, num_scores do
 				self:stoptweening()
-				SetScoreData(1, i, "", "", "", false, false, false)
-				SetScoreData(2, i, "", "", "", false, false, false)
-				SetScoreData(3, i, "", "", "", false, false, false)
+				SetScoreData(1, i, "", "", "", "", false, false, false)
+				SetScoreData(2, i, "", "", "", "", false, false, false)
+				SetScoreData(3, i, "", "", "", "", false, false, false)
+				SetScoreData(4, i, "", "", "", "", false, false, false)
 				if i ~= 1 then
 					self:GetChild("MachineRank"..i):settext(""):visible(false)
 				end
@@ -408,13 +419,16 @@ local af = Def.ActorFrame{
 			self:GetChild("Rank"..i):visible(song)
 			self:GetChild("Name"..i):visible(song)
 			self:GetChild("Score"..i):visible(song)
+			self:GetChild("Date"..i):visible(song)
 			self:GetChild("MachineRank"..i):visible(song)
 			self:GetChild("MachineName"..i):visible(song)
 			self:GetChild("MachineScore"..i):visible(song)
+			self:GetChild("MachineDate"..i):visible(song)
 		end
 		if IsServiceAllowed(SL.GrooveStats.GetScores) then
 			self:GetChild("GrooveStatsLogo"):stopeffect()
 		end
+		self:GetChild("EXScoreLogo"):visible(song)
 		self:GetChild("EXText"):visible(song)
 		self:GetChild("SRPG6Logo"):visible(song)
 		self:GetChild("ITLLogo"):visible(song)
@@ -441,19 +455,21 @@ local af = Def.ActorFrame{
 		for i=1,num_scores do
 			local y = -height/2 + 16 * i + 8
 			local zoom = 0.87
-			local rank,name,score
+			local rank,name,score, date
 			
 			if HighScores[i] then
 				EntryCount = EntryCount + 1
 				HasLocalScores = true
 				rank = i
 				score = FormatPercentScore(HighScores[i]:GetPercentDP())
+				date = ParseGroovestatsDate(HighScores[i]:GetDate())
 				name = HighScores[i]:GetName()
 				
 				MachineScores[#MachineScores+1] = {
 					["rank"]=rank,
 					["name"]=name,
 					["score"]=score,
+					["date"]=date,
 				}
 			end
 			if i == num_scores and not IsServiceAllowed(SL.GrooveStats.GetScores) then
@@ -465,6 +481,7 @@ local af = Def.ActorFrame{
 					["rank"]="",
 					["name"]="",
 					["score"]="",
+					["date"]="",
 			}
 		end
 		
@@ -526,13 +543,16 @@ local af = Def.ActorFrame{
 					self:GetParent():GetChild("Name"..i):settext(""):visible(false)
 					self:GetParent():GetChild("Score"..i):settext(""):visible(false)
 					self:GetParent():GetChild("Rank"..i):diffusealpha(0):visible(false)
+					self:GetParent():GetChild("Date"..i):diffusealpha(0):visible(false)
 					self:GetParent():GetChild("MachineName"..i):settext(""):visible(false)
 					self:GetParent():GetChild("MachineScore"..i):settext(""):visible(false)
 					self:GetParent():GetChild("MachineRank"..i):diffusealpha(0):visible(false)
+					self:GetParent():GetChild("MachineDate"..i):diffusealpha(0):visible(false)
 				end
 				if IsServiceAllowed(SL.GrooveStats.GetScores) then
 					self:GetParent():GetChild("GrooveStatsLogo"):diffusealpha(0.5):glowshift({color("#C8FFFF"), color("#6BF0FF")})
 				end	
+				self:GetParent():GetChild("EXScoreLogo"):diffusealpha(0):visible(false)
 				self:GetParent():GetChild("EXText"):diffusealpha(0):visible(false)
 				self:GetParent():GetChild("SRPG6Logo"):diffusealpha(0):visible(false)
 				self:GetParent():GetChild("ITLLogo"):diffusealpha(0):visible(false)
@@ -579,7 +599,7 @@ local af = Def.ActorFrame{
 		end,
 		UpdateScoreboxCommand=function(self)
 			self:stoptweening()
-			if cur_style == 0 or  cur_style == 1 then
+			if cur_style == 0 then
 				self:linear(transition_seconds/2):diffusealpha(0.5)
 			else
 				self:linear(transition_seconds/2):diffusealpha(0)
@@ -587,18 +607,36 @@ local af = Def.ActorFrame{
 		end,
 		OffCommand=function(self) self:stoptweening():stopeffect() end
 	},
+	
+	--EX Score Logo
+	Def.Sprite{
+		Texture=THEME:GetPathG("", "EXScore.png"),
+		Name="EXScoreLogo",
+		InitCommand=function(self)
+			self:zoom(0.6):diffusealpha(0.5):x(80)
+		end,
+		UpdateScoreboxCommand=function(self)
+			self:stoptweening()
+			if cur_style == 1 then
+				self:linear(transition_seconds/2):diffusealpha(0.5)
+			else
+				self:linear(transition_seconds/2):diffusealpha(0)
+			end
+		end,
+	},
+	
 	-- EX Text
 	Def.BitmapText{
 		Font="Common Normal",
 		Name="EXText",
 		Text="EX",
 		InitCommand=function(self)
-			self:diffusealpha(1):x(80):y(-4):diffusealpha(0)
+			self:x(80):y(-4):diffusealpha(0.4):diffuse(color("#ff3367"))
 		end,
 		UpdateScoreboxCommand=function(self)
 			self:stoptweening()
 			if cur_style == 1 then
-				self:linear(transition_seconds/2):diffusealpha(0.8)
+				self:linear(transition_seconds/2):diffusealpha(0.4)
 			else
 				self:linear(transition_seconds/2):diffusealpha(0)
 			end
@@ -648,7 +686,7 @@ local af = Def.ActorFrame{
 		UpdateScoreboxCommand=function(self)
 			self:stoptweening()
 			if cur_style == 4 then
-				self:linear(transition_seconds/2):diffusealpha(0.5)
+				self:linear(transition_seconds/2):diffusealpha(0.3)
 			else
 				self:linear(transition_seconds/2):diffusealpha(0)
 			end
@@ -757,6 +795,31 @@ for i=1,num_scores do
 		OffCommand=function(self) self:stoptweening() end
 	}
 	
+	af[#af+1] = LoadFont("Common Normal")..{
+		Name="Date"..i,
+		Text="",
+		InitCommand=function(self)
+			self:diffuse(Color.White):xy(-width/2 + 260, y):horizalign(right):zoom(zoom)
+		end,
+		UpdateScoreboxCommand=function(self)
+			self:stoptweening():linear(transition_seconds/2):diffusealpha(0):queuecommand("SetScorebox")
+		end,
+		SetScoreboxCommand=function(self)
+			local score = all_data[cur_style+1]["scores"][i]
+			local clr = Color.White
+			if score.isFail then
+				clr = Color.Red
+			elseif score.isSelf then
+				clr = self_color
+			elseif score.isRival then
+				clr = rival_color
+			end
+			self:settext(score.date)
+			self:linear(transition_seconds/2):diffusealpha(1):diffuse(clr)
+		end,
+		OffCommand=function(self) self:stoptweening() end
+	}
+	
 	--- Machine scores
 	if i == 1 then
 		af[#af+1] = Def.Sprite{
@@ -826,6 +889,24 @@ for i=1,num_scores do
 		SetMachineScoresCommand=function(self)
 			if cur_style == 4 and HasLocalScores and GAMESTATE:GetCurrentSong() then
 				self:settext(MachineScores[i]["score"])
+				self:linear(transition_seconds/2):diffusealpha(1)
+			end
+		end,
+		OffCommand=function(self) self:stoptweening() end
+	}
+	
+	af[#af+1] = LoadFont("Common Normal")..{
+		Name="MachineDate"..i,
+		Text="",
+		InitCommand=function(self)
+			self:diffuse(Color.White):xy(-width/2 + 260, y):horizalign(right):zoom(zoom)
+		end,
+		UpdateMachineScoresCommand=function(self)
+			self:stoptweening():linear(transition_seconds/2):diffusealpha(0):queuecommand("SetMachineScores")
+		end,
+		SetMachineScoresCommand=function(self)
+			if cur_style == 4 and HasLocalScores and GAMESTATE:GetCurrentSong() then
+				self:settext(MachineScores[i]["date"])
 				self:linear(transition_seconds/2):diffusealpha(1)
 			end
 		end,
