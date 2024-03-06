@@ -4,6 +4,7 @@ local RpgGreen = color("#009b7f")
 local RpgTextGreen = color("#00e6bc")
 local RpgTextBody = color("#d8e87c")
 local ItlPink = color("1,0.2,0.406,1")
+IsEvent = false
 
 local paneWidth1Player = 330
 local paneWidth2Player = 230
@@ -682,6 +683,10 @@ for player in ivalues(PlayerNumber) do
 				if SL[pn].ITLData["pathMap"][song_dir] == nil then
 					UpdateItlData(player)
 				end
+			end
+			
+			if params.data["rpg"] or params.data["itl"] then
+				IsEvent = true
 			end
 			
 			-- Also pass the response data to the progress box.

@@ -506,13 +506,25 @@ af[#af+1] = Def.Quad{
 af[#af+1] = LoadFont("Common Bold")..{
 	Name="EventButtonLabel",
 	InitCommand=function(self)
-		self:zoom(0.225)
+		self:zoom(0.225):vertspacing(0)
 		:xy(SCREEN_CENTER_X,SCREEN_CENTER_Y + (SCREEN_HEIGHT/2) - 13)
 		:settext("SHOW EVENT MENU")
 		self:visible(false)
+		self:sleep(10):queuecommand("CycleText")
+	end,
+	CycleTextCommand=function(self)
+		self:stoptweening()
+		if self:GetText() == "SHOW EVENT MENU" then
+			self:zoom(0.17):vertspacing(-55):settext("CLICK OR PRESS\nLeft Shift")
+		elseif self:GetText() == "CLICK OR PRESS\nLeft Shift" then
+			self:zoom(0.225):vertspacing(0):settext("SHOW EVENT MENU")
+		end
+		self:sleep(3):queuecommand("CycleText")
 	end,
 	ShowEventMenuToggleMessageCommand=function(self)
+		self:stoptweening()
 		self:visible(true)
+		self:sleep(3):queuecommand("CycleText")
 	end,
 }
 
