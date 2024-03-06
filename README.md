@@ -1,12 +1,16 @@
-# Digital Dance v1.0.8
+# Digital Dance v1.0.8.1
 
-# ------------ Differences from 1.0.7.1 ------------
-- Added a player options menu to screen select music as well as integrated the sort/filter menu into it.
+# ------------ Differences from 1.0.8 ------------
+- ITL 2024 support!
+- Added EX leaderboards/scorebox.
+- Added dates to the SSM Scorebox.
+- All charts now show leaderboards on SSM instead of only charts ranked on Groovestats.
+- Quint grades now exist on evaluation/evaluation summary (Quints on music wheel later maybe?)
+- Animated banners now animate at the proper speed on Screen Evaluation.
+- Fixed Max Error millisecond rounding on evaluation.
+- Some Player Menu input fixes.
 - An additional subsort has been added.
-- You can now filter by specific difficulties (easy, medium, hard etc.)
-- This new menu is compatible with mouse.
-- Removed screen player options completely.
-- Fixed bug with FA+/EX Scoring not uploading.
+- Fixed bug with Course mode exploding.
 
 ## ITGMANIA USE ONLY
 As noted in the "About" section this theme is intended for use with ITGMania only.
