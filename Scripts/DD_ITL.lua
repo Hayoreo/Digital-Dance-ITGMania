@@ -4,22 +4,25 @@ IsItlSong = function(player)
 	local song_dir = song:GetSongDir()
 	local group = string.lower(song:GetGroupName())
 	local pn = ToEnumShortString(player)
-	return string.find(group, "itl online 2023") or string.find(group, "itl 2023") or SL[pn].ITLData["pathMap"][song_dir] ~= nil
+	return string.find(group, "itl online 2024") or string.find(group, "itl 2024") or SL[pn].ITLData["pathMap"][song_dir] ~= nil
 end
 
 
 IsItlActive = function()
 	-- The file is only written to while the event is active.
 	-- These are just placeholder dates.
-	local startTimestamp = 20230317
-	local endTimestamp = 20230619
+	-- local startTimestamp = 20230317
+	-- local endTimestamp = 20240420
 
-	local year = Year()
-	local month = MonthOfYear()+1
-	local day = DayOfMonth()
-	local today = year * 10000 + month * 100 + day
+	-- local year = Year()
+	-- local month = MonthOfYear()+1
+	-- local day = DayOfMonth()
+	-- local today = year * 10000 + month * 100 + day
 
-	return startTimestamp <= today and today <= endTimestamp
+	-- return startTimestamp <= today and today <= endTimestamp
+
+	-- Assume ITL is always active. This helps when we close and reopen the event.
+	return true
 end
 
 
@@ -41,7 +44,7 @@ end
 -- This set up lets us display song wheel grades for ITL both from playing within the
 -- ITL pack and also outside of it.
 -- Note that songs resynced for ITL but played outside of the pack will not be covered in the pathMap.
-local itlFilePath = "itl2023.json"
+local itlFilePath = "itl2024.json"
 
 local TableContainsData = function(t)
 	if t == nil then return false end
@@ -60,14 +63,13 @@ WriteItlFile = function(player)
 			not TableContainsData(SL[pn].ITLData["hashMap"])) then
 		return
 	end
-	
+
 	local profile_slot = {
 		[PLAYER_1] = "ProfileSlot_Player1",
 		[PLAYER_2] = "ProfileSlot_Player2"
 	}
 	
 	local dir = PROFILEMAN:GetProfileDir(profile_slot[player])
-	local pn = ToEnumShortString(player)
 	-- We require an explicit profile to be loaded.
 	if not dir or #dir == 0 then return end
 
@@ -75,7 +77,7 @@ WriteItlFile = function(player)
 	local f = RageFileUtil:CreateRageFile()
 
 	if f:Open(path, 2) then
-		f:Write(json.encode(SL[pn].ITLData))
+		f:Write(JsonEncode(SL[pn].ITLData))
 		f:Close()
 	end
 	f:destroy()
@@ -107,7 +109,7 @@ ReadItlFile = function(player)
 			f:Close()
 		end
 		f:destroy()
-		itlData = json.decode(existing)
+		itlData = JsonDecode(existing)
 	end
 	-- SL 5.2.0 had a bug where the EX scores weren't calculated correctly.
 	-- If that's the case, then recalculate the scores the first time the v5.2.1 theme
@@ -144,7 +146,14 @@ ReadItlFile = function(player)
 				local totalHolds = counts["totalHolds"]
 				local totalRolls = counts["totalRolls"]
 
-				local total_possible = totalSteps * SL.ExWeights["W0"] + (totalHolds + totalRolls) * SL.ExWeights["Held"]
+				-- SL.ExWeights["W0"] may have been modified for tournament mode.
+				-- Try and set a fallback (3.5) so that things are still calculated correctly.
+				local SameW0Weight = (ThemePrefs.Get("EnableTournamentMode") and
+										ThemePrefs.Get("ScoringSystem") == "EX" and
+										ThemePrefs.Get("FantasticPlusWindowWeight") == "Same")
+				W0Weight = SameW0Weight and 3.5 or SL.ExWeights["W0"]
+
+				local total_possible = totalSteps * W0Weight + (totalHolds + totalRolls) * SL.ExWeights["Held"]
 				local total_points = 0
 
 				for key in ivalues(keys) do
@@ -169,6 +178,7 @@ ReadItlFile = function(player)
 
 		itlData["fixedEx"] = true
 	end
+
 	SL[pn].ITLData = itlData
 end
 
@@ -216,8 +226,8 @@ local DataForSong = function(player, prevData)
 		-- 1 = Pass
 		-- 2 = FGC
 		-- 3 = FEC
-		-- 4 = Quad
-		-- 5 = Quint
+		-- 4 = FFC
+		-- 5 = FFPC
 		local clearType = 1
 
 		-- Dropping a hold or roll will always be a Pass
@@ -256,14 +266,16 @@ local DataForSong = function(player, prevData)
 	local steps = GAMESTATE:GetCurrentSteps(player)
 	local chartName = steps:GetChartName()
 
+	-- Note that playing OUTSIDE of the ITL pack will result in 0 points for all upscores.
+	-- Technically this number isn't displayed, but players can opt to swap the EX score in the
+	-- wheel with this value instead if they prefer.
 	local maxPoints = chartName:gsub(" pts", "")
 	if #maxPoints == 0 then
 		maxPoints = nil
 	else
-		-- Note that playing OUTSIDE of the ITL pack will result in 0 points for all upscores.
 		maxPoints = tonumber(maxPoints)
 	end
-	
+
 	if maxPoints == nil then
 		--  See if we already have these points stored if we failed to parse it.
 		if prevData ~= nil and prevData["maxPoints"] ~= nil then
@@ -274,9 +286,10 @@ local DataForSong = function(player, prevData)
 		end
 	end
 	
+	
 	-- Assume C-Mod is okay by default.
 	local noCmod = false
-	
+
 	if prevData == nil or prevData["noCmod"] == nil then
 		-- If we have no prior play data data for this ITL song, or the noCmod bit hasn't been
 		-- calculated, parse the subtitle to see if this chart explicitly calls for noCmod.
@@ -293,13 +306,13 @@ local DataForSong = function(player, prevData)
 			noCmod = prevData["noCmod"]
 		end
 	end
-
+	
 	local year = Year()
 	local month = MonthOfYear()+1
 	local day = DayOfMonth()
 
 	local judgments = GetExJudgmentCounts(player)
-	local ex = CalculateExScore(player, judgments)
+	local ex = CalculateExScore(player)
 	local clearType = GetClearType(judgments)
 	local points = GetITLPointsForSong(maxPoints, ex)
 	local usedCmod = GAMESTATE:GetPlayerState(pn):GetPlayerOptions("ModsLevel_Preferred"):CMod() ~= nil
@@ -317,103 +330,6 @@ local DataForSong = function(player, prevData)
 	}
 end
 
--- Calculate Song Ranks
-CalculateITLSongRanks = function(player)
-	local pn = ToEnumShortString(player)
-	
-	-- Grab data from memory
-	itlData = SL[pn].ITLData
-	local songHashes = itlData["hashMap"]
-
-	-- Create and populate tables to rank each hash score
-	local points = {}
-	local songPoints = {}
-	for key in pairs(songHashes) do
-		songPoints[key] = songHashes[key]["points"]
-		table.insert(points,songHashes[key]["points"])
-	end		 
-	-- Reverse sort points values
-	table.sort(points,function(a,b) return a > b end)
-
-	for key in pairs(songPoints) do
-		local point = songPoints[key]
-		-- search for the point value in the list
-		for k, v in pairs(points) do
-			if v == point then
-				songHashes[key]["rank"] = k
-				break
-			end
-		end		 	
-	end
-	itlData["hashMap"] = songHashes
-
-	-- Write song scores sorted by point value descending into json
-	itlData["points"] = points
-
-	-- Rewrite the data in memory
-	SL[pn].ITLData = itlData
-end
-
--- Quick function that overwrites EX score entry if the score found is higher than what is found locally
-UpdateItlExScore = function(player, hash, exscore)
-	local pn = ToEnumShortString(player)
-	local hashMap = SL[pn].ITLData["hashMap"]
-	if hashMap[hash] == nil then
-		-- New score, just copy things over.
-		hashMap[hash] = {
-			["judgments"] = {},
-			["ex"] = 0,
-			["clearType"] = 1,
-			["points"] = 0,
-			["usedCmod"] = false,
-			["date"] = "",
-			["maxPoints"] = 0,
-			["noCmod"] = false,
-		}
-		
-		updated = true
-	end
-	
-	if exscore >= hashMap[hash]["ex"] or hashMap[hash]["points"] == 0 then
-		hashMap[hash]["ex"] = exscore
-		
-		local steps = GAMESTATE:GetCurrentSteps(player)
-		local chartName = steps:GetChartName()
-
-		local maxPoints = nil
-		if steps:GetDescription() == SL[pn].Streams.Description then
-			maxPoints = chartName:gsub(" pts", "")
-			if #maxPoints == 0 then
-				maxPoints = nil
-			else
-				maxPoints = tonumber(maxPoints)
-				hashMap[hash]["maxPoints"] = maxPoints
-			end
-		end
-
-		if maxPoints == nil then
-			--  See if we already have these points stored if we failed to parse it.
-			if prevData ~= nil and prevData["maxPoints"] ~= nil then
-				maxPoints = prevData["maxPoints"]
-			-- Otherwise we don't know how many points this chart is. Default to 0.
-			else
-				maxPoints = 0
-			end
-		end
-		
-		-- Do not recalculate points if maxPoints is 0
-		if maxPoints > 0 then
-			hashMap[hash]["points"] = GetPointsForSong(maxPoints, exscore/100)
-		end
-		
-		updated = true
-		
-		if updated then
-			CalculateITLSongRanks(player)
-			WriteItlFile(player)
-		end
-	end
-end
 
 -- Should be called during ScreenEvaluation to update the ITL data loaded.
 -- Will also write the contents to the file.
@@ -432,12 +348,11 @@ UpdateItlData = function(player)
 	-- We also require mines to be on.
 	local po = GAMESTATE:GetPlayerState(player):GetPlayerOptions("ModsLevel_Preferred")
 	local minesEnabled = not po:NoMines()
-	
+
 	-- We also require all the windows to be enabled.
 	-- ITG mode is the only mode that has all the windows enabled by default.
 	local allWindowsEnabled = SL.Global.GameMode == "DD"
-	-- TODO(teejusb): Update for ITGmania
-	for enabled in ivalues(SL.Global.ActiveModifiers.TimingWindows) do
+	for enabled in ivalues(SL[pn].ActiveModifiers.TimingWindows) do
 		allWindowsEnabled = allWindowsEnabled and enabled
 	end
 
@@ -471,7 +386,6 @@ UpdateItlData = function(player)
 		
 		-- Then maybe update the hashMap.
 		local updated = false
-	
 		if hashMap[hash] == nil then
 			-- New score, just copy things over.
 			hashMap[hash] = {

@@ -270,11 +270,11 @@ local LeaderboardRequestProcessor = function(res, master)
 
 		if data[playerStr]["rpg"] then
 			local entryCount = 0
-			all_data[2].has_data = false
+			all_data[3].has_data = false
 			for i=1,num_scores do
-				SetScoreData(2, i, "", "", "", false, false, false)
+				SetScoreData(3, i, "", "", "", false, false, false)
 			end
-			SetScoreData(2, 1, "", "No Scores", "", false, false, false)
+			SetScoreData(3, 1, "", "No Scores", "", false, false, false)
 
 			if data[playerStr]["rpg"]["rpgLeaderboard"] then
 				for entry in ivalues(data[playerStr]["rpg"]["rpgLeaderboard"]) do
@@ -308,7 +308,7 @@ local LeaderboardRequestProcessor = function(res, master)
 
 		if data[playerStr]["itl"] then
 			local entryCount = 0
-			all_data[3].has_data = false
+			all_data[4].has_data = false
 			for i=1,num_scores do
 				SetScoreData(4, i, "", "", "", false, false, false)
 			end
@@ -316,12 +316,8 @@ local LeaderboardRequestProcessor = function(res, master)
 
 			if data[playerStr]["itl"]["itlLeaderboard"] then
 				for entry in ivalues(data[playerStr]["itl"]["itlLeaderboard"]) do
-					if entry["isSelf"] then
-						UpdateItlExScore(player, SL[pn].Streams.Hash, entry["score"])
-						SL["P"..n].itlScore = entry["score"]
-					end
 					entryCount = entryCount + 1
-					SetScoreData(4, num_scores,
+					SetScoreData(4, entryCount,
 									tostring(entry["rank"]),
 									entry["name"],
 									string.format("%.2f", entry["score"]/100),
@@ -419,6 +415,7 @@ local af = Def.ActorFrame{
 		if IsServiceAllowed(SL.GrooveStats.GetScores) then
 			self:GetChild("GrooveStatsLogo"):stopeffect()
 		end
+		self:GetChild("EXText"):visible(song)
 		self:GetChild("SRPG6Logo"):visible(song)
 		self:GetChild("ITLLogo"):visible(song)
 		self:GetChild("MachineLogo"):visible(song)
@@ -536,6 +533,7 @@ local af = Def.ActorFrame{
 				if IsServiceAllowed(SL.GrooveStats.GetScores) then
 					self:GetParent():GetChild("GrooveStatsLogo"):diffusealpha(0.5):glowshift({color("#C8FFFF"), color("#6BF0FF")})
 				end	
+				self:GetParent():GetChild("EXText"):diffusealpha(0):visible(false)
 				self:GetParent():GetChild("SRPG6Logo"):diffusealpha(0):visible(false)
 				self:GetParent():GetChild("ITLLogo"):diffusealpha(0):visible(false)
 				self:GetParent():GetChild("MachineLogo"):diffusealpha(0):visible(false)
@@ -592,9 +590,10 @@ local af = Def.ActorFrame{
 	-- EX Text
 	Def.BitmapText{
 		Font="Common Normal",
+		Name="EXText",
 		Text="EX",
 		InitCommand=function(self)
-			self:diffusealpha(1):x(80):y(-4)
+			self:diffusealpha(1):x(80):y(-4):diffusealpha(0)
 		end,
 		UpdateScoreboxCommand=function(self)
 			self:stoptweening()
