@@ -142,6 +142,15 @@ local LeaderboardRequestProcessor = function(res, master)
 				}
 				master[pn]["LeaderboardIndex"] = 1
 			end
+			
+			-- Then add the EX Score leaderboard.
+			if data[playerStr]["exLeaderboard"] then
+				leaderboardList[#leaderboardList + 1] = {
+					Name="EX Score",
+					Data=DeepCopy(data[playerStr]["exLeaderboard"]),
+					IsEX=true
+				}
+			end
 
 			-- Then any event leaderboards.
 			local events = {"rpg", "itl"}
