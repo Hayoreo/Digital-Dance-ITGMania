@@ -4,7 +4,7 @@ local playerStats = STATSMAN:GetCurStageStats():GetPlayerStageStats(player)
 local grade = playerStats:GetGrade()
 
 -- QUINT
-local ex = CalculateExScore(player, GetExJudgmentCounts(player))
+local ex = CalculateExScore(player)
 if ex == 100 then grade = "Grade_Tier00" end
 
 local t = Def.ActorFrame{}
