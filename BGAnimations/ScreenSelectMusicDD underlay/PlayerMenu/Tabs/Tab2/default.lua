@@ -21,6 +21,7 @@ local VisualModsNames = {
 THEME:GetString("OptionTitles","Perspective"),
 THEME:GetString("OptionTitles","Scroll"),
 THEME:GetString("OptionTitles","BackgroundFilter"),
+THEME:GetString("OptionTitles","MeasureLines"),
 THEME:GetString("OptionNames","Hide"),
 THEME:GetString("OptionNames","Hide"),
 THEME:GetString("OptionTitles","NoteFieldOffsetX"),
@@ -862,6 +863,213 @@ af[#af+1] = Def.Quad{
 }
 
 -----------------------------------------------------------------------------------
+local MeasureLines = {
+	THEME:GetString("SLPlayerOptions","Off"),
+	THEME:GetString("SLPlayerOptions","Measure"),
+	THEME:GetString("SLPlayerOptions","Quarter"),
+	THEME:GetString("SLPlayerOptions","Eighth"),
+}
+
+for i=1,#MeasureLines do
+	af[#af+1] = Def.BitmapText{
+		Font="Miso/_miso",
+		Name=pn.."MeasureLines"..i,
+		InitCommand=function(self)
+			local zoom = 0.6
+			local Parent = self:GetParent():GetChild(pn.."VisualMods4")
+			local TextZoom = Parent:GetZoom()
+			local TextWidth = Parent:GetWidth()
+			local TextHeight = Parent:GetHeight() * TextZoom
+			local TextXPosition = Parent:GetX()
+			local TextYPosition = Parent:GetY()
+			local PastWidth
+			local PastX
+			local CurrentX
+			if i == 1 then
+				self:x(TextXPosition + TextWidth*TextZoom + 5)
+			else
+				PastWidth = self:GetParent():GetChild(pn.."MeasureLines"..i-1):GetWidth()
+				PastX = self:GetParent():GetChild(pn.."MeasureLines"..i-1):GetX()
+				CurrentX = PastX + (PastWidth*zoom) + 10
+				self:x(CurrentX)
+			end
+			self:horizalign(left):vertalign(middle):shadowlength(1)
+				:draworder(2)
+				:y(TextYPosition + TextHeight/2)
+				:maxwidth((width/zoom) - 20)
+				:zoom(zoom)
+				:settext(MeasureLines[i])
+				:queuecommand("UpdateDisplayedTab")
+		end,
+		UpdateDisplayedTabCommand=function(self)
+			if pn == "P1" then
+				if CurrentTabP1 == 2 then
+					self:visible(true)
+				else
+					self:visible(false)
+				end
+			elseif pn == "P2" then
+				if CurrentTabP2 == 2 then
+					self:visible(true)
+				else
+					self:visible(false)
+				end
+			end
+		end,
+	}
+end
+
+
+local PlayerMeasureLines = mods.MeasureLines or "Off"
+local ScreenMLNumber
+
+if PlayerMeasureLines == "Off" then
+	ScreenMLNumber = 1
+elseif PlayerMeasureLines == "Measure" then
+	ScreenMLNumber = 2
+elseif PlayerMeasureLines == "Quarter" then
+	ScreenMLNumber = 3
+elseif PlayerMeasureLines == "Eighth" then
+	ScreenMLNumber = 4
+end
+
+--- MeasureLines Selector
+af[#af+1] = Def.Quad{
+	Name=pn.."MeasureLinesSelector",
+	InitCommand=function(self)
+		local Parent = self:GetParent():GetChild(pn.."MeasureLines"..ScreenMLNumber)
+		local TextZoom = Parent:GetZoom()
+		local TextWidth = Parent:GetWidth() * TextZoom
+		local TextHeight = Parent:GetHeight()
+		local TextXPosition = Parent:GetX()
+		local TextYPosition = Parent:GetY()
+		local color = PlayerColor(player)
+		self:diffuse(color)
+			:draworder(1)
+			:zoomto(TextWidth, 3)
+			:vertalign(top):horizalign(left)
+			:x(TextXPosition)
+			:y(TextYPosition + TextHeight/3)
+			:queuecommand("UpdateDisplayedTab")
+	end,
+	UpdateDisplayedTabCommand=function(self)
+		if pn == "P1" then
+			if CurrentTabP1 == 2 then
+				self:visible(true)
+			else
+				self:visible(false)
+			end
+		elseif pn == "P2" then
+			if CurrentTabP2 == 2 then
+				self:visible(true)
+			else
+				self:visible(false)
+			end
+		end
+	end,
+	["PlayerMenuSelection"..pn.."MessageCommand"]=function(self)
+		local CurrentTab, CurrentRow, CurrentColumn
+		if pn == "P1" then
+			CurrentTab = CurrentTabP1
+			CurrentRow = CurrentRowP1
+			CurrentColumn = CurrentColumnP1
+		elseif pn == "P2" then
+			CurrentTab = CurrentTabP2
+			CurrentRow = CurrentRowP2
+			CurrentColumn = CurrentColumnP2
+		end
+		if CurrentTab == 2 and CurrentRow == 4 then
+			if CurrentColumn == 1 then
+				mods.MeasureLines = "Off"
+			elseif CurrentColumn == 2 then
+				mods.MeasureLines = "Measure"
+			elseif CurrentColumn == 3 then
+				mods.MeasureLines = "Quarter"
+			elseif CurrentColumn == 4 then
+				mods.MeasureLines = "Eighth"
+			end
+			local Parent = self:GetParent():GetChild(pn.."MeasureLines"..CurrentColumn)
+			local TextZoom = Parent:GetZoom()
+			local TextXPosition = Parent:GetX()
+			local TextYPosition = Parent:GetY()
+			local TextHeight = Parent:GetHeight()
+			local TextWidth = Parent:GetWidth() * TextZoom
+			self:zoomto(TextWidth, 3)
+			:x(TextXPosition)
+			:y(TextYPosition + TextHeight/3)
+		end
+	end,
+	LeftMouseClickUpdateMessageCommand=function(self)
+		local CurrentTab, CurrentRow, CurrentColumn
+		local MadeSelection = false
+		if pn == "P1" then
+			CurrentTab = CurrentTabP1
+			CurrentRow = CurrentRowP1
+			CurrentColumn = CurrentColumnP1
+		elseif pn == "P2" then
+			CurrentTab = CurrentTabP2
+			CurrentRow = CurrentRowP2
+			CurrentColumn = CurrentColumnP2
+		end
+		if CurrentTab ~= 2 then return end
+		for j=1,#ScreenFilters do
+			local Parent = self:GetParent():GetChild(pn.."MeasureLines"..j)
+			local ObjectZoom = Parent:GetZoom()
+			local ObjectWidth = Parent:GetWidth() * ObjectZoom
+			local ObjectHeight = Parent:GetHeight()
+			local ObjectX = Parent:GetX()
+			local ObjectY = Parent:GetY()
+			local HAlign = Parent:GetHAlign()
+			local VAlign = Parent:GetVAlign()
+			ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+			ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+			
+			if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 2 then
+				if j == 1 then
+					CurrentRow = 4
+					CurrentColumn = 1
+					mods.MeasureLines = "Off"
+				elseif j == 2 then
+					CurrentRow = 4
+					CurrentColumn = 2
+					mods.MeasureLines = "Measure"
+				elseif j == 3 then
+					CurrentRow = 4
+					CurrentColumn = 3
+					mods.MeasureLines = "Quarter"
+				elseif j == 4 then
+					CurrentRow = 4
+					CurrentColumn = 4
+					mods.MeasureLines = "Eighth"
+				end
+				MadeSelection = true
+			end
+		end
+		if MadeSelection then
+			local Parent2 = self:GetParent():GetChild(pn.."MeasureLines"..CurrentColumn)
+			local TextZoom = Parent2:GetZoom()
+			local TextXPosition = Parent2:GetX()
+			local TextYPosition = Parent2:GetY()
+			local TextHeight = Parent2:GetHeight()
+			local TextWidth = Parent2:GetWidth() * TextZoom
+			if pn == "P1" then
+				CurrentTabP1 = CurrentTab
+				CurrentRowP1 = CurrentRow
+				CurrentColumnP1 = CurrentColumn
+			elseif pn == "P2" then
+				CurrentTabP2 = CurrentTab
+				CurrentRowP2 = CurrentRow
+				CurrentColumnP2 = CurrentColumn
+			end
+			self:zoomto(TextWidth, 3)
+					:x(TextXPosition)
+					:y(TextYPosition + TextHeight/3)
+			MESSAGEMAN:Broadcast("UpdateMenuCursorPosition"..pn, {})
+		end
+	end,
+}
+
+-----------------------------------------------------------------------------------
 
 local Hide = {
 THEME:GetString("SLPlayerOptions","Targets"),
@@ -884,7 +1092,7 @@ for i=1,#Hide do
 		Name=pn.."Hide"..i,
 		InitCommand=function(self)
 			local zoom = 0.5
-			local Parent = self:GetParent():GetChild(pn.."VisualMods4")
+			local Parent = self:GetParent():GetChild(pn.."VisualMods5")
 			local TextZoom = Parent:GetZoom()
 			local TextWidth = Parent:GetWidth() * TextZoom
 			local TextHeight = Parent:GetHeight() * TextZoom
@@ -932,7 +1140,7 @@ for i=1,#Hide do
 	af[#af+1] = Def.Quad{
 		Name=pn.."HideBox"..i,
 		InitCommand=function(self)
-			local Parent = self:GetParent():GetChild(pn.."VisualMods4")
+			local Parent = self:GetParent():GetChild(pn.."VisualMods5")
 			local TextZoom = self:GetParent():GetChild(pn.."Hide"..i):GetZoom()
 			local TextWidth = Parent:GetWidth()
 			local TextHeight = self:GetParent():GetChild(pn.."Hide"..i):GetHeight() * TextZoom
@@ -1044,7 +1252,7 @@ for i=1,#Hide do
 				CurrentRow = CurrentRowP2
 				CurrentColumn = CurrentColumnP2
 			end
-			if CurrentTab == 2 and CurrentRow == 4 then
+			if CurrentTab == 2 and CurrentRow == 5 then
 				if CurrentColumn == 1 and i == 1 then
 					if HideTargets == true then
 						HideTargets = false
@@ -1118,7 +1326,7 @@ for i=1,#Hide do
 				
 				if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 2 then
 					if j == 1 and j == i then
-						CurrentRow = 4
+						CurrentRow = 5
 						CurrentColumn = 1
 						if HideTargets == true then
 							HideTargets = false
@@ -1133,7 +1341,7 @@ for i=1,#Hide do
 						end
 						break
 					elseif j == 2 and j == i then
-						CurrentRow =4
+						CurrentRow =5
 						CurrentColumn = 2
 						if HideBackground == true then
 							HideBackground = false
@@ -1148,7 +1356,7 @@ for i=1,#Hide do
 						end
 						break
 					elseif j == 3 and j == i then
-						CurrentRow = 4
+						CurrentRow = 5
 						CurrentColumn = 3
 						if HideCombo == true then
 							HideCombo = false
@@ -1161,7 +1369,7 @@ for i=1,#Hide do
 						end
 						break
 					elseif j == 4 and j == i then
-						CurrentRow = 4
+						CurrentRow = 5
 						CurrentColumn = 4
 						if HideLife == true then
 							HideLife = false
@@ -1197,7 +1405,7 @@ for i=1,#Hide2 do
 		Name=pn.."Hide2_"..i,
 		InitCommand=function(self)
 			local zoom = 0.5
-			local Parent = self:GetParent():GetChild(pn.."VisualMods5")
+			local Parent = self:GetParent():GetChild(pn.."VisualMods6")
 			local TextZoom = Parent:GetZoom()
 			local TextWidth = Parent:GetWidth() * TextZoom
 			local TextHeight = Parent:GetHeight() * TextZoom
@@ -1245,7 +1453,7 @@ for i=1,#Hide2 do
 	af[#af+1] = Def.Quad{
 		Name=pn.."HideBox2_"..i,
 		InitCommand=function(self)
-			local Parent = self:GetParent():GetChild(pn.."VisualMods5")
+			local Parent = self:GetParent():GetChild(pn.."VisualMods6")
 			local TextZoom = self:GetParent():GetChild(pn.."Hide2_"..i):GetZoom()
 			local TextWidth = Parent:GetWidth()
 			local TextHeight = self:GetParent():GetChild(pn.."Hide2_"..i):GetHeight() * TextZoom
@@ -1346,7 +1554,7 @@ for i=1,#Hide2 do
 				CurrentRow = CurrentRowP2
 				CurrentColumn = CurrentColumnP2
 			end
-			if CurrentTab == 2 and CurrentRow == 5 then
+			if CurrentTab == 2 and CurrentRow == 6 then
 				if CurrentColumn == 1 and i == 1 then
 					if HideScore == true then
 						HideScore = false
@@ -1406,7 +1614,7 @@ for i=1,#Hide2 do
 				
 				if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 2 then
 					if j == 1 and j == i then
-						CurrentRow = 5
+						CurrentRow = 6
 						CurrentColumn = 1
 						if HideScore == true then
 							HideScore = false
@@ -1419,7 +1627,7 @@ for i=1,#Hide2 do
 						end
 						break
 					elseif j == 2 and j == i then
-						CurrentRow = 5
+						CurrentRow = 6
 						CurrentColumn = 2
 						if HideDanger == true then
 							HideDanger = false
@@ -1432,7 +1640,7 @@ for i=1,#Hide2 do
 						end
 						break
 					elseif j == 3 and j == i then
-						CurrentRow = 5
+						CurrentRow = 6
 						CurrentColumn = 3
 						if HideComboExplosions == true then
 							HideComboExplosions = false
@@ -1465,7 +1673,7 @@ end
 af[#af+1] = Def.Quad{
 	Name=pn.."NotefieldXBox1",
 	InitCommand=function(self)
-		local Parent = self:GetParent():GetChild(pn.."VisualMods6")
+		local Parent = self:GetParent():GetChild(pn.."VisualMods7")
 		local TextZoom = Parent:GetZoom()
 		local TextWidth = Parent:GetWidth() * TextZoom
 		local TextHeight = Parent:GetHeight()
@@ -1517,7 +1725,7 @@ af[#af+1] = Def.Quad{
 		ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
 		
 		if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 2 then
-			CurrentRow = 10
+			CurrentRow = 7
 			CurrentColumn = 1
 			if pn == "P1" then
 				CurrentTabP1 = CurrentTab
@@ -1545,7 +1753,7 @@ af[#af+1] = Def.BitmapText{
 	Name=pn.."NotefieldXText",
 	InitCommand=function(self)
 		local zoom = 0.7
-		local Parent = self:GetParent():GetChild(pn.."VisualMods6")
+		local Parent = self:GetParent():GetChild(pn.."VisualMods7")
 		local TextZoom = Parent:GetZoom()
 		local QuadWidth = self:GetParent():GetChild(pn.."NotefieldXBox1"):GetZoomX()
 		local TextHeight = Parent:GetHeight() * TextZoom
@@ -1590,7 +1798,7 @@ af[#af+1] = Def.BitmapText{
 			 CurrentColumn = CurrentColumnP2
 		end
 		
-		if CurrentTab == 2 and CurrentRow == 6 then
+		if CurrentTab == 2 and CurrentRow == 7 then
 			if params[1] == "left" then
 				if PlayerNotefieldX <= MinNotefield then
 					if not params[2] == true then
@@ -1620,7 +1828,7 @@ af[#af+1] = Def.BitmapText{
 af[#af+1] = Def.Quad{
 	Name=pn.."NotefieldYBox1",
 	InitCommand=function(self)
-		local Parent = self:GetParent():GetChild(pn.."VisualMods7")
+		local Parent = self:GetParent():GetChild(pn.."VisualMods8")
 		local TextZoom = Parent:GetZoom()
 		local TextWidth = Parent:GetWidth() * TextZoom
 		local TextHeight = Parent:GetHeight()
@@ -1672,7 +1880,7 @@ af[#af+1] = Def.Quad{
 		ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
 		
 		if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 2 then
-			CurrentRow = 7
+			CurrentRow = 8
 			CurrentColumn = 1
 			if pn == "P1" then
 				CurrentTabP1 = CurrentTab
@@ -1695,7 +1903,7 @@ af[#af+1] = Def.BitmapText{
 	Name=pn.."NotefieldYText",
 	InitCommand=function(self)
 		local zoom = 0.7
-		local Parent = self:GetParent():GetChild(pn.."VisualMods7")
+		local Parent = self:GetParent():GetChild(pn.."VisualMods8")
 		local TextZoom = Parent:GetZoom()
 		local QuadWidth = self:GetParent():GetChild(pn.."NotefieldYBox1"):GetZoomX()
 		local TextHeight = Parent:GetHeight() * TextZoom
@@ -1740,7 +1948,7 @@ af[#af+1] = Def.BitmapText{
 			 CurrentColumn = CurrentColumnP2
 		end
 		
-		if CurrentTab == 2 and CurrentRow == 7 then
+		if CurrentTab == 2 and CurrentRow == 8 then
 			if params[1] == "left" then
 				if PlayerNotefieldY <= MinNotefield then
 					if not params[2] == true then
@@ -1770,7 +1978,7 @@ af[#af+1] = Def.BitmapText{
 af[#af+1] = Def.Quad{
 	Name=pn.."VisualDelayBox1",
 	InitCommand=function(self)
-		local Parent = self:GetParent():GetChild(pn.."VisualMods8")
+		local Parent = self:GetParent():GetChild(pn.."VisualMods9")
 		local TextZoom = Parent:GetZoom()
 		local TextWidth = Parent:GetWidth() * TextZoom
 		local TextHeight = Parent:GetHeight()
@@ -1822,7 +2030,7 @@ af[#af+1] = Def.Quad{
 		ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
 		
 		if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 2 then
-			CurrentRow = 12
+			CurrentRow = 9
 			CurrentColumn = 1
 			if pn == "P1" then
 				CurrentTabP1 = CurrentTab
@@ -1850,7 +2058,7 @@ af[#af+1] = Def.BitmapText{
 	Name=pn.."VisualDelayText",
 	InitCommand=function(self)
 		local zoom = 0.7
-		local Parent = self:GetParent():GetChild(pn.."VisualMods8")
+		local Parent = self:GetParent():GetChild(pn.."VisualMods9")
 		local TextZoom = Parent:GetZoom()
 		local QuadWidth = self:GetParent():GetChild(pn.."VisualDelayBox1"):GetZoomX()
 		local TextHeight = Parent:GetHeight() * TextZoom
@@ -1895,7 +2103,7 @@ af[#af+1] = Def.BitmapText{
 			 CurrentColumn = CurrentColumnP2
 		end
 		
-		if CurrentTab == 2 and CurrentRow == 8 then
+		if CurrentTab == 2 and CurrentRow == 9 then
 			if params[1] == "left" then
 				if PlayerVisualDelay <= MinVisualDelay then
 					if not params[2] == true then
@@ -1928,6 +2136,7 @@ local Mod2Descriptions = {
 THEME:GetString("OptionExplanations","Perspective"),
 THEME:GetString("OptionExplanations","Scroll"),
 THEME:GetString("OptionExplanations","BackgroundFilter"),
+THEME:GetString("OptionExplanations","MeasureLines"),
 THEME:GetString("OptionExplanations","Hide"),
 THEME:GetString("OptionExplanations","Hide"),
 THEME:GetString("OptionExplanations","NoteFieldOffsetX"),

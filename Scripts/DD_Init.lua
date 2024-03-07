@@ -30,6 +30,7 @@ local PlayerDefaults = {
 				MeasureCounter = "16th",
 				MeasureCounterLeft = false,
 				MeasureCounterUp = false,
+				MeasureLines = "Off",
 				DataVisualizations = "None",
 				TargetScore = 11,
 				ActionOnMissedTarget = "Nothing",

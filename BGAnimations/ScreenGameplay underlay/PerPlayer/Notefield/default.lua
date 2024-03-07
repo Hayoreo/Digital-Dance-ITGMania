@@ -11,8 +11,26 @@ local af = Def.ActorFrame{
     -- playfield as the anchor point, and we want to move the playfield as a whole.
     self:addx(mods.NoteFieldOffsetX * 2)
     self:addy(mods.NoteFieldOffsetY * 2)
-    SCREENMAN:GetTopScreen():GetChild("Player"..pn):GetChild("NoteField"):addx(mods.NoteFieldOffsetX)
-    SCREENMAN:GetTopScreen():GetChild("Player"..pn):GetChild("NoteField"):addy(mods.NoteFieldOffsetY)
+    local player = SCREENMAN:GetTopScreen():GetChild("Player"..pn)
+    player:addx(mods.NoteFieldOffsetX)
+    player:addy(mods.NoteFieldOffsetY)
+
+    local notefield = player:GetChild("NoteField")
+    if mods.MeasureLines == "Off" then
+      notefield:SetBeatBars(false)
+      notefield:SetBeatBarsAlpha(0, 0, 0, 0)
+    else
+      notefield:SetBeatBars(true)
+
+      if mods.MeasureLines == "Measure" then
+        notefield:SetBeatBarsAlpha(0.5, 0, 0, 0)
+      elseif mods.MeasureLines == "Quarter" then
+        notefield:SetBeatBarsAlpha(0.5, 0.25, 0, 0)
+      elseif mods.MeasureLines == "Eighth" then
+        notefield:SetBeatBarsAlpha(0.5, 0.25, 0.1, 0)
+      end
+    end
+	
   end,
 }
 

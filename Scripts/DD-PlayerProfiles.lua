@@ -41,6 +41,7 @@ local permitted_profile_settings = {
 	MeasureCounterLeft = "boolean",
 	MeasureCounterUp = "boolean",
 	HideLookahead = "boolean",
+	MeasureLines = "string",
 	ColumnCues = "string",
 	CueMines = "boolean",
 	IgnoreHoldsRolls = "boolean",

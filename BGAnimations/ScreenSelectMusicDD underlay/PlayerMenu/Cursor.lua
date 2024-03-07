@@ -33,6 +33,7 @@ local NameTable =
 		"Perspective",
 		"ScrollBox",
 		"ScreenFilter",
+		"MeasureLines",
 		"HideBox",
 		"HideBox2_",
 		"NotefieldXBox",
