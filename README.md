@@ -2,12 +2,15 @@
 
 # ------------ Differences from 1.0.8 ------------
 - ITL 2024 support!
+- Added Left-Right and Up-Down Mirror!
 - Added EX leaderboards/scorebox.
 - Added dates to the SSM Scorebox.
 - All charts now show leaderboards on SSM instead of only charts ranked on Groovestats.
-- Quint grades now exist on evaluation/evaluation summary (Quints on music wheel later maybe?)
+- Added Quint grades on evaluation/evaluation summary (Quints on music wheel later maybe?).
+- Added Measure Lines as a player option.
 - Animated banners now animate at the proper speed on Screen Evaluation.
 - Fixed Max Error millisecond rounding on evaluation.
+- Blender replaced with Random (HyperShuffle)
 - Some Player Menu input fixes.
 - An additional subsort has been added.
 - Fixed bug with Course mode exploding.
