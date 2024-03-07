@@ -1081,6 +1081,7 @@ for noteskin in ivalues(Noteskins) do
 					:y(NoteskinY + TextHeight/3)
 					:zoom(0.33)
 					:visible(false)
+					:queuecommand('UpdateNoteskin')
 			end,
 			UpdateDisplayedTabCommand=function(self)
 				local CurrentTab, CurrentRow, CurrentColumn
@@ -1310,6 +1311,7 @@ for JudgmentName in ivalues( Judgments ) do
 					:y(JudgmentY + QuadHeight/3)
 					:zoom(0.3)
 					:visible(false)
+					:queuecommand('UpdateJudgment')
 			end,
 			UpdateDisplayedTabCommand=function(self)
 				local CurrentTab, CurrentRow, CurrentColumn
@@ -1539,6 +1541,7 @@ for combo_font in ivalues( ComboFonts ) do
 					:y(ComboY + QuadHeight/3)
 					:zoom(0.3)
 					:visible(false)
+					:queuecommand('UpdateComboFont')
 			end,
 			UpdateDisplayedTabCommand=function(self)
 				local CurrentTab, CurrentRow, CurrentColumn
@@ -1791,6 +1794,7 @@ for hj_filename in ivalues( HoldJudgments ) do
 				:y(JudgmentY + QuadHeight/3)
 				:zoom(0.3)
 				:visible(false)
+				:queuecommand('UpdateHoldJ')
 		end,
 			-- held
 		Def.Sprite{
@@ -1862,7 +1866,7 @@ local Turns2 ={
 	THEME:GetString("OptionNames","Left"),
 	THEME:GetString("OptionNames","Right"),
 	THEME:GetString("OptionNames","Shuffle"),
-	THEME:GetString("OptionNames","Blender"),
+	THEME:GetString("OptionNames","Random"),
 }
 
 --- Turn Mods 1
@@ -2132,13 +2136,13 @@ for i=1,#Turns1 do
 					elseif j == 5 and j == i then
 						CurrentRow = 8
 						CurrentColumn = 5
-						if IsBlender then
-							IsBlender = false
-							SetEngineMod(player, "SuperShuffle", IsBlender)
+						if IsRandom then
+							IsRandom = false
+							SetEngineMod(player, "HyperShuffle", IsRandom)
 							self:settext("")
-						elseif not IsBlender then
-							IsBlender = true
-							SetEngineMod(player, "SuperShuffle",IsBlender)
+						elseif not IsRandom then
+							IsRandom = true
+							SetEngineMod(player, "HyperShuffle", IsRandom)
 							self:settext("✅")
 						end
 						break
@@ -2247,7 +2251,7 @@ end
 local IsLeft = PlayerState:GetPlayerOptions(0):Left()
 local IsRight = PlayerState:GetPlayerOptions(0):Right()
 local IsShuffle = PlayerState:GetPlayerOptions(0):Shuffle()
-local IsBlender = PlayerState:GetPlayerOptions(0):SuperShuffle()
+local IsRandom = PlayerState:GetPlayerOptions(0):HyperShuffle()
 
 --- Turn Check Boxes 2
 for i=1,#Turns2 do
@@ -2280,7 +2284,7 @@ for i=1,#Turns2 do
 					self:settext("")
 				end
 			elseif i == 4 then
-				if IsBlender then
+				if IsRandom then
 					self:settext("✅")
 				else
 					self:settext("")
@@ -2351,13 +2355,13 @@ for i=1,#Turns2 do
 						self:settext("✅")
 					end
 				elseif CurrentColumn == 4 and i == 4 then
-					if IsBlender then
-						IsBlender = false
-						SetEngineMod(player, "SuperShuffle", IsBlender)
+					if IsRandom then
+						IsRandom = false
+						SetEngineMod(player, "HyperShuffle", IsRandom)
 						self:settext("")
-					elseif not IsBlender then
-						IsBlender = true
-						SetEngineMod(player, "SuperShuffle",IsBlender)
+					elseif not IsRandom then
+						IsRandom = true
+						SetEngineMod(player, "HyperShuffle",IsRandom)
 						self:settext("✅")
 					end
 				end
@@ -2430,13 +2434,13 @@ for i=1,#Turns2 do
 					elseif j == 4 and j == i then
 						CurrentRow = 9
 						CurrentColumn = 4
-						if IsBlender then
-							IsBlender = false
-							SetEngineMod(player, "SuperShuffle", IsBlender)
+						if IsRandom then
+							IsRandom = false
+							SetEngineMod(player, "HyperShuffle", IsRandom)
 							self:settext("")
-						elseif not IsBlender then
-							IsBlender = true
-							SetEngineMod(player, "SuperShuffle",IsBlender)
+						elseif not IsRandom then
+							IsRandom = true
+							SetEngineMod(player, "HyperShuffle",IsRandom)
 							self:settext("✅")
 						end
 						break
