@@ -80,6 +80,11 @@ local t = Def.ActorFrame {
 			LeavingScreenSelectMusicDD = true
 		end
 	end,
+	HideOptionsJawnMessageCommand=function(self)
+		if LeavingScreenSelectMusicDD == true then
+			LeavingScreenSelectMusicDD = false
+		end
+	end,
 	CodeMessageCommand=function(self, params)
 		-- I'm using Metrics-based code detection because the engine is already good at handling
 		-- simultaneous button presses,
