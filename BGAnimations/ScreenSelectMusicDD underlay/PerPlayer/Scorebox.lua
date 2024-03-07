@@ -125,7 +125,8 @@ local ResetAllData = function()
 				["date"]="",
 				["isSelf"]=false,
 				["isRival"]=false,
-				["isFail"]=false
+				["isFail"]=false,
+				["isEx"]=false,
 			}
 		end
 		all_data[#all_data + 1] = data
@@ -140,7 +141,7 @@ local HasData = function(idx)
 	return all_data[idx+1] and all_data[idx+1].has_data
 end
 
-local SetScoreData = function(data_idx, score_idx, rank, name, score, date, isSelf, isRival, isFail)
+local SetScoreData = function(data_idx, score_idx, rank, name, score, date, isSelf, isRival, isFail, isEx)
 	all_data[data_idx].has_data = true
 
 	local score_data = all_data[data_idx]["scores"][score_idx]
@@ -151,6 +152,7 @@ local SetScoreData = function(data_idx, score_idx, rank, name, score, date, isSe
 	score_data.isSelf = isSelf
 	score_data.isRival = isRival
 	score_data.isFail = isFail
+	score_data.isEx = isEx
 end
 
 local LeaderboardRequestProcessor = function(res, master)
@@ -165,13 +167,13 @@ local LeaderboardRequestProcessor = function(res, master)
 			text = "Failed to Load 😞"
 		end
 		for i=1, num_scores do
-			SetScoreData(1, i, "", "", "", false, false, false)
-			SetScoreData(2, i, "", "", "", false, false, false)
-			SetScoreData(3, i, "", "", "", false, false, false)
+			SetScoreData(1, i, "", "", "", false, false, false, false)
+			SetScoreData(2, i, "", "", "", false, false, false, false)
+			SetScoreData(3, i, "", "", "", false, false, false, false)
 		end
-		SetScoreData(1, 1, "", text, "", false, false, false)
-		SetScoreData(2, 1, "", text, "", false, false, false)
-		SetScoreData(3, 1, "", text, "", false, false, false)
+		SetScoreData(1, 1, "", text, "", false, false, false, false)
+		SetScoreData(2, 1, "", text, "", false, false, false, false)
+		SetScoreData(3, 1, "", text, "", false, false, false, false)
 		master:queuecommand("LoopScorebox")
 		return
 	end
@@ -186,9 +188,9 @@ local LeaderboardRequestProcessor = function(res, master)
 			isRanked = true
 			all_data[1].has_data = false
 			for i=1,num_scores do
-				SetScoreData(1, i, "", "", "", "", false, false, false)
+				SetScoreData(1, i, "", "", "", "", false, false, false, false)
 			end
-			SetScoreData(1, 1, "", "No Scores", "", "", false, false, false)
+			SetScoreData(1, 1, "", "No Scores", "", "", false, false, false, false)
 		else
 			isRanked = true
 			all_data[1].has_data = false
@@ -197,13 +199,13 @@ local LeaderboardRequestProcessor = function(res, master)
 				all_data[2].has_data = false
 				all_data[3].has_data = false
 				for i=1,num_scores do
-					SetScoreData(1, i, "", "", "", "", false, false, false)
-					SetScoreData(2, i, "", "", "", "", false, false, false)
-					SetScoreData(3, i, "", "", "", "", false, false, false)
+					SetScoreData(1, i, "", "", "", "", false, false, false, false)
+					SetScoreData(2, i, "", "", "", "", false, false, false, false)
+					SetScoreData(3, i, "", "", "", "", false, false, false, false)
 				end
-				SetScoreData(1, 1, "", "No Scores", "", "", false, false, false)
-				SetScoreData(2, 1, "", "Chart Not Ranked", "", "", false, false, false)
-				SetScoreData(3, 1, "", "Chart Not Ranked", "", "", false, false, false)
+				SetScoreData(1, 1, "", "No Scores", "", "", false, false, false, false)
+				SetScoreData(2, 1, "", "Chart Not Ranked", "", "", false, false, false, false)
+				SetScoreData(3, 1, "", "Chart Not Ranked", "", "", false, false, false, false)
 				isRanked = false
 			end
 		end
@@ -219,7 +221,8 @@ local LeaderboardRequestProcessor = function(res, master)
 								ParseGroovestatsDate(entry["date"]),
 								entry["isSelf"],
 								entry["isRival"],
-								entry["isFail"])
+								entry["isFail"],
+								false)
 			end
 			entryCount = entryCount + 1
 			if entryCount > 1 then
@@ -231,14 +234,15 @@ local LeaderboardRequestProcessor = function(res, master)
 									"",
 									false,
 									false,
+									false,
 									false)
 				end
 			end
 		else
 			for i=1,num_scores do
-				SetScoreData(1, i, "", "", "", "", false, false, false)
+				SetScoreData(1, i, "", "", "", "", false, false, false, false)
 			end
-			SetScoreData(1, 1, "", "No Scores", "", "", false, false, false)
+			SetScoreData(1, 1, "", "No Scores", "", "", false, false, false, false)
 		end
 		
 		if data[playerStr]["exLeaderboard"] then
@@ -252,7 +256,8 @@ local LeaderboardRequestProcessor = function(res, master)
 								ParseGroovestatsDate(entry["date"]),
 								entry["isSelf"],
 								entry["isRival"],
-								entry["isFail"])
+								entry["isFail"],
+								true)
 			end
 			entryCount = entryCount + 1
 			if entryCount > 1 then
@@ -264,13 +269,14 @@ local LeaderboardRequestProcessor = function(res, master)
 									"",
 									false,
 									false,
+									false,
 									false)
 				end
 			else
 				for i=1,num_scores do
-					SetScoreData(2, i, "", "", "", "", false, false, false)
+					SetScoreData(2, i, "", "", "", "", false, false, false, false)
 				end
-				SetScoreData(2, 1, "", "No Scores", "", "", false, false, false)
+				SetScoreData(2, 1, "", "No Scores", "", "", false, false, false, false)
 			end
 		end
 
@@ -278,9 +284,9 @@ local LeaderboardRequestProcessor = function(res, master)
 			local entryCount = 0
 			all_data[3].has_data = false
 			for i=1,num_scores do
-				SetScoreData(3, i, "", "", "", "", false, false, false)
+				SetScoreData(3, i, "", "", "", "", false, false, false, false)
 			end
-			SetScoreData(3, 1, "", "No Scores", "", "", false, false, false)
+			SetScoreData(3, 1, "", "No Scores", "", "", false, false, false, false)
 
 			if data[playerStr]["rpg"]["rpgLeaderboard"] then
 				for entry in ivalues(data[playerStr]["rpg"]["rpgLeaderboard"]) do
@@ -292,7 +298,8 @@ local LeaderboardRequestProcessor = function(res, master)
 									ParseGroovestatsDate(entry["date"]),
 									entry["isSelf"],
 									entry["isRival"],
-									entry["isFail"]
+									entry["isFail"],
+									false
 								)
 				end
 				entryCount = entryCount + 1
@@ -304,23 +311,24 @@ local LeaderboardRequestProcessor = function(res, master)
 									"",
 									false,
 									false,
+									false,
 									false)
 				end
 			end
 		else
 			for i=1,num_scores do
-				SetScoreData(3, i, "", "", "", "", false, false, false)
+				SetScoreData(3, i, "", "", "", "", false, false, false, false)
 			end
-			SetScoreData(3, 1, "", "Chart Not Ranked", "", "", false, false, false)
+			SetScoreData(3, 1, "", "Chart Not Ranked", "", "", false, false, false, false)
 		end
 
 		if data[playerStr]["itl"] then
 			local entryCount = 0
 			all_data[4].has_data = false
 			for i=1,num_scores do
-				SetScoreData(4, i, "", "", "", "", false, false, false)
+				SetScoreData(4, i, "", "", "", "", false, false, false, false)
 			end
-			SetScoreData(4, 1, "", "No Scores", "", "", false, false, false)
+			SetScoreData(4, 1, "", "No Scores", "", "", false, false, false, false)
 
 			if data[playerStr]["itl"]["itlLeaderboard"] then
 				for entry in ivalues(data[playerStr]["itl"]["itlLeaderboard"]) do
@@ -332,7 +340,8 @@ local LeaderboardRequestProcessor = function(res, master)
 									ParseGroovestatsDate(entry["date"]),
 									entry["isSelf"],
 									entry["isRival"],
-									entry["isFail"]
+									entry["isFail"],
+									true
 								)
 				end
 				entryCount = entryCount + 1
@@ -344,14 +353,15 @@ local LeaderboardRequestProcessor = function(res, master)
 									"",
 									false,
 									false,
+									false,
 									false)
 				end
 			end
 		else
 			for i=1,num_scores do
-				SetScoreData(4, i, "", "", "", "", false, false, false)
+				SetScoreData(4, i, "", "", "", "", false, false, false, false)
 			end
-			SetScoreData(4, 1, "", "Chart Not Ranked", "", "", false, false, false)
+			SetScoreData(4, 1, "", "Chart Not Ranked", "", "", false, false, false, false)
 		end
 		
  	end
@@ -784,6 +794,8 @@ for i=1,num_scores do
 			local clr = Color.White
 			if score.isFail then
 				clr = Color.Red
+			elseif score.isEx then
+				clr = SL.JudgmentColors["FA+"][1]
 			elseif score.isSelf then
 				clr = self_color
 			elseif score.isRival then
