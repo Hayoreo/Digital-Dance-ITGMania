@@ -8,8 +8,9 @@ local t = Def.ActorFrame{
 	OnCommand=function(self)
 		if IsUsingWideScreen() then
 			if GAMESTATE:IsCourseMode() then
-				self:zoom(0.7655)
-				self:xy(164 - 5, WideScale(62,62.75))
+				local zoom = 1.12
+				self:zoom(zoom)
+				self:xy(BannerWidth/2 * zoom, 0)
 			else
 				self:xy(_screen.cx, 0)
 			end
