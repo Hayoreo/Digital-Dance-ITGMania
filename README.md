@@ -1,6 +1,6 @@
-# Digital Dance v1.0.8.1
+# Digital Dance v1.0.9
 
-# ------------ Differences from 1.0.8 ------------
+# ------------ Differences from 1.0.9 ------------
 - ITL 2024 support!
 - Added Left-Right and Up-Down Mirror!
 - Added EX leaderboards/scorebox.
@@ -13,10 +13,11 @@
 - Blender replaced with Random (HyperShuffle)
 - Some Player Menu input fixes.
 - An additional subsort has been added.
-- Fixed bug with Course mode exploding.
+- Fixed Screen Select Course.
 
 ## ITGMANIA USE ONLY
-As noted in the "About" section this theme is intended for use with ITGMania only.
+- As noted in the "About" section this theme is intended for use with ITGMania only.
+- If you are using ITGMania version 0.7.0 or older you will need to upgrade to 0.8.0 or newer.
 
 # -- General things to note --
 - This theme is intended for home use only.
