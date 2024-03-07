@@ -350,7 +350,7 @@ UpdateItlData = function(player)
 	local minesEnabled = not po:NoMines()
 
 	-- We also require all the windows to be enabled.
-	-- ITG mode is the only mode that has all the windows enabled by default.
+	-- DD mode is the only mode that has all the windows enabled by default. (it's also the only mode, but ya know).
 	local allWindowsEnabled = SL.Global.GameMode == "DD"
 	for enabled in ivalues(SL[pn].ActiveModifiers.TimingWindows) do
 		allWindowsEnabled = allWindowsEnabled and enabled
