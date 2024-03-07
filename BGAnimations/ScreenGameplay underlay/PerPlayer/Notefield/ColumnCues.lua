@@ -11,7 +11,9 @@ local po = GAMESTATE:GetPlayerState(player):GetPlayerOptions('ModsLevel_Preferre
 local Left = po:Left()
 local Right = po:Right()
 local mirror = po:Mirror()
-local shuffle = po:Shuffle() or po:SuperShuffle() or po:SoftShuffle()
+local LRMirror = po:LRMirror()
+local UDMirror = po:UDMirror()
+local shuffle = po:Shuffle() or po:SuperShuffle() or po:SoftShuffle() or po:HyperShuffle()
 local flip = po:Flip() > 0
 local invert = po:Invert() > 0
 local insert = po:Wide() or po:Big() or po:Quick() or po:BMRize() or po:Skippy() or po:Echo() or po:Stomp()
@@ -32,7 +34,7 @@ local CountdownBreaks = mods.CountdownBreaks
 -- Don't run this if mines AND notes are not being cued lol
 if IgnoreNotes and not CueMines then return end
 
--- Don't run this if on shuffle, blender, backwards or inserting/removing notes
+-- Don't run this if on shuffle, blender, random, backwards or inserting/removing notes
 if shuffle or backwards or insert or notes_removed then return end
 
 -- Don't run this if flip AND invert are on because it breaks the column spacing.
@@ -57,6 +59,14 @@ end
 if mirror then
 	noteMapping = {noteMapping[4], noteMapping[3], noteMapping[2], noteMapping[1]}
 end
+if UDMirror then
+	noteMapping = {noteMapping[1], noteMapping[3], noteMapping[2], noteMapping[4]}
+end
+
+if LRMirror then
+	noteMapping = {noteMapping[4], noteMapping[2], noteMapping[3], noteMapping[1]}
+end
+
 local pn = ToEnumShortString(player)
 
 
@@ -92,10 +102,14 @@ if NumColumns == 8 then
 		noteMapping[4+i] = noteMapping[i] + 4
 	end
 	
-	-- Flip and mirror cancel each other out so only move the column cues around if it's one or the other.
-	if flip and mirror then
+	-- Flip, mirror and LRMirror all swap left and right sides.
+	-- If an odd number are set, swap.
+	local swapCount = 0
+	if flip then swapCount = swapCount + 1 end
+	if mirror then swapCount = swapCount + 1 end
+	if LRMirror then swapCount = swapCount + 1 end
 	
-	elseif flip or mirror then
+	if swapCount % 2 == 1 then
 		for i=1,4 do
 			noteMapping[i] = noteMapping[i] + 4
 			noteMapping[i+4] = noteMapping[i+4] - 4
