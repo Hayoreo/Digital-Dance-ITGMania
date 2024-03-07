@@ -11,17 +11,18 @@ local ColumnPerRow1 = {
 3,
 1,
 1,
-5,
+1,
+1,
+1,
+1,
+3,
+4,
 1,
 }
 
 local ColumnPerRow2 = {
 5,
 5,
-1,
-1,
-1,
-1,
 4,
 4,
 3,

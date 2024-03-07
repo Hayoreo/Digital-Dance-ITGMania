@@ -19,7 +19,12 @@ local NameTable =
 		"SpeedTypes",
 		"SpeedModBox",
 		"MiniBox",
+		"NoteskinBox",
+		"JudgmentBox",
+		"ComboBox",
+		"HoldJBox",
 		"TurnBox",
+		"TurnBox2",
 		"MusicRateBox",
 	},
 	
@@ -27,10 +32,6 @@ local NameTable =
 	{
 		"Perspective",
 		"ScrollBox",
-		"NoteskinBox",
-		"JudgmentBox",
-		"ComboBox",
-		"HoldJBox",
 		"ScreenFilter",
 		"HideBox",
 		"HideBox2_",

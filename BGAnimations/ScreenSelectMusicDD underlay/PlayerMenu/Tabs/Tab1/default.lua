@@ -21,6 +21,11 @@ local QuickModsNames = {
 THEME:GetString("OptionTitles","SpeedModType"),
 THEME:GetString("OptionTitles","SpeedMod"),
 THEME:GetString("OptionTitles","Mini"),
+THEME:GetString("OptionTitles","NoteSkin"),
+THEME:GetString("OptionTitles","JudgmentGraphic"),
+THEME:GetString("OptionTitles","ComboFont"),
+THEME:GetString("OptionTitles","HoldJudgment"),
+THEME:GetString("OptionTitles","Turn"),
 THEME:GetString("OptionTitles","Turn"),
 THEME:GetString("OptionTitles","MusicRate"),
 }
@@ -889,22 +894,985 @@ af[#af+1] = Def.BitmapText{
 }
 
 -----------------------------------------------------------------------------------------------------
-local Turns ={
-THEME:GetString("OptionNames","Mirror"),
-THEME:GetString("OptionNames","Left"),
-THEME:GetString("OptionNames","Right"),
-THEME:GetString("OptionNames","Shuffle"),
-THEME:GetString("OptionNames","Blender"),
+
+-- Noteskins
+--------------------------------------------------------------------
+local Noteskins = NOTESKIN:GetNoteSkinNames()
+
+local CurrentNoteskinIndex
+local PlayerNoteSkin = PlayerState:GetPlayerOptions(0):NoteSkin() or "cel"
+for i=1, #Noteskins do
+	if PlayerNoteSkin == Noteskins[i] then
+		CurrentNoteskinIndex = i
+		break
+	end
+end
+
+--- Noteskin Box
+af[#af+1] = Def.Quad{
+	Name=pn.."NoteskinBox1",
+	InitCommand=function(self)
+		local Parent = self:GetParent():GetChild(pn.."QuickMods4")
+		local TextZoom = Parent:GetZoom()
+		local TextWidth = Parent:GetWidth() * TextZoom
+		local TextHeight = Parent:GetHeight()
+		local TextXPosition = Parent:GetX()
+		local TextYPosition = Parent:GetY()
+		self:diffuse(color("#4d4d4d"))
+			:draworder(1)
+			:zoomto(70, TextHeight)
+			:vertalign(top):horizalign(left)
+			:x(TextXPosition + TextWidth + 5)
+			:y(TextYPosition - (TextHeight*TextZoom)/4)
+			:queuecommand("UpdateDisplayedTab")
+	end,
+	UpdateDisplayedTabCommand=function(self)
+		if pn == "P1" then
+			if CurrentTabP1 == 1 then
+				self:visible(true)
+			else
+				self:visible(false)
+			end
+		elseif pn == "P2" then
+			if CurrentTabP2 == 1 then
+				self:visible(true)
+			else
+				self:visible(false)
+			end
+		end
+	end,
+	LeftMouseClickUpdateMessageCommand=function(self)
+		local CurrentTab, CurrentRow, CurrentColumn
+		if pn == "P1" then
+			CurrentTab = CurrentTabP1
+			CurrentRow = CurrentRowP1
+			CurrentColumn = CurrentColumnP1
+		elseif pn == "P2" then
+			CurrentTab = CurrentTabP2
+			CurrentRow = CurrentRowP2
+			CurrentColumn = CurrentColumnP2
+		end
+		if CurrentTab ~= 1 then return end
+		local Parent = self:GetParent():GetChild(pn.."NoteskinBox1")
+		local ObjectWidth = Parent:GetZoomX()
+		local ObjectHeight = Parent:GetZoomY()
+		local ObjectX = Parent:GetX()
+		local ObjectY = Parent:GetY()
+		local HAlign = Parent:GetHAlign()
+		local VAlign = Parent:GetVAlign()
+		ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+		ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+		
+		if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 1 then
+			CurrentRow = 4
+			CurrentColumn = 1
+			if pn == "P1" then
+				CurrentTabP1 = CurrentTab
+				CurrentRowP1 = CurrentRow
+				CurrentColumnP1 = CurrentColumn
+			elseif pn == "P2" then
+				CurrentTabP2 = CurrentTab
+				CurrentRowP2 = CurrentRow
+				CurrentColumnP2 = CurrentColumn
+			end
+			MESSAGEMAN:Broadcast("UpdateMenuCursorPosition"..pn, {})
+		end
+	
+	end,
 }
 
---- Turn Mods
-for i=1,#Turns do
+--- Noteskin Text
+af[#af+1] = Def.BitmapText{
+	Font="Miso/_miso",
+	Name=pn.."NoteskinName1",
+	InitCommand=function(self)
+		local zoom = 0.7
+		local Parent = self:GetParent():GetChild(pn.."QuickMods4")
+		local TextZoom = Parent:GetZoom()
+		local QuadWidth = self:GetParent():GetChild(pn.."NoteskinBox1"):GetZoomX()
+		local TextHeight = Parent:GetHeight() * TextZoom
+		local QuadXPosition = self:GetParent():GetChild(pn.."NoteskinBox1"):GetX()
+		local TextYPosition = Parent:GetY()
+		local PastWidth
+		local PastX
+		local CurrentX
+		self:horizalign(center):vertalign(middle):shadowlength(1)
+			:draworder(2)
+			:y(TextYPosition + TextHeight/2)
+			:x(QuadXPosition + QuadWidth/2) 
+			:maxwidth((QuadWidth-2)/zoom)
+			:zoom(zoom)
+			:settext(Noteskins[CurrentNoteskinIndex])
+			:queuecommand("UpdateDisplayedTab")
+	end,
+	UpdateDisplayedTabCommand=function(self)
+		if pn == "P1" then
+			if CurrentTabP1 == 1 then
+				self:visible(true)
+			else
+				self:visible(false)
+			end
+		elseif pn == "P2" then
+			if CurrentTabP2 == 1 then
+				self:visible(true)
+			else
+				self:visible(false)
+			end
+		end
+	end,
+	["UpdateMenuCursorPosition"..pn.."MessageCommand"]=function(self, params)
+		local CurrentTab, CurrentRow, CurrentColumn
+		if pn == "P1" then
+			 CurrentTab = CurrentTabP1
+			 CurrentRow = CurrentRowP1
+			 CurrentColumn = CurrentColumnP1
+		elseif pn == "P2" then
+			CurrentTab = CurrentTabP2
+			 CurrentRow = CurrentRowP2
+			 CurrentColumn = CurrentColumnP2
+		end
+		
+		if CurrentTab == 1 and CurrentRow == 4 then
+			if params[1] == "left" then
+				if CurrentNoteskinIndex == 1 then
+					CurrentNoteskinIndex = #Noteskins
+				else
+					CurrentNoteskinIndex = CurrentNoteskinIndex - 1	
+				end
+				self:settext(Noteskins[CurrentNoteskinIndex])
+					:queuecommand("SetMod")
+			elseif params[1] == "right" then
+				if CurrentNoteskinIndex == #Noteskins then
+					CurrentNoteskinIndex = 1
+				else
+					CurrentNoteskinIndex = CurrentNoteskinIndex + 1
+				end
+				self:settext(Noteskins[CurrentNoteskinIndex])
+					:queuecommand("SetMod")
+			end
+		end
+	end,
+	SetModCommand=function(self)
+		SetEngineMod(player, "NoteSkin", Noteskins[CurrentNoteskinIndex])
+	end,
+}
+
+--- I have no intention of supporting other game modes
+--- This is ITGMania after all.
+local ArrowDirection ={
+	"Left",
+	"Down",
+	"Up",
+	"Right",
+}
+for noteskin in ivalues(Noteskins) do
+	for i=1, 4 do
+		af[#af+1] = NOTESKIN:LoadActorForNoteSkin(ArrowDirection[i], "Tap Note", noteskin:lower())..{
+			InitCommand=function(self)
+				local Parent = self:GetParent():GetChild(pn.."QuickMods4")
+				local NoteskinX = Parent:GetX()
+				local NoteskinY = Parent:GetY()
+				local TextZoom = Parent:GetZoom()
+				local TextWidth = Parent:GetWidth() * TextZoom
+				local TextHeight = Parent:GetHeight() * TextZoom
+				self:horizalign(center):vertalign(middle)
+					:draworder(1)
+					:x(NoteskinX + TextWidth + 70 + (i*25))
+					:y(NoteskinY + TextHeight/3)
+					:zoom(0.33)
+					:visible(false)
+			end,
+			UpdateDisplayedTabCommand=function(self)
+				local CurrentTab, CurrentRow, CurrentColumn
+				if pn == "P1" then
+					 CurrentTab = CurrentTabP1
+					 CurrentRow = CurrentRowP1
+					 CurrentColumn = CurrentColumnP1
+				elseif pn == "P2" then
+					CurrentTab = CurrentTabP2
+					 CurrentRow = CurrentRowP2
+					 CurrentColumn = CurrentColumnP2
+				end
+				if CurrentTab ~= 1 then
+					self:visible(false)
+					return
+				elseif Noteskins[CurrentNoteskinIndex] == noteskin:lower() then
+					self:visible(true)
+				end
+			end,
+			["UpdateMenuCursorPosition"..pn.."MessageCommand"]=function(self, params)
+				local CurrentTab, CurrentRow, CurrentColumn
+				if pn == "P1" then
+					 CurrentTab = CurrentTabP1
+					 CurrentRow = CurrentRowP1
+					 CurrentColumn = CurrentColumnP1
+				elseif pn == "P2" then
+					CurrentTab = CurrentTabP2
+					 CurrentRow = CurrentRowP2
+					 CurrentColumn = CurrentColumnP2
+				end
+				if CurrentTab == 1 and CurrentRow == 4 then
+					if params[1] == "left" or params[1] == "right" then
+						self:queuecommand("UpdateNoteskin")
+					end
+				end
+			end,
+			UpdateNoteskinCommand=function(self)
+				self:visible(false)
+				if Noteskins[CurrentNoteskinIndex] == noteskin:lower() then
+					self:visible(true)
+				else
+					self:visible(false)
+				end
+			end,
+		}
+	end
+end
+
+
+--------------------------------------------------------------------
+-- Judgments
+local Judgments = GetJudgmentGraphics() or "Ice 2x7.png"
+local CurrentJudgmentIndex
+
+--- Judgment Box
+af[#af+1] = Def.Quad{
+	Name=pn.."JudgmentBox1",
+	InitCommand=function(self)
+		local Parent = self:GetParent():GetChild(pn.."QuickMods5")
+		local TextZoom = Parent:GetZoom()
+		local TextWidth = Parent:GetWidth() * TextZoom
+		local TextHeight = Parent:GetHeight()
+		local TextXPosition = Parent:GetX()
+		local TextYPosition = Parent:GetY()
+		self:diffuse(color("#4d4d4d"))
+			:draworder(1)
+			:zoomto(70, TextHeight)
+			:vertalign(top):horizalign(left)
+			:x(TextXPosition + TextWidth + 5)
+			:y(TextYPosition - (TextHeight*TextZoom)/4)
+			:queuecommand("UpdateDisplayedTab")
+	end,
+	UpdateDisplayedTabCommand=function(self)
+		if pn == "P1" then
+			if CurrentTabP1 == 1 then
+				self:visible(true)
+			else
+				self:visible(false)
+			end
+		elseif pn == "P2" then
+			if CurrentTabP2 == 1 then
+				self:visible(true)
+			else
+				self:visible(false)
+			end
+		end
+	end,
+	LeftMouseClickUpdateMessageCommand=function(self)
+		local CurrentTab, CurrentRow, CurrentColumn
+		if pn == "P1" then
+			CurrentTab = CurrentTabP1
+			CurrentRow = CurrentRowP1
+			CurrentColumn = CurrentColumnP1
+		elseif pn == "P2" then
+			CurrentTab = CurrentTabP2
+			CurrentRow = CurrentRowP2
+			CurrentColumn = CurrentColumnP2
+		end
+		if CurrentTab ~= 1 then return end
+		local Parent = self:GetParent():GetChild(pn.."JudgmentBox1")
+		local ObjectWidth = Parent:GetZoomX()
+		local ObjectHeight = Parent:GetZoomY()
+		local ObjectX = Parent:GetX()
+		local ObjectY = Parent:GetY()
+		local HAlign = Parent:GetHAlign()
+		local VAlign = Parent:GetVAlign()
+		ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+		ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+		
+		if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 1 then
+			CurrentRow = 5
+			CurrentColumn = 1
+			if pn == "P1" then
+				CurrentTabP1 = CurrentTab
+				CurrentRowP1 = CurrentRow
+				CurrentColumnP1 = CurrentColumn
+			elseif pn == "P2" then
+				CurrentTabP2 = CurrentTab
+				CurrentRowP2 = CurrentRow
+				CurrentColumnP2 = CurrentColumn
+			end
+			MESSAGEMAN:Broadcast("UpdateMenuCursorPosition"..pn, {})
+		end
+	
+	end,
+}
+
+--- Judgment Text
+af[#af+1] = Def.BitmapText{
+	Font="Miso/_miso",
+	Name=pn.."JudgmentName1",
+	InitCommand=function(self)	
+		local zoom = 0.7
+		local Parent = self:GetParent():GetChild(pn.."QuickMods5")
+		local TextZoom = Parent:GetZoom()
+		local QuadWidth = self:GetParent():GetChild(pn.."JudgmentBox1"):GetZoomX()
+		local TextHeight = Parent:GetHeight() * TextZoom
+		local QuadXPosition = self:GetParent():GetChild(pn.."JudgmentBox1"):GetX()
+		local TextYPosition = Parent:GetY()
+		self:horizalign(center):vertalign(middle):shadowlength(1)
+			:draworder(2)
+			:settext("")
+			:y(TextYPosition + TextHeight/2)
+			:x(QuadXPosition + QuadWidth/2) 
+			:maxwidth((QuadWidth-2)/zoom)
+			:zoom(zoom)
+			:queuecommand("UpdateDisplayedTab")
+
+		--- idk sm is dumb (same) and i can't have this earlier
+		local PlayerJudge = mods.JudgmentGraphic or "Ice 2x7.png"
+		for i=1, #Judgments do
+			if Judgments[i] == PlayerJudge then
+				CurrentJudgmentIndex = i
+				self:queuecommand("UpdateJudgmentText")
+				break
+			end
+		end
+	end,
+	UpdateDisplayedTabCommand=function(self)
+		if pn == "P1" then
+			if CurrentTabP1 == 1 then
+				self:visible(true)
+			else
+				self:visible(false)
+			end
+		elseif pn == "P2" then
+			if CurrentTabP2 == 1 then
+				self:visible(true)
+			else
+				self:visible(false)
+			end
+		end
+	end,
+	UpdateJudgmentTextCommand=function(self)
+		self:settext( StripSpriteHints(Judgments[CurrentJudgmentIndex]) )
+	end,
+	["UpdateMenuCursorPosition"..pn.."MessageCommand"]=function(self, params)
+		local CurrentTab, CurrentRow, CurrentColumn
+		if pn == "P1" then
+			 CurrentTab = CurrentTabP1
+			 CurrentRow = CurrentRowP1
+			 CurrentColumn = CurrentColumnP1
+		elseif pn == "P2" then
+			CurrentTab = CurrentTabP2
+			 CurrentRow = CurrentRowP2
+			 CurrentColumn = CurrentColumnP2
+		end
+		
+		if CurrentTab == 1 and CurrentRow == 5 then
+			if params[1] == "left" then
+				if CurrentJudgmentIndex == 1 then
+					CurrentJudgmentIndex = #Judgments
+				else
+					CurrentJudgmentIndex = CurrentJudgmentIndex - 1	
+				end
+				mods.JudgmentGraphic = Judgments[CurrentJudgmentIndex]
+				self:settext(StripSpriteHints(Judgments[CurrentJudgmentIndex]))
+			elseif params[1] == "right" then
+				if CurrentJudgmentIndex == #Judgments then
+					CurrentJudgmentIndex = 1
+				else
+					CurrentJudgmentIndex = CurrentJudgmentIndex + 1
+				end
+				mods.JudgmentGraphic = Judgments[CurrentJudgmentIndex]
+				self:settext(StripSpriteHints(Judgments[CurrentJudgmentIndex]))
+			end
+		end
+	end,
+}
+
+
+for JudgmentName in ivalues( Judgments ) do
+	if JudgmentName ~= "None" then
+		af[#af+1] = LoadActor( THEME:GetPathG("", "_judgments/" .. JudgmentName) )..{
+			Name="JudgmentGraphic_"..StripSpriteHints(JudgmentName),
+			InitCommand=function(self)
+				local Parent = self:GetParent():GetChild(pn.."QuickMods5")
+				local JudgmentX = self:GetParent():GetChild(pn.."JudgmentBox1"):GetX()
+				local JudgmentY = Parent:GetY()
+				local TextZoom = Parent:GetZoom()
+				local TextWidth = Parent:GetWidth() * TextZoom
+				local QuadHeight = self:GetParent():GetChild(pn.."JudgmentBox1"):GetZoomY()
+				self:horizalign(center):vertalign(middle)
+					:animate(false)
+					:draworder(1)
+					:x(JudgmentX + 120)
+					:y(JudgmentY + QuadHeight/3)
+					:zoom(0.3)
+					:visible(false)
+			end,
+			UpdateDisplayedTabCommand=function(self)
+				local CurrentTab, CurrentRow, CurrentColumn
+				if pn == "P1" then
+					 CurrentTab = CurrentTabP1
+					 CurrentRow = CurrentRowP1
+					 CurrentColumn = CurrentColumnP1
+				elseif pn == "P2" then
+					CurrentTab = CurrentTabP2
+					 CurrentRow = CurrentRowP2
+					 CurrentColumn = CurrentColumnP2
+				end
+				if CurrentTab ~= 1 then
+					self:visible(false)
+					return
+				elseif Judgments[CurrentJudgmentIndex] == JudgmentName then
+					self:visible(true)
+				end
+			end,
+			["UpdateMenuCursorPosition"..pn.."MessageCommand"]=function(self, params)
+				local CurrentTab, CurrentRow, CurrentColumn
+				if pn == "P1" then
+					 CurrentTab = CurrentTabP1
+					 CurrentRow = CurrentRowP1
+					 CurrentColumn = CurrentColumnP1
+				elseif pn == "P2" then
+					CurrentTab = CurrentTabP2
+					 CurrentRow = CurrentRowP2
+					 CurrentColumn = CurrentColumnP2
+				end
+				if CurrentTab == 1 and CurrentRow == 5 then
+					if params[1] == "left" or params[1] == "right" then
+						self:queuecommand("UpdateJudgment")
+					end
+				end
+			end,
+			UpdateJudgmentCommand=function(self)
+				self:visible(false)
+				if Judgments[CurrentJudgmentIndex] == JudgmentName then
+					self:visible(true)
+				else
+					self:visible(false)
+				end
+			end,
+		}
+	else
+		af[#af+1] = Def.Actor{ Name="JudgmentGraphic_None", InitCommand=function(self) self:visible(false) end }
+	end
+end
+
+--------------------------------------------------------------------
+-- Combo Fonts
+
+--- Combo Box
+af[#af+1] = Def.Quad{
+	Name=pn.."ComboBox1",
+	InitCommand=function(self)
+		local Parent = self:GetParent():GetChild(pn.."QuickMods6")
+		local TextZoom = Parent:GetZoom()
+		local TextWidth = Parent:GetWidth() * TextZoom
+		local TextHeight = Parent:GetHeight()
+		local TextXPosition = Parent:GetX()
+		local TextYPosition = Parent:GetY()
+		self:diffuse(color("#4d4d4d"))
+			:draworder(1)
+			:zoomto(80, TextHeight)
+			:vertalign(top):horizalign(left)
+			:x(TextXPosition + TextWidth + 5)
+			:y(TextYPosition - (TextHeight*TextZoom)/4)
+			:queuecommand("UpdateDisplayedTab")
+	end,
+	UpdateDisplayedTabCommand=function(self)
+		if pn == "P1" then
+			if CurrentTabP1 == 1 then
+				self:visible(true)
+			else
+				self:visible(false)
+			end
+		elseif pn == "P2" then
+			if CurrentTabP2 == 1 then
+				self:visible(true)
+			else
+				self:visible(false)
+			end
+		end
+	end,
+	LeftMouseClickUpdateMessageCommand=function(self)
+		local CurrentTab, CurrentRow, CurrentColumn
+		if pn == "P1" then
+			CurrentTab = CurrentTabP1
+			CurrentRow = CurrentRowP1
+			CurrentColumn = CurrentColumnP1
+		elseif pn == "P2" then
+			CurrentTab = CurrentTabP2
+			CurrentRow = CurrentRowP2
+			CurrentColumn = CurrentColumnP2
+		end
+		if CurrentTab ~= 1 then return end
+		local Parent = self:GetParent():GetChild(pn.."ComboBox1")
+		local ObjectWidth = Parent:GetZoomX()
+		local ObjectHeight = Parent:GetZoomY()
+		local ObjectX = Parent:GetX()
+		local ObjectY = Parent:GetY()
+		local HAlign = Parent:GetHAlign()
+		local VAlign = Parent:GetVAlign()
+		ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+		ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+		
+		if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 1 then
+			CurrentRow = 6
+			CurrentColumn = 1
+			if pn == "P1" then
+				CurrentTabP1 = CurrentTab
+				CurrentRowP1 = CurrentRow
+				CurrentColumnP1 = CurrentColumn
+			elseif pn == "P2" then
+				CurrentTabP2 = CurrentTab
+				CurrentRowP2 = CurrentRow
+				CurrentColumnP2 = CurrentColumn
+			end
+			MESSAGEMAN:Broadcast("UpdateMenuCursorPosition"..pn, {})
+		end
+	
+	end,
+}
+
+
+local PlayerComboFont = mods.ComboFont or "Wendy"
+local ComboFonts = GetComboFonts()
+local CurrentComboIndex
+
+for i=1, #ComboFonts do
+	if ComboFonts[i] == PlayerComboFont then
+		CurrentComboIndex = i
+		break
+	end
+end
+
+-- Combo Text
+af[#af+1] = Def.BitmapText{
+	Font="Miso/_miso",
+	Name=pn.."JudgmentName1",
+	InitCommand=function(self)	
+		local zoom = 0.7
+		local Parent = self:GetParent():GetChild(pn.."QuickMods6")
+		local TextZoom = Parent:GetZoom()
+		local QuadWidth = self:GetParent():GetChild(pn.."ComboBox1"):GetZoomX()
+		local TextHeight = Parent:GetHeight() * TextZoom
+		local QuadXPosition = self:GetParent():GetChild(pn.."ComboBox1"):GetX()
+		local TextYPosition = Parent:GetY()
+		self:horizalign(center):vertalign(middle):shadowlength(1)
+			:draworder(2)
+			:settext(ComboFonts[CurrentComboIndex])
+			:y(TextYPosition + TextHeight/2)
+			:x(QuadXPosition + QuadWidth/2) 
+			:maxwidth((QuadWidth-2)/zoom)
+			:zoom(zoom)
+			:queuecommand("UpdateDisplayedTab")
+	end,
+	UpdateDisplayedTabCommand=function(self)
+		if pn == "P1" then
+			if CurrentTabP1 == 1 then
+				self:visible(true)
+			else
+				self:visible(false)
+			end
+		elseif pn == "P2" then
+			if CurrentTabP2 == 1 then
+				self:visible(true)
+			else
+				self:visible(false)
+			end
+		end
+	end,
+	["UpdateMenuCursorPosition"..pn.."MessageCommand"]=function(self, params)
+		local CurrentTab, CurrentRow, CurrentColumn
+		if pn == "P1" then
+			 CurrentTab = CurrentTabP1
+			 CurrentRow = CurrentRowP1
+			 CurrentColumn = CurrentColumnP1
+		elseif pn == "P2" then
+			CurrentTab = CurrentTabP2
+			 CurrentRow = CurrentRowP2
+			 CurrentColumn = CurrentColumnP2
+		end
+		
+		if CurrentTab == 1 and CurrentRow == 6 then
+			if params[1] == "left" then
+				if CurrentComboIndex == 1 then
+					CurrentComboIndex = #ComboFonts
+				else
+					CurrentComboIndex = CurrentComboIndex - 1	
+				end
+				mods.ComboFont = ComboFonts[CurrentComboIndex]
+				self:settext(ComboFonts[CurrentComboIndex])
+			elseif params[1] == "right" then
+				if CurrentComboIndex == #ComboFonts then
+					CurrentComboIndex = 1
+				else
+					CurrentComboIndex = CurrentComboIndex + 1
+				end
+				mods.ComboFont = ComboFonts[CurrentComboIndex]
+				self:settext(ComboFonts[CurrentComboIndex])
+			end
+		end
+	end,
+
+}
+
+--- combo preview
+for combo_font in ivalues( ComboFonts ) do
+	if combo_font ~= "None" then
+	
+		af[#af+1] = LoadFont("_Combo Fonts/" .. combo_font .."/" .. combo_font)..{
+			Name=(pn.."_ComboFont_"..combo_font),
+			Text="1",
+			InitCommand=function(self)
+				local Parent = self:GetParent():GetChild(pn.."QuickMods6")
+				local ComboX = self:GetParent():GetChild(pn.."ComboBox1"):GetX()
+				local ComboY = Parent:GetY()
+				local TextZoom = Parent:GetZoom()
+				local TextWidth = Parent:GetWidth() * TextZoom
+				local QuadHeight = self:GetParent():GetChild(pn.."ComboBox1"):GetZoomY()
+				self:horizalign(center):vertalign(middle)
+					:draworder(1)
+					:x(ComboX + 120)
+					:y(ComboY + QuadHeight/3)
+					:zoom(0.3)
+					:visible(false)
+			end,
+			UpdateDisplayedTabCommand=function(self)
+				local CurrentTab, CurrentRow, CurrentColumn
+				if pn == "P1" then
+					 CurrentTab = CurrentTabP1
+					 CurrentRow = CurrentRowP1
+					 CurrentColumn = CurrentColumnP1
+				elseif pn == "P2" then
+					CurrentTab = CurrentTabP2
+					 CurrentRow = CurrentRowP2
+					 CurrentColumn = CurrentColumnP2
+				end
+				if CurrentTab ~= 1 then
+					self:visible(false)
+					return
+				elseif ComboFonts[CurrentComboIndex] == combo_font then
+					self:visible(true)
+				end
+			end,
+			["UpdateMenuCursorPosition"..pn.."MessageCommand"]=function(self, params)
+				local CurrentTab, CurrentRow, CurrentColumn
+				if pn == "P1" then
+					 CurrentTab = CurrentTabP1
+					 CurrentRow = CurrentRowP1
+					 CurrentColumn = CurrentColumnP1
+				elseif pn == "P2" then
+					CurrentTab = CurrentTabP2
+					 CurrentRow = CurrentRowP2
+					 CurrentColumn = CurrentColumnP2
+				end
+				if CurrentTab == 1 and CurrentRow == 6 then
+					self:queuecommand("Loop")
+					if params[1] == "left" or params[1] == "right" then
+						self:visible(false):queuecommand("UpdateComboFont")
+					end
+				end
+			end,
+			LoopCommand=function(self)
+				if pn == "P1" then
+					 CurrentTab = CurrentTabP1
+					 CurrentRow = CurrentRowP1
+					 CurrentColumn = CurrentColumnP1
+				elseif pn == "P2" then
+					CurrentTab = CurrentTabP2
+					 CurrentRow = CurrentRowP2
+					 CurrentColumn = CurrentColumnP2
+				end
+				
+				if CurrentTab == 1 and CurrentRow == 6 then
+					if tonumber(self:GetText()) >= 999 then self:settext("1") end
+					self:settext( tonumber(self:GetText())+1 )
+					-- call stoptweening() to prevent tween overflow that could occur from rapid input from the player
+					-- and re-queue this "Loop" every 600ms
+					self:stoptweening():sleep(0.6):queuecommand("Loop")
+				end
+			end,
+			UpdateComboFontCommand=function(self)
+				self:visible(false)
+				if ComboFonts[CurrentComboIndex] == combo_font then
+					self:visible(true)
+				else
+					self:visible(false)
+				end
+			end,
+		}
+	else
+		af[#af+1] = Def.Actor{ Name=(pn.."_ComboFont_None"), InitCommand=function(self) self:visible(false) end }
+	end
+end
+
+
+--------------------------------------------------------------------
+-- Hold Judgments
+
+--- HoldJ Box
+af[#af+1] = Def.Quad{
+	Name=pn.."HoldJBox1",
+	InitCommand=function(self)
+		local Parent = self:GetParent():GetChild(pn.."QuickMods7")
+		local TextZoom = Parent:GetZoom()
+		local TextWidth = Parent:GetWidth() * TextZoom
+		local TextHeight = Parent:GetHeight()
+		local TextXPosition = Parent:GetX()
+		local TextYPosition = Parent:GetY()
+		self:diffuse(color("#4d4d4d"))
+			:draworder(1)
+			:zoomto(60, TextHeight)
+			:vertalign(top):horizalign(left)
+			:x(TextXPosition + TextWidth + 5)
+			:y(TextYPosition - (TextHeight*TextZoom)/4)
+			:queuecommand("UpdateDisplayedTab")
+	end,
+	UpdateDisplayedTabCommand=function(self)
+		if pn == "P1" then
+			if CurrentTabP1 == 1 then
+				self:visible(true)
+			else
+				self:visible(false)
+			end
+		elseif pn == "P2" then
+			if CurrentTabP2 == 1 then
+				self:visible(true)
+			else
+				self:visible(false)
+			end
+		end
+	end,
+	LeftMouseClickUpdateMessageCommand=function(self)
+		local CurrentTab, CurrentRow, CurrentColumn
+		if pn == "P1" then
+			CurrentTab = CurrentTabP1
+			CurrentRow = CurrentRowP1
+			CurrentColumn = CurrentColumnP1
+		elseif pn == "P2" then
+			CurrentTab = CurrentTabP2
+			CurrentRow = CurrentRowP2
+			CurrentColumn = CurrentColumnP2
+		end
+		if CurrentTab ~= 1 then return end
+		local Parent = self:GetParent():GetChild(pn.."HoldJBox1")
+		local ObjectWidth = Parent:GetZoomX()
+		local ObjectHeight = Parent:GetZoomY()
+		local ObjectX = Parent:GetX()
+		local ObjectY = Parent:GetY()
+		local HAlign = Parent:GetHAlign()
+		local VAlign = Parent:GetVAlign()
+		ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+		ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+		
+		if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 1 then
+			CurrentRow = 7
+			CurrentColumn = 1
+			if pn == "P1" then
+				CurrentTabP1 = CurrentTab
+				CurrentRowP1 = CurrentRow
+				CurrentColumnP1 = CurrentColumn
+			elseif pn == "P2" then
+				CurrentTabP2 = CurrentTab
+				CurrentRowP2 = CurrentRow
+				CurrentColumnP2 = CurrentColumn
+			end
+			MESSAGEMAN:Broadcast("UpdateMenuCursorPosition"..pn, {})
+		end
+	
+	end,
+}
+
+
+
+local PlayerHoldJudge = mods.HoldJudgment or "Ice 1x2.png"
+local HoldJudgments = GetHoldJudgments()
+local CurrentHoldJIndex
+
+
+for i=1, #HoldJudgments do
+	if HoldJudgments[i] == PlayerHoldJudge then
+		CurrentHoldJIndex = i
+		break
+	end
+end
+
+
+--- Hold Judgment Text
+af[#af+1] = Def.BitmapText{
+	Font="Miso/_miso",
+	Name=pn.."HoldJudgmentName1",
+	InitCommand=function(self)	
+		local zoom = 0.7
+		local Parent = self:GetParent():GetChild(pn.."QuickMods7")
+		local TextZoom = Parent:GetZoom()
+		local QuadWidth = self:GetParent():GetChild(pn.."HoldJBox1"):GetZoomX()
+		local TextHeight = Parent:GetHeight() * TextZoom
+		local QuadXPosition = self:GetParent():GetChild(pn.."HoldJBox1"):GetX()
+		local TextYPosition = Parent:GetY()
+		self:horizalign(center):vertalign(middle):shadowlength(1)
+			:draworder(2)
+			:settext(StripSpriteHints(HoldJudgments[CurrentHoldJIndex]))
+			:y(TextYPosition + TextHeight/2)
+			:x(QuadXPosition + QuadWidth/2) 
+			:maxwidth((QuadWidth-2)/zoom)
+			:zoom(zoom)
+			:queuecommand("UpdateDisplayedTab")
+	end,
+	UpdateDisplayedTabCommand=function(self)
+		if pn == "P1" then
+			if CurrentTabP1 == 1 then
+				self:visible(true)
+			else
+				self:visible(false)
+			end
+		elseif pn == "P2" then
+			if CurrentTabP2 == 1 then
+				self:visible(true)
+			else
+				self:visible(false)
+			end
+		end
+	end,
+	["UpdateMenuCursorPosition"..pn.."MessageCommand"]=function(self, params)
+		local CurrentTab, CurrentRow, CurrentColumn
+		if pn == "P1" then
+			 CurrentTab = CurrentTabP1
+			 CurrentRow = CurrentRowP1
+			 CurrentColumn = CurrentColumnP1
+		elseif pn == "P2" then
+			CurrentTab = CurrentTabP2
+			 CurrentRow = CurrentRowP2
+			 CurrentColumn = CurrentColumnP2
+		end
+		
+		if CurrentTab == 1 and CurrentRow == 7 then
+			if params[1] == "left" then
+				if CurrentHoldJIndex == 1 then
+					CurrentHoldJIndex = #HoldJudgments
+				else
+					CurrentHoldJIndex = CurrentHoldJIndex - 1	
+				end
+				mods.HoldJudgment = HoldJudgments[CurrentHoldJIndex]
+				self:settext(StripSpriteHints(HoldJudgments[CurrentHoldJIndex]))
+			elseif params[1] == "right" then
+				if CurrentHoldJIndex == #HoldJudgments then
+					CurrentHoldJIndex = 1
+				else
+					CurrentHoldJIndex = CurrentHoldJIndex + 1
+				end
+				mods.HoldJudgment = HoldJudgments[CurrentHoldJIndex]
+				self:settext(StripSpriteHints(HoldJudgments[CurrentHoldJIndex]))
+			end
+		end
+	end,
+
+}
+
+
+--- Hold Judgment Preview
+for hj_filename in ivalues( HoldJudgments ) do
+	af[#af+1] = Def.ActorFrame{
+		Name="HoldJudgment_"..StripSpriteHints(hj_filename),
+		InitCommand=function(self)
+			local Parent = self:GetParent():GetChild(pn.."QuickMods7")
+			local JudgmentX = self:GetParent():GetChild(pn.."HoldJBox1"):GetX()
+			local JudgmentY = Parent:GetY()
+			local TextZoom = Parent:GetZoom()
+			local TextWidth = Parent:GetWidth() * TextZoom
+			local QuadHeight = self:GetParent():GetChild(pn.."HoldJBox1"):GetZoomY()
+			self:horizalign(center):vertalign(middle)
+				:animate(false)
+				:draworder(1)
+				:x(JudgmentX + 120)
+				:y(JudgmentY + QuadHeight/3)
+				:zoom(0.3)
+				:visible(false)
+		end,
+			-- held
+		Def.Sprite{
+			Texture=THEME:GetPathG("", "_HoldJudgments/" .. hj_filename),
+			InitCommand=function(self) self:animate(false):setstate(0):addx(-self:GetWidth()*0.4) end
+		},
+		-- let go
+		Def.Sprite{
+			Texture=THEME:GetPathG("", "_HoldJudgments/" .. hj_filename),
+			InitCommand=function(self) self:animate(false):setstate(1):addx(self:GetWidth()*0.4) end
+		},
+		UpdateDisplayedTabCommand=function(self)
+			local CurrentTab, CurrentRow, CurrentColumn
+			if pn == "P1" then
+				 CurrentTab = CurrentTabP1
+				 CurrentRow = CurrentRowP1
+				 CurrentColumn = CurrentColumnP1
+			elseif pn == "P2" then
+				CurrentTab = CurrentTabP2
+				 CurrentRow = CurrentRowP2
+				 CurrentColumn = CurrentColumnP2
+			end
+			if CurrentTab ~= 1 then
+				self:visible(false)
+				return
+			elseif HoldJudgments[CurrentHoldJIndex] == hj_filename then
+				self:visible(true)
+			end
+		end,
+		["UpdateMenuCursorPosition"..pn.."MessageCommand"]=function(self, params)
+			local CurrentTab, CurrentRow, CurrentColumn
+			if pn == "P1" then
+				 CurrentTab = CurrentTabP1
+				 CurrentRow = CurrentRowP1
+				 CurrentColumn = CurrentColumnP1
+			elseif pn == "P2" then
+				CurrentTab = CurrentTabP2
+				 CurrentRow = CurrentRowP2
+				 CurrentColumn = CurrentColumnP2
+			end
+			if CurrentTab == 1 and CurrentRow == 7 then
+				if params[1] == "left" or params[1] == "right" then
+					self:queuecommand("UpdateHoldJ")
+				end
+			end
+		end,
+		UpdateHoldJCommand=function(self)
+			self:visible(false)
+			if HoldJudgments[CurrentHoldJIndex] ==  hj_filename then
+				self:visible(true)
+			else
+				self:visible(false)
+			end
+		end,
+		
+	}
+
+
+end
+
+--------------------------------------------------------------------------
+local Turns1 ={
+	THEME:GetString("OptionNames","Mirror"),
+	THEME:GetString("OptionNames","LRMirror"),
+	THEME:GetString("OptionNames","UDMirror"),
+}
+
+local Turns2 ={
+	THEME:GetString("OptionNames","Left"),
+	THEME:GetString("OptionNames","Right"),
+	THEME:GetString("OptionNames","Shuffle"),
+	THEME:GetString("OptionNames","Blender"),
+}
+
+--- Turn Mods 1
+for i=1,#Turns1 do
 	af[#af+1] = Def.BitmapText{
 		Font="Miso/_miso",
 		Name=pn.."TurnMods"..i,
 		InitCommand=function(self)
 			local zoom = 0.6
-			local Parent = self:GetParent():GetChild(pn.."QuickMods4")
+			local Parent = self:GetParent():GetChild(pn.."QuickMods8")
 			local TextZoom = Parent:GetZoom()
 			local TextWidth = Parent:GetWidth()
 			local TextHeight = Parent:GetHeight() * TextZoom
@@ -926,7 +1894,7 @@ for i=1,#Turns do
 				:y(TextYPosition + TextHeight)
 				:maxwidth((width/zoom) - 20)
 				:zoom(zoom)
-				:settext(Turns[i])
+				:settext(Turns1[i])
 		end,
 		UpdateDisplayedTabCommand=function(self)
 			if pn == "P1" then
@@ -946,12 +1914,12 @@ for i=1,#Turns do
 	}
 end
 
---- Turn boxes (this is a joint pairing with the turn mod names above)
-for i=1,#Turns do
+--- Turn boxes1 (this is a joint pairing with the turn mod names above)
+for i=1,#Turns1 do
 	af[#af+1] = Def.Quad{
 		Name=pn.."TurnBox"..i,
 		InitCommand=function(self)
-			local Parent = self:GetParent():GetChild(pn.."QuickMods4")
+			local Parent = self:GetParent():GetChild(pn.."QuickMods8")
 			local TextZoom = self:GetParent():GetChild(pn.."TurnMods"..i):GetZoom()
 			local TextWidth = Parent:GetWidth()
 			local TextHeight = self:GetParent():GetChild(pn.."TurnMods"..i):GetHeight() * TextZoom
@@ -983,13 +1951,11 @@ for i=1,#Turns do
 end
 
 local IsMirror = PlayerState:GetPlayerOptions(0):Mirror()
-local IsLeft = PlayerState:GetPlayerOptions(0):Right()
-local IsRight = PlayerState:GetPlayerOptions(0):Left()
-local IsShuffle = PlayerState:GetPlayerOptions(0):Shuffle()
-local IsBlender = PlayerState:GetPlayerOptions(0):SuperShuffle()
+local IsLRMirror = PlayerState:GetPlayerOptions(0):LRMirror()
+local IsUDMirror = PlayerState:GetPlayerOptions(0):UDMirror()
 
 --- Turn Check Boxes 1
-for i=1,#Turns do
+for i=1,#Turns1 do
 	af[#af+1] = Def.BitmapText{
 		Font="Common Normal",
 		Name=pn.."TurnCheck"..i,
@@ -1007,24 +1973,313 @@ for i=1,#Turns do
 					self:settext("")
 				end
 			elseif i == 2 then
-				if IsLeft then
+				if IsLRMirror then
 					self:settext("✅")
 				else
 					self:settext("")
 				end
 			elseif i == 3 then
+				if IsUDMirror then
+					self:settext("✅")
+				else
+					self:settext("")
+				end
+			end
+			self:x(QuadXPosition - QuadWidth/2)
+				:horizalign(center):vertalign(middle):shadowlength(1)
+				:draworder(1)
+				:y(QuadYPosition)
+				:zoom(zoom)
+				:queuecommand("UpdateDisplayedTab")
+		end,
+		UpdateDisplayedTabCommand=function(self)
+			if pn == "P1" then
+				if CurrentTabP1 == 1 then
+					self:visible(true)
+				else
+					self:visible(false)
+				end
+			elseif pn == "P2" then
+				if CurrentTabP2 == 1 then
+					self:visible(true)
+				else
+					self:visible(false)
+				end
+			end
+		end,
+		["PlayerMenuSelection"..pn.."MessageCommand"]=function(self)
+			local CurrentTab, CurrentRow, CurrentColumn
+			if pn == "P1" then
+				CurrentTab = CurrentTabP1
+				CurrentRow = CurrentRowP1
+				CurrentColumn = CurrentColumnP1
+			elseif pn == "P2" then
+				CurrentTab = CurrentTabP2
+				CurrentRow = CurrentRowP2
+				CurrentColumn = CurrentColumnP2
+			end
+			if CurrentTab == 1 and CurrentRow == 8 then
+				if CurrentColumn == 1 and i == 1 then
+					if IsMirror then
+						IsMirror = false
+						SetEngineMod(player, "Mirror", IsMirror)
+						self:settext("")
+					elseif not IsMirror then
+						IsMirror = true
+						SetEngineMod(player, "Mirror", IsMirror)
+						self:settext("✅")
+					end
+				elseif CurrentColumn == 2 and i == 2 then
+					if IsLRMirror then
+						IsLRMirror = false
+						SetEngineMod(player, "LRMirror", IsLRMirror)
+						self:settext("")
+					elseif not IsLRMirror then
+						IsLRMirror = true
+						SetEngineMod(player, "LRMirror", IsLRMirror)
+						self:settext("✅")
+					end
+				elseif CurrentColumn == 3 and i == 3 then
+					if IsUDMirror then
+						IsUDMirror = false
+						SetEngineMod(player, "UDMirror", IsUDMirror)
+						self:settext("")
+					elseif not IsUDMirror then
+						IsUDMirror = true
+						SetEngineMod(player, "UDMirror", IsUDMirror)
+						self:settext("✅")
+					end
+				end
+			end
+		end,
+		LeftMouseClickUpdateMessageCommand=function(self)
+			local CurrentTab, CurrentRow, CurrentColumn
+			if pn == "P1" then
+				CurrentTab = CurrentTabP1
+				CurrentRow = CurrentRowP1
+				CurrentColumn = CurrentColumnP1
+			elseif pn == "P2" then
+				CurrentTab = CurrentTabP2
+				CurrentRow = CurrentRowP2
+				CurrentColumn = CurrentColumnP2
+			end
+			if CurrentTab ~= 1 then return end
+			-- yooooooo the j!!!!
+			for j=1, #Turns1 do
+				local Parent = self:GetParent():GetChild(pn.."TurnBox"..i)
+				local ObjectWidth = Parent:GetZoomX()
+				local ObjectHeight = Parent:GetZoomY()
+				local ObjectX = Parent:GetX()
+				local ObjectY = Parent:GetY()
+				local HAlign = Parent:GetHAlign()
+				local VAlign = Parent:GetVAlign()
+				ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+				ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+				
+				if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 1 then
+					if j == 1 and j == i then
+						CurrentRow = 8
+						CurrentColumn = 1
+						if IsMirror then
+							IsMirror = false
+							SetEngineMod(player, "Mirror", IsMirror)
+							self:settext("")
+						elseif not IsMirror then
+							IsMirror = true
+							SetEngineMod(player, "Mirror", IsMirror)
+							self:settext("✅")
+						end
+						break
+					elseif j == 2 and j == i then
+						CurrentRow = 8
+						CurrentColumn = 2
+						if IsLRMirror then
+							IsLRMirror = false
+							SetEngineMod(player, "LRMirror", IsLRMirror)
+							self:settext("")
+						elseif not IsLRMirror then
+							IsLRMirror = true
+							SetEngineMod(player, "LRMirror", IsLRMirror)
+							self:settext("✅")
+						end
+						break
+					elseif j == 3 and j == i then
+						CurrentRow = 8
+						CurrentColumn = 3
+						if IsUDMirror then
+							IsUDMirror = false
+							SetEngineMod(player, "UDMirror", IsUDMirror)
+							self:settext("")
+						elseif not IsUDMirror then
+							IsUDMirror = true
+							SetEngineMod(player, "UDMirror", IsUDMirror)
+							self:settext("✅")
+						end
+						break
+					elseif j == 4 and j == i then
+						CurrentRow = 8
+						CurrentColumn = 4
+						if IsShuffle then
+							IsShuffle = false
+							SetEngineMod(player, "Shuffle", IsShuffle)
+							self:settext("")
+						elseif not IsShuffle then
+							IsShuffle = true
+							SetEngineMod(player, "Shuffle", IsShuffle)
+							self:settext("✅")
+						end
+						break
+					elseif j == 5 and j == i then
+						CurrentRow = 8
+						CurrentColumn = 5
+						if IsBlender then
+							IsBlender = false
+							SetEngineMod(player, "SuperShuffle", IsBlender)
+							self:settext("")
+						elseif not IsBlender then
+							IsBlender = true
+							SetEngineMod(player, "SuperShuffle",IsBlender)
+							self:settext("✅")
+						end
+						break
+					end
+				end
+			end
+			if pn == "P1" then
+				CurrentTabP1 = CurrentTab
+				CurrentRowP1 = CurrentRow
+				CurrentColumnP1 = CurrentColumn
+			elseif pn == "P2" then
+				CurrentTabP2 = CurrentTab
+				CurrentRowP2 = CurrentRow
+				CurrentColumnP2 = CurrentColumn
+			end
+			MESSAGEMAN:Broadcast("UpdateMenuCursorPosition"..pn, {})
+		end,
+	}
+end
+
+--- Turn Mods 2
+for i=1,#Turns2 do
+	af[#af+1] = Def.BitmapText{
+		Font="Miso/_miso",
+		Name=pn.."TurnMods2"..i,
+		InitCommand=function(self)
+			local zoom = 0.6
+			local Parent = self:GetParent():GetChild(pn.."QuickMods9")
+			local TextZoom = Parent:GetZoom()
+			local TextWidth = Parent:GetWidth()
+			local TextHeight = Parent:GetHeight() * TextZoom
+			local TextXPosition = Parent:GetX()
+			local TextYPosition = Parent:GetY()
+			local PreviousWidth
+			local PastX
+			local CurrentX
+			if i > 1 then
+				PreviousWidth = self:GetParent():GetChild(pn.."TurnMods2"..i-1):GetWidth()
+				PastX = self:GetParent():GetChild(pn.."TurnMods2"..i-1):GetX()
+				CurrentX = (PastX + PreviousWidth*zoom) + 18
+				self:x(CurrentX)
+			else
+				self:x(TextXPosition + TextWidth + 5)
+			end
+			self:horizalign(left):vertalign(bottom):shadowlength(1)
+				:draworder(1)
+				:y(TextYPosition + TextHeight)
+				:maxwidth((width/zoom) - 20)
+				:zoom(zoom)
+				:settext(Turns2[i])
+		end,
+		UpdateDisplayedTabCommand=function(self)
+			if pn == "P1" then
+				if CurrentTabP1 == 1 then
+					self:visible(true)
+				else
+					self:visible(false)
+				end
+			elseif pn == "P2" then
+				if CurrentTabP2 == 1 then
+					self:visible(true)
+				else
+					self:visible(false)
+				end
+			end
+		end,
+	}
+end
+
+--- Turn boxes2 (this is a joint pairing with the turn mod names above)
+for i=1,#Turns2 do
+	af[#af+1] = Def.Quad{
+		Name=pn.."TurnBox2"..i,
+		InitCommand=function(self)
+			local Parent = self:GetParent():GetChild(pn.."QuickMods9")
+			local TextZoom = self:GetParent():GetChild(pn.."TurnMods2"..i):GetZoom()
+			local TextWidth = Parent:GetWidth()
+			local TextHeight = self:GetParent():GetChild(pn.."TurnMods2"..i):GetHeight() * TextZoom
+			local TextXPosition = self:GetParent():GetChild(pn.."TurnMods2"..i):GetX()
+			local TextYPosition = Parent:GetY()
+			self:diffuse(color("#FFFFFF"))
+				:draworder(1)
+				:zoomto(TextHeight, TextHeight)
+				:vertalign(middle):horizalign(right)
+				:x(TextXPosition-2)
+				:y(TextYPosition + TextHeight/1.5)
+		end,
+		UpdateDisplayedTabCommand=function(self)
+			if pn == "P1" then
+				if CurrentTabP1 == 1 then
+					self:visible(true)
+				else
+					self:visible(false)
+				end
+			elseif pn == "P2" then
+				if CurrentTabP2 == 1 then
+					self:visible(true)
+				else
+					self:visible(false)
+				end
+			end
+		end,
+	}
+end
+
+local IsLeft = PlayerState:GetPlayerOptions(0):Left()
+local IsRight = PlayerState:GetPlayerOptions(0):Right()
+local IsShuffle = PlayerState:GetPlayerOptions(0):Shuffle()
+local IsBlender = PlayerState:GetPlayerOptions(0):SuperShuffle()
+
+--- Turn Check Boxes 2
+for i=1,#Turns2 do
+	af[#af+1] = Def.BitmapText{
+		Font="Common Normal",
+		Name=pn.."TurnCheck2"..i,
+		InitCommand=function(self)
+			local zoom = 0.38
+			local Parent = self:GetParent():GetChild(pn.."TurnBox2"..i)
+			local QuadWidth = Parent:GetZoomX()
+			local QuadHeight = Parent:GetZoomY()
+			local QuadXPosition = Parent:GetX()
+			local QuadYPosition = Parent:GetY()
+			if i == 1 then
+				if IsLeft then
+					self:settext("✅")
+				else
+					self:settext("")
+				end
+			elseif i == 2 then
 				if IsRight then
 					self:settext("✅")
 				else
 					self:settext("")
 				end
-			elseif i == 4 then
+			elseif i == 3 then
 				if IsShuffle then
 					self:settext("✅")
 				else
 					self:settext("")
 				end
-			elseif i == 5 then
+			elseif i == 4 then
 				if IsBlender then
 					self:settext("✅")
 				else
@@ -1064,18 +2319,8 @@ for i=1,#Turns do
 				CurrentRow = CurrentRowP2
 				CurrentColumn = CurrentColumnP2
 			end
-			if CurrentTab == 1 and CurrentRow == 4 then
+			if CurrentTab == 1 and CurrentRow == 9 then
 				if CurrentColumn == 1 and i == 1 then
-					if IsMirror then
-						IsMirror = false
-						SetEngineMod(player, "Mirror", IsMirror)
-						self:settext("")
-					elseif not IsMirror then
-						IsMirror = true
-						SetEngineMod(player, "Mirror", IsMirror)
-						self:settext("✅")
-					end
-				elseif CurrentColumn == 2 and i == 2 then
 					if IsLeft then
 						IsLeft = false
 						SetEngineMod(player, "Left", IsLeft)
@@ -1085,7 +2330,7 @@ for i=1,#Turns do
 						SetEngineMod(player, "Left", IsLeft)
 						self:settext("✅")
 					end
-				elseif CurrentColumn == 3 and i == 3 then
+				elseif CurrentColumn == 2 and i == 2 then
 					if IsRight then
 						IsRight = false
 						SetEngineMod(player, "Right", IsRight)
@@ -1095,7 +2340,7 @@ for i=1,#Turns do
 						SetEngineMod(player, "Right", IsRight)
 						self:settext("✅")
 					end
-				elseif CurrentColumn == 4 and i == 4 then
+				elseif CurrentColumn == 3 and i == 3 then
 					if IsShuffle then
 						IsShuffle = false
 						SetEngineMod(player, "Shuffle", IsShuffle)
@@ -1105,7 +2350,7 @@ for i=1,#Turns do
 						SetEngineMod(player, "Shuffle", IsShuffle)
 						self:settext("✅")
 					end
-				elseif CurrentColumn == 5 and i == 5 then
+				elseif CurrentColumn == 4 and i == 4 then
 					if IsBlender then
 						IsBlender = false
 						SetEngineMod(player, "SuperShuffle", IsBlender)
@@ -1131,8 +2376,8 @@ for i=1,#Turns do
 			end
 			if CurrentTab ~= 1 then return end
 			-- yooooooo the j!!!!
-			for j=1, #Turns do
-				local Parent = self:GetParent():GetChild(pn.."TurnBox"..i)
+			for j=1, #Turns2 do
+				local Parent = self:GetParent():GetChild(pn.."TurnBox2"..i)
 				local ObjectWidth = Parent:GetZoomX()
 				local ObjectHeight = Parent:GetZoomY()
 				local ObjectX = Parent:GetX()
@@ -1144,21 +2389,8 @@ for i=1,#Turns do
 				
 				if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 1 then
 					if j == 1 and j == i then
-						CurrentRow = 4
+						CurrentRow = 9
 						CurrentColumn = 1
-						if IsMirror then
-							IsMirror = false
-							SetEngineMod(player, "Mirror", IsMirror)
-							self:settext("")
-						elseif not IsMirror then
-							IsMirror = true
-							SetEngineMod(player, "Mirror", IsMirror)
-							self:settext("✅")
-						end
-						break
-					elseif j == 2 and j == i then
-						CurrentRow = 4
-						CurrentColumn = 2
 						if IsLeft then
 							IsLeft = false
 							SetEngineMod(player, "Left", IsLeft)
@@ -1169,9 +2401,9 @@ for i=1,#Turns do
 							self:settext("✅")
 						end
 						break
-					elseif j == 3 and j == i then
-						CurrentRow = 4
-						CurrentColumn = 3
+					elseif j == 2 and j == i then
+						CurrentRow = 9
+						CurrentColumn = 2
 						if IsRight then
 							IsRight = false
 							SetEngineMod(player, "Right", IsRight)
@@ -1182,9 +2414,9 @@ for i=1,#Turns do
 							self:settext("✅")
 						end
 						break
-					elseif j == 4 and j == i then
-						CurrentRow = 4
-						CurrentColumn = 4
+					elseif j == 3 and j == i then
+						CurrentRow = 9
+						CurrentColumn = 3
 						if IsShuffle then
 							IsShuffle = false
 							SetEngineMod(player, "Shuffle", IsShuffle)
@@ -1195,9 +2427,9 @@ for i=1,#Turns do
 							self:settext("✅")
 						end
 						break
-					elseif j == 5 and j == i then
-						CurrentRow = 4
-						CurrentColumn = 5
+					elseif j == 4 and j == i then
+						CurrentRow = 9
+						CurrentColumn = 4
 						if IsBlender then
 							IsBlender = false
 							SetEngineMod(player, "SuperShuffle", IsBlender)
@@ -1225,13 +2457,12 @@ for i=1,#Turns do
 	}
 end
 
-
 -----------------------------------------------------------------------------------------------------
 --- MusicRate Box
 af[#af+1] = Def.Quad{
 	Name=pn.."MusicRateBox1",
 	InitCommand=function(self)
-		local Parent = self:GetParent():GetChild(pn.."QuickMods5")
+		local Parent = self:GetParent():GetChild(pn.."QuickMods10")
 		local TextZoom = Parent:GetZoom()
 		local TextWidth = Parent:GetWidth() * TextZoom
 		local TextHeight = Parent:GetHeight()
@@ -1282,7 +2513,7 @@ af[#af+1] = Def.Quad{
 		ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
 		
 		if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 1 then
-			CurrentRow = 5
+			CurrentRow = 10
 			CurrentColumn = 1
 			if pn == "P1" then
 				CurrentTabP1 = CurrentTab
@@ -1309,7 +2540,7 @@ af[#af+1] = Def.BitmapText{
 	Name=pn.."NoteskinName1",
 	InitCommand=function(self)
 		local zoom = 0.7
-		local Parent = self:GetParent():GetChild(pn.."QuickMods5")
+		local Parent = self:GetParent():GetChild(pn.."QuickMods10")
 		local TextZoom = Parent:GetZoom()
 		local QuadWidth = self:GetParent():GetChild(pn.."MusicRateBox1"):GetZoomX()
 		local TextHeight = Parent:GetHeight() * TextZoom
@@ -1354,7 +2585,7 @@ af[#af+1] = Def.BitmapText{
 			 CurrentColumn = CurrentColumnP2
 		end
 		
-		if CurrentTab == 1 and CurrentRow == 5 then
+		if CurrentTab == 1 and CurrentRow == 10 then
 			if params[1] == "left" then
 				if CurrentRateMod <= MinRate then
 					if not params[2] == true then
@@ -1391,6 +2622,11 @@ local Mod1Descriptions = {
 THEME:GetString("OptionExplanations","SpeedModType"),
 THEME:GetString("OptionExplanations","SpeedMod"),
 THEME:GetString("OptionExplanations","Mini"),
+THEME:GetString("OptionExplanations","NoteSkin"),
+THEME:GetString("OptionExplanations","JudgmentGraphic"),
+THEME:GetString("OptionExplanations","ComboFont"),
+THEME:GetString("OptionExplanations","HoldJudgment"),
+THEME:GetString("OptionExplanations","Turn"),
 THEME:GetString("OptionExplanations","Turn"),
 THEME:GetString("OptionExplanations","MusicRate"),
 }
