@@ -19,7 +19,8 @@ return Def.Sprite{
 	Name="Cursor"..pn,
 	InitCommand=function(self)
 		self:visible(GAMESTATE:IsHumanPlayer(player))
-		self:y( IsUsingWideScreen() and 302.5 or 194)
+		self:y( IsUsingWideScreen() and 302.75 or 194)
+		self:zoom(0.33)
 		-- diffuse with white to make it less #OwMyEyes
 		local color = PlayerColor(player)
 		color[4] = 1
