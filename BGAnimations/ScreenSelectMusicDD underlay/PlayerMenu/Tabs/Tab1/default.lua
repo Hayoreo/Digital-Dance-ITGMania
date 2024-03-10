@@ -431,7 +431,7 @@ af[#af+1] = Def.BitmapText{
 							PlayerSpeedMod = MaxXMod
 						end
 					else
-						PlayerSpeedMod = PlayerSpeedMod - 0.05
+						PlayerSpeedMod = round(PlayerSpeedMod - 0.05, 2)
 					end
 				elseif PlayerSpeedType == "C" or PlayerSpeedType == "M" then
 					if PlayerSpeedMod <= MinCMod then
@@ -439,7 +439,7 @@ af[#af+1] = Def.BitmapText{
 							PlayerSpeedMod = MaxCMod
 						end
 					else
-						PlayerSpeedMod = PlayerSpeedMod - 5
+						PlayerSpeedMod = round(PlayerSpeedMod - 5)
 					end
 				end
 				--- literally why. I said set to 0 not 0.000000000000000000000000000000000000000000000000000000000001
@@ -459,7 +459,7 @@ af[#af+1] = Def.BitmapText{
 							PlayerSpeedMod = MinXMod
 						end
 					else
-						PlayerSpeedMod = PlayerSpeedMod + 0.05
+						PlayerSpeedMod = round(PlayerSpeedMod + 0.05, 2)
 					end
 				elseif PlayerSpeedType == "C" or PlayerSpeedType == "M" then
 					if PlayerSpeedMod >= MaxCMod then
@@ -467,7 +467,7 @@ af[#af+1] = Def.BitmapText{
 							PlayerSpeedMod = MinCMod
 						end
 					else
-						PlayerSpeedMod = PlayerSpeedMod + 5
+						PlayerSpeedMod = round(PlayerSpeedMod + 5)
 					end
 				end
 				--- literally why
