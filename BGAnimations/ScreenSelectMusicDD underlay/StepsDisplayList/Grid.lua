@@ -108,14 +108,14 @@ for RowNumber=1,num_rows do
 		end,
 		SetCommand=function(self, params)
 			-- diffuse and set each chart's difficulty meter
-			self:diffuse( Color.Black)
+			self:diffuse(Color.Black)
 			if params.Meter < 100 then
 				self:settext(params.Meter)
 			else
 				self:settext("M")
 			end
 		end,
-		UnsetCommand=function(self) self:settext(""):diffuse(color("#182025")) end,
+		UnsetCommand=function(self) self:settext("") end,
 		OnCommand=function(self)
 			SCREENMAN:GetTopScreen():AddInputCallback(getInputHandler(self, 'PlayerNumber_P1'))
 		end
@@ -135,14 +135,14 @@ for RowNumber=1,num_rows do
 		end,
 		SetCommand=function(self, params)
 			-- diffuse and set each chart's difficulty meter
-			self:diffuse( Color.Black)
+			self:diffuse(Color.Black)
 			if params.Meter < 100 then
 				self:settext(params.Meter)
 			else
 				self:settext("M")
 			end
 		end,
-		UnsetCommand=function(self) self:settext(""):diffuse(color("#182025")) end,
+		UnsetCommand=function(self) self:settext("") end,
 		OnCommand=function(self)
 			SCREENMAN:GetTopScreen():AddInputCallback(getInputHandler(self, 'PlayerNumber_P1'))
 		end
@@ -162,14 +162,14 @@ for RowNumber=1,num_rows do
 		end,
 		SetCommand=function(self, params)
 			-- diffuse and set each chart's difficulty meter
-			self:diffuse( Color.Black)
+			self:diffuse(Color.Black)
 			if params.Meter < 100 then
 				self:settext(params.Meter)
 			else
 				self:settext("M")
 			end
 		end,
-		UnsetCommand=function(self) self:settext(""):diffuse(color("#182025")) end,
+		UnsetCommand=function(self) self:settext("") end,
 		OnCommand=function(self)
 			SCREENMAN:GetTopScreen():AddInputCallback(getInputHandler(self, 'PlayerNumber_P1'))
 		end
@@ -189,14 +189,14 @@ for RowNumber=1,num_rows do
 		end,
 		SetCommand=function(self, params)
 			-- diffuse and set each chart's difficulty meter
-			self:diffuse( Color.Black)
+			self:diffuse(Color.Black)
 			if params.Meter < 100 then
 				self:settext(params.Meter)
 			else
 				self:settext("M")
 			end
 		end,
-		UnsetCommand=function(self) self:settext(""):diffuse(color("#182025")) end,
+		UnsetCommand=function(self) self:settext("") end,
 		OnCommand=function(self)
 			SCREENMAN:GetTopScreen():AddInputCallback(getInputHandler(self, 'PlayerNumber_P1'))
 		end
@@ -223,7 +223,7 @@ for RowNumber=1,num_rows do
 				self:settext("M")
 			end
 		end,
-		UnsetCommand=function(self) self:settext(""):diffuse(color("#182025")) end,
+		UnsetCommand=function(self) self:settext("") end,
 		OnCommand=function(self)
 			SCREENMAN:GetTopScreen():AddInputCallback(getInputHandler(self, 'PlayerNumber_P1'))
 		end
@@ -246,14 +246,14 @@ for RowNumber=1,num_rows do
 		end,
 		SetCommand=function(self, params)
 			-- diffuse and set each chart's difficulty meter
-			self:diffuse( Color.Black)
+			self:diffuse(Color.Black)
 			if params.Meter < 100 then
 				self:settext(params.Meter)
 			else
 				self:settext("M")
 			end
 		end,
-		UnsetCommand=function(self) self:settext(""):diffuse(color("#182025")) end,
+		UnsetCommand=function(self) self:settext("") end,
 		OnCommand=function(self)
 			SCREENMAN:GetTopScreen():AddInputCallback(getInputHandler(self, 'PlayerNumber_P2'))
 		end
@@ -274,14 +274,14 @@ for RowNumber=1,num_rows do
 		end,
 		SetCommand=function(self, params)
 			-- diffuse and set each chart's difficulty meter
-			self:diffuse( Color.Black)
+			self:diffuse(Color.Black)
 			if params.Meter < 100 then
 				self:settext(params.Meter)
 			else
 				self:settext("M")
 			end
 		end,
-		UnsetCommand=function(self) self:settext(""):diffuse(color("#182025")) end,
+		UnsetCommand=function(self) self:settext("") end,
 		OnCommand=function(self)
 			SCREENMAN:GetTopScreen():AddInputCallback(getInputHandler(self, 'PlayerNumber_P2'))
 		end
@@ -302,14 +302,14 @@ for RowNumber=1,num_rows do
 		end,
 		SetCommand=function(self, params)
 			-- diffuse and set each chart's difficulty meter
-			self:diffuse( Color.Black)
+			self:diffuse(Color.Black)
 			if params.Meter < 100 then
 				self:settext(params.Meter)
 			else
 				self:settext("M")
 			end
 		end,
-		UnsetCommand=function(self) self:settext(""):diffuse(color("#182025")) end,
+		UnsetCommand=function(self) self:settext("") end,
 		OnCommand=function(self)
 			SCREENMAN:GetTopScreen():AddInputCallback(getInputHandler(self, 'PlayerNumber_P2'))
 		end
@@ -330,14 +330,14 @@ for RowNumber=1,num_rows do
 		end,
 		SetCommand=function(self, params)
 			-- diffuse and set each chart's difficulty meter
-			self:diffuse( Color.Black)
+			self:diffuse(Color.Black)
 			if params.Meter < 100 then
 				self:settext(params.Meter)
 			else
 				self:settext("M")
 			end
 		end,
-		UnsetCommand=function(self) self:settext(""):diffuse(color("#182025")) end,
+		UnsetCommand=function(self) self:settext("") end,
 		OnCommand=function(self)
 			SCREENMAN:GetTopScreen():AddInputCallback(getInputHandler(self, 'PlayerNumber_P2'))
 		end
@@ -365,7 +365,7 @@ for RowNumber=1,num_rows do
 				self:settext("M")
 			end
 		end,
-		UnsetCommand=function(self) self:settext(""):diffuse(color("#182025")) end,
+		UnsetCommand=function(self) self:settext("") end,
 		OnCommand=function(self)
 			SCREENMAN:GetTopScreen():AddInputCallback(getInputHandler(self, 'PlayerNumber_P2'))
 		end
