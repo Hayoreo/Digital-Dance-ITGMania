@@ -438,8 +438,8 @@ local af = Def.ActorFrame{
 		if IsServiceAllowed(SL.GrooveStats.GetScores) then
 			self:GetChild("GrooveStatsLogo"):stopeffect()
 		end
-		self:GetChild("EXScoreLogo"):visible(song)
-		self:GetChild("EXText"):visible(song)
+		self:GetChild("EXScoreLogo"):visible(IsServiceAllowed(SL.GrooveStats.GetScores) and song)
+		self:GetChild("EXText"):visible(IsServiceAllowed(SL.GrooveStats.GetScores) and song)
 		self:GetChild("SRPG6Logo"):visible(song)
 		self:GetChild("ITLLogo"):visible(song)
 		self:GetChild("MachineLogo"):visible(song)
