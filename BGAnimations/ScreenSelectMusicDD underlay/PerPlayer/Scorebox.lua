@@ -623,7 +623,7 @@ local af = Def.ActorFrame{
 		Texture=THEME:GetPathG("", "EXScore.png"),
 		Name="EXScoreLogo",
 		InitCommand=function(self)
-			self:zoom(0.6):diffusealpha(0.5):x(80)
+			self:zoom(0.6):diffusealpha(0):x(80)
 		end,
 		UpdateScoreboxCommand=function(self)
 			self:stoptweening()
@@ -641,7 +641,7 @@ local af = Def.ActorFrame{
 		Name="EXText",
 		Text="EX",
 		InitCommand=function(self)
-			self:x(80):y(-4):diffusealpha(0.4):diffuse(color("#ff3367"))
+			self:x(80):y(-4):diffusealpha(0):diffuse(color("#ff3367")):visible(false)
 		end,
 		UpdateScoreboxCommand=function(self)
 			self:stoptweening()
