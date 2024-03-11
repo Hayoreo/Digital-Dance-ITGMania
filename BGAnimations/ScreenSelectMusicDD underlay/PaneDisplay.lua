@@ -6,7 +6,7 @@ local footer_height = 32
 -- height of the PaneDisplay in pixels
 local pane_height = 120
 
-local text_zoom = IsUsingWideScreen() and WideScale(0.8, 0.9) or 0.9
+local text_zoom =  0.75
 
 -- -----------------------------------------------------------------------
 -- Convenience function to return the SongOrCourse and StepsOrTrail for a
@@ -20,16 +20,16 @@ end
 -- -----------------------------------------------------------------------
 -- define the x positions of four columns, and the y positions of three rows of PaneItems
 local pos = {
-	col = { 
-	IsUsingWideScreen() and WideScale(-120,85) or -90, },
+	col = { WideScale(-120,85) },
 	
 	row = { 
-	IsUsingWideScreen() and -55 or -55, 
-	IsUsingWideScreen() and -37 or -37, 
-	IsUsingWideScreen() and -19 or -19,
-	IsUsingWideScreen() and -1 or -1, 
-	IsUsingWideScreen() and 17 or 17, 
-	IsUsingWideScreen() and 35 or 35, }
+		-40, 
+		-25, 
+		-10,
+		5, 
+		20, 
+		35,
+	}
 }
 
 local num_rows = 6
@@ -228,7 +228,7 @@ for player in ivalues(PlayerNumber) do
 	}
 
 	local colSpacing = 150
-	local rowSpacing = 18
+	local rowSpacing = 15
 	local width = IsUsingWideScreen() and SCREEN_WIDTH/3 or 309
 	local height = 64
 
@@ -241,7 +241,7 @@ for player in ivalues(PlayerNumber) do
 					local textHeight = 17
 					self:zoom(text_zoom):horizalign(right)
 					self:diffuse(Color.White)
-					self:xy(-width/2 + 40, -height/2 + 10)
+					self:xy(-width/2 + 40, -height/2 + 15)
 					self:addx((j-1)*colSpacing)
 					self:addy((i-1)*rowSpacing)
 				end,
@@ -264,7 +264,7 @@ for player in ivalues(PlayerNumber) do
 					local textHeight = 17
 					self:diffuse(Color.White)
 					self:maxwidth(width/text_zoom):zoom(text_zoom):horizalign(left)
-					self:xy(-width/2 + 50, -height/2 + 10)
+					self:xy(-width/2 + 50, -height/2 + 15)
 					self:addx((j-1)*colSpacing)
 					self:addy((i-1)*rowSpacing)
 				end,
