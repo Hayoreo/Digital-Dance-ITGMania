@@ -187,7 +187,7 @@ SL = {
 			EventMode=1,
 			CoinMode="Home",
 			
-			ShowMouseCursor=not ThemePrefs.Get("MouseInput"),
+			ShowMouseCursor=true,
 			
 			TimingWindowAdd=0.0015,
 			RegenComboAfterMiss=5,
@@ -213,12 +213,13 @@ SL = {
 			TimingWindowSecondsRoll=0.350000,
 		},
 		
+		--- The only reason this is here right now is to easily grab info for the FA+ emulated window.
 		["FA+"] = {
 			-- always force Event Mode and set Coin Mode to home
 			EventMode=1,
 			CoinMode="Home",
 			
-			ShowMouseCursor=not ThemePrefs.Get("MouseInput"),
+			ShowMouseCursor=true,
 			
 			TimingWindowAdd=0.0015,
 			RegenComboAfterMiss=5,

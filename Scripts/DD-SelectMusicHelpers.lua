@@ -44,6 +44,29 @@ stop_music = function()
 	SOUND:PlayMusicPart("", 0, 0)
 end
 
+update_sample_music = function(Xpos)
+	stop_music()
+	local song = GAMESTATE:GetCurrentSong()
+	
+	if song then
+		local Xpos = Xpos
+		local width = SCREEN_WIDTH/3
+		local song_length = song:GetLastSecond()
+		local ratio = song_length/width
+		local songpath = song:GetMusicPath()
+		local sample_start = Xpos * ratio
+		local sample_len = song_length - sample_start
+
+		if songpath and sample_start and sample_len then
+			SOUND:DimMusic(PREFSMAN:GetPreference("SoundVolume"), math.huge)
+			SOUND:PlayMusicPart(songpath, sample_start,sample_len, 0.5, 1.5, false, true)
+		else
+			stop_music()
+		end
+	else
+		stop_music()
+	end
+end
 
 ----------------------------------------------------------------------------------------
 -- functions used by ScreenSelectMusic

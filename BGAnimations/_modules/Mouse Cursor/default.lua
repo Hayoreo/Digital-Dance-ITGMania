@@ -1,6 +1,3 @@
--- don't even run this if the theme preference for this is off
-if not ThemePrefs.Get("MouseInput") then return end
-
 local MouseX
 local MouseY
 -- Apparently setting the refresh rate to "default" in SM sets it to 0 in the preferences.ini GOOD GAME VERY COOL.

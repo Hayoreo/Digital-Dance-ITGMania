@@ -142,7 +142,7 @@ t.Handler = function(event)
 	
 	-- Allow Mouse Input here
 	if event.type == "InputEventType_FirstPress" and event.type ~= "InputEventType_Release" and not IsSearchMenuVisible then
-		if IsMouseOnScreen() and ThemePrefs.Get("MouseInput") then
+		if IsMouseOnScreen() then
 			if not LeadboardHasFocus and not InputMenuHasFocus and not EscapeFromEventMode then
 				-- Close the song folder and switch to group wheel if mouse wheel is pressed.
 				if event.DeviceInput.button == "DeviceButton_middle mouse button" and t.WheelWithFocus == SongWheel then
@@ -374,6 +374,14 @@ t.Handler = function(event)
 							end
 						end
 					end
+					--- Change the preview music if clicking on the density graph.
+					if IsMouseGucci(0,_screen.h - (235), SCREEN_WIDTH/3, 64, "left", "bottom") and GAMESTATE:IsSideJoined('PlayerNumber_P1') and not PlayerMenuP1 then
+						update_sample_music(INPUTFILTER:GetMouseX())
+					elseif IsMouseGucci(SCREEN_RIGHT - (SCREEN_WIDTH/3),_screen.h - (235), SCREEN_WIDTH/3, 64, "left", "bottom") and GAMESTATE:IsSideJoined('PlayerNumber_P2') and not PlayerMenuP2  then
+						local Xpos = INPUTFILTER:GetMouseX()
+						update_sample_music(Xpos - (SCREEN_WIDTH/3 * 2))
+					end
+					
 				end
 			--- Test input mouse controls
 			elseif InputMenuHasFocus and not LeadboardHasFocus then
