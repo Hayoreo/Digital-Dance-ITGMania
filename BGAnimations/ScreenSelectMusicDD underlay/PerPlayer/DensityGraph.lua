@@ -11,6 +11,9 @@ local seconds = 0
 local ElapsedTime = 0
 local CurrentTime = 0
 local CurrentX
+local CurrentSong
+local NewSong
+local FirstPass = true
 
 -- Get the Y position for this section
 local FooterHeight = 32
@@ -43,6 +46,7 @@ end
 local af = Def.ActorFrame{
 	InitCommand=function(self)
 		self:SetUpdateFunction(UpdateCursor)
+		CurrentSong = GAMESTATE:GetCurrentSong()
 		if not IsUsingWideScreen() and nsj == 2 then
 			self:visible(false)
 		else
@@ -265,15 +269,20 @@ af2[#af2+1] = Def.Quad{
 		self:y(-17)
 	end,
 	RedrawCommand=function(self)
-		self:stoptweening()
 		local song = GAMESTATE:GetCurrentSong()
 		if song then
-			local SongLength = song:GetLastSecond()
-			local SongPosition = song:GetSampleStart()
-			local Ratio = width/SongLength
-			local XPos = SongPosition * Ratio
-			self:x(XPos)
-			self:queuecommand('DrawCursor')
+			NewSong = GAMESTATE:GetCurrentSong()
+			if CurrentSong ~= NewSong or FirstPass then
+				FirstPass = false
+				self:stoptweening()
+				CurrentSong = NewSong
+				local SongLength = song:GetLastSecond()
+				local SongPosition = song:GetSampleStart()
+				local Ratio = width/SongLength
+				local XPos = SongPosition * Ratio
+				self:x(XPos)
+				self:queuecommand('DrawCursor')
+			end
 		end
 	end,
 	DrawCursorCommand=function(self)
