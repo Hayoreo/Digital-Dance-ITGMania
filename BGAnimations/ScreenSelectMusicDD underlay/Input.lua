@@ -359,7 +359,7 @@ t.Handler = function(event)
 						if IsMouseGucci((_screen.w - _screen.w/3) + 2.5,_screen.h-149.5,33, 14,"left","top",1) then
 							MESSAGEMAN:Broadcast("TabClickedPlayerNumber_P2", {1})
 						end
-						for i=1,3 do
+						for i=1,4 do
 							if IsMouseGucci((_screen.w - _screen.w/3) + 3.5 + (i*32),_screen.h-149.5, i+1 == MaxTabs and 33 or 32, 14, "left", "top", 1) then
 								local TabCount = i + 1
 								if TabCount <= MaxTabs then
@@ -368,18 +368,20 @@ t.Handler = function(event)
 							end
 						end
 						-- the first and last tabs are slightly bigger than the middle tabs
-						if IsMouseGucci((_screen.w - _screen.w/3) + 3.5 + (4*32),_screen.h-149.5,33, 14,"left","top",1) then
-							if MaxTabs == 5 then
-								MESSAGEMAN:Broadcast("TabClickedPlayerNumber_P2", {5})
+						if IsMouseGucci((_screen.w - _screen.w/3) + 3.5 + (5*32),_screen.h-149.5,33, 14,"left","top",1) then
+							if MaxTabs == 6 then
+								MESSAGEMAN:Broadcast("TabClickedPlayerNumber_P2", {6})
 							end
 						end
 					end
 					--- Change the preview music if clicking on the density graph.
 					if IsMouseGucci(0,_screen.h - (235), SCREEN_WIDTH/3, 64, "left", "bottom") and GAMESTATE:IsSideJoined('PlayerNumber_P1') and not PlayerMenuP1 then
 						update_sample_music(INPUTFILTER:GetMouseX())
+						MESSAGEMAN:Broadcast('DrawCursorMouse', {"P1"})
 					elseif IsMouseGucci(SCREEN_RIGHT - (SCREEN_WIDTH/3),_screen.h - (235), SCREEN_WIDTH/3, 64, "left", "bottom") and GAMESTATE:IsSideJoined('PlayerNumber_P2') and not PlayerMenuP2  then
 						local Xpos = INPUTFILTER:GetMouseX()
 						update_sample_music(Xpos - (SCREEN_WIDTH/3 * 2))
+						MESSAGEMAN:Broadcast('DrawCursorMouse', {"P2"})
 					end
 					
 				end

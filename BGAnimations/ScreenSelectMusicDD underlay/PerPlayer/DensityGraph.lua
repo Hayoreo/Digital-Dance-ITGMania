@@ -7,6 +7,10 @@ if GAMESTATE:IsCourseMode() then return end
 local player = ...
 local pn = ToEnumShortString(player)
 if not GAMESTATE:IsHumanPlayer(pn) then return end
+local seconds = 0
+local ElapsedTime = 0
+local CurrentTime = 0
+local CurrentX
 
 -- Get the Y position for this section
 local FooterHeight = 32
@@ -27,8 +31,18 @@ local function getInputHandler(actor, player)
 	end)
 end
 
+local UpdateCursor = function(af, delta)
+	local song = GAMESTATE:GetCurrentSong()
+	if not song then 
+		ElapsedTime = 0
+		return 
+	end
+	ElapsedTime = (GetTimeSinceStart() - CurrentTime) * SL.Global.ActiveModifiers.MusicRate
+end
+
 local af = Def.ActorFrame{
 	InitCommand=function(self)
+		self:SetUpdateFunction(UpdateCursor)
 		if not IsUsingWideScreen() and nsj == 2 then
 			self:visible(false)
 		else
@@ -88,6 +102,7 @@ af[#af+1] = Def.ActorFrame{
 		self:GetChild("Breakdown"):visible(false)
 		self:GetChild("Total Measures"):GetChild("Total Measures Text"):settext("")
 		self:GetChild("Total Measures"):visible(false)
+		self:GetChild("ProgressBar"):visible(false)
 		
 		self:stoptweening()
 		self:sleep(0.2)
@@ -109,6 +124,7 @@ af[#af+1] = Def.ActorFrame{
 			self:GetChild("NPS"):visible(true)
 			self:GetChild("Breakdown"):visible(true)
 			self:GetChild("Total Measures"):visible(true)
+			self:GetChild("ProgressBar"):visible(true)
 			self:queuecommand("Redraw")
 		end
 	end,
@@ -119,6 +135,7 @@ af[#af+1] = Def.ActorFrame{
 		self:GetChild("Breakdown"):visible(false)
 		self:GetChild("Total Measures"):visible(false)
 		self:GetChild("DensityQuad"):visible(false)
+		self:GetChild("ProgressBar"):visible(false)
 	end,
 }
 
@@ -238,6 +255,103 @@ af2[#af2+1] = Def.ActorFrame{
 			self:settext(streamMeasures == 0 and "" or "Total Measures: "..streamMeasures..SongDensity)
 		end,
 	}
+}
+
+-- Progress bar
+af2[#af2+1] = Def.Quad{
+	Name="ProgressBar",
+	InitCommand=function(self)
+		self:diffuse(color("#FFFFFF")):zoomto(1, height):vertalign(bottom):horizalign(left)
+		self:y(-17)
+	end,
+	RedrawCommand=function(self)
+		self:stoptweening()
+		local song = GAMESTATE:GetCurrentSong()
+		if song then
+			local SongLength = song:GetLastSecond()
+			local SongPosition = song:GetSampleStart()
+			local Ratio = width/SongLength
+			local XPos = SongPosition * Ratio
+			self:x(XPos)
+			self:queuecommand('DrawCursor')
+		end
+	end,
+	DrawCursorCommand=function(self)
+		self:stoptweening()
+		local song = GAMESTATE:GetCurrentSong()
+		if song then
+			local SongLength = song:GetLastSecond()
+			local SongPosition = song:GetSampleStart() + ElapsedTime
+			local Ratio = width/SongLength
+			local XPos = SongPosition * Ratio
+			self:x(XPos)
+			if XPos > width - 1 then
+				self:visible(false)
+				return
+			end
+			self:sleep(0.1):queuecommand('DrawCursor')
+		end
+	end,
+	DrawCursorMouseMessageCommand = function(self, WhoClicked)
+		self:stoptweening()
+		local song = GAMESTATE:GetCurrentSong()
+		if song then
+			CurrentTime = GetTimeSinceStart()
+			ElapsedTime = 0
+			local WhoClicked = WhoClicked[1]
+			if WhoClicked == "P1" then
+				if pn == "P1" then
+					CurrentX = INPUTFILTER:GetMouseX()
+					self:x(CurrentX)
+				elseif pn == "P2" then
+					CurrentX = INPUTFILTER:GetMouseX()
+					self:x(CurrentX)
+				end
+			elseif WhoClicked == "P2" then
+				if pn == "P1" then
+					CurrentX = INPUTFILTER:GetMouseX() - SCREEN_WIDTH/3 * 2
+					self:x(CurrentX)
+				elseif pn == "P2" then
+					CurrentX = INPUTFILTER:GetMouseX() - SCREEN_WIDTH/3 * 2
+					self:x(CurrentX)
+				end
+			end
+			
+			self:sleep(0.1):queuecommand('UpdateCursorMouse')
+		end
+	end,
+	UpdateCursorMouseCommand=function(self)
+		self:stoptweening()
+		local song = GAMESTATE:GetCurrentSong()
+		if song then
+			local SongLength = song:GetLastSecond()
+			local Ratio = width/SongLength
+			local SongPosition = ElapsedTime * Ratio
+			self:x(SongPosition + CurrentX)
+			
+			-- hide the cursor if the song ends
+			if pn == "P1" then
+				if SongPosition + CurrentX > width - 1 then
+					self:visible(false)
+					return
+				else
+					self:visible(true)
+				end
+			elseif pn == "P2" then
+				if SongPosition + CurrentX > width - 1 then
+					self:visible(false)
+					return
+				else
+					self:visible(true)
+				end
+			end
+			self:sleep(0.1):queuecommand('UpdateCursorMouse')
+		end
+	end,
+	CurrentSongChangedMessageCommand=function(self)
+		ElapsedTime = 0
+		CurrentTime = GetTimeSinceStart()
+	end,
 }
 
 return af
