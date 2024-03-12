@@ -5,6 +5,8 @@
 - Added Left-Right and Up-Down Mirror!
 - Added EX leaderboards/scorebox.
 - Added dates to the SSM Scorebox.
+- You can now click on the density graph to seek the preview music (the entire song will play for where you select)
+- A progress bar has also been added to the density graph as well.
 - All charts now show leaderboards on SSM instead of only charts ranked on Groovestats.
 - Added Quint grades on evaluation/evaluation summary (Quints on music wheel later maybe?).
 - Added Measure Lines as a player option.
