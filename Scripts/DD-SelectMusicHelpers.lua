@@ -51,7 +51,7 @@ update_sample_music = function(Xpos)
 	if song then
 		local Xpos = Xpos
 		local width = SCREEN_WIDTH/3
-		local song_length = song:GetLastSecond() / SL.Global.ActiveModifiers.MusicRate
+		local song_length = song:GetLastSecond()
 		local ratio = song_length/width
 		local songpath = song:GetMusicPath()
 		local sample_start = Xpos * ratio
