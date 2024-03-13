@@ -293,12 +293,12 @@ af2[#af2+1] = Def.Quad{
 			local SongPosition = song:GetSampleStart() + ElapsedTime
 			local Ratio = width/SongLength
 			local XPos = SongPosition * Ratio
-			self:x(XPos)
+			self:linear(0.1):x(XPos)
 			if XPos > width - 1 then
 				self:visible(false)
 				return
 			end
-			self:sleep(0.1):queuecommand('DrawCursor')
+			self:sleep(0.01):queuecommand('DrawCursor')
 		end
 	end,
 	DrawCursorMouseMessageCommand = function(self, WhoClicked)
@@ -319,10 +319,10 @@ af2[#af2+1] = Def.Quad{
 			elseif WhoClicked == "P2" then
 				if pn == "P1" then
 					CurrentX = INPUTFILTER:GetMouseX() - SCREEN_WIDTH/3 * 2
-					self:x(CurrentX)
+					self:linear(0.1):x(CurrentX)
 				elseif pn == "P2" then
 					CurrentX = INPUTFILTER:GetMouseX() - SCREEN_WIDTH/3 * 2
-					self:x(CurrentX)
+					self:linear(0.1):x(CurrentX)
 				end
 			end
 			
@@ -336,7 +336,7 @@ af2[#af2+1] = Def.Quad{
 			local SongLength = song:GetLastSecond()
 			local Ratio = width/SongLength
 			local SongPosition = ElapsedTime * Ratio
-			self:x(SongPosition + CurrentX)
+			self:linear(0.1):x(SongPosition + CurrentX)
 			
 			-- hide the cursor if the song ends
 			if pn == "P1" then
@@ -354,10 +354,12 @@ af2[#af2+1] = Def.Quad{
 					self:visible(true)
 				end
 			end
-			self:sleep(0.1):queuecommand('UpdateCursorMouse')
+			self:sleep(0.01):queuecommand('UpdateCursorMouse')
 		end
 	end,
 	CurrentSongChangedMessageCommand=function(self)
+		self:stoptweening()
+		self:visible(false)
 		ElapsedTime = 0
 		CurrentTime = GetTimeSinceStart()
 	end,
