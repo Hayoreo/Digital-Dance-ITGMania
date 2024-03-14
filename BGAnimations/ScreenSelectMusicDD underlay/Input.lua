@@ -415,6 +415,7 @@ t.Handler = function(event)
 			if event.PlayerNumber == "PlayerNumber_P1" and GAMESTATE:IsSideJoined(event.PlayerNumber) then
 				if PlayerMenuP1 then
 					PlayerMenuP1 = false
+					ApplyMods(event.PlayerNumber)
 					if MusicWheelNeedsResetting then
 						MESSAGEMAN:Broadcast("ReloadSSMDD")
 					else
@@ -431,6 +432,7 @@ t.Handler = function(event)
 			elseif event.PlayerNumber == "PlayerNumber_P2" and GAMESTATE:IsSideJoined(event.PlayerNumber) then
 				if PlayerMenuP2 then
 					PlayerMenuP2 = false
+					ApplyMods(event.PlayerNumber)
 					if MusicWheelNeedsResetting then
 						MESSAGEMAN:Broadcast("ReloadSSMDD")
 					else
@@ -452,6 +454,7 @@ t.Handler = function(event)
 			if event.PlayerNumber == "PlayerNumber_P1" and GAMESTATE:IsSideJoined(event.PlayerNumber) and PlayerMenuP1 then
 				-- we have to make these nil otherwise we'll back out of the game x_x
 				PlayerMenuP1 = nil
+				ApplyMods(event.PlayerNumber)
 				if MusicWheelNeedsResetting then
 					MESSAGEMAN:Broadcast("ReloadSSMDD")
 				else
@@ -460,6 +463,7 @@ t.Handler = function(event)
 			elseif event.PlayerNumber == "PlayerNumber_P2" and GAMESTATE:IsSideJoined(event.PlayerNumber) and PlayerMenuP2 then
 				-- we have to make these nil otherwise we'll back out of the game x_x
 				PlayerMenuP2 = nil
+				ApplyMods(event.PlayerNumber)
 				if MusicWheelNeedsResetting then
 					MESSAGEMAN:Broadcast("ReloadSSMDD")
 				else
