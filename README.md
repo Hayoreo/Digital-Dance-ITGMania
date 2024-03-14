@@ -1,21 +1,10 @@
-# Digital Dance v1.0.9
+# Digital Dance v1.1.0
 
 # ------------ Differences from 1.0.9 ------------
-- ITL 2024 support!
-- Added Left-Right and Up-Down Mirror!
-- Added EX leaderboards/scorebox.
-- Added dates to the SSM Scorebox.
 - You can now click on the density graph to seek the preview music (the entire song will play for where you select)
 - A progress bar has also been added to the density graph as well.
-- All charts now show leaderboards on SSM instead of only charts ranked on Groovestats.
-- Added Quint grades on evaluation/evaluation summary (Quints on music wheel later maybe?).
-- Added Measure Lines as a player option.
-- Animated banners now animate at the proper speed on Screen Evaluation.
-- Fixed Max Error millisecond rounding on evaluation.
-- Blender replaced with Random (HyperShuffle)
-- Some Player Menu input fixes.
-- An additional subsort has been added.
-- Fixed Screen Select Course.
+- Sound effects on ScreenTitleMenu have been fixed.
+
 
 ## ITGMANIA USE ONLY
 - As noted in the "About" section this theme is intended for use with ITGMania only.
