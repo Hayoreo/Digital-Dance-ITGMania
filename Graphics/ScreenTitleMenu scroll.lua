@@ -2,6 +2,11 @@ local index = Var("GameCommand"):GetIndex()
 local VirtualIndex = 1
 local MaxIndex = 4
 local Scroller
+local ScrollSound = THEME:GetPathS("MusicWheel", "change.ogg")
+local SelectSound = THEME:GetPathS("Common", "start.ogg")
+local ScrollLength = get_music_file_length(ScrollSound)
+local SelectLength = get_music_file_length(SelectSound)
+local Volume = PREFSMAN:GetPreference("SoundVolume")/10
 
 local InputHandler = function(event)
 	-- Don't run any mouse input if the mouse is offscreen.
@@ -21,7 +26,7 @@ local InputHandler = function(event)
 			MESSAGEMAN:Broadcast("UpdateScroll")
 			-- the engine will already play this with the menu buttons, so we only need to do it for the mouse.
 			if event.DeviceInput.button == "DeviceButton_mousewheel up" then
-				SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "change.ogg"), true )
+				MESSAGEMAN:Broadcast('ScrollSound')
 			end
 		end
 		
@@ -34,7 +39,7 @@ local InputHandler = function(event)
 			MESSAGEMAN:Broadcast("UpdateScroll")
 			-- the engine will already play this with the menu buttons, so we only need to do it for the mouse.
 			if event.DeviceInput.button == "DeviceButton_mousewheel down" then
-				SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "change.ogg"), true )
+				MESSAGEMAN:Broadcast('ScrollSound')
 			end
 		end
 		
@@ -56,16 +61,16 @@ local InputHandler = function(event)
 		if event.DeviceInput.button == "DeviceButton_left mouse button" then
 			-- check which choice is selected to determine the zoom.
 			if IsMouseGucci(_screen.cx-2,_screen.cy-81, 670, 105, "center", "middle", VirtualIndex ==1 and 0.4 or 0.3) then
-				SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg"), true )
+				MESSAGEMAN:Broadcast('SelectSound')
 				SCREENMAN:SetNewScreen("ScreenSelectProfile")
 			elseif IsMouseGucci(_screen.cx-3,_screen.cy-21, 688, 105, "center", "middle", VirtualIndex ==2 and 0.4 or 0.3) then
-				SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg"), true )
+				MESSAGEMAN:Broadcast('SelectSound')
 				SCREENMAN:SetNewScreen("ScreenEditMenu")
 			elseif IsMouseGucci(_screen.cx-3,_screen.cy+37, 515, 106, "center", "middle", VirtualIndex ==3 and 0.4 or 0.3) then
-				SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg"), true )
+				MESSAGEMAN:Broadcast('SelectSound')
 				SCREENMAN:SetNewScreen("ScreenOptionsService")
 			elseif IsMouseGucci(_screen.cx-2,_screen.cy+97, 282, 106, "center", "middle", VirtualIndex ==4 and 0.4 or 0.3) then
-				SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg"), true )
+				MESSAGEMAN:Broadcast('SelectSound')
 				SCREENMAN:SetNewScreen("ScreenExit")
 			end
 		end
@@ -86,6 +91,30 @@ local t = Def.ActorFrame{
 		Scroller:SetDestinationItem(VirtualIndex)
 		Scroller:GetChild("ScrollChoice"..VirtualIndex):playcommand("GainFocus")
 	end,
+	
+	-- Scroll Sound
+	Def.Sound {
+		File=ScrollSound,
+		Name="ScollerSound",
+		IsAction=true,
+
+		ScrollSoundMessageCommand=function(self)
+			self:get():volume(Volume)
+			self:play()
+		end,
+	},
+	
+	-- Select Sound
+	Def.Sound {
+		File=SelectSound,
+		Name="SelectSound",
+		IsAction=true,
+
+		SelectSoundMessageCommand=function(self)
+			self:get():volume(Volume)
+			self:play()
+		end,
+	},
 }
 
 

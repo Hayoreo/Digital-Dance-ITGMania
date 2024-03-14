@@ -11,7 +11,8 @@ play_sample_music = function()
 			local musicpath = THEME:GetPathS("", "OfCourse.ogg")
 			local sample_start = 0
 			local sample_len = 32
-			SOUND:DimMusic(PREFSMAN:GetPreference("SoundVolume")/2, math.huge)
+			-- Dim Music doesn't seem to work at all???
+			SOUND:DimMusic(PREFSMAN:GetPreference("SoundVolume")/20, math.huge)
 			SOUND:PlayMusicPart(musicpath, sample_start, sample_len, 0,0, true, true)
 		else
 			stop_music()
