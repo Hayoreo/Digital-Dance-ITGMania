@@ -107,8 +107,10 @@ af[#af+1] = Def.ActorFrame{
 		self:GetChild("Total Measures"):GetChild("Total Measures Text"):settext("")
 		self:GetChild("Total Measures"):visible(false)
 		self:GetChild("ProgressBar"):visible(false)
-		
-		self:stoptweening()
+		if FirstPass then
+			FirstPass = false
+			self:stoptweening()
+		end
 		self:sleep(0.2)
 		self:queuecommand("ParseChart")
 	end,
@@ -267,22 +269,19 @@ af2[#af2+1] = Def.Quad{
 	InitCommand=function(self)
 		self:diffuse(color("#FFFFFF")):zoomto(1, height):vertalign(bottom):horizalign(left)
 		self:y(-17)
+		self:playcommand('RedrawCursor')
 	end,
-	RedrawCommand=function(self)
+	RedrawCursorCommand=function(self)
 		local song = GAMESTATE:GetCurrentSong()
 		if song then
-			NewSong = GAMESTATE:GetCurrentSong()
-			if CurrentSong ~= NewSong or FirstPass then
-				FirstPass = false
-				self:stoptweening()
-				CurrentSong = NewSong
-				local SongLength = song:GetLastSecond()
-				local SongPosition = song:GetSampleStart()
-				local Ratio = width/SongLength
-				local XPos = SongPosition * Ratio
-				self:x(XPos)
-				self:queuecommand('DrawCursor')
-			end
+			self:stoptweening()
+			CurrentSong = NewSong
+			local SongLength = song:GetLastSecond()
+			local SongPosition = song:GetSampleStart()
+			local Ratio = width/SongLength
+			local XPos = SongPosition * Ratio
+			self:x(XPos)
+			self:queuecommand('DrawCursor')
 		end
 	end,
 	DrawCursorCommand=function(self)
@@ -358,8 +357,12 @@ af2[#af2+1] = Def.Quad{
 		end
 	end,
 	CurrentSongChangedMessageCommand=function(self)
-		self:stoptweening()
 		self:visible(false)
+		NewSong = GAMESTATE:GetCurrentSong()
+		if NewSong ~= CurrentSong then
+			self:stoptweening()
+			self:queuecommand('RedrawCursor')
+		end
 		ElapsedTime = 0
 		CurrentTime = GetTimeSinceStart()
 	end,
