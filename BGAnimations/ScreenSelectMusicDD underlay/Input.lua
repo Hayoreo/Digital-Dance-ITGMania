@@ -32,7 +32,7 @@ local SwitchInputFocus = function(button)
 			if NameOfGroup == "RANDOM-PORTAL" then
 				SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				t.WheelWithFocus = SongWheel
-				SCREENMAN:SetNewScreen("ScreenGameplay")
+				SCREENMAN:GetTopScreen():SetNextScreenName( "ScreenGameplay" ):StartTransitioningScreen("SM_GoToNextScreen")
 			else
 				MESSAGEMAN:Broadcast("SwitchFocusToSongs")
 				t.WheelWithFocus = SongWheel
@@ -40,7 +40,7 @@ local SwitchInputFocus = function(button)
 
 		elseif t.WheelWithFocus == SongWheel then
 			SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
-			SCREENMAN:SetNewScreen("ScreenGameplay")
+			SCREENMAN:GetTopScreen():SetNextScreenName( "ScreenGameplay" ):StartTransitioningScreen("SM_GoToNextScreen")
 		end
 	elseif button == "Select" or button == "Back" then
 		if t.WheelWithFocus == SongWheel and not IsSearchMenuVisible then
@@ -257,7 +257,7 @@ t.Handler = function(event)
 						if t.WheelWithFocus == SongWheel and (not PlayerMenuP1 and not PlayerMenuP2) then
 							if t.WheelWithFocus:get_info_at_focus_pos() ~= "CloseThisFolder" then
 								SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
-								SCREENMAN:SetNewScreen("ScreenGameplay")
+								SCREENMAN:GetTopScreen():SetNextScreenName( "ScreenGameplay" ):StartTransitioningScreen("SM_GoToNextScreen")
 							elseif t.WheelWithFocus:get_info_at_focus_pos() == "CloseThisFolder" then
 								SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "expand.ogg") )
 								MESSAGEMAN:Broadcast("CloseCurrentFolder")
@@ -267,7 +267,7 @@ t.Handler = function(event)
 						elseif t.WheelWithFocus == GroupWheel then
 							if NameOfGroup == "RANDOM-PORTAL" then
 								SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
-								SCREENMAN:SetNewScreen("ScreenGameplay")
+								SCREENMAN:GetTopScreen():SetNextScreenName( "ScreenGameplay" ):StartTransitioningScreen("SM_GoToNextScreen")
 								t.WheelWithFocus = SongWheel
 							else
 								SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "expand.ogg") )
@@ -587,7 +587,7 @@ t.Handler = function(event)
 			if event.type == "InputEventType_FirstPress" then
 				if NameOfGroup == "RANDOM-PORTAL" then
 					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
-					SCREENMAN:SetNewScreen("ScreenGameplay")
+					SCREENMAN:GetTopScreen():SetNextScreenName( "ScreenGameplay" ):StartTransitioningScreen("SM_GoToNextScreen")
 					return
 				end
 
