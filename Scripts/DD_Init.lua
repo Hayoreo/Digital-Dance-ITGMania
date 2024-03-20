@@ -187,7 +187,7 @@ SL = {
 			EventMode=1,
 			CoinMode="Home",
 			
-			ShowMouseCursor=true,
+			ShowMouseCursor=false,
 			
 			TimingWindowAdd=0.0015,
 			RegenComboAfterMiss=5,
@@ -219,7 +219,7 @@ SL = {
 			EventMode=1,
 			CoinMode="Home",
 			
-			ShowMouseCursor=true,
+			ShowMouseCursor=false,
 			
 			TimingWindowAdd=0.0015,
 			RegenComboAfterMiss=5,
