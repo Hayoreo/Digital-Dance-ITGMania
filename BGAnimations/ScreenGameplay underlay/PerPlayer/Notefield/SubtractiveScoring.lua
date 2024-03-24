@@ -4,6 +4,7 @@ local mods = SL[pn].ActiveModifiers
 
 if not mods.SubtractiveScoring then return end
 local FAPlusCount = 0
+local HeldCount = 0
 -- -----------------------------------------------------------------------
 
 local undesirable_judgment = "W2"
@@ -106,6 +107,9 @@ bmt.ExCountsChangedMessageCommand=function(self, params)
 		-- don't update the score if we have the best judgement because constantly rounding is distracting/annoying.
 		if params.ExCounts["W0"] == FAPlusCount + 1 then
 			FAPlusCount = FAPlusCount + 1
+			update = false
+		elseif params.ExCounts["Held"] == HeldCount + 1 then
+			HeldCount = HeldCount + 1
 			update = false
 		end
 		
