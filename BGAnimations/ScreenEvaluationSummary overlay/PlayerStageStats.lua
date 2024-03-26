@@ -56,7 +56,7 @@ af[#af+1] = LoadFont("Common Bold")..{
 		if playerStats and score then
 		
 			if playerStats.judgments and playerStats.judgments.W0 and playerStats.exscore then
-				self:zoom(0.48):y(-32)
+				self:zoom(0.385):y(-26)
 			else
 				self:zoom(0.5):y(-24)
 			end
@@ -80,7 +80,7 @@ af[#af+1] = LoadFont("Common Bold")..{
 
 --ex score
 af[#af+1] = LoadFont("Common Bold")..{
-	InitCommand=function(self) self:zoom(0.38):horizalign(align1):x(col1x):y(-12) end,
+	InitCommand=function(self) self:zoom(0.35):horizalign(align1):x(col1x):y(-10) end,
 	DrawStageCommand=function(self)
 		if playerStats and playerStats.judgments and playerStats.judgments.W0 and playerStats.exscore then
 			self:settext(("%.2f"):format(playerStats.exscore)):diffuse(Colors[1])
@@ -190,6 +190,9 @@ for i=1,#TNSTypes do
 					self:zoom(0.28):horizalign(align2):x(col2x):y(i*13 - 63):diffuse( Colors[i] )
 					if i == 2 then
 						self:diffuse( Colors[1] )
+					-- Clear FA+ judgments if players switch between normal judgments and FA+ mid set so it doesn't carry over across pages.
+					elseif i == 1 then
+						self:settext("")
 					end
 				end
 				local val = playerStats.judgments[TNSTypes[i]]
