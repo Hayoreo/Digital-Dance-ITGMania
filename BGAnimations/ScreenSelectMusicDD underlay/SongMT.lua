@@ -50,6 +50,45 @@ local function update_grade(self)
 	end
 end
 
+local function update_exscore(self)
+	for player in ivalues(GAMESTATE:GetHumanPlayers()) do
+		local pn = ToEnumShortString(player)
+		-- Only display EX score if a profile is found for an enabled player.
+		if not GAMESTATE:IsPlayerEnabled(player) or not PROFILEMAN:IsPersistentProfile(player) then
+			self[pn..'ex_score']:visible(false)
+			return
+		end
+
+		if GAMESTATE:GetNumSidesJoined() == 2 then
+			if player == PLAYER_1 then
+				self[pn..'ex_score']:y(18):zoom(0.14)
+			else
+				self[pn..'ex_score']:y(28):zoom(0.14)
+			end
+		else
+			self[pn..'ex_score']:y(22)
+		end
+		local pn = ToEnumShortString(player)
+		if self.song ~= "CloseThisFolder" and self.song ~= "Random-Portal" and self.song ~= nil then
+			local song = self.song
+			local song_dir = song:GetSongDir()
+			if song_dir ~= nil then
+				if SL[pn].ITLData["pathMap"][song_dir] ~= nil then
+					local hash = SL[pn].ITLData["pathMap"][song_dir]
+					if SL[pn].ITLData["hashMap"][hash] ~= nil then
+						local ex = SL[pn].ITLData["hashMap"][hash]["ex"] / 100
+						self[pn..'ex_score']:settext(("%.2f"):format(ex))
+						self[pn..'ex_score']:visible(true)
+						return
+					end
+				end
+			end
+		end
+		self[pn..'ex_score']:visible(false)
+	end
+
+end
+
 local song_mt = {
 	__index = {
 		create_actors = function(self, name)
@@ -99,6 +138,7 @@ local song_mt = {
 
 				CurrentStepsChangedMessageCommand=function(subself, params)
 					update_grade(self)
+					update_exscore(self)
 				end,
 				
 				SongIsReloadingMessageCommand=function(subself)
@@ -163,6 +203,7 @@ local song_mt = {
 				else
 					grade_position = -112
 				end
+				-- Player grades
 				af[#af+1] = Def.ActorFrame {
 					InitCommand=function(subself) 
 						subself:visible(true) 
@@ -178,6 +219,18 @@ local song_mt = {
 							self[pn..'grade_sprite'] = subself 
 						end,
 					}
+				}
+				-- player EX Score for ITL
+				af[#af+1] = Def.BitmapText{
+					Font="Wendy/_wendy monospace numbers",
+					Text="",
+					InitCommand=function(subself)
+						subself:visible(false)
+						:zoom(0.2)
+						:x( _screen.w/8 )
+						:diffuse(SL.JudgmentColors["FA+"][1])
+						self[pn..'ex_score'] = subself 
+					end,
 				}
 			end
 
@@ -270,6 +323,7 @@ local song_mt = {
 			end
 
 			update_grade(self)
+			update_exscore(self)
 			update_edit(self)
 			
 		end,
