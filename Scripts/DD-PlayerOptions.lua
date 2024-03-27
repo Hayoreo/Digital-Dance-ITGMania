@@ -462,11 +462,8 @@ local Overrides = {
 			local IsUltraWide = (GetScreenAspectRatio() > 21/9)
 			local mpn = GAMESTATE:GetMasterPlayerNumber()
 
-			-- Never In 4:3 versus mode
-			if (not IsUsingWideScreen() and style and style:GetName() == "versus")
-			-- if the notefield takes up more than half the screen width (e.g. single + Center1Player + 4:3)
-			or (notefieldwidth and notefieldwidth > _screen.w/2)
-			then
+			-- Never In 4:3 versus/double mode
+			if (not IsUsingWideScreen() and style and (style:GetName() == "versus" or style:GetName() == "double") ) then
 				table.remove(choices, 3)
 			end
 

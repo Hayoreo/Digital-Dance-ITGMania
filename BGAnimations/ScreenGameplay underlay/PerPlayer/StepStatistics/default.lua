@@ -11,10 +11,8 @@ local stylename = GAMESTATE:GetCurrentStyle():GetName()
 
 if (SL[pn].ActiveModifiers.DataVisualizations ~= "Step Statistics")
 or (not IsUltraWide and stylename == "versus")
-or (GetNotefieldWidth() > _screen.w/2)
 or (NoteFieldIsCentered and not IsUsingWideScreen())
-or (not IsUltraWide and stylename ~= "single")
-or (    IsUltraWide and not (stylename == "single" or stylename == "versus"))
+or (not IsUltraWide and (not stylename == "single" or not stylename == "double") )
 then
 	return
 end
@@ -24,11 +22,19 @@ end
 
 local header_height   = 80
 local notefield_width = GetNotefieldWidth()
-local sidepane_width  = _screen.w/2
-local sidepane_pos_x  = _screen.w * (player==PLAYER_1 and 0.75 or 0.25)
+local sidepane_width
+local sidepane_pos_x
+
+if stylename == "double" then
+	sidepane_width  = _screen.w/7.2
+	sidepane_pos_x  = _screen.w * 0.0693
+else
+	sidepane_pos_x  = _screen.w * (player==PLAYER_1 and 0.75 or 0.25)
+	sidepane_width  = _screen.w/2
+end
 
 if not IsUltraWide then
-	if NoteFieldIsCentered and IsUsingWideScreen()  then
+	if NoteFieldIsCentered and IsUsingWideScreen() and not stylename == "double"   then
 		sidepane_width = (_screen.w - GetNotefieldWidth()) / 2
 
 		if player==PLAYER_1 then

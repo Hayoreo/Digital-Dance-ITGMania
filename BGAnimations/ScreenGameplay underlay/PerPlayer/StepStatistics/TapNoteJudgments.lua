@@ -5,6 +5,7 @@ local IsUltraWide = (GetScreenAspectRatio() > 21/9)
 local NoteFieldIsCentered = (GetNotefieldX(player) == _screen.cx)
 local StepsOrTrail = (GAMESTATE:IsCourseMode() and GAMESTATE:GetCurrentTrail(player)) or GAMESTATE:GetCurrentSteps(player)
 local total_tapnotes = StepsOrTrail:GetRadarValues(player):GetValue( "RadarCategory_Notes" )
+local stylename = GAMESTATE:GetCurrentStyle():GetName()
 
 -- Only add this in if the player enabled it.
 local ShowFaPlusWindow = SL[pn].ActiveModifiers.ShowFaPlusWindow
@@ -72,6 +73,12 @@ af.InitCommand=function(self)
 	if IsUltraWide and #GAMESTATE:GetHumanPlayers() > 1 then
 		self:x( 154 * (player==PLAYER_1 and 1 or -1))
 	end
+	
+	if stylename == "double" then
+		self:x(-40)
+			:y(50)
+			:zoom(0.7)
+	end
 end
 for index, window in ipairs(TNS.Types) do
 	-- TNS value
@@ -81,7 +88,11 @@ for index, window in ipairs(TNS.Types) do
 		InitCommand=function(self)
 			self:zoom(0.5)
 			self:y((index-1)*row_height - 280)
-			self:halign( PlayerNumber:Reverse()[player] )
+			if stylename == "double" then
+				self:halign( 0 )
+			else
+				self:halign( PlayerNumber:Reverse()[player] )
+			end
 			-- flip alignment when ultrawide and both players joined
 			if IsUltraWide and #GAMESTATE:GetHumanPlayers() > 1 then
 				self:halign( PlayerNumber:Reverse()[OtherPlayer[player]] )
@@ -137,8 +148,12 @@ for index, window in ipairs(TNS.Types) do
 				Text=TNS.Names[index]:upper(),
 				InitCommand=function(self)
 					self:zoom(0.833):maxwidth(72)
-					self:halign( PlayerNumber:Reverse()[player] )
-					if player==PLAYER_1 then
+					if stylename == "double" then
+						self:halign( 0 )
+					else
+						self:halign( PlayerNumber:Reverse()[player] )
+					end
+					if player==PLAYER_1 or stylename == "double" then
 						self:x( 80 + (digits-4)*16)
 					else
 						self:x(-80 - (digits-4)*16)

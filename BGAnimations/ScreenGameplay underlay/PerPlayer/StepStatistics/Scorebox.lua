@@ -1,5 +1,6 @@
 local player = ...
 local pn = ToEnumShortString(player)
+local stylename = GAMESTATE:GetCurrentStyle():GetName()
 
 if SL[pn].ApiKey == "" then
 	return
@@ -224,10 +225,14 @@ local af = Def.ActorFrame{
 		if NoteFieldIsCentered and IsUsingWideScreen() then
 			self:addx( (player==PLAYER_1 and -34 or 38) )
 		end
-
 		-- ultrawide and both players joined
 		if IsUltraWide and #GAMESTATE:GetHumanPlayers() > 1 then
 			self:x(self:GetX() * -1)
+		end
+		if stylename == "double" then
+			self:x(SCREEN_WIDTH - 118.5)
+				:y(-70)
+				:zoom(0.821)
 		end
 		self.isFirst = true
 	end,

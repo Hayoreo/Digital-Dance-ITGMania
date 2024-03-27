@@ -6,6 +6,7 @@ local P1 = GAMESTATE:IsHumanPlayer(PLAYER_1)
 local P2 = GAMESTATE:IsHumanPlayer(PLAYER_2)
 local NoteFieldIsCentered = (GetNotefieldX(player) == _screen.cx)
 local elapsedtime
+local stylename = GAMESTATE:GetCurrentStyle():GetName()
 
 -- -----------------------------------------------------------------------
 -- reference to the BitmapText actor that will display elapsed time (current BitmapText)
@@ -136,6 +137,10 @@ af.InitCommand=function(self)
 		self:x(GAMESTATE:IsSideJoined(0) and -275 or 55)
 		self:zoom(0.9)
 	end
+	if stylename == "double" then
+		self:x(-170)
+			:y(60)
+	end
 end
 
 af.CurrentSongChangedMessageCommand=function(self,params)
@@ -161,7 +166,7 @@ end
 af[#af+1] = LoadFont("Common Normal")..{
 	Text=("%s "):format( THEME:GetString("ScreenGameplay", "Elapsed")..":" ),
 	InitCommand=function(self) self:horizalign(right):xy(-6, 0):zoom(0.7) 
-	if P1 then
+	if P1 or stylename == "double" then
 		self:x(180)
 	end
 	end
@@ -174,7 +179,7 @@ af[#af+1] = LoadFont("Common Normal")..{
 		curBMT = self
 		self:horizalign(left):xy(0,0)
 		self:zoom(0.9)
-		if P1 then
+		if P1 or stylename == "double" then
 			self:x(180)
 		end
 	end,
@@ -196,7 +201,7 @@ af[#af+1] = LoadFont("Common Normal")..{
 af[#af+1] = LoadFont("Common Normal")..{
 	Text=("%s "):format( THEME:GetString("ScreenGameplay", "Remaining")..":"	),
 	InitCommand=function(self) self:horizalign(right):xy(-6, 18):zoom(0.7) 
-	if P1 then
+	if P1 or stylename == "double" then
 		self:x(180)
 	end
 	end
@@ -210,7 +215,7 @@ af[#af+1] = LoadFont("Common Normal")..{
 		remBMT = self
 		self:horizalign(left):xy(0,18)
 		self:zoom(0.9)
-		if P1 then
+		if P1 or stylename == "double" then
 			self:x(180)
 		end
 	end,
@@ -235,7 +240,7 @@ af[#af+1] = LoadFont("Common Normal")..{
 af[#af+1] = LoadFont("Common Normal")..{
 	InitCommand=function(self)
 		self:horizalign(right):xy(-6, 36):zoom(0.7)
-		if P1 then
+		if P1 or stylename == "double" then
 			self:x(180)
 		end
 		local s = GAMESTATE:IsCourseMode() and THEME:GetString("ScreenGameplay", "Course")..":" or THEME:GetString("ScreenGameplay", "Length")..":"
@@ -249,7 +254,7 @@ af[#af+1] = LoadFont("Common Normal")..{
 	InitCommand=function(self)
 		self:horizalign(left):xy(0,36)
 		self:zoom(0.9)
-		if P1 then
+		if P1 or stylename == "double" then
 			self:x(180)
 		end
 

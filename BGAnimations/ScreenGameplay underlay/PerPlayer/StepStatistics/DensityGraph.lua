@@ -1,6 +1,7 @@
 local player, width = unpack(...)
 
 local pn = ToEnumShortString(player)
+local stylename = GAMESTATE:GetCurrentStyle():GetName()
 -- height is how tall, in pixels, the density graph will be
 local height = 105
 
@@ -32,12 +33,20 @@ local max_seconds = 4 * 60
 -- width and position of the density graph
 local pos_x = -width / 2
 
+if stylename == "double" then
+	pos_x = SCREEN_WIDTH -width/0.666
+end
+
 local scaled_width = width
 local UpdateRate, first_second, last_second
 
 local af = Def.ActorFrame{
 	InitCommand=function(self)
 		self:xy( pos_x, 55 ):queuecommand("Update")
+		if stylename == "double" then
+			self:zoom(1.002)
+			self:y(54.84)
+		end
 	end,
 	OnCommand=function(self)
 		LifeMeter = SCREENMAN:GetTopScreen():GetChild("Life"..pn)
@@ -87,7 +96,11 @@ local histogram_amv = Scrolling_NPS_Histogram(player, width, height)..{
 local text = LoadFont("Common Normal")..{
 	InitCommand=function(self)
 		self:zoom(0.9)
-		self:halign( PlayerNumber:Reverse()[OtherPlayer[player]] )
+		if stylename == "double" then
+			self:halign( 1 )
+		else
+			self:halign( PlayerNumber:Reverse()[player] )
+		end
 		self:vertalign(bottom)
 
 		-- flip alignment if ultrawide and both players joined because the pane
@@ -105,8 +118,8 @@ local text = LoadFont("Common Normal")..{
 			return
 		end
 
-		if player == PLAYER_1 then
-			self:x(_screen.w*0.5 - SL_WideScale(6,59))
+		if player == PLAYER_1 and stylename ~= "double" then
+			self:x(_screen.w*0.5 - SL_WideScale(6,182))
 
 			if NoteFieldIsCentered then
 				self:x(_screen.w*0.5 - 134)
@@ -114,14 +127,18 @@ local text = LoadFont("Common Normal")..{
 			if IsUltraWide and #GAMESTATE:GetHumanPlayers() > 1 then
 				self:x(52)
 			end
-		else
-			self:x(SL_WideScale(6,8))
+		elseif player == PLAYER_2 and stylename ~= "double" then
+			self:x(SL_WideScale(6,182))
 			if NoteFieldIsCentered then
 				self:x(26)
 			end
 			if IsUltraWide and #GAMESTATE:GetHumanPlayers() > 1 then
 				self:x(180)
 			end
+		end
+		if stylename == "double" then
+			self:x(115)
+				:zoom(0.58)
 		end
 
 		self:y( -self:GetHeight()/2 )

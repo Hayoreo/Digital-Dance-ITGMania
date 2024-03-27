@@ -2,6 +2,7 @@ local player = ...
 
 local IsUltraWide = (GetScreenAspectRatio() > 21/9)
 local NoteFieldIsCentered = (GetNotefieldX(player) == _screen.cx)
+local stylename = GAMESTATE:GetCurrentStyle():GetName()
 
 -- gray is used for leading 0s
 local gray = color("#5A6166")
@@ -99,6 +100,10 @@ af.InitCommand=function(self)
 	if IsUltraWide and #GAMESTATE:GetHumanPlayers() > 1 then
 		self:x( player==PLAYER_1 and 14 or 50 )
 	end
+	if stylename == "double" then
+		self:xy(55,0)
+			:zoom(0.7)
+	end
 end
 
 
@@ -117,7 +122,7 @@ for i, category in ipairs(RadarCategories) do
 			self:y( (i-1)*row_height )
 		end,
 		PositionCommand=function(self, params)
-			self:x((player==PLAYER_1 and -10 or 90) - (params.Offset or 0))
+			self:x(((player==PLAYER_1 or stylename == "double") and -10 or 90) - (params.Offset or 0))
 		end
 	}
 
@@ -126,7 +131,7 @@ for i, category in ipairs(RadarCategories) do
 		Name=("%s_Values"):format(category),
 		InitCommand=function(self)
 			self:zoom(0.4):horizalign( right )
-			self:x( player==PLAYER_1 and 0 or 100 )
+			self:x( (player==PLAYER_1 or stylename == "double") and 0 or 100 )
 			self:y( (i-1)*row_height )
 		end,
 		BeginCommand=function(self)

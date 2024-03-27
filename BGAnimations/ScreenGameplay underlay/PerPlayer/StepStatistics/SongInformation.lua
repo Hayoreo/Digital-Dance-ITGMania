@@ -8,6 +8,7 @@ local TotalCourseSongs
 local NoteFieldIsCentered = (GetNotefieldX(player) == _screen.cx)
 local MaxWidth = NoteFieldIsCentered and 134 or 195
 local count = 0
+local stylename = GAMESTATE:GetCurrentStyle():GetName()
 
 -- initalize song/course info
 if GAMESTATE:IsCourseMode() then
@@ -28,6 +29,12 @@ af.InitCommand=function(self)
 		self:x(P1 and -275 or 35)
 		self:y(-45)
 		self:zoom(0.9)
+	end
+	if stylename == "double" then
+		self:xy(SCREEN_WIDTH-230, -115)
+		if not GAMESTATE:IsCourseMode() then
+			self:visible(false)
+		end
 	end
 end
 
@@ -80,6 +87,9 @@ af[#af+1] = LoadFont("Common Normal")..{
 		if P1 then
 			self:x(180)
 		end
+		if stylename == "double" then
+			self:visible(false)
+		end
 	end,
 	
 }
@@ -93,6 +103,9 @@ af[#af+1] = LoadFont("Common Normal")..{
 		:settext(CurSongName)
 		if P1 then
 			self:x(180)
+		end
+		if stylename == "double" then
+			self:visible(false)
 		end
 	end,
 	CurrentSongChangedMessageCommand=function(self)
@@ -113,6 +126,9 @@ af[#af+1] = LoadFont("Common Normal")..{
 		if P1 then
 			self:x(180)
 		end
+		if stylename == "double" then
+			self:visible(false)
+		end
 	end
 	
 }
@@ -127,6 +143,9 @@ af[#af+1] = LoadFont("Common Normal")..{
 		:maxwidth(MaxWidth)
 		if P1 then
 			self:x(180)
+		end
+		if stylename == "double" then
+			self:visible(false)
 		end
 	end,
 	
