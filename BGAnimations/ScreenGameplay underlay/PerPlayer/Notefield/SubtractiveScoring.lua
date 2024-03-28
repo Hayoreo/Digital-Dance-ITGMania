@@ -5,6 +5,14 @@ local mods = SL[pn].ActiveModifiers
 if not mods.SubtractiveScoring then return end
 local FAPlusCount = 0
 local HeldCount = 0
+local ex_actual
+local ex_possible
+local ex_score
+local HasFailed = false
+local possible_dp
+local current_possible_dp
+local actual_dp
+local score
 -- -----------------------------------------------------------------------
 
 local undesirable_judgment = "W2"
@@ -94,7 +102,21 @@ bmt.InitCommand=function(self)
 end
 
 bmt.JudgmentMessageCommand=function(self, params)
-	if player == params.Player and not mods.ShowEXScore then
+	-- stop updating subtractive score and show the total lost score if the player failed.
+	if GAMESTATE:GetPlayerState(player):GetHealthState() == "HealthState_Dead" and HasFailed == false then
+		if mods.ShowEXScore then
+			local percent
+			HasFailed = true
+			percent = 100 - ex_actual
+			self:settext( ("-%.2f%%"):format(percent) )
+		else
+			HasFailed = true
+			local dance_points = STATSMAN:GetCurStageStats():GetPlayerStageStats(player):GetPercentDancePoints() * 100
+			local percent = 100-dance_points
+			self:settext( ("-%.2f%%"):format(percent) )
+		end
+	end
+	if player == params.Player and not mods.ShowEXScore and not HasFailed then
 		tns = ToEnumShortString(params.TapNoteScore)
 		hns = params.HoldNoteScore and ToEnumShortString(params.HoldNoteScore)
 		self:queuecommand("SetScore")
@@ -113,13 +135,13 @@ bmt.ExCountsChangedMessageCommand=function(self, params)
 			update = false
 		end
 		
-		local actual = params.ExScore
-		local possible = GetPossibleExScore(params.ExCounts)
-		local score = possible - actual
+		ex_actual = params.ExScore
+		ex_possible = GetPossibleExScore(params.ExCounts)
+		ex_score = ex_possible - ex_actual
 
 		-- handle floating point equality.
-		if score >= 0.0001 and update then
-			self:settext( ("-%.2f%%"):format(score) )
+		if ex_score >= 0.0001 and update then
+			self:settext( ("-%.2f%%"):format(ex_score) )
 		end
 	end
 end
@@ -173,13 +195,13 @@ bmt.SetScoreCommand=function(self, params)
 
 		-- PossibleDancePoints and CurrentPossibleDancePoints change as the song progresses and judgments
 		-- are earned by the player; these values need to be continually fetched from the engine
-		local possible_dp = pss:GetPossibleDancePoints()
-		local current_possible_dp = pss:GetCurrentPossibleDancePoints()
+		possible_dp = pss:GetPossibleDancePoints()
+		current_possible_dp = pss:GetCurrentPossibleDancePoints()
 
 		-- max to prevent subtractive scoring reading more than -100%
-		local actual_dp = math.max(pss:GetActualDancePoints(), 0)
+		actual_dp = math.max(pss:GetActualDancePoints(), 0)
 
-		local score = current_possible_dp - actual_dp
+		score = current_possible_dp - actual_dp
 		score = math.floor(((possible_dp - score) / possible_dp) * 10000) / 100
 
 		-- specify percent away from 100%
