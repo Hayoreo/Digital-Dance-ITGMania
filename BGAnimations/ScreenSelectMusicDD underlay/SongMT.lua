@@ -58,17 +58,7 @@ local function update_exscore(self)
 			self[pn..'ex_score']:visible(false)
 			return
 		end
-
-		if GAMESTATE:GetNumSidesJoined() == 2 then
-			if player == PLAYER_1 then
-				self[pn..'ex_score']:y(18):zoom(0.14)
-			else
-				self[pn..'ex_score']:y(28):zoom(0.14)
-			end
-		else
-			self[pn..'ex_score']:y(22)
-		end
-		local pn = ToEnumShortString(player)
+		
 		if self.song ~= "CloseThisFolder" and self.song ~= "Random-Portal" and self.song ~= nil then
 			local song = self.song
 			local song_dir = song:GetSongDir()
@@ -77,14 +67,18 @@ local function update_exscore(self)
 					local hash = SL[pn].ITLData["pathMap"][song_dir]
 					if SL[pn].ITLData["hashMap"][hash] ~= nil then
 						local ex = SL[pn].ITLData["hashMap"][hash]["ex"] / 100
-						self[pn..'ex_score']:settext(("%.2f"):format(ex))
-						self[pn..'ex_score']:visible(true)
-						return
+						if ex then
+							self[pn..'ex_score']:settext(("%.2f"):format(ex))
+							self[pn..'ex_score']:visible(true)
+						else
+							self[pn..'ex_score']:visible(false)
+						end
 					end
 				end
 			end
+		else
+			self[pn..'ex_score']:visible(false)
 		end
-		self[pn..'ex_score']:visible(false)
 	end
 
 end
@@ -198,16 +192,16 @@ local song_mt = {
 				if pn == 'PLAYER_1' then side = -1
 				else side = 1 end
 				local grade_position
+				local ExScore_position
 				if pn == 'P1' then
 					grade_position = -130
+					ExScore_position = 17
 				else
 					grade_position = -112
+					ExScore_position = 28
 				end
 				-- Player grades
 				af[#af+1] = Def.ActorFrame {
-					InitCommand=function(subself) 
-						subself:visible(true) 
-					end,
 					-- The grade shown to the left of the song name
 					Def.Sprite{
 						Texture=THEME:GetPathG("","_grades/assets/grades 1x18.png"),
@@ -229,6 +223,11 @@ local song_mt = {
 						:zoom(0.2)
 						:x( _screen.w/8 )
 						:diffuse(SL.JudgmentColors["FA+"][1])
+						if GAMESTATE:GetNumSidesJoined() == 2 then
+							subself:y(ExScore_position):zoom(0.14)
+						else
+							subself:y(22)
+						end
 						self[pn..'ex_score'] = subself 
 					end,
 				}
