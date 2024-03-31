@@ -70,6 +70,8 @@ local function update_exscore(self)
 						local ex = SL[pn].ITLData["hashMap"][hash]["ex"] / 100
 						if ex then
 							self[pn..'ex_score']:settext(("%.2f"):format(ex)):visible(true)
+							self.title_bmt:maxwidth(255)
+							self.subtitle_bmt:maxwidth(255)
 						else
 							self[pn..'ex_score']:visible(false):settext("")
 						end
@@ -223,7 +225,8 @@ local song_mt = {
 					InitCommand=function(subself)
 						subself:visible(false)
 						:zoom(0.2)
-						:x( _screen.w/8 )
+						:horizalign(right)
+						:x( _screen.w/6 )
 						:diffuse(SL.JudgmentColors["FA+"][1])
 						if GAMESTATE:GetNumSidesJoined() == 2 then
 							subself:y(ExScore_position):zoom(0.14)
