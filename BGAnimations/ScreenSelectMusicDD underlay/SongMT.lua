@@ -53,6 +53,7 @@ end
 local function update_exscore(self)
 	for player in ivalues(GAMESTATE:GetHumanPlayers()) do
 		local pn = ToEnumShortString(player)
+		self[pn..'ex_score']:visible(false):settext("")
 		-- Only display EX score if a profile is found for an enabled player.
 		if not GAMESTATE:IsPlayerEnabled(player) or not PROFILEMAN:IsPersistentProfile(player) then
 			self[pn..'ex_score']:visible(false)
@@ -68,16 +69,17 @@ local function update_exscore(self)
 					if SL[pn].ITLData["hashMap"][hash] ~= nil then
 						local ex = SL[pn].ITLData["hashMap"][hash]["ex"] / 100
 						if ex then
-							self[pn..'ex_score']:settext(("%.2f"):format(ex))
-							self[pn..'ex_score']:visible(true)
+							self[pn..'ex_score']:settext(("%.2f"):format(ex)):visible(true)
 						else
-							self[pn..'ex_score']:visible(false)
+							self[pn..'ex_score']:visible(false):settext("")
 						end
 					end
 				end
+			else
+				self[pn..'ex_score']:visible(false):settext("")
 			end
 		else
-			self[pn..'ex_score']:visible(false)
+			self[pn..'ex_score']:visible(false):settext("")
 		end
 	end
 
