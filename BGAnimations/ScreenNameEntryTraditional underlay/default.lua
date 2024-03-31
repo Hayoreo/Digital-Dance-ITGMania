@@ -151,7 +151,7 @@ for i=1,NumStages do
 				else
 					self:LoadFromSong(SongOrCourse)
 				end
-				self:setsize(418,164):zoom(0.7)
+				self:setsize(418,164):zoom(0.7):animate(false)
 			end
 		end
 	}
