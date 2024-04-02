@@ -1053,7 +1053,8 @@ af[#af+1] = Def.BitmapText{
 		end
 	end,
 	SetModCommand=function(self)
-		SetEngineMod(player, "NoteSkin", Noteskins[CurrentNoteskinIndex])
+		mods.NoteSkin = Noteskins[CurrentNoteskinIndex]
+		SetEngineMod(player, "NoteSkin", mods.NoteSkin)
 	end,
 }
 
