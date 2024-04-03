@@ -13,9 +13,9 @@ local tickDuration = 0.5
 local numTicks = mods.ErrorBarMultiTick and 10 or 1
 local currentTick = 1
 local judgmentToTrim = {
-    TapNoteScore_W3 = mods.ErrorBarTrim == "Excellent",
-    TapNoteScore_W4 = mods.ErrorBarTrim ~= "Off",
-    TapNoteScore_W5 = mods.ErrorBarTrim ~= "Off"
+	TapNoteScore_W3 = mods.ErrorBarTrim,
+    TapNoteScore_W4 = mods.ErrorBarTrim,
+    TapNoteScore_W5 = mods.ErrorBarTrim
 }
 
 local enabledTimingWindows = {}
