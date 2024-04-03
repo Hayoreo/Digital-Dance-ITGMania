@@ -235,6 +235,9 @@ for i=1,6 do
 					CurrentTab = i
 					CurrentRow = 0
 					CurrentColumn = 1
+					if j == i then
+						SOUND:PlayOnce( THEME:GetPathS("", "page_turn.ogg") )
+					end
 					if pn == "P1" then
 						if i == CurrentTabP1 then
 							local color = PlayerColor(player)

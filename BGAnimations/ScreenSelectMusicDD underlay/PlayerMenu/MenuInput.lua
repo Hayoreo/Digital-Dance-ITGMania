@@ -140,7 +140,7 @@ local InputHandler = function( event )
 	-- Allow Mouse Input here
 	if event.type == "InputEventType_FirstPress" and event.type ~= "InputEventType_Release" and not IsSearchMenuVisible and not EscapeFromEventMode and IsMouseOnScreen() then
 		if not LeadboardHasFocus and not InputMenuHasFocus then
-			if event.DeviceInput.button == "DeviceButton_left mouse button" then
+			if event.DeviceInput.button == "DeviceButton_left mouse button" and event.type == "InputEventType_FirstPress"  then
 				MESSAGEMAN:Broadcast("LeftMouseClickUpdate")
 			end
 		end
@@ -170,6 +170,7 @@ local InputHandler = function( event )
 				else
 					CurrentTab = CurrentTab + 1
 				end
+				SOUND:PlayOnce( THEME:GetPathS("", "page_turn.ogg") )
 			else
 				MaxColumn = TabsTable[CurrentTab][CurrentRow]
 				if CurrentColumn == MaxColumn then
@@ -177,6 +178,7 @@ local InputHandler = function( event )
 				else
 					CurrentColumn = CurrentColumn + 1
 				end
+				SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 			end
 			Direction = "right"
 		elseif event.GameButton == "MenuLeft" then
@@ -186,6 +188,7 @@ local InputHandler = function( event )
 				else
 					CurrentTab = CurrentTab - 1
 				end
+				SOUND:PlayOnce( THEME:GetPathS("", "page_turn.ogg") )
 			else
 				MaxColumn = TabsTable[CurrentTab][CurrentRow]
 				if CurrentColumn == 1 then
@@ -193,23 +196,28 @@ local InputHandler = function( event )
 				else
 					CurrentColumn = CurrentColumn - 1
 				end
+				SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 			end
 			Direction="left"
-		elseif event.GameButton == "MenuUp" and event.type == "InputEventType_FirstPress" then
+		elseif event.GameButton == "MenuUp" then
 			MaxRow = RowPerTab[CurrentTab]
 			CurrentColumn = 1
 			if CurrentRow == 0 then
+				SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
 				CurrentRow = MaxRow
 			else
+				SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
 				CurrentRow = CurrentRow - 1
 			end
 			Direction="up"
-		elseif event.GameButton == "MenuDown" and event.type == "InputEventType_FirstPress" then
+		elseif event.GameButton == "MenuDown" then
 			MaxRow = RowPerTab[CurrentTab]
 			CurrentColumn = 1
 			if CurrentRow == MaxRow then
+				SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
 				CurrentRow = 0
 			else
+				SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
 				CurrentRow = CurrentRow + 1
 			end
 			Direction="down"

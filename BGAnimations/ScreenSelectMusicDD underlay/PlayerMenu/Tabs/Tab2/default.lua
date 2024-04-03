@@ -208,6 +208,7 @@ af[#af+1] = Def.Quad{
 			self:zoomto(TextWidth, 3)
 			:x(TextXPosition)
 			:y(TextYPosition + TextHeight/3)
+			SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 		end
 	end,
 	LeftMouseClickUpdateMessageCommand=function(self)
@@ -261,6 +262,7 @@ af[#af+1] = Def.Quad{
 			end
 		end
 		if MadeSelection then
+			SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 			local Parent2 = self:GetParent():GetChild(pn.."Perspective"..CurrentColumn)
 			local TextZoom = Parent2:GetZoom()
 			local TextXPosition = Parent2:GetX()
@@ -486,6 +488,7 @@ for i=1,#Scrolls do
 						SetPlayerMod(pn, "Reverse", 1)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 2 and i == 2 then
 					if IsSplit then
 						IsSplit = false
@@ -498,6 +501,7 @@ for i=1,#Scrolls do
 						SetPlayerMod(pn, "Split", 1)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 3 and i == 3 then
 					if IsAlternate then
 						IsAlternate = false
@@ -510,6 +514,7 @@ for i=1,#Scrolls do
 						SetPlayerMod(pn, "Alternate", 1)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 4 and i == 4 then
 					if IsCross then
 						IsCross = false
@@ -522,6 +527,7 @@ for i=1,#Scrolls do
 						SetPlayerMod(pn, "Cross", 1)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 5 and i == 5 then
 					if IsCentered then
 						IsCentered = false
@@ -534,6 +540,7 @@ for i=1,#Scrolls do
 						SetPlayerMod(pn, "Centered", 1)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				end
 			end
 		end,
@@ -576,6 +583,7 @@ for i=1,#Scrolls do
 							SetPlayerMod(pn, "Reverse", 1)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 2 and j == i then
 						CurrentRow =2
@@ -591,6 +599,7 @@ for i=1,#Scrolls do
 							SetPlayerMod(pn, "Split", 1)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 3 and j == i then
 						CurrentRow = 2
@@ -606,6 +615,7 @@ for i=1,#Scrolls do
 							SetPlayerMod(pn, "Alternate", 1)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 4 and j == i then
 						CurrentRow = 2
@@ -621,6 +631,7 @@ for i=1,#Scrolls do
 							SetPlayerMod(pn, "Cross", 1)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 5 and j == i then
 						CurrentRow = 2
@@ -636,6 +647,7 @@ for i=1,#Scrolls do
 							SetPlayerMod(pn, "Centered", 1)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					end
 				end
@@ -781,6 +793,7 @@ af[#af+1] = Def.Quad{
 			elseif CurrentColumn == 4 then
 				mods.BackgroundFilter = "Darkest"
 			end
+			SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 			local Parent = self:GetParent():GetChild(pn.."ScreenFilter"..CurrentColumn)
 			local TextZoom = Parent:GetZoom()
 			local TextXPosition = Parent:GetX()
@@ -839,6 +852,7 @@ af[#af+1] = Def.Quad{
 			end
 		end
 		if MadeSelection then
+			SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 			local Parent2 = self:GetParent():GetChild(pn.."ScreenFilter"..CurrentColumn)
 			local TextZoom = Parent2:GetZoom()
 			local TextXPosition = Parent2:GetX()
@@ -997,6 +1011,7 @@ af[#af+1] = Def.Quad{
 			self:zoomto(TextWidth, 3)
 			:x(TextXPosition)
 			:y(TextYPosition + TextHeight/3)
+			SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 		end
 	end,
 	LeftMouseClickUpdateMessageCommand=function(self)
@@ -1046,6 +1061,7 @@ af[#af+1] = Def.Quad{
 			end
 		end
 		if MadeSelection then
+			SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 			local Parent2 = self:GetParent():GetChild(pn.."MeasureLines"..CurrentColumn)
 			local TextZoom = Parent2:GetZoom()
 			local TextXPosition = Parent2:GetX()
@@ -1265,6 +1281,7 @@ for i=1,#Hide do
 						SetEngineMod(player, "Dark", 1)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 2 and i == 2 then
 					if HideBackground == true then
 						HideBackground = false
@@ -1277,6 +1294,7 @@ for i=1,#Hide do
 						SetEngineMod(player, "Cover", 1)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 3 and i == 3 then
 					if HideCombo == true then
 						HideCombo = false
@@ -1287,6 +1305,7 @@ for i=1,#Hide do
 						mods.HideCombo = true
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 4 and i == 4 then
 					if HideLife == true then
 						HideLife = false
@@ -1297,6 +1316,7 @@ for i=1,#Hide do
 						mods.HideLifebar = true
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				end
 			end
 		end,
@@ -1339,6 +1359,7 @@ for i=1,#Hide do
 							SetEngineMod(player, "Dark", 1)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 2 and j == i then
 						CurrentRow =5
@@ -1354,6 +1375,7 @@ for i=1,#Hide do
 							SetEngineMod(player, "Cover", 1)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 3 and j == i then
 						CurrentRow = 5
@@ -1367,6 +1389,7 @@ for i=1,#Hide do
 							mods.HideCombo = true
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 4 and j == i then
 						CurrentRow = 5
@@ -1380,6 +1403,7 @@ for i=1,#Hide do
 							mods.HideLifebar = true
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					end
 				end
@@ -1565,6 +1589,7 @@ for i=1,#Hide2 do
 						mods.HideScore = true
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 2 and i == 2 then
 					if HideDanger == true then
 						HideDanger = false
@@ -1575,6 +1600,7 @@ for i=1,#Hide2 do
 						mods.HideDanger = true
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 3 and i == 3 then
 					if HideComboExplosions == true then
 						HideComboExplosions = false
@@ -1585,6 +1611,7 @@ for i=1,#Hide2 do
 						mods.HideComboExplosions = true
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				end
 			end
 		end,
@@ -1625,6 +1652,7 @@ for i=1,#Hide2 do
 							mods.HideScore = true
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 2 and j == i then
 						CurrentRow = 6
@@ -1638,6 +1666,7 @@ for i=1,#Hide2 do
 							mods.HideDanger = true
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 3 and j == i then
 						CurrentRow = 6
@@ -1651,6 +1680,7 @@ for i=1,#Hide2 do
 							mods.HideComboExplosions = true
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					end
 				end

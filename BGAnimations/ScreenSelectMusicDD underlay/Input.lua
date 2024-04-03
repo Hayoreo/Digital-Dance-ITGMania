@@ -290,9 +290,11 @@ t.Handler = function(event)
 					-- Toggle the PlayerMenu on if the options button is clicked (and the menu isn't already open).
 					if IsMouseGucci(SCREEN_WIDTH/3 - 20 - 60,148,65,21,"left","top") and not PlayerMenuP1 and GAMESTATE:IsSideJoined('PlayerNumber_P1') then
 						PlayerMenuP1 = true
+						SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "expand.ogg") )
 						MESSAGEMAN:Broadcast("ShowPlayerMenuP1")
 					elseif IsMouseGucci( (SCREEN_WIDTH) - (SCREEN_WIDTH/3 - 20),148,65,21,"left","top") and not PlayerMenuP2 and GAMESTATE:IsSideJoined('PlayerNumber_P2') then
 						PlayerMenuP2 = true
+						SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "expand.ogg") )
 						MESSAGEMAN:Broadcast("ShowPlayerMenuP2")
 					end
 					
@@ -416,6 +418,7 @@ t.Handler = function(event)
 				if PlayerMenuP1 then
 					PlayerMenuP1 = false
 					ApplyMods(event.PlayerNumber)
+					SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "expand.ogg") )
 					if MusicWheelNeedsResetting then
 						MESSAGEMAN:Broadcast("ReloadSSMDD")
 					else
@@ -427,12 +430,14 @@ t.Handler = function(event)
 				else
 					PlayerMenuP1 = true
 					SOUND:StopMusic()
+					SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "expand.ogg") )
 					MESSAGEMAN:Broadcast("ShowPlayerMenuP1")
 				end
 			elseif event.PlayerNumber == "PlayerNumber_P2" and GAMESTATE:IsSideJoined(event.PlayerNumber) then
 				if PlayerMenuP2 then
 					PlayerMenuP2 = false
 					ApplyMods(event.PlayerNumber)
+					SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "expand.ogg") )
 					if MusicWheelNeedsResetting then
 						MESSAGEMAN:Broadcast("ReloadSSMDD")
 					else
@@ -444,6 +449,7 @@ t.Handler = function(event)
 				else
 					PlayerMenuP2 = true
 					SOUND:StopMusic()
+					SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "expand.ogg") )
 					MESSAGEMAN:Broadcast("ShowPlayerMenuP2")
 				end
 			end
@@ -454,6 +460,7 @@ t.Handler = function(event)
 			if event.PlayerNumber == "PlayerNumber_P1" and GAMESTATE:IsSideJoined(event.PlayerNumber) and PlayerMenuP1 then
 				-- we have to make these nil otherwise we'll back out of the game x_x
 				PlayerMenuP1 = nil
+				SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "expand.ogg") )
 				ApplyMods(event.PlayerNumber)
 				if MusicWheelNeedsResetting then
 					MESSAGEMAN:Broadcast("ReloadSSMDD")
@@ -463,6 +470,7 @@ t.Handler = function(event)
 			elseif event.PlayerNumber == "PlayerNumber_P2" and GAMESTATE:IsSideJoined(event.PlayerNumber) and PlayerMenuP2 then
 				-- we have to make these nil otherwise we'll back out of the game x_x
 				PlayerMenuP2 = nil
+				SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "expand.ogg") )
 				ApplyMods(event.PlayerNumber)
 				if MusicWheelNeedsResetting then
 					MESSAGEMAN:Broadcast("ReloadSSMDD")
@@ -583,7 +591,7 @@ t.Handler = function(event)
 		end
 		--------------------------------------------------------------
 		-- proceed to the next wheel
-		if event.GameButton == "Start" and not IsSearchMenuVisible then
+		if event.GameButton == "Start" and not IsSearchMenuVisible and not (PlayerMenuP1 or PlayerMenuP2) then
 			if event.type == "InputEventType_FirstPress" then
 				if NameOfGroup == "RANDOM-PORTAL" then
 					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )

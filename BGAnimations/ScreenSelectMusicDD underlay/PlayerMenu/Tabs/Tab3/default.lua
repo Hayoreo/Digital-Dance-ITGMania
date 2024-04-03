@@ -199,6 +199,7 @@ af[#af+1] = Def.Quad{
 			self:zoomto(TextWidth, 3)
 			:x(TextXPosition)
 			:y(TextYPosition + TextHeight/3)
+			SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 		end
 	end,
 	LeftMouseClickUpdateMessageCommand=function(self)
@@ -244,6 +245,7 @@ af[#af+1] = Def.Quad{
 			end
 		end
 		if MadeSelection then
+			SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 			local Parent2 = self:GetParent():GetChild(pn.."LifeBarType"..CurrentColumn)
 			local TextZoom = Parent2:GetZoom()
 			local TextXPosition = Parent2:GetX()
@@ -398,6 +400,7 @@ af[#af+1] = Def.Quad{
 			self:zoomto(TextWidth, 3)
 			:x(TextXPosition)
 			:y(TextYPosition + TextHeight/3)
+			SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 		end
 	end,
 	LeftMouseClickUpdateMessageCommand=function(self)
@@ -443,6 +446,7 @@ af[#af+1] = Def.Quad{
 			end
 		end
 		if MadeSelection then
+			SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 			local Parent2 = self:GetParent():GetChild(pn.."DataVisualization"..CurrentColumn)
 			local TextZoom = Parent2:GetZoom()
 			local TextXPosition = Parent2:GetX()
@@ -783,6 +787,7 @@ af[#af+1] = Def.Quad{
 			self:zoomto(TextWidth, 3)
 			:x(TextXPosition)
 			:y(TextYPosition + TextHeight/3)
+			SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 		end
 	end,
 	LeftMouseClickUpdateMessageCommand=function(self)
@@ -828,6 +833,7 @@ af[#af+1] = Def.Quad{
 			end
 		end
 		if MadeSelection then
+			SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 			local Parent2 = self:GetParent():GetChild(pn.."TargetAction"..CurrentColumn)
 			local TextZoom = Parent2:GetZoom()
 			local TextXPosition = Parent2:GetX()
@@ -1022,6 +1028,7 @@ for i=1,#GameplayExtras do
 						mods.ColumnFlashOnMiss = ColumnFlashOnMiss
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 2 and i == 2 then
 					if SubtractiveScoring then
 						SubtractiveScoring = false
@@ -1032,6 +1039,7 @@ for i=1,#GameplayExtras do
 						mods.SubtractiveScoring = SubtractiveScoring
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				end
 			end
 		end,
@@ -1072,6 +1080,7 @@ for i=1,#GameplayExtras do
 							mods.ColumnFlashOnMiss = ColumnFlashOnMiss
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 2 and j == i then
 						CurrentRow = 5
@@ -1085,6 +1094,7 @@ for i=1,#GameplayExtras do
 							mods.SubtractiveScoring = SubtractiveScoring
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					end
 				end
@@ -1261,6 +1271,7 @@ for i=1,#GameplayExtras2 do
 						mods.Pacemaker = Pacemaker
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 2 and i == 2 then
 					if NPSGraphAtTop then
 						NPSGraphAtTop = false
@@ -1271,6 +1282,7 @@ for i=1,#GameplayExtras2 do
 						mods.NPSGraphAtTop = NPSGraphAtTop
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				end
 			end
 		end,
@@ -1311,6 +1323,7 @@ for i=1,#GameplayExtras2 do
 							mods.Pacemaker = Pacemaker
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 2 and j == i then
 						CurrentRow = 6
@@ -1324,6 +1337,7 @@ for i=1,#GameplayExtras2 do
 							mods.NPSGraphAtTop = NPSGraphAtTop
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					end
 				end
@@ -1476,6 +1490,7 @@ af[#af+1] = Def.Quad{
 			self:zoomto(TextWidth, 3)
 			:x(TextXPosition)
 			:y(TextYPosition + TextHeight/3)
+			SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 		end
 	end,
 	LeftMouseClickUpdateMessageCommand=function(self)
@@ -1525,6 +1540,7 @@ af[#af+1] = Def.Quad{
 			end
 		end
 		if MadeSelection then
+			SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 			local Parent2 = self:GetParent():GetChild(pn.."ErrorBar"..CurrentColumn)
 			local TextZoom = Parent2:GetZoom()
 			local TextXPosition = Parent2:GetX()
@@ -1720,6 +1736,7 @@ for i=1,#ErrorBarOptions do
 						mods.ErrorBarUp = ErrorBarUp
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 2 and i == 2 then
 					if ErrorBarMultiTick then
 						ErrorBarMultiTick = false
@@ -1730,6 +1747,7 @@ for i=1,#ErrorBarOptions do
 						mods.ErrorBarMultiTick = ErrorBarMultiTick
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 3 and i == 3 then
 					if ErrorBarTrim then
 						ErrorBarTrim = false
@@ -1740,6 +1758,7 @@ for i=1,#ErrorBarOptions do
 						mods.ErrorBarTrim = ErrorBarTrim
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				end
 			end
 		end,
@@ -1780,6 +1799,7 @@ for i=1,#ErrorBarOptions do
 							mods.ErrorBarUp = ErrorBarUp
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 2 and j == i then
 						CurrentRow = 8
@@ -1793,6 +1813,7 @@ for i=1,#ErrorBarOptions do
 							mods.ErrorBarMultiTick = ErrorBarMultiTick
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 3 and j == i then
 						CurrentRow = 8
@@ -1806,6 +1827,7 @@ for i=1,#ErrorBarOptions do
 							mods.ErrorBarTrim = ErrorBarTrim
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					end
 				end
@@ -1969,6 +1991,7 @@ af[#af+1] = Def.Quad{
 			self:zoomto(TextWidth, 3)
 			:x(TextXPosition)
 			:y(TextYPosition + TextHeight/3)
+			SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 		end
 	end,
 	LeftMouseClickUpdateMessageCommand=function(self)
@@ -2026,6 +2049,7 @@ af[#af+1] = Def.Quad{
 			end
 		end
 		if MadeSelection then
+			SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 			local Parent2 = self:GetParent():GetChild(pn.."MeasureCounter"..CurrentColumn)
 			local TextZoom = Parent2:GetZoom()
 			local TextXPosition = Parent2:GetX()
@@ -2221,6 +2245,7 @@ for i=1,#MeasureCounterOptions do
 						mods.MeasureCounterLeft = MeasureCounterLeft
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 2 and i == 2 then
 					if MeasureCounterUp then
 						MeasureCounterUp = false
@@ -2231,6 +2256,7 @@ for i=1,#MeasureCounterOptions do
 						mods.MeasureCounterUp = MeasureCounterUp
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 3 and i == 3 then
 					if HideLookahead then
 						HideLookahead = false
@@ -2241,6 +2267,7 @@ for i=1,#MeasureCounterOptions do
 						mods.HideLookahead = HideLookahead
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				end
 			end
 		end,
@@ -2281,6 +2308,7 @@ for i=1,#MeasureCounterOptions do
 							mods.MeasureCounterLeft = MeasureCounterLeft
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 2 and j == i then
 						CurrentRow = 10
@@ -2294,6 +2322,7 @@ for i=1,#MeasureCounterOptions do
 							mods.MeasureCounterUp = MeasureCounterUp
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 3 and j == i then
 						CurrentRow = 10
@@ -2307,6 +2336,7 @@ for i=1,#MeasureCounterOptions do
 							mods.HideLookahead = HideLookahead
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					end
 				end
@@ -2489,6 +2519,7 @@ for i=1,#EarlyRescoreOptions do
 						mods.HideEarlyDecentWayOffJudgments = HideEarlyDecentWayOffJudgments
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 2 and i == 2 then
 					if HideEarlyDecentWayOffFlash then
 						HideEarlyDecentWayOffFlash = false
@@ -2499,6 +2530,7 @@ for i=1,#EarlyRescoreOptions do
 						mods.HideEarlyDecentWayOffFlash = HideEarlyDecentWayOffFlash
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				end
 			end
 		end,
@@ -2539,6 +2571,7 @@ for i=1,#EarlyRescoreOptions do
 							mods.HideEarlyDecentWayOffJudgments = HideEarlyDecentWayOffJudgments
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 2 and j == i then
 						CurrentRow = 11
@@ -2552,6 +2585,7 @@ for i=1,#EarlyRescoreOptions do
 							mods.HideEarlyDecentWayOffFlash = HideEarlyDecentWayOffFlash
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					end
 				end
@@ -2736,6 +2770,7 @@ for i=1,#FAPlusOptions do
 						mods.ShowFaPlusWindow = ShowFaPlusWindow
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 2 and i == 2 then
 					if ShowEXScore then
 						ShowEXScore = false
@@ -2746,6 +2781,7 @@ for i=1,#FAPlusOptions do
 						mods.ShowEXScore = ShowEXScore
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				end
 			end
 		end,
@@ -2786,6 +2822,7 @@ for i=1,#FAPlusOptions do
 							mods.ShowFaPlusWindow = ShowFaPlusWindow
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 2 and j == i then
 						CurrentRow = 12
@@ -2799,6 +2836,7 @@ for i=1,#FAPlusOptions do
 							mods.ShowEXScore = ShowEXScore
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					end
 				end
@@ -3153,6 +3191,7 @@ for i=1,#ColumnCueExtras do
 						mods.CueMines = CueMines
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 2 and i == 2 then
 					if IgnoreHoldsRolls then
 						IgnoreHoldsRolls = false
@@ -3163,6 +3202,7 @@ for i=1,#ColumnCueExtras do
 						mods.IgnoreHoldsRolls = IgnoreHoldsRolls
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				end
 			end
 		end,
@@ -3203,6 +3243,7 @@ for i=1,#ColumnCueExtras do
 							mods.CueMines = CueMines
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 2 and j == i then
 						CurrentRow = 14
@@ -3216,6 +3257,7 @@ for i=1,#ColumnCueExtras do
 							mods.IgnoreHoldsRolls = IgnoreHoldsRolls
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					end
 				end
@@ -3392,6 +3434,7 @@ for i=1,#ColumnCueExtras2 do
 						mods.IgnoreNotes = IgnoreNotes
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 2 and i == 2 then
 					if CountdownBreaks then
 						CountdownBreaks = false
@@ -3402,6 +3445,7 @@ for i=1,#ColumnCueExtras2 do
 						mods.CountdownBreaks = CountdownBreaks
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				end
 			end
 		end,
@@ -3442,6 +3486,7 @@ for i=1,#ColumnCueExtras2 do
 							mods.IgnoreNotes = IgnoreNotes
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 2 and j == i then
 						CurrentRow = 15
@@ -3455,6 +3500,7 @@ for i=1,#ColumnCueExtras2 do
 							mods.CountdownBreaks = CountdownBreaks
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					end
 				end

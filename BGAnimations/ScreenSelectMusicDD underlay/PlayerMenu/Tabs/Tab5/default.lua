@@ -1230,6 +1230,7 @@ for i=1,#Difficulties do
 						SetShowDifficulty("Easy", CurrentEasy)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 2 and i == 2 then
 					if CurrentMedium == 1 then
 						CurrentMedium = 0
@@ -1240,6 +1241,7 @@ for i=1,#Difficulties do
 						SetShowDifficulty("Medium", CurrentMedium)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 3 and i == 3 then
 					if CurrentHard == 1 then
 						CurrentHard = 0
@@ -1250,6 +1252,7 @@ for i=1,#Difficulties do
 						SetShowDifficulty("Hard", CurrentHard)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 4 and i == 4 then
 					if CurrentChallenge == 1 then
 						CurrentChallenge = 0
@@ -1260,6 +1263,7 @@ for i=1,#Difficulties do
 						SetShowDifficulty("Challenge", CurrentChallenge)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				end
 			end
 		end,
@@ -1300,6 +1304,7 @@ for i=1,#Difficulties do
 							SetShowDifficulty("Easy", CurrentEasy)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 2 and j == i then
 						CurrentRow = 6
@@ -1313,6 +1318,7 @@ for i=1,#Difficulties do
 							SetShowDifficulty("Medium", CurrentMedium)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 3 and j == i then
 						CurrentRow = 6
@@ -1326,6 +1332,7 @@ for i=1,#Difficulties do
 							SetShowDifficulty("Hard", CurrentHard)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 4 and j == i then
 						CurrentRow = 6
@@ -1339,6 +1346,7 @@ for i=1,#Difficulties do
 							SetShowDifficulty("Challenge", CurrentChallenge)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					end
 				end
@@ -1525,6 +1533,7 @@ for i=1,#Difficulties2 do
 						SetShowDifficulty("Beginner", CurrentBeginner)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 2 and i == 2 then
 					if CurrentEdit == 1 then
 						CurrentEdit = 0
@@ -1535,6 +1544,7 @@ for i=1,#Difficulties2 do
 						SetShowDifficulty("Edit", CurrentEdit)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				end
 			end
 		end,
@@ -1575,6 +1585,7 @@ for i=1,#Difficulties2 do
 							SetShowDifficulty("Beginner", CurrentBeginner)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 2 and j == i then
 						CurrentRow = 7
@@ -1588,6 +1599,7 @@ for i=1,#Difficulties2 do
 							SetShowDifficulty("Edit", CurrentEdit)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					end
 				end
@@ -2578,6 +2590,7 @@ af[#af+1] = Def.Quad{
 			self:zoomto(TextWidth, 3)
 			:x(TextXPosition)
 			:y(TextYPosition + TextHeight/3)
+			SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 		end
 		if HaveSortsFiltersChanged() then
 			MusicWheelNeedsResetting = true
@@ -2636,6 +2649,7 @@ af[#af+1] = Def.Quad{
 			end
 		end
 		if MadeSelection then
+			SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 			local Parent2 = self:GetParent():GetChild(pn.."Groovestats"..CurrentColumn)
 			local TextZoom = Parent2:GetZoom()
 			local TextXPosition = Parent2:GetX()
@@ -2785,6 +2799,7 @@ af[#af+1] = Def.Quad{
 			self:zoomto(TextWidth, 3)
 			:x(TextXPosition)
 			:y(TextYPosition + TextHeight/3)
+			SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 		end
 		if HaveSortsFiltersChanged() then
 			MusicWheelNeedsResetting = true
@@ -2843,6 +2858,7 @@ af[#af+1] = Def.Quad{
 			end
 		end
 		if MadeSelection then
+			SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 			local Parent2 = self:GetParent():GetChild(pn.."Autogen"..CurrentColumn)
 			local TextZoom = Parent2:GetZoom()
 			local TextXPosition = Parent2:GetX()
@@ -2966,6 +2982,7 @@ af[#af+1] = Def.Quad{
 			CurrentColumn = CurrentColumnP2
 		end
 		if CurrentTab == 5 and CurrentRow == #SortsFiltersNames then
+			SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 			MESSAGEMAN:Broadcast("DDResetSortsFilters")
 		end
 	end,
@@ -2994,6 +3011,7 @@ af[#af+1] = Def.Quad{
 		if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 5 then
 			CurrentRow = 14
 			CurrentColumn = 1
+			SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 			MESSAGEMAN:Broadcast("DDResetSortsFilters")
 			if pn == "P1" then
 				CurrentTabP1 = CurrentTab

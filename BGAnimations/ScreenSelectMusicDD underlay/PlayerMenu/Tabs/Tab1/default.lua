@@ -194,18 +194,21 @@ af[#af+1] = Def.Quad{
 				if PlayerSpeedType ~= "C" then
 					PlayerSpeedType = "C"
 					mods.SpeedModType = "C"
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 					MESSAGEMAN:Broadcast("SpeedTypeHasChanged"..pn, {PastSpeedType, PlayerSpeedType})
 				end
 			elseif CurrentColumn == 2 then
 				if PlayerSpeedType ~= "M" then
 					PlayerSpeedType = "M"
 					mods.SpeedModType = "M"
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 					MESSAGEMAN:Broadcast("SpeedTypeHasChanged"..pn, {PastSpeedType, PlayerSpeedType})
 				end
 			elseif CurrentColumn == 3 then
 				if PlayerSpeedType ~= "X" then
 					PlayerSpeedType = "X"
 					mods.SpeedModType = "X"
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 					MESSAGEMAN:Broadcast("SpeedTypeHasChanged"..pn, {PastSpeedType, PlayerSpeedType})
 				end
 			end
@@ -251,6 +254,7 @@ af[#af+1] = Def.Quad{
 					if PlayerSpeedType ~= "C" then
 						PlayerSpeedType = "C"
 						mods.SpeedModType = "C"
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						MESSAGEMAN:Broadcast("SpeedTypeHasChanged"..pn, {PastSpeedType, PlayerSpeedType})
 					end
 				elseif i == 2 then
@@ -259,6 +263,7 @@ af[#af+1] = Def.Quad{
 					if PlayerSpeedType ~= "M" then
 						PlayerSpeedType = "M"
 						mods.SpeedModType = "M"
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						MESSAGEMAN:Broadcast("SpeedTypeHasChanged"..pn, {PastSpeedType, PlayerSpeedType})
 					end
 				elseif i == 3 then
@@ -267,6 +272,7 @@ af[#af+1] = Def.Quad{
 					if PlayerSpeedType ~= "X" then
 						PlayerSpeedType = "X"
 						mods.SpeedModType = "X"
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						MESSAGEMAN:Broadcast("SpeedTypeHasChanged"..pn, {PastSpeedType, PlayerSpeedType})
 					end
 				end
@@ -2034,6 +2040,7 @@ for i=1,#Turns1 do
 						SetEngineMod(player, "Mirror", IsMirror)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 2 and i == 2 then
 					if IsLRMirror then
 						IsLRMirror = false
@@ -2044,6 +2051,7 @@ for i=1,#Turns1 do
 						SetEngineMod(player, "LRMirror", IsLRMirror)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 3 and i == 3 then
 					if IsUDMirror then
 						IsUDMirror = false
@@ -2054,6 +2062,7 @@ for i=1,#Turns1 do
 						SetEngineMod(player, "UDMirror", IsUDMirror)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				end
 			end
 		end,
@@ -2094,6 +2103,7 @@ for i=1,#Turns1 do
 							SetEngineMod(player, "Mirror", IsMirror)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 2 and j == i then
 						CurrentRow = 8
@@ -2107,6 +2117,7 @@ for i=1,#Turns1 do
 							SetEngineMod(player, "LRMirror", IsLRMirror)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 3 and j == i then
 						CurrentRow = 8
@@ -2120,6 +2131,7 @@ for i=1,#Turns1 do
 							SetEngineMod(player, "UDMirror", IsUDMirror)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 4 and j == i then
 						CurrentRow = 8
@@ -2133,6 +2145,7 @@ for i=1,#Turns1 do
 							SetEngineMod(player, "Shuffle", IsShuffle)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 5 and j == i then
 						CurrentRow = 8
@@ -2146,6 +2159,7 @@ for i=1,#Turns1 do
 							SetEngineMod(player, "HyperShuffle", IsRandom)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					end
 				end
@@ -2335,6 +2349,7 @@ for i=1,#Turns2 do
 						SetEngineMod(player, "Left", IsLeft)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 2 and i == 2 then
 					if IsRight then
 						IsRight = false
@@ -2345,6 +2360,7 @@ for i=1,#Turns2 do
 						SetEngineMod(player, "Right", IsRight)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 3 and i == 3 then
 					if IsShuffle then
 						IsShuffle = false
@@ -2355,6 +2371,7 @@ for i=1,#Turns2 do
 						SetEngineMod(player, "Shuffle", IsShuffle)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 4 and i == 4 then
 					if IsRandom then
 						IsRandom = false
@@ -2365,6 +2382,7 @@ for i=1,#Turns2 do
 						SetEngineMod(player, "HyperShuffle",IsRandom)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				end
 			end
 		end,
@@ -2405,6 +2423,7 @@ for i=1,#Turns2 do
 							SetEngineMod(player, "Left", IsLeft)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 2 and j == i then
 						CurrentRow = 9
@@ -2418,6 +2437,7 @@ for i=1,#Turns2 do
 							SetEngineMod(player, "Right", IsRight)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 3 and j == i then
 						CurrentRow = 9
@@ -2431,6 +2451,7 @@ for i=1,#Turns2 do
 							SetEngineMod(player, "Shuffle", IsShuffle)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 4 and j == i then
 						CurrentRow = 9
@@ -2444,6 +2465,7 @@ for i=1,#Turns2 do
 							SetEngineMod(player, "HyperShuffle",IsRandom)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					end
 				end

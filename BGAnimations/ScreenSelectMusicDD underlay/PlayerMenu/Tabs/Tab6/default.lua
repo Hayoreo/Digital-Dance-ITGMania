@@ -132,6 +132,9 @@ for i=1, #SystemNames do
 						SM("No song selected!")
 					end
 				end
+				if i == CurrentRow then
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
+				end
 			end
 		end,
 		CurrentSongChangedMessageCommand=function(self)
@@ -214,6 +217,9 @@ for i=1, #SystemNames do
 						else
 							SM("No song selected!")
 						end
+					end
+					if j == i then
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 					end
 					
 				end

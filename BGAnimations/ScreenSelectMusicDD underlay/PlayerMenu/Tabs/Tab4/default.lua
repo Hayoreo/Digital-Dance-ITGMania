@@ -258,6 +258,7 @@ for i=1,#InsertMods do
 						SetEngineMod(player, "Wide", true)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 2 and i == 2 then
 					if IsBig then
 						IsBig = false
@@ -268,6 +269,7 @@ for i=1,#InsertMods do
 						SetEngineMod(player, "Big", true)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 3 and i == 3 then
 					if IsQuick then
 						IsQuick = false
@@ -278,6 +280,7 @@ for i=1,#InsertMods do
 						SetEngineMod(player, "Quick", true)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 4 and i == 4 then
 					if IsBMRize then
 						IsBMRize = false
@@ -288,6 +291,7 @@ for i=1,#InsertMods do
 						SetEngineMod(player, "BMRize", true)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				end
 			end
 		end,
@@ -328,6 +332,7 @@ for i=1,#InsertMods do
 							SetEngineMod(player, "Wide", true)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 2 and j == i then
 						CurrentRow = 1
@@ -341,6 +346,7 @@ for i=1,#InsertMods do
 							SetEngineMod(player, "Big", true)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 3 and j == i then
 						CurrentRow = 1
@@ -354,6 +360,7 @@ for i=1,#InsertMods do
 							SetEngineMod(player, "Quick", true)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 4 and j == i then
 						CurrentRow = 1
@@ -367,6 +374,7 @@ for i=1,#InsertMods do
 							SetEngineMod(player, "BMRize", true)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					end
 				end
@@ -555,6 +563,7 @@ for i=1,#InsertMods2 do
 						SetEngineMod(player, "Skippy", IsSkippy)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 2 and i == 2 then
 					if IsEcho then
 						IsEcho = false
@@ -565,6 +574,7 @@ for i=1,#InsertMods2 do
 						SetEngineMod(player, "Echo", IsEcho)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 3 and i == 3 then
 					if IsStomp then
 						IsStomp = false
@@ -575,6 +585,7 @@ for i=1,#InsertMods2 do
 						SetEngineMod(player, "Stomp", IsStomp)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				end
 			end
 		end,
@@ -615,6 +626,7 @@ for i=1,#InsertMods2 do
 							SetEngineMod(player, "Skippy", IsSkippy)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 2 and j == i then
 						CurrentRow = 2
@@ -628,6 +640,7 @@ for i=1,#InsertMods2 do
 							SetEngineMod(player, "Echo", IsEcho)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 3 and j == i then
 						CurrentRow = 2
@@ -641,6 +654,7 @@ for i=1,#InsertMods2 do
 							SetEngineMod(player, "Stomp", IsStomp)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					end
 				end
@@ -848,6 +862,7 @@ for i=1,#RemoveMods do
 						SetEngineMod(player, "Little", Little)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 2 and i == 2 then
 					if NoMines then
 						NoMines = false
@@ -858,6 +873,7 @@ for i=1,#RemoveMods do
 						SetEngineMod(player, "NoMines", NoMines)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 3 and i == 3 then
 					if NoHolds then
 						NoHolds = false
@@ -868,6 +884,7 @@ for i=1,#RemoveMods do
 						SetEngineMod(player, "NoHolds", NoHolds)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 4 and i == 4 then
 					if NoJumps then
 						NoJumps = false
@@ -878,6 +895,7 @@ for i=1,#RemoveMods do
 						SetEngineMod(player, "NoJumps", NoJumps)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				end
 			end
 		end,
@@ -918,6 +936,7 @@ for i=1,#RemoveMods do
 							SetEngineMod(player, "Little", Little)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 2 and j == i then
 						CurrentRow = 3
@@ -931,6 +950,7 @@ for i=1,#RemoveMods do
 							SetEngineMod(player, "NoMines", NoMines)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 3 and j == i then
 						CurrentRow = 3
@@ -944,6 +964,7 @@ for i=1,#RemoveMods do
 							SetEngineMod(player, "NoHolds", NoHolds)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 4 and j == i then
 						CurrentRow = 3
@@ -957,6 +978,7 @@ for i=1,#RemoveMods do
 							SetEngineMod(player, "NoJumps", NoJumps)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					end
 				end
@@ -1149,6 +1171,7 @@ for i=1,#RemoveMods2 do
 						SetEngineMod(player, "NoHands", NoHands)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 2 and i == 2 then
 					if NoQuads then
 						NoQuads = false
@@ -1159,6 +1182,7 @@ for i=1,#RemoveMods2 do
 						SetEngineMod(player, "NoQuads", NoQuads)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 3 and i == 3 then
 					if NoLifts then
 						NoLifts = false
@@ -1169,6 +1193,7 @@ for i=1,#RemoveMods2 do
 						SetEngineMod(player, "NoLifts", NoLifts)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 4 and i == 4 then
 					if NoFakes then
 						NoFakes = false
@@ -1179,6 +1204,7 @@ for i=1,#RemoveMods2 do
 						SetEngineMod(player, "NoFakes", NoFakes)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				end
 			end
 		end,
@@ -1219,6 +1245,7 @@ for i=1,#RemoveMods2 do
 							SetEngineMod(player, "NoHands", NoHands)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 2 and j == i then
 						CurrentRow = 4
@@ -1232,6 +1259,7 @@ for i=1,#RemoveMods2 do
 							SetEngineMod(player, "NoQuads", NoQuads)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 3 and j == i then
 						CurrentRow = 4
@@ -1245,6 +1273,7 @@ for i=1,#RemoveMods2 do
 							SetEngineMod(player, "NoLifts", NoLifts)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 4 and j == i then
 						CurrentRow = 4
@@ -1258,6 +1287,7 @@ for i=1,#RemoveMods2 do
 							SetEngineMod(player, "NoFakes", NoFakes)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					end
 				end
@@ -1446,6 +1476,7 @@ for i=1,#Notes2HoldsMods do
 						SetEngineMod(player, "Planted", Planted)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 2 and i == 2 then
 					if Floored then
 						Floored = false
@@ -1456,6 +1487,7 @@ for i=1,#Notes2HoldsMods do
 						SetEngineMod(player, "Floored", Floored)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				end
 			end
 		end,
@@ -1496,6 +1528,7 @@ for i=1,#Notes2HoldsMods do
 							SetEngineMod(player, "Planted", Planted)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 2 and j == i then
 						CurrentRow = 5
@@ -1509,6 +1542,7 @@ for i=1,#Notes2HoldsMods do
 							SetEngineMod(player, "Floored", Floored)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					end
 				end
@@ -1687,6 +1721,7 @@ for i=1,#Notes2HoldsMods2 do
 						SetEngineMod(player, "Twister", Twister)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 2 and i == 2 then
 					if HoldRolls then
 						HoldRolls = false
@@ -1697,6 +1732,7 @@ for i=1,#Notes2HoldsMods2 do
 						SetEngineMod(player, "HoldRolls", HoldRolls)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				end
 			end
 		end,
@@ -1737,6 +1773,7 @@ for i=1,#Notes2HoldsMods2 do
 							SetEngineMod(player, "Twister", Twister)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 2 and j == i then
 						CurrentRow = 6
@@ -1750,6 +1787,7 @@ for i=1,#Notes2HoldsMods2 do
 							SetEngineMod(player, "HoldRolls", HoldRolls)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					end
 				end
@@ -1946,6 +1984,7 @@ for i=1,#AccelMods do
 						SetEngineMod(player, "Boost", Boost)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 2 and i == 2 then
 					if Brake == 1 then
 						Brake = 0
@@ -1956,6 +1995,7 @@ for i=1,#AccelMods do
 						SetEngineMod(player, "Brake", Brake)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 3 and i == 3 then
 					if Wave == 1 then
 						Wave = 0
@@ -1966,6 +2006,7 @@ for i=1,#AccelMods do
 						SetEngineMod(player, "Wave", Wave)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				end
 			end
 		end,
@@ -2006,6 +2047,7 @@ for i=1,#AccelMods do
 							SetEngineMod(player, "Boost", Boost)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 2 and j == i then
 						CurrentRow = 7
@@ -2019,6 +2061,7 @@ for i=1,#AccelMods do
 							SetEngineMod(player, "Brake", Brake)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 3 and j == i then
 						CurrentRow = 7
@@ -2032,6 +2075,7 @@ for i=1,#AccelMods do
 							SetEngineMod(player, "Wave", Wave)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					end
 				end
@@ -2210,6 +2254,7 @@ for i=1,#AccelMods2 do
 						SetEngineMod(player, "Expand", Expand)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 2 and i == 2 then
 					if Boomerang == 1 then
 						Boomerang = 0
@@ -2220,6 +2265,7 @@ for i=1,#AccelMods2 do
 						SetEngineMod(player, "Boomerang", Boomerang)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				end
 			end
 		end,
@@ -2260,6 +2306,7 @@ for i=1,#AccelMods2 do
 							SetEngineMod(player, "Expand", Expand)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 2 and j == i then
 						CurrentRow = 8
@@ -2273,6 +2320,7 @@ for i=1,#AccelMods2 do
 							SetEngineMod(player, "Boomerang", Boomerang)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					end
 				end
@@ -2481,6 +2529,7 @@ for i=1,#EffectMods do
 						SetEngineMod(player, "Drunk", Drunk)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 2 and i == 2 then
 					if Dizzy == 1 then
 						Dizzy = 0
@@ -2491,6 +2540,7 @@ for i=1,#EffectMods do
 						SetEngineMod(player, "Dizzy", Dizzy)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 3 and i == 3 then
 					if Confusion == 1 then
 						Confusion = 0
@@ -2501,6 +2551,7 @@ for i=1,#EffectMods do
 						SetEngineMod(player, "Confusion", Confusion)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 4 and i == 4 then
 					if Flip == 1 then
 						Flip = 0
@@ -2511,6 +2562,7 @@ for i=1,#EffectMods do
 						SetEngineMod(player, "Flip", Flip)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				end
 			end
 		end,
@@ -2551,6 +2603,7 @@ for i=1,#EffectMods do
 							SetEngineMod(player, "Drunk", Drunk)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 2 and j == i then
 						CurrentRow = 9
@@ -2564,6 +2617,7 @@ for i=1,#EffectMods do
 							SetEngineMod(player, "Dizzy", Dizzy)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 3 and j == i then
 						CurrentRow = 9
@@ -2577,6 +2631,7 @@ for i=1,#EffectMods do
 							SetEngineMod(player, "Confusion", Confusion)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 4 and j == i then
 						CurrentRow = 9
@@ -2590,6 +2645,7 @@ for i=1,#EffectMods do
 							SetEngineMod(player, "Flip", Flip)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					end
 				end
@@ -2789,6 +2845,7 @@ for i=1,#EffectMods2 do
 						SetEngineMod(player, "Invert", Invert)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 2 and i == 2 then
 					if Tornado == 1 then
 						Tornado = 0
@@ -2799,6 +2856,7 @@ for i=1,#EffectMods2 do
 						SetEngineMod(player, "Tornado", Tornado)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 3 and i == 3 then
 					if Tipsy == 1 then
 						Tipsy = 0
@@ -2809,6 +2867,7 @@ for i=1,#EffectMods2 do
 						SetEngineMod(player, "Tipsy", Tipsy)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 4 and i == 4 then
 					if Bumpy == 1 then
 						Bumpy = 0
@@ -2819,6 +2878,7 @@ for i=1,#EffectMods2 do
 						SetEngineMod(player, "Bumpy", Bumpy)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 5 and i == 5 then
 					if Beat == 1 then
 						Beat = 0
@@ -2829,6 +2889,7 @@ for i=1,#EffectMods2 do
 						SetEngineMod(player, "Beat", Beat)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				end
 			end
 		end,
@@ -2869,6 +2930,7 @@ for i=1,#EffectMods2 do
 							SetEngineMod(player, "Invert", Invert)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 2 and j == i then
 						CurrentRow = 10
@@ -2882,6 +2944,7 @@ for i=1,#EffectMods2 do
 							SetEngineMod(player, "Tornado", Tornado)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 3 and j == i then
 						CurrentRow = 10
@@ -2895,6 +2958,7 @@ for i=1,#EffectMods2 do
 							SetEngineMod(player, "Tipsy", Tipsy)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 4 and j == i then
 						CurrentRow = 10
@@ -2908,6 +2972,7 @@ for i=1,#EffectMods2 do
 							SetEngineMod(player, "Bumpy", Bumpy)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 5 and j == i then
 						CurrentRow = 10
@@ -2921,6 +2986,7 @@ for i=1,#EffectMods2 do
 							SetEngineMod(player, "Beat", Beat)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					end
 				end
@@ -3121,6 +3187,7 @@ for i=1,#AppearanceMods do
 						SetEngineMod(player, "Hidden", Hidden)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 2 and i == 2 then
 					if Sudden == 1 then
 						Sudden = 0
@@ -3131,6 +3198,7 @@ for i=1,#AppearanceMods do
 						SetEngineMod(player, "Sudden", Sudden)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 3 and i == 3 then
 					if Stealth == 1 then
 						Stealth = 0
@@ -3141,6 +3209,7 @@ for i=1,#AppearanceMods do
 						SetEngineMod(player, "Stealth", Stealth)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				elseif CurrentColumn == 4 and i == 4 then
 					if RandomVanish == 1 then
 						RandomVanish = 0
@@ -3151,6 +3220,7 @@ for i=1,#AppearanceMods do
 						SetEngineMod(player, "RandomVanish", RandomVanish)
 						self:settext("✅")
 					end
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 				end
 			end
 		end,
@@ -3191,6 +3261,7 @@ for i=1,#AppearanceMods do
 							SetEngineMod(player, "Hidden", Hidden)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 2 and j == i then
 						CurrentRow = 11
@@ -3204,6 +3275,7 @@ for i=1,#AppearanceMods do
 							SetEngineMod(player, "Sudden", Sudden)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 3 and j == i then
 						CurrentRow = 11
@@ -3217,6 +3289,7 @@ for i=1,#AppearanceMods do
 							SetEngineMod(player, "Stealth", Stealth)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 4 and j == i then
 						CurrentRow = 11
@@ -3230,6 +3303,7 @@ for i=1,#AppearanceMods do
 							SetEngineMod(player, "RandomVanish", RandomVanish)
 							self:settext("✅")
 						end
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					end
 				end
@@ -3382,6 +3456,7 @@ af[#af+1] = Def.Quad{
 			self:zoomto(TextWidth, 3)
 			:x(TextXPosition)
 			:y(TextYPosition + TextHeight/3)
+			SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 		end
 	end,
 	LeftMouseClickUpdateMessageCommand=function(self)
@@ -3431,6 +3506,7 @@ af[#af+1] = Def.Quad{
 			end
 		end
 		if MadeSelection then
+			SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 			local Parent2 = self:GetParent():GetChild(pn.."AttackMod"..CurrentColumn)
 			local TextZoom = Parent2:GetZoom()
 			local TextXPosition = Parent2:GetX()
@@ -3559,6 +3635,7 @@ af[#af+1] = Def.Quad{
 			CurrentColumn = CurrentColumnP2
 		end
 		if CurrentTab == 4 and CurrentRow == 13 then
+			SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 			if CurrentColumn == 1 then
 				GAMESTATE:GetSongOptionsObject(0):Haste(0)
 			elseif CurrentColumn == 2 then
@@ -3636,6 +3713,7 @@ af[#af+1] = Def.Quad{
 			end
 		end
 		if MadeSelection then
+			SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 			local Parent2 = self:GetParent():GetChild(pn.."HasteMod"..CurrentColumn)
 			local TextZoom = Parent2:GetZoom()
 			local TextXPosition = Parent2:GetX()
