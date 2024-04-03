@@ -1134,7 +1134,7 @@ end
 
 --------------------------------------------------------------------
 -- Judgments
-local Judgments = GetJudgmentGraphics() or "Ice 2x7.png"
+local Judgments = GetJudgmentGraphics() or "Digital 2x7 (doubleres).png"
 local CurrentJudgmentIndex
 
 --- Judgment Box
@@ -1232,7 +1232,7 @@ af[#af+1] = Def.BitmapText{
 			:queuecommand("UpdateDisplayedTab")
 
 		--- idk sm is dumb (same) and i can't have this earlier
-		local PlayerJudge = mods.JudgmentGraphic or "Ice 2x7.png"
+		local PlayerJudge = mods.JudgmentGraphic or "Digital 2x7 (doubleres).png"
 		for i=1, #Judgments do
 			if Judgments[i] == PlayerJudge then
 				CurrentJudgmentIndex = i
