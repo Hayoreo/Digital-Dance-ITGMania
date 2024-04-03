@@ -1,17 +1,38 @@
 local player = ...
+local pn = ToEnumShortString(player)
+local mods = SL[pn].ActiveModifiers
 
 local width = 16
 local height = 250
-local _x = width * WideScale(1, 3.5)
+local _x = width * WideScale(1, 3.5) + (mods.NoteFieldOffsetX * 2)
+local style = GAMESTATE:GetCurrentStyle(player)
+local notewidth = style:GetWidth(player)
 
 if GAMESTATE:GetCurrentStyle():GetStyleType() == "StyleType_OnePlayerTwoSides" then
-	_x = width * WideScale(2,8)
+	_x = width * WideScale(2,8) + (mods.NoteFieldOffsetX * 2)
 elseif PREFSMAN:GetPreference("Center1Player") and #GAMESTATE:GetHumanPlayers() == 1 then
-	_x = width * WideScale(10,16)
+	_x = width * WideScale(10,16) + (mods.NoteFieldOffsetX * 2)
 end
 
-if player == PLAYER_2 then _x = _screen.w - _x end
+if player == PLAYER_2 then 
+	_x = _screen.w - _x + (mods.NoteFieldOffsetX * 4)
+end
 
+-- Swap lifebar side if it will otherwise go offscreen.
+if player == PLAYER_1 and mods.NoteFieldOffsetX < -22 then
+	if style:GetName() ~= 'double' then
+		_x = _x + notewidth * 1.25
+	else
+		_x = _x + notewidth * 1.125
+	end
+elseif player == PLAYER_2 and mods.NoteFieldOffsetX > 22 then
+	if style:GetName() ~= 'double' then
+		_x = _x - notewidth * 1.25
+	elseif style:GetName() == 'double' then
+		
+		_x = _x - notewidth * 1.125
+	end
+end
 
 local swoosh, move
 
