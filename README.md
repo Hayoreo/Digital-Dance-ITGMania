@@ -1,10 +1,19 @@
-# Digital Dance v1.1.0
+# Digital Dance v1.0.9.1
+This version is mostly bug fixes (some more gamebreaking than others) plus a couple of QOL features.
 
 # ------------ Differences from 1.0.9 ------------
-- You can now click on the density graph to seek the preview music (the entire song will play for where you select)
+- You can now click on the density graph to seek the preview music (the entire song will play from where you select).
 - A progress bar has also been added to the density graph as well.
 - Sound effects on ScreenTitleMenu have been fixed.
-
+- Player EXScore added to the music wheel.
+- Added Step Statistics to double mode.
+- New "Digital" judgment graphic has been added.
+- Mouse Input is always enabled now.
+- Fixed bug where the player couldn't change their noteskin LOL
+- Added sound effects to the player menu when adding/removing mods.
+- Fixed notefield UI in regards to NoteFieldX and NoteFieldY player mods.
+- Changed subtractive score behavior for EXScore to stop constantly rounding.
+- Fixed rounding issue in the Player Menu.
 
 ## ITGMANIA USE ONLY
 - As noted in the "About" section this theme is intended for use with ITGMania only.
