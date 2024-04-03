@@ -142,10 +142,6 @@ local Overrides = {
 						"delta", "delta-note", "delta-routine-p1", "delta-routine-p2",
 						"frame5p", "newextra", "pad", "rhythm", "simple"
 					},
-					kb7 = {
-						"default", "orbital", "retrobar", "retrobar-iidx",
-						"retrobar-o2jam", "retrobar-razor", "retrobar-razor_o2"
-					}
 				}
 				if stock[game] then
 					for stock_noteskin in ivalues(stock[game]) do
