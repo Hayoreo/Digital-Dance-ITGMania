@@ -76,8 +76,8 @@ af.InitCommand=function(self)
 	
 	if stylename == "double" then
 		self:x(-40)
-			:y(50)
-			:zoom(0.7)
+			:y(40)
+			:zoom(0.65)
 	end
 end
 for index, window in ipairs(TNS.Types) do

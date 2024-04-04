@@ -25,10 +25,16 @@ and SL.P2.ActiveModifiers.DataVisualizations == "Step Statistics")
 -- horizontally compressed (squeezed in, so to speak) and it's dificult get any useful
 -- information out of it, visually.  And there are a lot of Very Long Songs™.
 --
--- So, we hardcode it to 4 minutes here. If the song is longer than 4 minutes, the density
+-- So, we hardcode it to 4 minutes here (1 minute for double). If the song is longer than 4 minutes, the density
 -- graph will scroll with the song.  If the song is shorter than 4 minutes, we'll scale
 -- the width of the graph to take up the full width available in the StepStatistics sidebar.
-local max_seconds = 4 * 60
+local max_seconds
+if stylename == "double" then
+	max_seconds = 1 * 60
+else
+	max_seconds = 4 * 60
+end
+
 
 -- width and position of the density graph
 local pos_x = -width / 2
