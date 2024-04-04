@@ -3,6 +3,7 @@ if GAMESTATE:IsCourseMode() or GAMESTATE:GetCurrentGame():GetName() ~= "dance" t
 
 local player = ...
 local BreakTime
+local text
 
 --- A list of potential mods the player will have active.
 local mods = SL[ToEnumShortString(player)].ActiveModifiers
@@ -278,7 +279,7 @@ for ColumnIndex=1,NumColumns do
 							:x((ColumnIndex - (NumColumns/2 + 0.5)) * (width/NumColumns))
 							:decelerate(fade_time)
 							:diffuse(Color.White)
-							:settext(round(BreakTime,1))
+							:settext(round(BreakTime))
 							:playcommand("UpdateBreak")
 					else
 						text:diffuse(0,0,0,0)
