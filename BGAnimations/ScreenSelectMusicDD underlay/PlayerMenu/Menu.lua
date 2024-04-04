@@ -139,6 +139,29 @@ af[#af+1] = Def.Quad{
 			:x(XPos + padding/2 + border/2)
 			:y(YPos)
 	end,
+	RightMouseClickUpdateMessageCommand=function(self)
+		local ObjectX = self:GetX() - border/2
+		local ObjectY = self:GetY()
+		local ObjectWidth = self:GetZoomX() + border
+		local ObjectHeight = self:GetZoomY() + border
+		local HAlign = self:GetHAlign()
+		local VAlign = self:GetVAlign()
+		ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+		ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+		if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) then
+			if pn == "P1" and PlayerMenuP1 then
+				PlayerMenuP1 = false
+				SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "expand.ogg") )
+				MESSAGEMAN:Broadcast("HidePlayerMenuP1")
+			elseif pn == "P2" and PlayerMenuP2 then
+				PlayerMenuP2 = false
+				SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "expand.ogg") )
+				MESSAGEMAN:Broadcast("HidePlayerMenuP2")
+			end
+		
+		end
+		
+	end,
 }
 
 -- Tab divider outline
