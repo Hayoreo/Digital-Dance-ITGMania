@@ -59,6 +59,12 @@ SL_CustomPrefs.Get = function()
 			Choices = { THEME:GetString("ThemePrefs","Yes"), THEME:GetString("ThemePrefs", "No") },
 			Values 	= { true, false }
 		},
+		HideBeatBars =
+		{
+			Default = false,
+			Choices = { THEME:GetString("ThemePrefs","Yes"), THEME:GetString("ThemePrefs", "No") },
+			Values 	= { true, false }
+		},
 		
 		-- - - - - - - - - - - - - - - - - - - -
 		-- SM5.1's ImageCache System (used in DDMode)
