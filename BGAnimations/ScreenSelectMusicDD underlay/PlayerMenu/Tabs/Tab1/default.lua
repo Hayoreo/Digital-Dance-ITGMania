@@ -462,17 +462,21 @@ af[#af+1] = Def.BitmapText{
 				if PlayerSpeedType == "X" then
 					if PlayerSpeedMod <= MinXMod then
 						if not params[2] == true then
+							SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 							PlayerSpeedMod = MaxXMod
 						end
 					else
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 						PlayerSpeedMod = round(PlayerSpeedMod - 0.05, 2)
 					end
 				elseif PlayerSpeedType == "C" or PlayerSpeedType == "M" then
 					if PlayerSpeedMod <= MinCMod then
 						if not params[2] == true then
+							SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 							PlayerSpeedMod = MaxCMod
 						end
 					else
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 						PlayerSpeedMod = round(PlayerSpeedMod - 5)
 					end
 				end
@@ -490,17 +494,21 @@ af[#af+1] = Def.BitmapText{
 				if PlayerSpeedType == "X" then
 					if PlayerSpeedMod >= MaxXMod then
 						if not params[2] == true then
+							SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 							PlayerSpeedMod = MinXMod
 						end
 					else
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 						PlayerSpeedMod = round(PlayerSpeedMod + 0.05, 2)
 					end
 				elseif PlayerSpeedType == "C" or PlayerSpeedType == "M" then
 					if PlayerSpeedMod >= MaxCMod then
 						if not params[2] == true then
+							SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 							PlayerSpeedMod = MinCMod
 						end
 					else
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 						PlayerSpeedMod = round(PlayerSpeedMod + 5)
 					end
 				end
@@ -907,9 +915,16 @@ af[#af+1] = Def.BitmapText{
 			if params[1] == "left" then
 				if PlayerMini == MinMini then
 					if not params[2] == true then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 						PlayerMini = MaxMini
 					end
+				elseif PlayerMini == 0 then
+					if not params[2] == true then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+						PlayerMini = PlayerMini - 1
+					end
 				else
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 					PlayerMini = PlayerMini - 1
 				end
 				mods.Mini = PlayerMini.."%"
@@ -918,9 +933,16 @@ af[#af+1] = Def.BitmapText{
 			elseif params[1] == "right" then
 				if PlayerMini == MaxMini then
 					if not params[2] == true then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 						PlayerMini = MinMini
 					end
+				elseif PlayerMini == 0 then
+					if not params[2] == true then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+						PlayerMini = PlayerMini + 1
+					end
 				else
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 					PlayerMini = PlayerMini + 1
 				end
 				mods.Mini = PlayerMini.."%"
@@ -2686,9 +2708,11 @@ af[#af+1] = Def.BitmapText{
 			if params[1] == "left" then
 				if CurrentRateMod <= MinRate then
 					if not params[2] == true then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 						CurrentRateMod = round(MaxRate, 2)
 					end
 				else
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 					CurrentRateMod = round(CurrentRateMod - 0.01, 2)
 				end
 				self:settext(CurrentRateMod)
@@ -2696,9 +2720,11 @@ af[#af+1] = Def.BitmapText{
 			elseif params[1] == "right" then
 				if CurrentRateMod >= MaxRate then
 					if not params[2] == true then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 						CurrentRateMod = round(MinRate)
 					end
 				else
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 					CurrentRateMod = round(CurrentRateMod + 0.01, 2)
 				end
 				self:settext(CurrentRateMod)

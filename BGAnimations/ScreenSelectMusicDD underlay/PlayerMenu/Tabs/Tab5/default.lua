@@ -824,11 +824,13 @@ af[#af+1] = Def.BitmapText{
 			if params[1] == "right" then
 				if CurrentLowerMeter == MaxMeter then
 					if not params[2] == true then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 						CurrentLowerMeter = 0
 						SetLowerMeterFilter(CurrentLowerMeter)
 						self:settext(CurrentLowerMeter == 0 and "none" or CurrentLowerMeter)
 					end
 				else
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 					CurrentLowerMeter = CurrentLowerMeter + 1
 					SetLowerMeterFilter(CurrentLowerMeter)
 					self:settext(CurrentLowerMeter == 0 and "none" or CurrentLowerMeter)
@@ -846,11 +848,13 @@ af[#af+1] = Def.BitmapText{
 			elseif params[1] == "left" then
 				if CurrentLowerMeter == 0 then
 					if not params[2] == true then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 						CurrentLowerMeter = MaxMeter
 						SetLowerMeterFilter(CurrentLowerMeter)
 						self:settext(CurrentLowerMeter == 0 and "none" or CurrentLowerMeter)
 					end
 				else
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 					CurrentLowerMeter = CurrentLowerMeter - 1
 					SetLowerMeterFilter(CurrentLowerMeter)
 					self:settext(CurrentLowerMeter == 0 and "none" or CurrentLowerMeter)
@@ -1038,11 +1042,13 @@ af[#af+1] = Def.BitmapText{
 			if params[1] == "right" then
 				if CurrentUpperMeter == MaxMeter then
 					if not params[2] == true then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 						CurrentUpperMeter = 0
 						SetUpperMeterFilter(CurrentUpperMeter)
 						self:settext(CurrentUpperMeter == 0 and "none" or CurrentUpperMeter)
 					end
 				else
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 					CurrentUpperMeter = CurrentUpperMeter + 1
 					SetUpperMeterFilter(CurrentUpperMeter)
 					self:settext(CurrentUpperMeter == 0 and "none" or CurrentUpperMeter)
@@ -1060,11 +1066,13 @@ af[#af+1] = Def.BitmapText{
 			elseif params[1] == "left" then
 				if CurrentUpperMeter == 0 then
 					if not params[2] == true then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 						CurrentUpperMeter = MaxMeter
 						SetUpperMeterFilter(CurrentUpperMeter)
 						self:settext(CurrentUpperMeter == 0 and "none" or CurrentUpperMeter)
 					end
 				else
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 					CurrentUpperMeter = CurrentUpperMeter - 1
 					SetUpperMeterFilter(CurrentUpperMeter)
 					self:settext(CurrentUpperMeter == 0 and "none" or CurrentUpperMeter)
@@ -1801,11 +1809,13 @@ af[#af+1] = Def.BitmapText{
 			if params[1] == "right" then
 				if CurrentLowerBPM == MaxBPM then
 					if not params[2] == true then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 						CurrentLowerBPM = 49
 						SetLowerBPMFilter(CurrentLowerBPM)
 						self:settext(CurrentLowerBPM == 49 and "none" or CurrentLowerBPM)
 					end
 				else
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 					CurrentLowerBPM = CurrentLowerBPM + 1
 					SetLowerBPMFilter(CurrentLowerBPM)
 					self:settext(CurrentLowerBPM == 49 and "none" or CurrentLowerBPM)
@@ -1823,11 +1833,13 @@ af[#af+1] = Def.BitmapText{
 			elseif params[1] == "left" then
 				if CurrentLowerBPM == 49 then
 					if not params[2] == true then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 						CurrentLowerBPM = MaxBPM
 						SetLowerBPMFilter(CurrentLowerBPM)
 						self:settext(CurrentLowerBPM == 49 and "none" or CurrentLowerBPM)
 					end
 				else
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 					CurrentLowerBPM = CurrentLowerBPM - 1
 					SetLowerBPMFilter(CurrentLowerBPM)
 					self:settext(CurrentLowerBPM == 49 and "none" or CurrentLowerBPM)
@@ -2015,11 +2027,13 @@ af[#af+1] = Def.BitmapText{
 			if params[1] == "right" then
 				if CurrentUpperBPM == MaxBPM then
 					if not params[2] == true then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 						CurrentUpperBPM = 49
 						SetUpperBPMFilter(CurrentUpperBPM)
 						self:settext(CurrentUpperBPM == 49 and "none" or CurrentUpperBPM)
 					end
 				else
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 					CurrentUpperBPM = CurrentUpperBPM + 1
 					SetUpperBPMFilter(CurrentUpperBPM)
 					self:settext(CurrentUpperBPM == 49 and "none" or CurrentUpperBPM)
@@ -2037,11 +2051,13 @@ af[#af+1] = Def.BitmapText{
 			elseif params[1] == "left" then
 				if CurrentUpperBPM == 49 then
 					if not params[2] == true then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 						CurrentUpperBPM = MaxBPM
 						SetUpperBPMFilter(CurrentUpperBPM)
 						self:settext(CurrentUpperBPM == 49 and "none" or CurrentUpperBPM)
 					end
 				else
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 					CurrentUpperBPM = CurrentUpperBPM - 1
 					SetUpperBPMFilter(CurrentUpperBPM)
 					self:settext(CurrentUpperBPM == 49 and "none" or CurrentUpperBPM)
@@ -2202,23 +2218,28 @@ af[#af+1] = Def.BitmapText{
 			if params[1] == "right" then
 				if CurrentLowerLength == 3600 then
 					if not params[2] == true then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 						CurrentLowerLength = 0
 						self:queuecommand('UpdateLowerLength')
 					end
 				--- go in increments of 30sec for songs less than 1 minute
 				elseif CurrentLowerLength >= 0 and CurrentLowerLength < 60 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 					CurrentLowerLength = CurrentLowerLength + 30
 					self:queuecommand('UpdateLowerLength')
 				--- go in increments of 5sec for songs between 1min and 10min
 				elseif CurrentLowerLength >= 60 and CurrentLowerLength < 600 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 					CurrentLowerLength = CurrentLowerLength + 5
 					self:queuecommand('UpdateLowerLength')
 				--- go in increments of 1min for songs between 10min and 30min
 				elseif CurrentLowerLength >= 600 and CurrentLowerLength < 1800 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 					CurrentLowerLength = CurrentLowerLength + 60
 					self:queuecommand('UpdateLowerLength')
 				--- go in increments of 10min for songs longer than 30min
 				elseif CurrentLowerLength >= 1800 and CurrentLowerLength < 3600 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 					CurrentLowerLength = CurrentLowerLength + 600
 					self:queuecommand('UpdateLowerLength')
 				end
@@ -2235,23 +2256,28 @@ af[#af+1] = Def.BitmapText{
 			elseif params[1] == "left" then
 				if CurrentLowerLength == 0 then
 					if not params[2] == true then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 						CurrentLowerLength = 3600
 						self:queuecommand('UpdateLowerLength')
 					end
 				--- go in increments of 30sec for songs less than 1 minute
 				elseif CurrentLowerLength > 0 and CurrentLowerLength <= 60 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 					CurrentLowerLength = CurrentLowerLength - 30
 					self:queuecommand('UpdateLowerLength')
 				--- go in increments of 5sec for songs between 1min and 10min
 				elseif CurrentLowerLength > 60 and CurrentLowerLength <= 600 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 					CurrentLowerLength = CurrentLowerLength - 5
 					self:queuecommand('UpdateLowerLength')
 				--- go in increments of 1min for songs between 10min and 30min
 				elseif CurrentLowerLength > 600 and CurrentLowerLength <= 1800 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 					CurrentLowerLength = CurrentLowerLength - 60
 					self:queuecommand('UpdateLowerLength')
 				--- go in increments of 10min for songs longer than 30min
 				elseif CurrentLowerLength > 1800 and CurrentLowerLength <= 3600 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 					CurrentLowerLength = CurrentLowerLength - 600
 					self:queuecommand('UpdateLowerLength')
 				end
@@ -2459,46 +2485,56 @@ af[#af+1] = Def.BitmapText{
 			if params[1] == "right" then
 				if CurrentUpperLength == 3600 then
 					if not params[2] == true then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 						CurrentUpperLength = 0
 						self:queuecommand('UpdateUpperLength')
 					end
 				--- go in increments of 30sec for songs less than 1 minute
 				elseif CurrentUpperLength >= 0 and CurrentUpperLength < 60 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 					CurrentUpperLength = CurrentUpperLength + 30
 					self:queuecommand('UpdateUpperLength')
 				--- go in increments of 5sec for songs between 1min and 10min
 				elseif CurrentUpperLength >= 60 and CurrentUpperLength < 600 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 					CurrentUpperLength = CurrentUpperLength + 5
 					self:queuecommand('UpdateUpperLength')
 				--- go in increments of 1min for songs between 10min and 30min
 				elseif CurrentUpperLength >= 600 and CurrentUpperLength < 1800 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 					CurrentUpperLength = CurrentUpperLength + 60
 					self:queuecommand('UpdateUpperLength')
 				--- go in increments of 10min for songs longer than 30min
 				elseif CurrentUpperLength >= 1800 and CurrentUpperLength < 3600 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 					CurrentUpperLength = CurrentUpperLength + 600
 					self:queuecommand('UpdateUpperLength')
 				end
 			elseif params[1] == "left" then
 				if CurrentUpperLength == 0 then
 					if not params[2] == true then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 						CurrentUpperLength = 3600
 						self:queuecommand('UpdateUpperLength')
 					end
 				--- go in increments of 30sec for songs less than 1 minute
 				elseif CurrentUpperLength > 0 and CurrentUpperLength <= 60 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 					CurrentUpperLength = CurrentUpperLength - 30
 					self:queuecommand('UpdateUpperLength')
 				--- go in increments of 5sec for songs between 1min and 10min
 				elseif CurrentUpperLength > 60 and CurrentUpperLength <= 600 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 					CurrentUpperLength = CurrentUpperLength - 5
 					self:queuecommand('UpdateUpperLength')
 				--- go in increments of 1min for songs between 10min and 30min
 				elseif CurrentUpperLength > 600 and CurrentUpperLength <= 1800 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 					CurrentUpperLength = CurrentUpperLength - 60
 					self:queuecommand('UpdateUpperLength')
 				--- go in increments of 10min for songs longer than 30min
 				elseif CurrentUpperLength > 1800 and CurrentUpperLength <= 3600 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 					CurrentUpperLength = CurrentUpperLength - 600
 					self:queuecommand('UpdateUpperLength')
 				end

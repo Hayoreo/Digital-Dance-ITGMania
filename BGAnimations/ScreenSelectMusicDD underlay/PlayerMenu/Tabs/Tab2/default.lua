@@ -1979,9 +1979,16 @@ af[#af+1] = Def.BitmapText{
 			if params[1] == "left" then
 				if PlayerNotefieldX <= MinNotefield then
 					if not params[2] == true then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 						PlayerNotefieldX = MaxNotefield
 					end
+				elseif PlayerNotefieldX == 0 then
+					if not params[2] == true then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+						PlayerNotefieldX = PlayerNotefieldX - 1
+					end
 				else
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 					PlayerNotefieldX = PlayerNotefieldX - 1
 				end
 				mods.NoteFieldOffsetX = PlayerNotefieldX
@@ -1989,9 +1996,16 @@ af[#af+1] = Def.BitmapText{
 			elseif params[1] == "right" then
 				if PlayerNotefieldX >= MaxNotefield then
 					if not params[2] == true then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 						PlayerNotefieldX = MinNotefield
 					end
+				elseif PlayerNotefieldX == 0 then
+					if not params[2] == true then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+						PlayerNotefieldX = PlayerNotefieldX + 1
+					end
 				else
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 					PlayerNotefieldX = PlayerNotefieldX + 1
 				end
 				mods.NoteFieldOffsetX = PlayerNotefieldX
@@ -2136,9 +2150,16 @@ af[#af+1] = Def.BitmapText{
 			if params[1] == "left" then
 				if PlayerNotefieldY <= MinNotefield then
 					if not params[2] == true then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 						PlayerNotefieldY = MaxNotefield
 					end
+				elseif PlayerNotefieldY == 0 then
+					if not params[2] == true then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+						PlayerNotefieldY = PlayerNotefieldY - 1
+					end
 				else
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 					PlayerNotefieldY = PlayerNotefieldY - 1
 				end
 				mods.NoteFieldOffsetY = PlayerNotefieldY
@@ -2146,9 +2167,16 @@ af[#af+1] = Def.BitmapText{
 			elseif params[1] == "right" then
 				if PlayerNotefieldY >= MaxNotefield then
 					if not params[2] == true then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 						PlayerNotefieldY = MinNotefield
 					end
+				elseif PlayerNotefieldY == 0 then
+					if not params[2] == true then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+						PlayerNotefieldY = PlayerNotefieldY + 1
+					end
 				else
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 					PlayerNotefieldY = PlayerNotefieldY + 1
 				end
 				mods.NoteFieldOffsetY = PlayerNotefieldY
@@ -2298,9 +2326,16 @@ af[#af+1] = Def.BitmapText{
 			if params[1] == "left" then
 				if PlayerVisualDelay <= MinVisualDelay then
 					if not params[2] == true then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 						PlayerVisualDelay = MaxVisualDelay
 					end
+				elseif PlayerVisualDelay == 0 then
+					if not params[2] == true then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+						PlayerVisualDelay = PlayerVisualDelay - 1
+					end
 				else
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 					PlayerVisualDelay = PlayerVisualDelay - 1
 				end
 				mods.VisualDelay = PlayerVisualDelay.."ms"
@@ -2309,9 +2344,16 @@ af[#af+1] = Def.BitmapText{
 			elseif params[1] == "right" then
 				if PlayerVisualDelay >= MaxVisualDelay then
 					if not params[2] == true then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 						PlayerVisualDelay = MinVisualDelay
 					end
+				elseif PlayerVisualDelay == 0 then
+					if not params[2] == true then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+						PlayerVisualDelay = PlayerVisualDelay + 1
+					end
 				else
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 					PlayerVisualDelay = PlayerVisualDelay + 1
 				end
 				mods.VisualDelay = PlayerVisualDelay.."ms"

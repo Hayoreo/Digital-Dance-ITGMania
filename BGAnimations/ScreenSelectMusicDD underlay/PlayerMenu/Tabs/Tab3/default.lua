@@ -678,15 +678,24 @@ af[#af+1] = Def.BitmapText{
 		if CurrentTab == 3 and CurrentRow == 3 then
 			if params[1] == "left" then
 				if PlayerTargetScore <= MinTargetScore then
-					PlayerTargetScore = round(MaxTargetScore, 2)
+					if not params[2] == true then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+						PlayerTargetScore = round(MaxTargetScore, 2)
+					end
 				elseif PlayerTargetScore <= 100 and PlayerTargetScore >= 99.01 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 					PlayerTargetScore = round(PlayerTargetScore - 0.01, 2)
 				elseif PlayerTargetScore <= 99 and PlayerTargetScore >= 90.1 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 					PlayerTargetScore = round(PlayerTargetScore - 0.1, 2)
 				elseif PlayerTargetScore <= 90 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 					PlayerTargetScore = round(PlayerTargetScore - 1, 2)
 				else
-					PlayerTargetScore = round(PlayerTargetScore - 1,2)
+					if not params[2] == true then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+						PlayerTargetScore = round(PlayerTargetScore - 1,2)
+					end
 				end
 				mods.TargetScore = PlayerTargetScore
 				local TargetScoreText
@@ -700,17 +709,29 @@ af[#af+1] = Def.BitmapText{
 				self:settext(TargetScoreText)
 			elseif params[1] == "right" then
 				if PlayerTargetScore >= MaxTargetScore then
-					PlayerTargetScore = round(MinTargetScore, 2)
+					if not params[2] == true then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+						PlayerTargetScore = round(MinTargetScore, 2)
+					end
 				elseif PlayerTargetScore >= 100 then
-					PlayerTargetScore = round(PlayerTargetScore + 1, 2)
+					if not params[2] == true then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+						PlayerTargetScore = round(PlayerTargetScore + 1, 2)
+					end
 				elseif PlayerTargetScore <= 99.99 and PlayerTargetScore >= 99 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 					PlayerTargetScore = round(PlayerTargetScore + 0.01, 2)
 				elseif PlayerTargetScore >= 90 and PlayerTargetScore <= 98.9 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 					PlayerTargetScore = round(PlayerTargetScore + 0.1, 2)
 				elseif PlayerTargetScore <= 89 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 					PlayerTargetScore = round(PlayerTargetScore + 1, 2)
 				else
-					PlayerTargetScore = round(PlayerTargetScore + 1, 2)
+					if not params[2] == true then	
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+						PlayerTargetScore = round(PlayerTargetScore + 1, 2)
+					end
 				end
 				mods.TargetScore = PlayerTargetScore
 				local TargetScoreText
@@ -3208,9 +3229,11 @@ af[#af+1] = Def.BitmapText{
 			if params[1] == "left" then
 				if PlayerColumnCue <= MinColumnCue then
 					if not params[2] == true then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 						PlayerColumnCue = MaxColumnCue
 					end
 				else
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 					PlayerColumnCue = round(PlayerColumnCue - 0.1, 1)
 				end
 				if PlayerColumnCue == 0 then
@@ -3223,9 +3246,11 @@ af[#af+1] = Def.BitmapText{
 			elseif params[1] == "right" then
 				if PlayerColumnCue >= MaxColumnCue then
 					if not params[2] == true then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 						PlayerColumnCue = MinColumnCue
 					end
 				else
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 					PlayerColumnCue = round(PlayerColumnCue + 0.1, 1)
 				end
 				if PlayerColumnCue == 0 then

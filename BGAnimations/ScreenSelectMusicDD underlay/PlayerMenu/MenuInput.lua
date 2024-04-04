@@ -163,7 +163,11 @@ local InputHandler = function( event )
 	
 	if event.type ~= "InputEventType_Release" and not IsSearchMenuVisible and not LeadboardHasFocus and not InputMenuHasFocus and not EscapeFromEventMode then
 		local IsHeld = false
+		if event.type ~= "InputEventType_Release" and event.type ~= "InputEventType_FirstPress" then
+			IsHeld = true
+		end
 		if event.GameButton == "MenuRight" then
+			Direction = "right"
 			if CurrentRow == 0 then
 				if CurrentTab == 6 then
 					CurrentTab = 1
@@ -178,10 +182,21 @@ local InputHandler = function( event )
 				else
 					CurrentColumn = CurrentColumn + 1
 				end
-				SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+				if CurrentTab == 1 and CurrentRow ~= 2 and CurrentRow ~= 3 and CurrentRow ~= 10 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+				elseif CurrentTab == 2 and CurrentRow ~= 7 and CurrentRow ~= 8 and CurrentRow ~= 9 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+				elseif CurrentTab == 3 and CurrentRow ~= 3 and CurrentRow ~= 13 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+				elseif CurrentTab == 4 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+				elseif CurrentTab == 5 and CurrentRow ~= 4 and CurrentRow ~= 5 and CurrentRow ~= 8 and CurrentRow ~= 9 and CurrentRow ~= 10 and CurrentRow ~= 11 and CurrentRow ~= 14 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+				end
+				
 			end
-			Direction = "right"
 		elseif event.GameButton == "MenuLeft" then
+			Direction="left"
 			if CurrentRow == 0 then
 				if CurrentTab == 1 then
 					CurrentTab = 6
@@ -196,9 +211,18 @@ local InputHandler = function( event )
 				else
 					CurrentColumn = CurrentColumn - 1
 				end
-				SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+				if CurrentTab == 1 and CurrentRow ~= 2 and CurrentRow ~= 3 and CurrentRow ~= 10 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+				elseif CurrentTab == 2 and CurrentRow ~= 7 and CurrentRow ~= 8 and CurrentRow ~= 9 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+				elseif CurrentTab == 3 and CurrentRow ~= 3 and CurrentRow ~= 13 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+				elseif CurrentTab == 4 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+				elseif CurrentTab == 5 and CurrentRow ~= 4 and CurrentRow ~= 5 and CurrentRow ~= 8 and CurrentRow ~= 9 and CurrentRow ~= 10 and CurrentRow ~= 11 and CurrentRow ~= 14 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+				end
 			end
-			Direction="left"
 		elseif event.GameButton == "MenuUp" then
 			MaxRow = RowPerTab[CurrentTab]
 			CurrentColumn = 1
@@ -227,9 +251,6 @@ local InputHandler = function( event )
 			elseif event.PlayerNumber == "PlayerNumber_P2" then
 				MESSAGEMAN:Broadcast("PlayerMenuSelectionP2")
 			end
-		end
-		if event.type ~= "InputEventType_Release" and event.type ~= "InputEventType_FirstPress" then
-			IsHeld = true
 		end
 		
 		if event.PlayerNumber == "PlayerNumber_P1" then

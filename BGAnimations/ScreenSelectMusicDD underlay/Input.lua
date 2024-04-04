@@ -290,10 +290,12 @@ t.Handler = function(event)
 					-- Toggle the PlayerMenu on if the options button is clicked (and the menu isn't already open).
 					if IsMouseGucci(SCREEN_WIDTH/3 - 20 - 60,148,65,21,"left","top") and not PlayerMenuP1 and GAMESTATE:IsSideJoined('PlayerNumber_P1') then
 						PlayerMenuP1 = true
+						stop_music()
 						SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "expand.ogg") )
 						MESSAGEMAN:Broadcast("ShowPlayerMenuP1")
 					elseif IsMouseGucci( (SCREEN_WIDTH) - (SCREEN_WIDTH/3 - 20),148,65,21,"left","top") and not PlayerMenuP2 and GAMESTATE:IsSideJoined('PlayerNumber_P2') then
 						PlayerMenuP2 = true
+						stop_music()
 						SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "expand.ogg") )
 						MESSAGEMAN:Broadcast("ShowPlayerMenuP2")
 					end
