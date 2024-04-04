@@ -3437,13 +3437,16 @@ af[#af+1] = Def.Quad{
 		end
 		if CurrentTab == 4 and CurrentRow == 12 then
 			if CurrentColumn == 1 then
+				AttackNumber = 1
 				-- attacks are on by default so disable the other mods
 				SetEngineMod(player, "RandAttack", 0)
 				SetEngineMod(player, "NoAttack", 0)
 			elseif CurrentColumn == 2 then
+				AttackNumber = 2
 				SetEngineMod(player, "NoAttack", 0)
 				SetEngineMod(player, "RandAttack", 1)
 			elseif CurrentColumn == 3 then
+				AttackNumber = 3
 				SetEngineMod(player, "RandAttack", 0)
 				SetEngineMod(player, "NoAttack", 1)
 			end
@@ -3486,19 +3489,49 @@ af[#af+1] = Def.Quad{
 			
 			if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 4 then
 				if j == 1 then
+					if CurrentRow ~= 12 and AttackNumber == 1 then
+						if CurrentRow < 12 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif CurrentRow > 12 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+						end
+					elseif AttackNumber ~= 1 then
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
+					end
 					CurrentRow = 12
 					CurrentColumn = 1
+					AttackNumber = 1
 					-- attacks are on by default so disable the other mods
 					SetEngineMod(player, "RandAttack", 0)
 					SetEngineMod(player, "NoAttack", 0)
 				elseif j == 2 then
+					if CurrentRow ~= 12 and AttackNumber == 2 then
+						if CurrentRow < 12 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif CurrentRow > 12 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+						end
+					elseif AttackNumber ~= 2 then
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
+					end
 					CurrentRow = 12
 					CurrentColumn = 2
+					AttackNumber = 2
 					SetEngineMod(player, "NoAttack", 0)
 					SetEngineMod(player, "RandAttack", 1)
 				elseif j == 3 then
+					if CurrentRow ~= 12 and AttackNumber == 3 then
+						if CurrentRow < 12 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif CurrentRow > 12 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+						end
+					elseif AttackNumber ~= 3 then
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
+					end
 					CurrentRow = 12
 					CurrentColumn = 3
+					AttackNumber = 3
 					SetEngineMod(player, "RandAttack", 0)
 					SetEngineMod(player, "NoAttack", 1)
 				end
@@ -3506,7 +3539,6 @@ af[#af+1] = Def.Quad{
 			end
 		end
 		if MadeSelection then
-			SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 			local Parent2 = self:GetParent():GetChild(pn.."AttackMod"..CurrentColumn)
 			local TextZoom = Parent2:GetZoom()
 			local TextXPosition = Parent2:GetX()
@@ -3637,8 +3669,10 @@ af[#af+1] = Def.Quad{
 		if CurrentTab == 4 and CurrentRow == 13 then
 			SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 			if CurrentColumn == 1 then
+				HasteNumber = 1
 				GAMESTATE:GetSongOptionsObject(0):Haste(0)
 			elseif CurrentColumn == 2 then
+				HasteNumber = 2
 				GAMESTATE:GetSongOptionsObject(0):Haste(1)
 			end
 			local Parent = self:GetParent():GetChild(pn.."HasteMod"..CurrentColumn)
@@ -3701,19 +3735,38 @@ af[#af+1] = Def.Quad{
 			
 			if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 4 then
 				if j == 1 then
+					if CurrentRow ~= 13 and HasteNumber == 1 then
+						if CurrentRow < 13 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif CurrentRow > 13 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+						end
+					elseif HasteNumber ~= 1 then
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
+					end
 					CurrentRow = 13
 					CurrentColumn = 1
+					HasteNumber = 1
 					GAMESTATE:GetSongOptionsObject(0):Haste(0)
 				elseif j == 2 then
+					if CurrentRow ~= 13 and HasteNumber == 2 then
+						if CurrentRow < 13 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif CurrentRow > 13 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+						end
+					elseif HasteNumber ~= 2 then
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
+					end
 					CurrentRow = 13
 					CurrentColumn = 2
+					HasteNumber = 2
 					GAMESTATE:GetSongOptionsObject(0):Haste(1)
 				end
 				MadeSelection = true
 			end
 		end
 		if MadeSelection then
-			SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 			local Parent2 = self:GetParent():GetChild(pn.."HasteMod"..CurrentColumn)
 			local TextZoom = Parent2:GetZoom()
 			local TextXPosition = Parent2:GetX()

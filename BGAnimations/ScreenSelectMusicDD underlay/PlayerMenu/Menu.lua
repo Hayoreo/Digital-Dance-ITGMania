@@ -232,12 +232,15 @@ for i=1,6 do
 				ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
 				
 				if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) then
+					
+					if CurrentTab ~= i then
+						SOUND:PlayOnce( THEME:GetPathS("", "page_turn.ogg") )
+					elseif CurrentRow ~= 0 and CurrentTab == i then
+						SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+					end
 					CurrentTab = i
 					CurrentRow = 0
 					CurrentColumn = 1
-					if j == i then
-						SOUND:PlayOnce( THEME:GetPathS("", "page_turn.ogg") )
-					end
 					if pn == "P1" then
 						if i == CurrentTabP1 then
 							local color = PlayerColor(player)

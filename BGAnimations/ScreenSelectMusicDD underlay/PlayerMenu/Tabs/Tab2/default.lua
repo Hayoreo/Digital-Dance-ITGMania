@@ -189,14 +189,19 @@ af[#af+1] = Def.Quad{
 		end
 		if CurrentTab == 2 and CurrentRow == 1 then
 			if CurrentColumn == 1 then
+				PerspectiveNumber = 1
 				SetEngineMod(player, "Overhead", 1)
 			elseif CurrentColumn == 2 then
+				PerspectiveNumber = 2
 				SetEngineMod(player, "Hallway", 1)
 			elseif CurrentColumn == 3 then
+				PerspectiveNumber = 3
 				SetEngineMod(player, "Distant", 1)
 			elseif CurrentColumn == 4 then
+				PerspectiveNumber = 4
 				SetEngineMod(player, "Incoming", 1)
 			elseif CurrentColumn == 5 then
+				PerspectiveNumber = 5
 				SetEngineMod(player, "Space", 1)
 			end
 			local Parent = self:GetParent():GetChild(pn.."Perspective"..CurrentColumn)
@@ -238,22 +243,72 @@ af[#af+1] = Def.Quad{
 			
 			if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 2 then
 				if j == 1 then
+					if CurrentRow ~= 1 and PerspectiveNumber == 1 then
+						if CurrentRow < 1 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif CurrentRow > 1 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+						end
+					elseif PerspectiveNumber ~= 1 then
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
+					end
+					PerspectiveNumber = 1
 					CurrentRow = 1
 					CurrentColumn = 1
 					SetEngineMod(player, "Overhead", 1)
 				elseif j == 2 then
+					if CurrentRow ~= 1 and PerspectiveNumber == 2 then
+						if CurrentRow < 1 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif CurrentRow > 1 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+						end
+					elseif PerspectiveNumber ~= 2 then
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
+					end
+					PerspectiveNumber = 2
 					CurrentRow = 1
 					CurrentColumn = 2
 					SetEngineMod(player, "Hallway", 1)
 				elseif j == 3 then
+					if CurrentRow ~= 1 and PerspectiveNumber == 3 then
+						if CurrentRow < 1 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif CurrentRow > 1 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+						end
+					elseif PerspectiveNumber ~= 3 then
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
+					end
+					PerspectiveNumber = 3
 					CurrentRow = 1
 					CurrentColumn = 3
 					SetEngineMod(player, "Distant", 1)
 				elseif j == 4 then
+					if CurrentRow ~= 1 and PerspectiveNumber == 4 then
+						if CurrentRow < 1 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif CurrentRow > 1 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+						end
+					elseif PerspectiveNumber ~= 4 then
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
+					end
+					PerspectiveNumber = 4
 					CurrentRow = 1
 					CurrentColumn = 4
 					SetEngineMod(player, "Incoming", 1)
 				elseif j == 5 then
+					if CurrentRow ~= 1 and PerspectiveNumber == 5 then
+						if CurrentRow < 1 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif CurrentRow > 1 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+						end
+					elseif PerspectiveNumber ~= 5 then
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
+					end
+					PerspectiveNumber = 5
 					CurrentRow = 1
 					CurrentColumn = 5
 					SetEngineMod(player, "Space", 1)
@@ -262,7 +317,6 @@ af[#af+1] = Def.Quad{
 			end
 		end
 		if MadeSelection then
-			SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 			local Parent2 = self:GetParent():GetChild(pn.."Perspective"..CurrentColumn)
 			local TextZoom = Parent2:GetZoom()
 			local TextXPosition = Parent2:GetX()
@@ -785,12 +839,16 @@ af[#af+1] = Def.Quad{
 		end
 		if CurrentTab == 2 and CurrentRow == 3 then
 			if CurrentColumn == 1 then
+				ScreenFilterNumber = 1
 				mods.BackgroundFilter = "Off"
 			elseif CurrentColumn == 2 then
+				ScreenFilterNumber = 2
 				mods.BackgroundFilter = "Dark"
 			elseif CurrentColumn == 3 then
+				ScreenFilterNumber = 3
 				mods.BackgroundFilter = "Darker"
 			elseif CurrentColumn == 4 then
+				ScreenFilterNumber = 4
 				mods.BackgroundFilter = "Darkest"
 			end
 			SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
@@ -832,27 +890,66 @@ af[#af+1] = Def.Quad{
 			
 			if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 2 then
 				if j == 1 then
+					if CurrentRow ~= 3 and ScreenFilterNumber == 1 then
+						if CurrentRow < 3 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif CurrentRow > 3 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+						end
+					elseif ScreenFilterNumber ~= 1 then
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
+					end
 					CurrentRow = 3
 					CurrentColumn = 1
+					ScreenFilterNumber = 1
 					mods.BackgroundFilter = "Off"
 				elseif j == 2 then
+					if CurrentRow ~= 3 and ScreenFilterNumber == 2 then
+						if CurrentRow < 3 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif CurrentRow > 3 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+						end
+					elseif ScreenFilterNumber ~= 2 then
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
+					end
 					CurrentRow = 3
 					CurrentColumn = 2
+					ScreenFilterNumber = 2
 					mods.BackgroundFilter = "Dark"
 				elseif j == 3 then
+					if CurrentRow ~= 3 and ScreenFilterNumber == 3 then
+						if CurrentRow < 3 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif CurrentRow > 3 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+						end
+					elseif ScreenFilterNumber ~= 3 then
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
+					end
 					CurrentRow = 3
 					CurrentColumn = 3
+					ScreenFilterNumber = 3
 					mods.BackgroundFilter = "Darker"
 				elseif j == 4 then
+					if CurrentRow ~= 3 and ScreenFilterNumber == 4 then
+						if CurrentRow < 3 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif CurrentRow > 3 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+						end
+					elseif ScreenFilterNumber ~= 4 then
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
+					end
 					CurrentRow = 3
 					CurrentColumn = 4
+					ScreenFilterNumber = 4
 					mods.BackgroundFilter = "Darkest"
 				end
 				MadeSelection = true
 			end
 		end
 		if MadeSelection then
-			SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 			local Parent2 = self:GetParent():GetChild(pn.."ScreenFilter"..CurrentColumn)
 			local TextZoom = Parent2:GetZoom()
 			local TextXPosition = Parent2:GetX()
@@ -994,12 +1091,16 @@ af[#af+1] = Def.Quad{
 		end
 		if CurrentTab == 2 and CurrentRow == 4 then
 			if CurrentColumn == 1 then
+				ScreenMLNumber = 1
 				mods.MeasureLines = "Off"
 			elseif CurrentColumn == 2 then
+				ScreenMLNumber = 2
 				mods.MeasureLines = "Measure"
 			elseif CurrentColumn == 3 then
+				ScreenMLNumber = 3
 				mods.MeasureLines = "Quarter"
 			elseif CurrentColumn == 4 then
+				ScreenMLNumber = 4
 				mods.MeasureLines = "Eighth"
 			end
 			local Parent = self:GetParent():GetChild(pn.."MeasureLines"..CurrentColumn)
@@ -1041,27 +1142,66 @@ af[#af+1] = Def.Quad{
 			
 			if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 2 then
 				if j == 1 then
+					if CurrentRow ~= 4 and ScreenMLNumber == 1 then
+						if CurrentRow < 4 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif CurrentRow > 4 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+						end
+					elseif ScreenMLNumber ~= 1 then
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
+					end
 					CurrentRow = 4
 					CurrentColumn = 1
+					ScreenMLNumber = 1
 					mods.MeasureLines = "Off"
 				elseif j == 2 then
+					if CurrentRow ~= 4 and ScreenMLNumber == 2 then
+						if CurrentRow < 4 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif CurrentRow > 4 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+						end
+					elseif ScreenMLNumber ~= 2 then
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
+					end
 					CurrentRow = 4
 					CurrentColumn = 2
+					ScreenMLNumber = 2
 					mods.MeasureLines = "Measure"
 				elseif j == 3 then
+					if CurrentRow ~= 4 and ScreenMLNumber == 3 then
+						if CurrentRow < 4 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif CurrentRow > 4 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+						end
+					elseif ScreenMLNumber ~= 3 then
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
+					end
 					CurrentRow = 4
 					CurrentColumn = 3
+					ScreenMLNumber = 3
 					mods.MeasureLines = "Quarter"
-				elseif j == 4 then
+				elseif j == 4 then	
+					if CurrentRow ~= 4 and ScreenMLNumber == 4 then
+						if CurrentRow < 4 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif CurrentRow > 4 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+						end
+					elseif ScreenMLNumber ~= 4 then
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
+					end
 					CurrentRow = 4
 					CurrentColumn = 4
+					ScreenMLNumber = 4
 					mods.MeasureLines = "Eighth"
 				end
 				MadeSelection = true
 			end
 		end
 		if MadeSelection then
-			SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 			local Parent2 = self:GetParent():GetChild(pn.."MeasureLines"..CurrentColumn)
 			local TextZoom = Parent2:GetZoom()
 			local TextXPosition = Parent2:GetX()
@@ -1755,6 +1895,13 @@ af[#af+1] = Def.Quad{
 		ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
 		
 		if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 2 then
+			if CurrentRow ~= 7 then
+				if CurrentRow < 7 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+				elseif CurrentRow > 7 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+				end
+			end
 			CurrentRow = 7
 			CurrentColumn = 1
 			if pn == "P1" then
@@ -1910,6 +2057,13 @@ af[#af+1] = Def.Quad{
 		ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
 		
 		if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 2 then
+			if CurrentRow ~= 8 then
+				if CurrentRow < 8 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+				elseif CurrentRow > 8 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+				end
+			end
 			CurrentRow = 8
 			CurrentColumn = 1
 			if pn == "P1" then
@@ -2060,6 +2214,13 @@ af[#af+1] = Def.Quad{
 		ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
 		
 		if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 2 then
+			if CurrentRow ~= 9 then
+				if CurrentRow < 9 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+				elseif CurrentRow > 9 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+				end
+			end
 			CurrentRow = 9
 			CurrentColumn = 1
 			if pn == "P1" then

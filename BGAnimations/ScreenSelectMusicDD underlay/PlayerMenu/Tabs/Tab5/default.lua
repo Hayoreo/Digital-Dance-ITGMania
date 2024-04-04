@@ -199,6 +199,13 @@ af[#af+1] = Def.Quad{
 		ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
 		
 		if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 5 then
+			if CurrentRow ~= 1 then
+				if CurrentRow < 1 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+				elseif CurrentRow > 1 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+				end
+			end
 			CurrentRow = 1
 			CurrentColumn = 1
 			if pn == "P1" then
@@ -378,6 +385,13 @@ af[#af+1] = Def.Quad{
 		ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
 		
 		if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 5 then
+			if CurrentRow ~= 2 then
+				if CurrentRow < 2 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+				elseif CurrentRow > 2 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+				end
+			end
 			CurrentRow = 2
 			CurrentColumn = 1
 			if pn == "P1" then
@@ -557,6 +571,13 @@ af[#af+1] = Def.Quad{
 		ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
 		
 		if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 5 then
+			if CurrentRow ~= 3 then
+				if CurrentRow < 3 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+				elseif CurrentRow > 3 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+				end
+			end
 			CurrentRow = 3
 			CurrentColumn = 1
 			if pn == "P1" then
@@ -727,6 +748,13 @@ af[#af+1] = Def.Quad{
 		ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
 		
 		if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 5 then
+			if CurrentRow ~= 4 then
+				if CurrentRow < 4 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+				elseif CurrentRow > 4 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+				end
+			end
 			CurrentRow = 4
 			CurrentColumn = 1
 			if pn == "P1" then
@@ -936,6 +964,13 @@ af[#af+1] = Def.Quad{
 		ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
 		
 		if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 5 then
+			if CurrentRow ~= 5 then
+				if CurrentRow < 5 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+				elseif CurrentRow > 5 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+				end
+			end
 			CurrentRow = 5
 			CurrentColumn = 1
 			if pn == "P1" then
@@ -1692,6 +1727,13 @@ af[#af+1] = Def.Quad{
 		ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
 		
 		if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 5 then
+			if CurrentRow ~= 8 then
+				if CurrentRow < 8 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+				elseif CurrentRow > 8 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+				end
+			end
 			CurrentRow = 8
 			CurrentColumn = 1
 			if pn == "P1" then
@@ -1899,6 +1941,13 @@ af[#af+1] = Def.Quad{
 		ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
 		
 		if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 5 then
+			if CurrentRow ~= 9 then
+				if CurrentRow < 9 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+				elseif CurrentRow > 9 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+				end
+			end
 			CurrentRow = 9
 			CurrentColumn = 1
 			if pn == "P1" then
@@ -2070,6 +2119,13 @@ af[#af+1] = Def.Quad{
 		ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
 		
 		if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 5 then
+			if CurrentRow ~= 10 then
+				if CurrentRow < 10 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+				elseif CurrentRow > 10 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+				end
+			end
 			CurrentRow = 10
 			CurrentColumn = 1
 			if pn == "P1" then
@@ -2320,6 +2376,13 @@ af[#af+1] = Def.Quad{
 		ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
 		
 		if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 5 then
+			if CurrentRow ~= 11 then
+				if CurrentRow < 11 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+				elseif CurrentRow > 11 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+				end
+			end
 			CurrentRow = 11
 			CurrentColumn = 1
 			if pn == "P1" then
@@ -2630,16 +2693,43 @@ af[#af+1] = Def.Quad{
 			
 			if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 5 then
 				if j == 1 then
+					if CurrentRow ~= 12 and CurrentGroovestats == 1 then
+						if CurrentRow < 12 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif CurrentRow > 12 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+						end
+					elseif CurrentGroovestats ~= 1 then
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
+					end
 					CurrentRow = 12
 					CurrentColumn = 1
 					CurrentGroovestats = 1
 					SetGroovestatsFilter(CurrentGroovestats)
 				elseif j == 2 then
+					if CurrentRow ~= 12 and CurrentGroovestats == 2 then
+						if CurrentRow < 12 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif CurrentRow > 12 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+						end
+					elseif CurrentGroovestats ~= 2 then
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
+					end
 					CurrentRow = 12
 					CurrentColumn = 2
 					CurrentGroovestats = 2
 					SetGroovestatsFilter(CurrentGroovestats)
 				elseif j == 3 then
+					if CurrentRow ~= 12 and CurrentGroovestats == 3 then
+						if CurrentRow < 12 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif CurrentRow > 12 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+						end
+					elseif CurrentGroovestats ~= 3 then
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
+					end
 					CurrentRow = 12
 					CurrentColumn = 3
 					CurrentGroovestats = 3
@@ -2649,7 +2739,6 @@ af[#af+1] = Def.Quad{
 			end
 		end
 		if MadeSelection then
-			SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 			local Parent2 = self:GetParent():GetChild(pn.."Groovestats"..CurrentColumn)
 			local TextZoom = Parent2:GetZoom()
 			local TextXPosition = Parent2:GetX()
@@ -2839,16 +2928,43 @@ af[#af+1] = Def.Quad{
 			
 			if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 5 then
 				if j == 1 then
+					if CurrentRow ~= 13 and CurrentAutogen == 1 then
+						if CurrentRow < 13 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif CurrentRow > 13 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+						end
+					elseif CurrentAutogen ~= 1 then
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
+					end
 					CurrentRow = 13
 					CurrentColumn = 1
 					CurrentAutogen = 1
 					SetAutogenFilter(CurrentAutogen)
 				elseif j == 2 then
+					if CurrentRow ~= 13 and CurrentAutogen == 2 then
+						if CurrentRow < 13 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif CurrentRow > 13 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+						end
+					elseif CurrentAutogen ~= 2 then
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
+					end
 					CurrentRow = 13
 					CurrentColumn = 2
 					CurrentAutogen = 2
 					SetAutogenFilter(CurrentAutogen)
 				elseif j == 3 then
+					if CurrentRow ~= 13 and CurrentAutogen == 3 then
+						if CurrentRow < 13 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif CurrentRow > 13 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+						end
+					elseif CurrentAutogen ~= 3 then
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
+					end
 					CurrentRow = 13
 					CurrentColumn = 3
 					CurrentAutogen = 3
@@ -2858,7 +2974,6 @@ af[#af+1] = Def.Quad{
 			end
 		end
 		if MadeSelection then
-			SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 			local Parent2 = self:GetParent():GetChild(pn.."Autogen"..CurrentColumn)
 			local TextZoom = Parent2:GetZoom()
 			local TextXPosition = Parent2:GetX()
