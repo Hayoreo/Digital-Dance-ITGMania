@@ -10,6 +10,7 @@ This version is mostly bug fixes (some more gamebreaking than others) plus a cou
 - New "Digital" judgment graphic has been added.
 - Mouse Input is always enabled now.
 - Fixed bug where the player couldn't change their noteskin LOL
+- Fixed CountDown timer for Column Cues with both players enabled.
 - Added sound effects to the player menu when adding/removing mods.
 - Fixed notefield UI in regards to NoteFieldX and NoteFieldY player mods.
 - Changed subtractive score behavior for EXScore to stop constantly rounding.
