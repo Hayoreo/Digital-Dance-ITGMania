@@ -234,6 +234,8 @@ af[#af+1] = Def.Quad{
 			CurrentRow = CurrentRowP2
 			CurrentColumn = CurrentColumnP2
 		end
+		if pn == "P1" and not PlayerMenuP1 then return end
+		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 1 then return end
 		for i=1, #SpeedTypes do
 			local Parent = self:GetParent():GetChild(pn.."SpeedTypes"..i)
@@ -366,6 +368,8 @@ af[#af+1] = Def.Quad{
 			CurrentRow = CurrentRowP2
 			CurrentColumn = CurrentColumnP2
 		end
+		if pn == "P1" and not PlayerMenuP1 then return end
+		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 1 then return end
 		local Parent = self:GetParent():GetChild(pn.."SpeedModBox1")
 		local ObjectWidth = Parent:GetZoomX()
@@ -820,6 +824,8 @@ af[#af+1] = Def.Quad{
 			CurrentRow = CurrentRowP2
 			CurrentColumn = CurrentColumnP2
 		end
+		if pn == "P1" and not PlayerMenuP1 then return end
+		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 1 then return end
 		local Parent = self:GetParent():GetChild(pn.."MiniBox1")
 		local ObjectWidth = Parent:GetZoomX()
@@ -1015,6 +1021,8 @@ af[#af+1] = Def.Quad{
 			CurrentRow = CurrentRowP2
 			CurrentColumn = CurrentColumnP2
 		end
+		if pn == "P1" and not PlayerMenuP1 then return end
+		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 1 then return end
 		local Parent = self:GetParent():GetChild(pn.."NoteskinBox1")
 		local ObjectWidth = Parent:GetZoomX()
@@ -1251,6 +1259,8 @@ af[#af+1] = Def.Quad{
 			CurrentRow = CurrentRowP2
 			CurrentColumn = CurrentColumnP2
 		end
+		if pn == "P1" and not PlayerMenuP1 then return end
+		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 1 then return end
 		local Parent = self:GetParent():GetChild(pn.."JudgmentBox1")
 		local ObjectWidth = Parent:GetZoomX()
@@ -1487,6 +1497,8 @@ af[#af+1] = Def.Quad{
 			CurrentRow = CurrentRowP2
 			CurrentColumn = CurrentColumnP2
 		end
+		if pn == "P1" and not PlayerMenuP1 then return end
+		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 1 then return end
 		local Parent = self:GetParent():GetChild(pn.."ComboBox1")
 		local ObjectWidth = Parent:GetZoomX()
@@ -1745,6 +1757,8 @@ af[#af+1] = Def.Quad{
 			CurrentRow = CurrentRowP2
 			CurrentColumn = CurrentColumnP2
 		end
+		if pn == "P1" and not PlayerMenuP1 then return end
+		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 1 then return end
 		local Parent = self:GetParent():GetChild(pn.."HoldJBox1")
 		local ObjectWidth = Parent:GetZoomX()
@@ -2162,6 +2176,8 @@ for i=1,#Turns1 do
 				CurrentRow = CurrentRowP2
 				CurrentColumn = CurrentColumnP2
 			end
+			if pn == "P1" and not PlayerMenuP1 then return end
+			if pn == "P2" and not PlayerMenuP2 then return end
 			if CurrentTab ~= 1 then return end
 			-- yooooooo the j!!!!
 			for j=1, #Turns1 do
@@ -2482,6 +2498,8 @@ for i=1,#Turns2 do
 				CurrentRow = CurrentRowP2
 				CurrentColumn = CurrentColumnP2
 			end
+			if pn == "P1" and not PlayerMenuP1 then return end
+			if pn == "P2" and not PlayerMenuP2 then return end
 			if CurrentTab ~= 1 then return end
 			-- yooooooo the j!!!!
 			for j=1, #Turns2 do
@@ -2613,6 +2631,8 @@ af[#af+1] = Def.Quad{
 			CurrentRow = CurrentRowP2
 			CurrentColumn = CurrentColumnP2
 		end
+		if pn == "P1" and not PlayerMenuP1 then return end
+		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 1 then return end
 		local Parent = self:GetParent():GetChild(pn.."MusicRateBox1")
 		local ObjectWidth = Parent:GetZoomX()

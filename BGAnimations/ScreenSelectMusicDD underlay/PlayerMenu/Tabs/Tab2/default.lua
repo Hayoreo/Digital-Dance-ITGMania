@@ -228,6 +228,8 @@ af[#af+1] = Def.Quad{
 			CurrentRow = CurrentRowP2
 			CurrentColumn = CurrentColumnP2
 		end
+		if pn == "P1" and not PlayerMenuP1 then return end
+		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 2 then return end
 		for j=1,#Perspectives do
 			local Parent = self:GetParent():GetChild(pn.."Perspective"..j)
@@ -609,6 +611,8 @@ for i=1,#Scrolls do
 				CurrentRow = CurrentRowP2
 				CurrentColumn = CurrentColumnP2
 			end
+			if pn == "P1" and not PlayerMenuP1 then return end
+			if pn == "P2" and not PlayerMenuP2 then return end
 			if CurrentTab ~= 2 then return end
 			-- yooooooo the j!!!!
 			for j=1, #Scrolls do
@@ -875,6 +879,8 @@ af[#af+1] = Def.Quad{
 			CurrentRow = CurrentRowP2
 			CurrentColumn = CurrentColumnP2
 		end
+		if pn == "P1" and not PlayerMenuP1 then return end
+		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 2 then return end
 		for j=1,#ScreenFilters do
 			local Parent = self:GetParent():GetChild(pn.."ScreenFilter"..j)
@@ -1127,6 +1133,8 @@ af[#af+1] = Def.Quad{
 			CurrentRow = CurrentRowP2
 			CurrentColumn = CurrentColumnP2
 		end
+		if pn == "P1" and not PlayerMenuP1 then return end
+		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 2 then return end
 		for j=1,#ScreenFilters do
 			local Parent = self:GetParent():GetChild(pn.."MeasureLines"..j)
@@ -1471,6 +1479,8 @@ for i=1,#Hide do
 				CurrentRow = CurrentRowP2
 				CurrentColumn = CurrentColumnP2
 			end
+			if pn == "P1" and not PlayerMenuP1 then return end
+			if pn == "P2" and not PlayerMenuP2 then return end
 			if CurrentTab ~= 2 then return end
 			-- yooooooo the j!!!!
 			for j=1, #Hide do
@@ -1766,6 +1776,8 @@ for i=1,#Hide2 do
 				CurrentRow = CurrentRowP2
 				CurrentColumn = CurrentColumnP2
 			end
+			if pn == "P1" and not PlayerMenuP1 then return end
+			if pn == "P2" and not PlayerMenuP2 then return end
 			if CurrentTab ~= 2 then return end
 			-- yooooooo the j!!!!
 			for j=1, #Hide2 do
@@ -1883,6 +1895,8 @@ af[#af+1] = Def.Quad{
 			CurrentRow = CurrentRowP2
 			CurrentColumn = CurrentColumnP2
 		end
+		if pn == "P1" and not PlayerMenuP1 then return end
+		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 2 then return end
 		local Parent = self:GetParent():GetChild(pn.."NotefieldXBox1")
 		local ObjectWidth = Parent:GetZoomX()
@@ -2059,6 +2073,8 @@ af[#af+1] = Def.Quad{
 			CurrentRow = CurrentRowP2
 			CurrentColumn = CurrentColumnP2
 		end
+		if pn == "P1" and not PlayerMenuP1 then return end
+		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 2 then return end
 		local Parent = self:GetParent():GetChild(pn.."NotefieldYBox1")
 		local ObjectWidth = Parent:GetZoomX()
@@ -2230,6 +2246,8 @@ af[#af+1] = Def.Quad{
 			CurrentRow = CurrentRowP2
 			CurrentColumn = CurrentColumnP2
 		end
+		if pn == "P1" and not PlayerMenuP1 then return end
+		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 2 then return end
 		local Parent = self:GetParent():GetChild(pn.."VisualDelayBox1")
 		local ObjectWidth = Parent:GetZoomX()

@@ -187,6 +187,8 @@ af[#af+1] = Def.Quad{
 			CurrentRow = CurrentRowP2
 			CurrentColumn = CurrentColumnP2
 		end
+		if pn == "P1" and not PlayerMenuP1 then return end
+		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 5 then return end
 		local Parent = self:GetParent():GetChild(pn.."MainSortBox1")
 		local ObjectWidth = Parent:GetZoomX()
@@ -373,6 +375,8 @@ af[#af+1] = Def.Quad{
 			CurrentRow = CurrentRowP2
 			CurrentColumn = CurrentColumnP2
 		end
+		if pn == "P1" and not PlayerMenuP1 then return end
+		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 5 then return end
 		local Parent = self:GetParent():GetChild(pn.."SubSort1Box1")
 		local ObjectWidth = Parent:GetZoomX()
@@ -559,6 +563,8 @@ af[#af+1] = Def.Quad{
 			CurrentRow = CurrentRowP2
 			CurrentColumn = CurrentColumnP2
 		end
+		if pn == "P1" and not PlayerMenuP1 then return end
+		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 5 then return end
 		local Parent = self:GetParent():GetChild(pn.."SubSort2Box1")
 		local ObjectWidth = Parent:GetZoomX()
@@ -736,6 +742,8 @@ af[#af+1] = Def.Quad{
 			CurrentRow = CurrentRowP2
 			CurrentColumn = CurrentColumnP2
 		end
+		if pn == "P1" and not PlayerMenuP1 then return end
+		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 5 then return end
 		local Parent = self:GetParent():GetChild(pn.."MeterFilter1Box1")
 		local ObjectWidth = Parent:GetZoomX()
@@ -956,6 +964,8 @@ af[#af+1] = Def.Quad{
 			CurrentRow = CurrentRowP2
 			CurrentColumn = CurrentColumnP2
 		end
+		if pn == "P1" and not PlayerMenuP1 then return end
+		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 5 then return end
 		local Parent = self:GetParent():GetChild(pn.."MeterFilter2Box1")
 		local ObjectWidth = Parent:GetZoomX()
@@ -1321,6 +1331,8 @@ for i=1,#Difficulties do
 				CurrentRow = CurrentRowP2
 				CurrentColumn = CurrentColumnP2
 			end
+			if pn == "P1" and not PlayerMenuP1 then return end
+			if pn == "P2" and not PlayerMenuP2 then return end
 			if CurrentTab ~= 5 then return end
 			-- yooooooo the j!!!!
 			for j=1, #Difficulties do
@@ -1602,6 +1614,8 @@ for i=1,#Difficulties2 do
 				CurrentRow = CurrentRowP2
 				CurrentColumn = CurrentColumnP2
 			end
+			if pn == "P1" and not PlayerMenuP1 then return end
+			if pn == "P2" and not PlayerMenuP2 then return end
 			if CurrentTab ~= 5 then return end
 			-- yooooooo the j!!!!
 			for j=1, #Difficulties2 do
@@ -1723,6 +1737,8 @@ af[#af+1] = Def.Quad{
 			CurrentRow = CurrentRowP2
 			CurrentColumn = CurrentColumnP2
 		end
+		if pn == "P1" and not PlayerMenuP1 then return end
+		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 5 then return end
 		local Parent = self:GetParent():GetChild(pn.."BPMFilter1Box1")
 		local ObjectWidth = Parent:GetZoomX()
@@ -1941,6 +1957,8 @@ af[#af+1] = Def.Quad{
 			CurrentRow = CurrentRowP2
 			CurrentColumn = CurrentColumnP2
 		end
+		if pn == "P1" and not PlayerMenuP1 then return end
+		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 5 then return end
 		local Parent = self:GetParent():GetChild(pn.."BPMFilter2Box1")
 		local ObjectWidth = Parent:GetZoomX()
@@ -2123,6 +2141,8 @@ af[#af+1] = Def.Quad{
 			CurrentRow = CurrentRowP2
 			CurrentColumn = CurrentColumnP2
 		end
+		if pn == "P1" and not PlayerMenuP1 then return end
+		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 5 then return end
 		local Parent = self:GetParent():GetChild(pn.."LengthFilter1Box1")
 		local ObjectWidth = Parent:GetZoomX()
@@ -2390,6 +2410,8 @@ af[#af+1] = Def.Quad{
 			CurrentRow = CurrentRowP2
 			CurrentColumn = CurrentColumnP2
 		end
+		if pn == "P1" and not PlayerMenuP1 then return end
+		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 5 then return end
 		local Parent = self:GetParent():GetChild(pn.."LengthFilter2Box1")
 		local ObjectWidth = Parent:GetZoomX()
@@ -2714,6 +2736,8 @@ af[#af+1] = Def.Quad{
 			CurrentRow = CurrentRowP2
 			CurrentColumn = CurrentColumnP2
 		end
+		if pn == "P1" and not PlayerMenuP1 then return end
+		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 5 then return end
 		for j=1,#FilterOptions do
 			local Parent = self:GetParent():GetChild(pn.."Groovestats"..j)
@@ -2949,6 +2973,8 @@ af[#af+1] = Def.Quad{
 			CurrentRow = CurrentRowP2
 			CurrentColumn = CurrentColumnP2
 		end
+		if pn == "P1" and not PlayerMenuP1 then return end
+		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 5 then return end
 		for j=1,#FilterOptions do
 			local Parent = self:GetParent():GetChild(pn.."Autogen"..j)
@@ -3148,6 +3174,8 @@ af[#af+1] = Def.Quad{
 			CurrentRow = CurrentRowP2
 			CurrentColumn = CurrentColumnP2
 		end
+		if pn == "P1" and not PlayerMenuP1 then return end
+		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 5 then return end
 		local Parent = self:GetParent():GetChild(pn.."ResetButton")
 		local ObjectWidth = Parent:GetZoomX()

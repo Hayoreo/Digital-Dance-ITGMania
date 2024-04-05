@@ -217,6 +217,8 @@ af[#af+1] = Def.Quad{
 			CurrentRow = CurrentRowP2
 			CurrentColumn = CurrentColumnP2
 		end
+		if pn == "P1" and not PlayerMenuP1 then return end
+		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 3 then return end
 		for j=1,#LifeBarTypes do
 			local Parent = self:GetParent():GetChild(pn.."LifeBarType"..j)
@@ -450,6 +452,8 @@ af[#af+1] = Def.Quad{
 			CurrentRow = CurrentRowP2
 			CurrentColumn = CurrentColumnP2
 		end
+		if pn == "P1" and not PlayerMenuP1 then return end
+		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 3 then return end
 		for j=1,#DataVisualizations do
 			local Parent = self:GetParent():GetChild(pn.."DataVisualization"..j)
@@ -579,6 +583,8 @@ af[#af+1] = Def.Quad{
 			CurrentRow = CurrentRowP2
 			CurrentColumn = CurrentColumnP2
 		end
+		if pn == "P1" and not PlayerMenuP1 then return end
+		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 3 then return end
 		local Parent = self:GetParent():GetChild(pn.."TargetScoreBox1")
 		local ObjectWidth = Parent:GetZoomX()
@@ -897,6 +903,8 @@ af[#af+1] = Def.Quad{
 			CurrentRow = CurrentRowP2
 			CurrentColumn = CurrentColumnP2
 		end
+		if pn == "P1" and not PlayerMenuP1 then return end
+		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 3 then return end
 		for j=1,#TargetActions do
 			local Parent = self:GetParent():GetChild(pn.."TargetAction"..j)
@@ -1178,6 +1186,8 @@ for i=1,#GameplayExtras do
 				CurrentRow = CurrentRowP2
 				CurrentColumn = CurrentColumnP2
 			end
+			if pn == "P1" and not PlayerMenuP1 then return end
+			if pn == "P2" and not PlayerMenuP2 then return end
 			if CurrentTab ~= 3 then return end
 			-- yooooooo the j!!!!
 			for j=1, #GameplayExtras do
@@ -1421,6 +1431,8 @@ for i=1,#GameplayExtras2 do
 				CurrentRow = CurrentRowP2
 				CurrentColumn = CurrentColumnP2
 			end
+			if pn == "P1" and not PlayerMenuP1 then return end
+			if pn == "P2" and not PlayerMenuP2 then return end
 			if CurrentTab ~= 3 then return end
 			-- yooooooo the j!!!!
 			for j=1, #GameplayExtras2 do
@@ -1633,6 +1645,8 @@ af[#af+1] = Def.Quad{
 			CurrentRow = CurrentRowP2
 			CurrentColumn = CurrentColumnP2
 		end
+		if pn == "P1" and not PlayerMenuP1 then return end
+		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 3 then return end
 		for j=1,#ErrorBars do
 			local Parent = self:GetParent():GetChild(pn.."ErrorBar"..j)
@@ -1940,6 +1954,8 @@ for i=1,#ErrorBarOptions do
 				CurrentRow = CurrentRowP2
 				CurrentColumn = CurrentColumnP2
 			end
+			if pn == "P1" and not PlayerMenuP1 then return end
+			if pn == "P2" and not PlayerMenuP2 then return end
 			if CurrentTab ~= 3 then return end
 			-- yooooooo the j!!!!
 			for j=1, #ErrorBarOptions do
@@ -2179,6 +2195,8 @@ af[#af+1] = Def.Quad{
 			CurrentRow = CurrentRowP2
 			CurrentColumn = CurrentColumnP2
 		end
+		if pn == "P1" and not PlayerMenuP1 then return end
+		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 3 then return end
 		for j=1,#MeasureCounter do
 			local Parent = self:GetParent():GetChild(pn.."MeasureCounter"..j)
@@ -2514,6 +2532,8 @@ for i=1,#MeasureCounterOptions do
 				CurrentRow = CurrentRowP2
 				CurrentColumn = CurrentColumnP2
 			end
+			if pn == "P1" and not PlayerMenuP1 then return end
+			if pn == "P2" and not PlayerMenuP2 then return end
 			if CurrentTab ~= 3 then return end
 			-- yooooooo the j!!!!
 			for j=1, #MeasureCounterOptions do
@@ -2777,6 +2797,8 @@ for i=1,#EarlyRescoreOptions do
 				CurrentRow = CurrentRowP2
 				CurrentColumn = CurrentColumnP2
 			end
+			if pn == "P1" and not PlayerMenuP1 then return end
+			if pn == "P2" and not PlayerMenuP2 then return end
 			if CurrentTab ~= 3 then return end
 			-- yooooooo the j!!!!
 			for j=1, #EarlyRescoreOptions do
@@ -3028,6 +3050,8 @@ for i=1,#FAPlusOptions do
 				CurrentRow = CurrentRowP2
 				CurrentColumn = CurrentColumnP2
 			end
+			if pn == "P1" and not PlayerMenuP1 then return end
+			if pn == "P2" and not PlayerMenuP2 then return end
 			if CurrentTab ~= 3 then return end
 			-- yooooooo the j!!!!
 			for j=1, #FAPlusOptions do
@@ -3131,6 +3155,8 @@ af[#af+1] = Def.Quad{
 			CurrentRow = CurrentRowP2
 			CurrentColumn = CurrentColumnP2
 		end
+		if pn == "P1" and not PlayerMenuP1 then return end
+		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 3 then return end
 		local Parent = self:GetParent():GetChild(pn.."ColumnCuesBox1")
 		local ObjectWidth = Parent:GetZoomX()
@@ -3460,6 +3486,8 @@ for i=1,#ColumnCueExtras do
 				CurrentRow = CurrentRowP2
 				CurrentColumn = CurrentColumnP2
 			end
+			if pn == "P1" and not PlayerMenuP1 then return end
+			if pn == "P2" and not PlayerMenuP2 then return end
 			if CurrentTab ~= 3 then return end
 			-- yooooooo the j!!!!
 			for j=1, #ColumnCueExtras do
@@ -3703,6 +3731,8 @@ for i=1,#ColumnCueExtras2 do
 				CurrentRow = CurrentRowP2
 				CurrentColumn = CurrentColumnP2
 			end
+			if pn == "P1" and not PlayerMenuP1 then return end
+			if pn == "P2" and not PlayerMenuP2 then return end
 			if CurrentTab ~= 3 then return end
 			-- yooooooo the j!!!!
 			for j=1, #ColumnCueExtras2 do

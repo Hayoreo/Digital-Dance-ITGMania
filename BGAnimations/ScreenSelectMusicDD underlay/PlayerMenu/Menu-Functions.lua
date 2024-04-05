@@ -111,7 +111,6 @@ local t = Def.ActorFrame{
 			SCREENMAN:GetTopScreen():StartTransitioningScreen("SM_GoToNextScreen")
 		end
 	end,
-
 }
 
 return t

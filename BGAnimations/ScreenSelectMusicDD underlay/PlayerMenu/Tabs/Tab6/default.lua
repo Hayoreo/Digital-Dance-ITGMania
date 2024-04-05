@@ -167,6 +167,8 @@ for i=1, #SystemNames do
 				CurrentRow = CurrentRowP2
 				CurrentColumn = CurrentColumnP2
 			end
+			if pn == "P1" and not PlayerMenuP1 then return end
+			if pn == "P2" and not PlayerMenuP2 then return end
 			if CurrentTab ~= 6 then return end
 			for j=1, #SystemNames do
 				local Parent = self:GetParent():GetChild(pn.."System"..j)

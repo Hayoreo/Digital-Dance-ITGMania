@@ -306,6 +306,8 @@ for i=1,#InsertMods do
 				CurrentRow = CurrentRowP2
 				CurrentColumn = CurrentColumnP2
 			end
+			if pn == "P1" and not PlayerMenuP1 then return end
+			if pn == "P2" and not PlayerMenuP2 then return end
 			if CurrentTab ~= 4 then return end
 			-- yooooooo the j!!!!
 			for j=1, #InsertMods do
@@ -600,6 +602,8 @@ for i=1,#InsertMods2 do
 				CurrentRow = CurrentRowP2
 				CurrentColumn = CurrentColumnP2
 			end
+			if pn == "P1" and not PlayerMenuP1 then return end
+			if pn == "P2" and not PlayerMenuP2 then return end
 			if CurrentTab ~= 4 then return end
 			-- yooooooo the j!!!!
 			for j=1, #InsertMods2 do
@@ -910,6 +914,8 @@ for i=1,#RemoveMods do
 				CurrentRow = CurrentRowP2
 				CurrentColumn = CurrentColumnP2
 			end
+			if pn == "P1" and not PlayerMenuP1 then return end
+			if pn == "P2" and not PlayerMenuP2 then return end
 			if CurrentTab ~= 4 then return end
 			-- yooooooo the j!!!!
 			for j=1, #RemoveMods do
@@ -1219,6 +1225,8 @@ for i=1,#RemoveMods2 do
 				CurrentRow = CurrentRowP2
 				CurrentColumn = CurrentColumnP2
 			end
+			if pn == "P1" and not PlayerMenuP1 then return end
+			if pn == "P2" and not PlayerMenuP2 then return end
 			if CurrentTab ~= 4 then return end
 			-- yooooooo the j!!!!
 			for j=1, #RemoveMods2 do
@@ -1502,6 +1510,8 @@ for i=1,#Notes2HoldsMods do
 				CurrentRow = CurrentRowP2
 				CurrentColumn = CurrentColumnP2
 			end
+			if pn == "P1" and not PlayerMenuP1 then return end
+			if pn == "P2" and not PlayerMenuP2 then return end
 			if CurrentTab ~= 4 then return end
 			-- yooooooo the j!!!!
 			for j=1, #Notes2HoldsMods do
@@ -1747,6 +1757,8 @@ for i=1,#Notes2HoldsMods2 do
 				CurrentRow = CurrentRowP2
 				CurrentColumn = CurrentColumnP2
 			end
+			if pn == "P1" and not PlayerMenuP1 then return end
+			if pn == "P2" and not PlayerMenuP2 then return end
 			if CurrentTab ~= 4 then return end
 			-- yooooooo the j!!!!
 			for j=1, #Notes2HoldsMods2 do
@@ -2021,6 +2033,8 @@ for i=1,#AccelMods do
 				CurrentRow = CurrentRowP2
 				CurrentColumn = CurrentColumnP2
 			end
+			if pn == "P1" and not PlayerMenuP1 then return end
+			if pn == "P2" and not PlayerMenuP2 then return end
 			if CurrentTab ~= 4 then return end
 			-- yooooooo the j!!!!
 			for j=1, #AccelMods do
@@ -2280,6 +2294,8 @@ for i=1,#AccelMods2 do
 				CurrentRow = CurrentRowP2
 				CurrentColumn = CurrentColumnP2
 			end
+			if pn == "P1" and not PlayerMenuP1 then return end
+			if pn == "P2" and not PlayerMenuP2 then return end
 			if CurrentTab ~= 4 then return end
 			-- yooooooo the j!!!!
 			for j=1, #AccelMods2 do
@@ -2577,6 +2593,8 @@ for i=1,#EffectMods do
 				CurrentRow = CurrentRowP2
 				CurrentColumn = CurrentColumnP2
 			end
+			if pn == "P1" and not PlayerMenuP1 then return end
+			if pn == "P2" and not PlayerMenuP2 then return end
 			if CurrentTab ~= 4 then return end
 			-- yooooooo the j!!!!
 			for j=1, #EffectMods do
@@ -2904,6 +2922,8 @@ for i=1,#EffectMods2 do
 				CurrentRow = CurrentRowP2
 				CurrentColumn = CurrentColumnP2
 			end
+			if pn == "P1" and not PlayerMenuP1 then return end
+			if pn == "P2" and not PlayerMenuP2 then return end
 			if CurrentTab ~= 4 then return end
 			-- yooooooo the j!!!!
 			for j=1, #EffectMods2 do
@@ -3235,6 +3255,8 @@ for i=1,#AppearanceMods do
 				CurrentRow = CurrentRowP2
 				CurrentColumn = CurrentColumnP2
 			end
+			if pn == "P1" and not PlayerMenuP1 then return end
+			if pn == "P2" and not PlayerMenuP2 then return end
 			if CurrentTab ~= 4 then return end
 			-- yooooooo the j!!!!
 			for j=1, #AppearanceMods do
@@ -3474,6 +3496,8 @@ af[#af+1] = Def.Quad{
 			CurrentRow = CurrentRowP2
 			CurrentColumn = CurrentColumnP2
 		end
+		if pn == "P1" and not PlayerMenuP1 then return end
+		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 4 then return end
 		for j=1,#AttackMods do
 			local Parent = self:GetParent():GetChild(pn.."AttackMod"..j)
@@ -3720,6 +3744,8 @@ af[#af+1] = Def.Quad{
 			CurrentRow = CurrentRowP2
 			CurrentColumn = CurrentColumnP2
 		end
+		if pn == "P1" and not PlayerMenuP1 then return end
+		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 4 then return end
 		for j=1,#HasteMods do
 			local Parent = self:GetParent():GetChild(pn.."HasteMod"..j)
