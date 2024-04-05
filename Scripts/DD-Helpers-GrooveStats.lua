@@ -415,7 +415,7 @@ end
 
 CreateCommentString = function(player)
 	local pss = STATSMAN:GetCurStageStats():GetPlayerStageStats(player)
-	local isQuint = false
+	local isQuint = true
 	local isQuad = true
 
 	local suffixes = {"w", "e", "g", "d", "wo"}
@@ -446,8 +446,7 @@ CreateCommentString = function(player)
 				comment = comment .. ", "
 			end
 			comment = comment..WNumber..FAsuffix
-		elseif WNumber == 0 then
-			IsQuint = true
+			IsQuint = false
 		end
 	end
 	
@@ -469,11 +468,11 @@ CreateCommentString = function(player)
 	end
 	
 	--If the player got a quint, first of all nice, but let other people know here.
-	if IsQuint then
+	if IsQuint and IsQuad then
 		if #comment ~= 0 then
 			comment = comment .. ", "
 		end
-		comment = comment.."Quint"
+		comment = comment.."FBFC"
 	elseif IsQuad and not IsQuint then
 		if #comment ~= 0 then
 			comment = comment .. ", "
