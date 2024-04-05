@@ -448,6 +448,8 @@ CreateCommentString = function(player)
 			comment = comment..WNumber..FAsuffix
 			IsQuint = false
 		end
+	else
+		isQuint = false
 	end
 	
 	--- for all other judgements
