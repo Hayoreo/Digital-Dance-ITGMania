@@ -186,7 +186,7 @@ af[#af+1] = Def.BitmapText{
 	Font="Miso/_miso",
 	Name="SongsPlayedSetValue"..pn,
 	InitCommand=function(self)
-		local zoom = 0.75
+		local zoom = 0.7
 		self:horizalign(right):vertalign(bottom):diffuse(color("#a58cff"))
 			:x(pn == "P1" and padding/2 + border/2 + width - 45 or _screen.w - padding/2 - border/2 - 45)
 			:y(padding/2 + border/2 + 17)
@@ -202,7 +202,7 @@ af[#af+1] = Def.BitmapText{
 	Font="Miso/_miso",
 	Name="SongsPlayedSet"..pn,
 	InitCommand=function(self)
-		local zoom = 0.75
+		local zoom = 0.7
 		self:horizalign(left):vertalign(bottom)
 			:x(pn == "P1" and padding/2 + border/2 + width - 43 or _screen.w - padding/2 - border/2 - 43)
 			:y(padding/2 + border/2 + 17)
@@ -218,7 +218,7 @@ af[#af+1] = Def.BitmapText{
 	Font="Miso/_miso",
 	Name="SongsPlayedLifetimeLabel"..pn,
 	InitCommand=function(self)
-		local zoom = 0.75
+		local zoom = 0.7
 		self:horizalign(right):vertalign(bottom):diffuse(color("#a58cff"))
 			:x(pn == "P1" and padding/2 + border/2 + width - 45 or _screen.w - padding/2 - border/2 - 45)
 			:y(padding/2 + border/2 + 32)
@@ -235,7 +235,7 @@ af[#af+1] = Def.BitmapText{
 	Font="Miso/_miso",
 	Name="SongsPlayedLifetimeValue"..pn,
 	InitCommand=function(self)
-		local zoom = 0.75
+		local zoom = 0.7
 		self:horizalign(left):vertalign(bottom)
 			:x(pn == "P1" and padding/2 + border/2 + width - 43 or _screen.w - padding/2 - border/2 - 43)
 			:y(padding/2 + border/2 + 32)
@@ -252,7 +252,7 @@ af[#af+1] = Def.BitmapText{
 	Font="Miso/_miso",
 	Name="NumberOfTimesSongsPlayed"..pn,
 	InitCommand=function(self)
-		local zoom = 0.75
+		local zoom = 0.7
 		self:horizalign(right):vertalign(bottom):diffuse(color("#a58cff"))
 			:x(pn == "P1" and padding/2 + border/2 + width - 45 or _screen.w - padding/2 - border/2 - 45)
 			:y(padding/2 + border/2 + 47)
@@ -269,7 +269,7 @@ af[#af+1] = Def.BitmapText{
 	Font="Miso/_miso",
 	Name="NumberOfTimesSongsPlayedValue"..pn,
 	InitCommand=function(self)
-		local zoom = 0.75
+		local zoom = 0.7
 		local song = GAMESTATE:GetCurrentSong()
 		local num_times_song = player_profile:GetSongNumTimesPlayed(song)
 		self:horizalign(left):vertalign(bottom)
