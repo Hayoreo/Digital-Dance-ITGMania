@@ -30,6 +30,46 @@ THEME:GetString("OptionTitles","Turn"),
 THEME:GetString("OptionTitles","MusicRate"),
 }
 
+local function GetNoteskins()
+	local all = NOTESKIN:GetNoteSkinNames()
+
+	if ThemePrefs.Get("HideStockNoteSkins") then
+		local game = GAMESTATE:GetCurrentGame():GetName()
+
+		-- Apologies, midiman. :(
+		local stock = {
+			dance = {
+				"default", "delta", "easyv2", "exactv2", "lambda", "midi-note",
+				"midi-note-3d", "midi-rainbow", "midi-routine-p1", "midi-routine-p2",
+				"midi-solo", "midi-vivid", "midi-vivid-3d", "retro", "retrobar",
+				"retrobar-splithand_whiteblue"
+			},
+			pump = {
+				"cmd", "cmd-routine-p1", "cmd-routine-p2", "complex", "default",
+				"delta", "delta-note", "delta-routine-p1", "delta-routine-p2",
+				"frame5p", "newextra", "pad", "rhythm", "simple"
+			},
+		}
+		if stock[game] then
+			for stock_noteskin in ivalues(stock[game]) do
+				for i=1,#all do
+					if stock_noteskin == all[i] then
+						table.remove(all, i)
+						break
+					end
+				end
+			end
+		end
+	end
+
+	-- It's possible a user might want to hide stock noteskins
+	-- but only have stock noteskins.  If so, just return all noteskins.
+	if #all == 0 then all = NOTESKIN:GetNoteSkinNames() end
+
+	return all
+
+end
+
 --- I still do not understand why i have to throw in a random actor frame before everything else will work????
 af[#af+1] = Def.Quad{}
 
@@ -966,7 +1006,7 @@ af[#af+1] = Def.BitmapText{
 
 -- Noteskins
 --------------------------------------------------------------------
-local Noteskins = NOTESKIN:GetNoteSkinNames()
+local Noteskins = GetNoteskins()
 
 local CurrentNoteskinIndex
 local PlayerNoteSkin = PlayerState:GetPlayerOptions(0):NoteSkin() or "cel"
