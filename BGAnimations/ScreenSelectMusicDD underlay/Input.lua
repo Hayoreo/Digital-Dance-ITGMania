@@ -419,7 +419,6 @@ t.Handler = function(event)
 			if event.PlayerNumber == "PlayerNumber_P1" and GAMESTATE:IsSideJoined(event.PlayerNumber) then
 				if PlayerMenuP1 then
 					PlayerMenuP1 = false
-					ApplyMods(event.PlayerNumber)
 					SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "expand.ogg") )
 					if MusicWheelNeedsResetting then
 						MESSAGEMAN:Broadcast("ReloadSSMDD")
@@ -438,7 +437,6 @@ t.Handler = function(event)
 			elseif event.PlayerNumber == "PlayerNumber_P2" and GAMESTATE:IsSideJoined(event.PlayerNumber) then
 				if PlayerMenuP2 then
 					PlayerMenuP2 = false
-					ApplyMods(event.PlayerNumber)
 					SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "expand.ogg") )
 					if MusicWheelNeedsResetting then
 						MESSAGEMAN:Broadcast("ReloadSSMDD")
@@ -463,7 +461,6 @@ t.Handler = function(event)
 				-- we have to make these nil otherwise we'll back out of the game x_x
 				PlayerMenuP1 = nil
 				SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "expand.ogg") )
-				ApplyMods(event.PlayerNumber)
 				if MusicWheelNeedsResetting then
 					MESSAGEMAN:Broadcast("ReloadSSMDD")
 				else
@@ -473,7 +470,6 @@ t.Handler = function(event)
 				-- we have to make these nil otherwise we'll back out of the game x_x
 				PlayerMenuP2 = nil
 				SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "expand.ogg") )
-				ApplyMods(event.PlayerNumber)
 				if MusicWheelNeedsResetting then
 					MESSAGEMAN:Broadcast("ReloadSSMDD")
 				else
