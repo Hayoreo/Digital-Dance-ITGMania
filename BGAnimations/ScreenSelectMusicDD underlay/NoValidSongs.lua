@@ -11,8 +11,9 @@ local DefaultUpperLength = 0
 local DefaultGroovestats = 1
 local DefaultAutogen = 1
 local DefaultDifficulty = 1
-
-if 
+local DefaultMainSort = 1
+if
+GetMainSortPreference() == 7 or
 GetLowerMeterFilter() ~= DefaultLowerMeter or
 GetUpperMeterFilter() ~= DefaultUpperMeter or
 GetShowDifficulty("Beginner") ~= DefaultDifficulty or
@@ -27,6 +28,7 @@ GetLowerLengthFilter() ~= DefaultLowerLength or
 GetUpperLengthFilter() ~= DefaultUpperLength or
 GetGroovestatsFilter() ~= DefaultGroovestats or
 GetAutogenFilter() ~= DefaultAutogen then
+	SetMainSortPreference(DefaultMainSort)
 	SetLowerMeterFilter(DefaultLowerMeter)
 	SetUpperMeterFilter(DefaultUpperMeter)
 	SetShowDifficulty("Beginner")

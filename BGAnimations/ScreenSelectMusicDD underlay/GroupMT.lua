@@ -10,6 +10,36 @@ local PruneSongsFromGroup = args[8]
 local starting_group = args[9]
 local group_info = args[10]
 local WheelWidth = SCREEN_WIDTH/3
+local DarkenAmount = 0.8
+local DarkenAmount2 = 0.6
+
+local P1Colors = {
+0.298,
+0.082,
+0.478,
+}
+local P2Colors = {
+0,
+0.710,
+0.686,
+}
+local NumPlayers = GAMESTATE:GetNumSidesJoined()
+local mpn = GAMESTATE:GetMasterPlayerNumber()
+local PlayerNum
+
+if mpn == "PlayerNumber_P1" then
+	PlayerNum = 0
+elseif mpn == "PlayerNumber_P2" then
+	PlayerNum = 1
+end
+
+for i=1, 3 do
+	P1Colors[i] = P1Colors[i] * DarkenAmount
+	P2Colors[i] = P2Colors[i] * DarkenAmount2
+end
+
+local P1Color = color( tostring(P1Colors[1])..","..tostring(P1Colors[2])..","..tostring(P1Colors[3])..",1" )
+local P2Color = color( tostring(P2Colors[1])..","..tostring(P2Colors[2])..","..tostring(P2Colors[3])..",1" )
 
 local max_chars = 64
 
@@ -27,6 +57,35 @@ local switch_to_songs_from_group = function(group_name,event)
 	songs[#songs+1] = "CloseThisFolder"
 	index = 0
 	SongWheel:set_info_set(songs,index)	
+end
+
+local function UpdateGroupColor(self, Group)
+	local Group = Group
+	if GetMainSortPreference() == 1 then
+		if NumPlayers == 1 then
+			if IsCurrentGroupTagged(Group, PlayerNum) then
+				if PlayerNum == 0 then
+					self.QuadColor:diffuse(P1Color)
+				elseif PlayerNum == 1 then
+					self.QuadColor:diffuse(P2Color)
+				end
+			else	
+				self.QuadColor:diffuse(color("#363d42"))
+			end
+		elseif NumPlayers == 2 then
+			if IsCurrentGroupTagged(Group, 0) then
+				self.QuadColor:diffuse(P1Color)
+			elseif IsCurrentGroupTagged(Group, 1) then
+				self.QuadColor:diffuse(P2Color)
+			else
+				self.QuadColor:diffuse(color("#363d42"))
+			end
+		else
+			self.QuadColor:diffuse(color("#363d42"))
+		end
+	else
+		self.QuadColor:diffuse(color("#363d42"))
+	end
 end
 
 local item_mt = {
@@ -219,12 +278,13 @@ local item_mt = {
 				self.QuadColor:diffuse(color("#000000"))
 				self.Numberbmt:settext("")
 			else
+				UpdateGroupColor(self, groupName)
 				self.groupName = groupName
-				self.QuadColor:diffuse(color("#363d42"))
 				self.bmt:diffuse(color("#4ffff3"))
 				-- handle text
 				self.bmt:settext(self.groupName):Truncate(max_chars)
 				self.Numberbmt:settext(group_info[groupName].num_songs)
+				
 			end
 		end
 	}

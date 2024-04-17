@@ -4,7 +4,7 @@ local t = Def.ActorFrame {
 	self:visible(false)
 	end,
 	
-	--- Let's the songwheel input know if it's Open/Closed so it can stop input.
+	--- Lets the songwheel input know if it's Open/Closed so it can stop input.
 	ToggleSearchMenuMessageCommand=function(self)
 		if self:GetVisible() then
 			self:stoptweening()

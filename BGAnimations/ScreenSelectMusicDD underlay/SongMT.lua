@@ -4,6 +4,56 @@ local TransitionTime = args[2]
 local row = args[3]
 local col = args[4]
 local WheelWidth = SCREEN_WIDTH/3
+local DarkenAmount = 0.5
+local DarkenAmount2 = 0.4
+local DarkenGroup = 0.8
+local DarkenGroup2 = 0.6
+
+local P1Colors = {
+0.298,
+0.082,
+0.478,
+}
+local P2Colors = {
+0,
+0.710,
+0.686,
+}
+
+local P1GroupColors = {
+0.298,
+0.082,
+0.478,
+}
+local P2GroupColors = {
+0,
+0.710,
+0.686,
+}
+
+
+
+local NumPlayers = GAMESTATE:GetNumSidesJoined()
+local mpn = GAMESTATE:GetMasterPlayerNumber()
+local PlayerNum
+
+if mpn == "PlayerNumber_P1" then
+	PlayerNum = 0
+elseif mpn == "PlayerNumber_P2" then
+	PlayerNum = 1
+end
+
+for i=1, 3 do
+	P1Colors[i] = P1Colors[i] * DarkenAmount
+	P2Colors[i] = P2Colors[i] * DarkenAmount2
+	P1GroupColors[i] = P1GroupColors[i] * DarkenGroup
+	P2GroupColors[i] = P2GroupColors[i] * DarkenGroup2
+end
+
+local P1Color = color( tostring(P1Colors[1])..","..tostring(P1Colors[2])..","..tostring(P1Colors[3])..",1" )
+local P2Color = color( tostring(P2Colors[1])..","..tostring(P2Colors[2])..","..tostring(P2Colors[3])..",1" )
+local P1GroupColor = color( tostring(P1GroupColors[1])..","..tostring(P1GroupColors[2])..","..tostring(P1GroupColors[3])..",1" )
+local P2GroupColor = color( tostring(P2GroupColors[1])..","..tostring(P2GroupColors[2])..","..tostring(P2GroupColors[3])..",1" )
 
 local Subtitle
 local CurrentStyle = GAMESTATE:GetCurrentStyle():GetStepsType()
@@ -228,7 +278,7 @@ local song_mt = {
 						:horizalign(right)
 						:x( _screen.w/6 )
 						:diffuse(SL.JudgmentColors["FA+"][1])
-						if GAMESTATE:GetNumSidesJoined() == 2 then
+						if NumPlayers == 2 then
 							subself:y(ExScore_position):zoom(0.14)
 						else
 							subself:y(22)
@@ -303,6 +353,21 @@ local song_mt = {
 					self.title_bmt:settext(NameOfGroup):maxwidth(280):diffuse(color("#4ffff3")):shadowlength(1.1):horizalign(center):valign(0.5):x(0)
 					self.QuadColor:diffuse(color("#363d42"))
 					self.subtitle_bmt:settext("")
+					if NumPlayers == 1 then
+						if IsCurrentGroupTagged(NameOfGroup, PlayerNum) then
+							if PlayerNum == 0 then
+								self.QuadColor:diffuse(P1GroupColor)
+							elseif PlayerNum == 1 then
+								self.QuadColor:diffuse(P2GroupColor)
+							end
+						end
+					elseif NumPlayers == 2 then
+						if IsCurrentGroupTagged(NameOfGroup, 0) then
+							self.QuadColor:diffuse(P1GroupColor)
+						elseif IsCurrentGroupTagged(NameOfGroup, 1) then
+							self.QuadColor:diffuse(P2GroupColor)
+						end
+					end
 				else
 					self.song = song
 					self.title_bmt:settext("RANDOM"):diffuse(color("#f70000")):shadowlength(1.1):horizalign(center):valign(0.5):x(0)
@@ -323,6 +388,23 @@ local song_mt = {
 					self.title_bmt:valign(row.h/170)
 				else
 					self.title_bmt:valign(0.5)
+				end
+				if GetMainSortPreference() ~= 7 then
+					if NumPlayers == 1 then
+						if IsCurrentSongTagged(song, PlayerNum) or (IsCurrentGroupTagged(song:GetGroupName(), PlayerNum) and GetMainSortPreference() ~= 1) then
+							if PlayerNum == 0 then
+								self.QuadColor:diffuse(P1Color)
+							elseif PlayerNum == 1 then
+								self.QuadColor:diffuse(P2Color)
+							end
+						end
+					elseif NumPlayers == 2 then
+						if IsCurrentSongTagged(song, 0) or (IsCurrentGroupTagged(song:GetGroupName(), PlayerNum) and GetMainSortPreference() ~= 1) then
+							self.QuadColor:diffuse(P1Color)
+						elseif IsCurrentSongTagged(song, 1) then
+							self.QuadColor:diffuse(P2Color)
+						end
+					end
 				end
 			end
 

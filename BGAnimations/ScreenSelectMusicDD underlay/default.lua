@@ -149,6 +149,8 @@ local t = Def.ActorFrame {
 	LoadActor("./TestInput.lua"),
 	-- Handles song search data
 	LoadActor("./SearchMenu/default.lua"),
+	-- Menu for managing tags
+	LoadActor("./TagsMenu/default.lua", {GroupWheel,SongWheel,Input}),
 	-- For backing out of SSMDD.
 	LoadActor('./EscapeFromEventMode.lua'),
 }

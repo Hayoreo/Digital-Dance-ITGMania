@@ -4,6 +4,7 @@ local max_bpm_group = '500+'
 local NoSongs = false
 local AllSongs = SONGMAN:GetAllSongs()
 IsUntiedWR = false
+HaveTagsChanged = false
 local HasDifficultyFilters =  IsUsingDifficultyFilters()
 
 
@@ -71,36 +72,6 @@ local function GetSongBpmGroup(song)
 	else
 		return song_bpms[index] .. ' - ' .. (song_bpms[index+1] - 1)
 	end
-end
-
----------------------------------------------------------------------------
--- helper function used for groovestats filtering.
--- returns the contents of a txt file as an indexed table, split on newline
-
-local GetFileContents = function(path)
-	local contents = ""
-
-	if FILEMAN:DoesFileExist(path) then
-		-- create a generic RageFile that we'll use to read the contents
-		local file = RageFileUtil.CreateRageFile()
-		-- the second argument here (the 1) signifies
-		-- that we are opening the file in read-only mode
-		if file:Open(path, 1) then
-			contents = file:Read()
-		end
-
-		-- destroy the generic RageFile now that we have the contents
-		file:destroy()
-	end
-
-	-- split the contents of the file on newline
-	-- to create a table of lines as strings
-	local lines = {}
-	for line in contents:gmatch("[^\r\n]+") do
-		lines[#lines+1] = line
-	end
-
-	return lines
 end
 
 -- Initialize Groovestats filter
@@ -242,6 +213,8 @@ local main_sort_funcs = {
 	function(g, s) return round(s:GetDisplayBpms()[2], 0) end,
 	-- Difficulty (only subsort)
 	function(g, s) return '' end,
+	-- Tags
+	function(g, s) return '' end,
 }
 
 ---------------------------------------------------------------------------
@@ -305,6 +278,67 @@ local UpdatePrunedSongs = function()
 				else
 					local songs = songs_by_group[meter]
 					songs[#songs+1] = song
+				end
+			end
+		end
+	elseif sort_pref == 7 then
+		songs_by_group = {}
+		local PlayerNumber
+		local NumPlayers = GAMESTATE:GetNumPlayersEnabled()
+		local P2TagPath
+		local P2TagLines
+		if GAMESTATE:IsPlayerEnabled(PLAYER_1) then
+			pn = 0
+			PlayerNumber = PLAYER_1
+		else
+			pn = 1
+			PlayerNumber = PLAYER_2
+		end
+		local tag_path
+		if DDStats.GetStat(PlayerNumber, 'LastStyle') == "Single" then
+			tag_path = PROFILEMAN:GetProfileDir(pn) .. "/Tags-single.txt"
+		else
+			tag_path = PROFILEMAN:GetProfileDir(pn) .. "/Tags-double.txt"
+		end
+		local tag_lines = GetFileContents(tag_path)
+		local tag_group
+		
+		if NumPlayers == 2 then
+			if DDStats.GetStat(PLAYER_2, 'LastStyle') == "Single" then
+				P2TagPath = PROFILEMAN:GetProfileDir(1) .. "/Tags-single.txt"
+			else
+				P2TagPath = PROFILEMAN:GetProfileDir(1) .. "/Tags-double.txt"
+			end
+			P2TagLines =  GetFileContents(P2TagPath)
+			--- combine P1 and P2 taglines
+			for line in ivalues(P2TagLines) do
+				tag_lines[#tag_lines+1] = line
+			end
+		end
+		
+		for line in ivalues(tag_lines) do
+			if line:sub(1,1) == "#" then
+				tag_group = line:sub(2)
+			elseif line:sub(1,1) ~= "#" and tag_group ~= nil then
+				if line:find("/%*") then
+					local song_group = line:gsub("/.*", "")
+					for song in ivalues(AllSongs) do
+						if song:GetGroupName():lower() == song_group:lower() then
+							if songs_by_group[tag_group] == nil then
+								songs_by_group[tag_group] = {song}
+							else
+								local songs = songs_by_group[tag_group]
+								songs[#songs+1] = song
+							end
+						end
+					end
+				elseif SONGMAN:FindSong(line) then
+					if songs_by_group[tag_group] == nil then
+						songs_by_group[tag_group] = {SONGMAN:FindSong(line)}
+					else
+						local songs = songs_by_group[tag_group]
+						songs[#songs+1] = SONGMAN:FindSong(line)
+					end
 				end
 			end
 		end
@@ -599,6 +633,48 @@ local GetGroups = function()
 			if b == max_difficulty_group then return true end
 			return a < b
 		end)
+		return groups
+	elseif sort_pref == 7 then
+		local groups = {}
+		local PlayerNumber
+		local NumPlayers = GAMESTATE:GetNumPlayersEnabled()
+		local P2TagPath
+		local P2TagLines
+		if GAMESTATE:IsPlayerEnabled(PLAYER_1) then
+			pn = 0
+			PlayerNumber = PLAYER_1
+		else
+			pn = 1
+			PlayerNumber = PLAYER_2
+		end
+		local tag_path
+		if DDStats.GetStat(PlayerNumber, 'LastStyle') == "Single" then
+			tag_path = PROFILEMAN:GetProfileDir(pn) .. "/Tags-single.txt"
+		else
+			tag_path = PROFILEMAN:GetProfileDir(pn) .. "/Tags-double.txt"
+		end
+		local tag_lines = GetFileContents(tag_path)
+		
+		if NumPlayers == 2 then
+			if DDStats.GetStat(PLAYER_2, 'LastStyle') == "Single" then
+				P2TagPath = PROFILEMAN:GetProfileDir(1) .. "/Tags-single.txt"
+			else
+				P2TagPath = PROFILEMAN:GetProfileDir(1) .. "/Tags-double.txt"
+			end
+			P2TagLines =  GetFileContents(P2TagPath)
+			--- combine P1 and P2 taglines
+			for line in ivalues(P2TagLines) do
+				tag_lines[#tag_lines+1] = line
+			end
+		end
+		
+		for line in ivalues(tag_lines) do
+			if line:sub(1,1) == "#" then
+				groups[#groups+1] = line:sub(2)
+			end
+		end
+		
+		table.sort(groups, SortByLetter)
 		return groups
 	end
 end

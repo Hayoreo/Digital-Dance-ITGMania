@@ -160,3 +160,176 @@ GetMaxCursorPosition = function()
 	end
 	return tonumber(MaxCursorPosition)
 end
+
+GetFileContents = function(path)
+	local contents = ""
+
+	if FILEMAN:DoesFileExist(path) then
+		-- create a generic RageFile that we'll use to read the contents
+		local file = RageFileUtil.CreateRageFile()
+		-- the second argument here (the 1) signifies
+		-- that we are opening the file in read-only mode
+		if file:Open(path, 1) then
+			contents = file:Read()
+		end
+
+		-- destroy the generic RageFile now that we have the contents
+		file:destroy()
+	end
+
+	-- split the contents of the file on newline
+	-- to create a table of lines as strings
+	local lines = {}
+	for line in contents:gmatch("[^\r\n]+") do
+		lines[#lines+1] = line
+	end
+
+	return lines
+end
+
+IsCurrentSongTagged = function(song, PlayerNum)
+	local style
+	if GAMESTATE:GetCurrentStyle():GetStyleType() == 'StyleType_OnePlayerTwoSides' then
+		style = "double"
+	else
+		style = "single"
+	end
+	local PlayerNum = PlayerNum
+	local song = song
+	local SongPath = song:GetSongDir():sub(8):sub(1, -2)
+	local tag_path = PROFILEMAN:GetProfileDir(PlayerNum) .. "/Tags-"..style..".txt"
+	local tag_lines = GetFileContents(tag_path)
+	local Value = false
+	for line in ivalues(tag_lines) do
+		if line == SongPath then
+			Value = true
+			break
+		end
+	end
+	return Value
+end
+
+IsCurrentGroupTagged = function(group, PlayerNum)
+	local style
+	if GAMESTATE:GetCurrentStyle():GetStyleType() == 'StyleType_OnePlayerTwoSides' then
+		style = "double"
+	else
+		style = "single"
+	end
+	local PlayerNum = PlayerNum
+	local song = song
+	local Group = group
+	local GroupName = Group.."/*"
+	local tag_path = PROFILEMAN:GetProfileDir(PlayerNum) .. "/Tags-"..style..".txt"
+	local tag_lines = GetFileContents(tag_path)
+	local Value = false
+	for line in ivalues(tag_lines) do
+		if line == GroupName then
+			Value = true
+			break
+		end
+	end
+	return Value
+end
+
+GetCurrentPlayerTags = function(PlayerNum)
+	local style
+	if GAMESTATE:GetCurrentStyle():GetStyleType() == 'StyleType_OnePlayerTwoSides' then
+		style = "double"
+	else
+		style = "single"
+	end
+	local tag_path = PROFILEMAN:GetProfileDir(PlayerNum) .. "/Tags-"..style..".txt"
+	local tag_lines = GetFileContents(tag_path)
+	local player_tags = {}
+	for line in ivalues(tag_lines) do
+		if line:sub(1,1) == "#" then
+			player_tags[#player_tags+1] = line:sub(2)
+		end
+	end
+	return player_tags
+end
+
+GetCurrentObjectTags = function(Object, PlayerNumber)
+	local style
+	if GAMESTATE:GetCurrentStyle():GetStyleType() == 'StyleType_OnePlayerTwoSides' then
+		style = "double"
+	else
+		style = "single"
+	end
+	local Object = Object
+	local SongOrGroup
+	local tag_path = PROFILEMAN:GetProfileDir(PlayerNumber) .. "/Tags-"..style..".txt"
+	local tag_lines = GetFileContents(tag_path)
+	local Tag
+	local NewTag
+	
+	if Object == NameOfGroup then
+		SongOrGroup = "Group"
+	else
+		SongOrGroup = "Song"
+	end
+	
+	local object_tags = {}
+	for line in ivalues(tag_lines) do
+		if line:sub(1,1) == "#" then
+			Tag = line:sub(2)
+			local FoundObject = false
+			for line in ivalues(tag_lines) do
+				if line:sub(1,1) == "#" then
+					NewTag = line:sub(2)
+				end
+				if SongOrGroup == "Song" then
+					if Object:GetSongDir():sub(8):sub(1, -2) == line then
+						if NewTag == Tag then
+							FoundObject = true
+							break
+						end
+					end
+				elseif SongOrGroup == "Group" then
+					if Object.."/*" == line then
+						if NewTag == Tag then
+							FoundObject = true
+							break
+						end
+					end
+				end
+			end
+			if FoundObject then
+				object_tags[#object_tags+1] = Tag
+			end
+		end
+	end
+	
+	return object_tags
+	
+end
+
+GetObjectsPerTag = function (Tag, PlayerNumber, Object)
+	local style
+	if GAMESTATE:GetCurrentStyle():GetStyleType() == 'StyleType_OnePlayerTwoSides' then
+		style = "double"
+	else
+		style = "single"
+	end
+	local tag_path = PROFILEMAN:GetProfileDir(PlayerNumber) .. "/Tags-"..style..".txt"
+	local tag_lines = GetFileContents(tag_path)
+	local Objects = {}
+	local NewTag
+	
+	for line in ivalues(tag_lines) do
+		if line:sub(1,1) == "#" then
+			NewTag = line:sub(2)
+		end
+		if Tag == NewTag and line:sub(1,1) ~= "#" then
+			if line:find("/%*") and Object == "Pack" then
+				Objects[#Objects+1] = "Pack: "..line:gsub("/.*", "")
+			elseif Object == "Song" and not line:find("/%*") then
+				local song = SONGMAN:FindSong(line)
+				Objects[#Objects+1] = "Song: "..song:GetDisplayMainTitle()
+			end
+		end
+	end
+	
+	return Objects
+end

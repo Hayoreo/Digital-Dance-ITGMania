@@ -228,12 +228,13 @@ af[#af+1] = Def.Quad{
 
 -- Main Sort Texts
 local MainSortText = {
-	"GROUP",
-	"TITLE",
-	"ARTIST",
-	"LENGTH",
-	"BPM",
-	"METER",
+	THEME:GetString("DDPlayerMenu","Group"),
+	THEME:GetString("DDPlayerMenu","Title"),
+	THEME:GetString("DDPlayerMenu","Artist"),
+	THEME:GetString("DDPlayerMenu","Length"),
+	THEME:GetString("DDPlayerMenu","BPM"),
+	THEME:GetString("DDPlayerMenu","Meter"),
+	THEME:GetString("DDPlayerMenu","Tags"),
 }
 
 
@@ -414,15 +415,15 @@ af[#af+1] = Def.Quad{
 }
 
 
--- Main Sort Texts
+-- Sub Sort Texts
 local SubSortText = {
-	"GROUP",
-	"TITLE",
-	"ARTIST",
-	"LENGTH",
-	"BPM",
-	"# OF STEPS",
-	"METER",
+	THEME:GetString("DDPlayerMenu","Group"),
+	THEME:GetString("DDPlayerMenu","Title"),
+	THEME:GetString("DDPlayerMenu","Artist"),
+	THEME:GetString("DDPlayerMenu","Length"),
+	THEME:GetString("DDPlayerMenu","BPM"),
+	THEME:GetString("DDPlayerMenu","NumSteps"),
+	THEME:GetString("DDPlayerMenu","Meter"),
 }
 
 -- The Sub Sort Text
