@@ -10,7 +10,7 @@ end
 local function getPlayerProfileDir(PlayerNumber)
 	local dir = PROFILEMAN:GetProfileDir(PlayerNumber)
 
-	return dir..'Tags-'..style..'.txt'
+	return dir..'/Tags-'..style..'.txt'
 end
 
 local function PleaseSortMe(Taggles)
