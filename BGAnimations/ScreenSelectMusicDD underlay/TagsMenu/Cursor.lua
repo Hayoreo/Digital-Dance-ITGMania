@@ -14,12 +14,14 @@ CurrentTagSubMenu = false
 
 local maxwidth = (quadwidth-quadborder)/2.75
 local CurrentTagIndex = 1
+local InfinityIndex = 0
 local FakeIndex
 local CurrentColumn = 1
 local Player_Tags
 local NumTags = 1
 local PlayerNumber
 local AvailableTags
+local TagsToBeAdded
 local TagSongs
 local TagPacks
 local Tag
@@ -59,6 +61,9 @@ end
 
 for i=1, 15 do
 	TagPositionNames[#TagPositionNames+1] = "PlayerTags"..i
+end
+
+for i=1, 24 do
 	RemoveTagPositionNames[#RemoveTagPositionNames+1] = "RemovePlayerTags" ..i
 	ManageTagNames[#ManageTagNames+1] = "ManagePlayerTags"..i
 end
@@ -118,6 +123,7 @@ t[#t+1] = Def.Quad{
 		CurrentTagSubMenu = false
 		CurrentTagIndex = 1
 		CurrentColumn = 1
+		InfinityIndex = 0
 		self:playcommand('UpdateTagCursor')
 	end,
 	DimCursorCommand=function(self)
@@ -136,6 +142,13 @@ t[#t+1] = Def.Quad{
 		Player_Tags = GetCurrentPlayerTags(PlayerNumber)
 		-- Plus one for the text entry field
 		NumTags = #Player_Tags + 1
+		local Object
+		if IsSong() then
+			Object = GAMESTATE:GetCurrentSong()
+		elseif IsGroup() then
+			Object = NameOfGroup
+		end
+		TagsToBeAdded = GetAvailableTagsToAdd(Object, PlayerNumber)
 	end,
 	UpdateTagCursorMessageCommand=function(self, Direction)
 		self:stoptweening()
@@ -172,62 +185,244 @@ t[#t+1] = Def.Quad{
 			self:zoomy(CursorHeight + 5)
 			self:queuecommand('BrightenCursor')
 		elseif AddTagSubMenu and not RemoveTagSubMenu and not ManageTagsSubMenu and not CurrentTagSubMenu then
-			if #Player_Tags > 0 then
+			if #TagsToBeAdded > 0 then
 				if Direction[1] == "Up" then
 					if CurrentTagIndex == 1 then
-						CurrentTagIndex = NumTags
-						SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						if #TagsToBeAdded >= 15 and InfinityIndex == 0 then
+							for i=1, #TagsToBeAdded do
+								if i*3 + 1 == #TagsToBeAdded then
+									CurrentTagIndex = 14
+									InfinityIndex = #TagsToBeAdded
+									break
+								elseif i*3 + 2 == #TagsToBeAdded then
+									CurrentTagIndex = 15
+									InfinityIndex = #TagsToBeAdded
+									break
+								elseif i*3 == #TagsToBeAdded then	
+									CurrentTagIndex = 16
+									InfinityIndex = #TagsToBeAdded
+									break
+								end
+							end
+							MESSAGEMAN:Broadcast("UpdateAddTagsText", {PlayerNumber, TagsToBeAdded, InfinityIndex, CurrentTagIndex, "None", Direction[1]} )
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						else
+							CurrentTagIndex = #TagsToBeAdded + 1
+							InfinityIndex = #TagsToBeAdded
+							MESSAGEMAN:Broadcast("UpdateAddTagsText", {PlayerNumber, TagsToBeAdded, InfinityIndex, CurrentTagIndex, "None", Direction[1]} )
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						end
 					elseif CurrentTagIndex == 2 or CurrentTagIndex == 3 or CurrentTagIndex == 4 then
-						CurrentTagIndex = 1
-						SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+						if InfinityIndex < 4 then
+							CurrentTagIndex = 1
+							InfinityIndex = 0
+						else
+							InfinityIndex = InfinityIndex - 3
+						end
+						MESSAGEMAN:Broadcast("UpdateAddTagsText", {PlayerNumber, TagsToBeAdded, InfinityIndex, CurrentTagIndex, "None", Direction[1]} )
+						SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
 					else
 						CurrentTagIndex = CurrentTagIndex - 3
+						InfinityIndex = InfinityIndex - 3
 						SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
 					end
 				elseif Direction[1] == "Down" then
-					if CurrentTagIndex == NumTags then
-						CurrentTagIndex = 1
-						SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
-					elseif CurrentTagIndex == 1 and NumTags > 1 then
+					if CurrentTagIndex == 1 then
 						CurrentTagIndex = 2
+						InfinityIndex = 1
 						SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+					elseif CurrentTagIndex == 14 then
+						if InfinityIndex + 3 <= #TagsToBeAdded then
+							InfinityIndex = InfinityIndex + 3
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+							MESSAGEMAN:Broadcast("UpdateAddTagsText", {PlayerNumber, TagsToBeAdded, InfinityIndex, CurrentTagIndex, "None", Direction[1]} )	
+						else
+							CurrentTagIndex = 1
+							InfinityIndex = 0
+							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+							MESSAGEMAN:Broadcast("UpdatePlayerTagsText", {PlayerNumber, Object} )
+						end
+					elseif CurrentTagIndex == 15 then
+						if InfinityIndex + 3 <= #TagsToBeAdded then
+							InfinityIndex = InfinityIndex + 3
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+							MESSAGEMAN:Broadcast("UpdateAddTagsText", {PlayerNumber, TagsToBeAdded, InfinityIndex, CurrentTagIndex, "None", Direction[1]} )
+						elseif InfinityIndex + 2 <= #TagsToBeAdded  then
+							InfinityIndex = #TagsToBeAdded
+							CurrentTagIndex = 14
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+							MESSAGEMAN:Broadcast("UpdateAddTagsText", {PlayerNumber, TagsToBeAdded, InfinityIndex, CurrentTagIndex, "None", Direction[1]} )
+						else
+							CurrentTagIndex = 1
+							InfinityIndex = 0
+							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+							MESSAGEMAN:Broadcast("UpdatePlayerTagsText", {PlayerNumber, Object} )
+						end
+					elseif CurrentTagIndex == 16 then
+						if InfinityIndex + 3 <= #TagsToBeAdded then
+							InfinityIndex = InfinityIndex + 3
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+							MESSAGEMAN:Broadcast("UpdateAddTagsText", {PlayerNumber, TagsToBeAdded, InfinityIndex, CurrentTagIndex, "None", Direction[1]} )
+						elseif #TagsToBeAdded > InfinityIndex then
+							InfinityIndex = #TagsToBeAdded
+							for i=1, #TagsToBeAdded do
+								if i*3 + 1 == InfinityIndex then
+									CurrentTagIndex = 14
+									break
+								elseif i*3 + 2 == InfinityIndex then
+									CurrentTagIndex = 15
+									break
+								end
+							end
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+							MESSAGEMAN:Broadcast("UpdateAddTagsText", {PlayerNumber, TagsToBeAdded, InfinityIndex, CurrentTagIndex, "None", Direction[1]} )
+						else
+							CurrentTagIndex = 1
+							InfinityIndex = 0
+							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+							MESSAGEMAN:Broadcast("UpdatePlayerTagsText", {PlayerNumber, Object} )
+						end
 					else
-						if CurrentTagIndex + 3 <= NumTags then
+						if InfinityIndex + 3 <= #TagsToBeAdded then
 							CurrentTagIndex = CurrentTagIndex + 3
+							InfinityIndex = InfinityIndex + 3
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif #TagsToBeAdded > InfinityIndex and #TagsToBeAdded <= 15 then
+							
+							for i=1, #TagsToBeAdded do
+								if i == 1 and i == InfinityIndex then
+									if #TagsToBeAdded >= 4 then
+										InfinityIndex = InfinityIndex + 3
+										CurrentTagIndex = CurrentTagIndex + 3
+										SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+										break
+									else
+										InfinityIndex = 0
+										CurrentTagIndex = 1
+										SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+									end
+								elseif i == 2 and i == InfinityIndex then
+									if #TagsToBeAdded >= 5 then
+										InfinityIndex = InfinityIndex + 3
+										CurrentTagIndex = CurrentTagIndex + 3
+										SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+										break
+									elseif #TagsToBeAdded == 4 then
+										InfinityIndex = 4
+										CurrentTagIndex = 5
+										SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+										break
+									else
+										InfinityIndex = 0
+										CurrentTagIndex = 1
+										SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+									end
+								elseif i == 3 and i == InfinityIndex then
+									if #TagsToBeAdded >= 6 then
+										InfinityIndex = InfinityIndex + 3
+										CurrentTagIndex = CurrentTagIndex + 3
+										SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+										break
+									elseif #TagsToBeAdded == 5 then
+										InfinityIndex = 5
+										CurrentTagIndex = 6
+										SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+										break
+									elseif #TagsToBeAdded == 4 then
+										InfinityIndex = 4
+										CurrentTagIndex = 5
+										SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+										break
+									else
+										InfinityIndex = 0
+										CurrentTagIndex = 1
+										SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+									end
+								elseif i*3 + 1 == InfinityIndex then
+									CurrentTagIndex = InfinityIndex + 1
+									InfinityIndex = #TagsToBeAdded
+									SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+									break
+								elseif i*3 + 2 == InfinityIndex then
+									CurrentTagIndex = InfinityIndex + 1
+									InfinityIndex = #TagsToBeAdded
+									SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+									break
+								elseif i*3 == InfinityIndex then
+									CurrentTagIndex = InfinityIndex + 1
+									InfinityIndex = #TagsToBeAdded
+									SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+									break
+								end
+							end
+							
+						elseif #TagsToBeAdded > InfinityIndex and #TagsToBeAdded > 15 then
+							InfinityIndex = #TagsToBeAdded
+							for i=1, #TagsToBeAdded do
+								if i*3 + 1 == InfinityIndex then
+									CurrentTagIndex = 14
+									break
+								elseif i*3 + 2 == InfinityIndex then
+									CurrentTagIndex = 15
+									break
+								elseif i*3 == InfinityIndex then
+									CurrentTagIndex = 16
+									break
+								end
+							end
 							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
 						else
 							CurrentTagIndex = 1
+							InfinityIndex = 0
 							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+							MESSAGEMAN:Broadcast("UpdatePlayerTagsText", {PlayerNumber, Object} )
 						end
 						
 					end
 				elseif Direction[1] == "Left" then
 					if CurrentTagIndex == 2 or CurrentTagIndex == 5  or CurrentTagIndex == 8 or CurrentTagIndex == 11 or CurrentTagIndex == 14 then
-						if CurrentTagIndex + 2 <= NumTags then
+						if #TagsToBeAdded >= InfinityIndex + 2 then
 							CurrentTagIndex = CurrentTagIndex + 2
+							InfinityIndex = InfinityIndex + 2
 							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
-						else
-							CurrentTagIndex = NumTags
+						elseif #TagsToBeAdded >= InfinityIndex + 1 then
+							CurrentTagIndex = CurrentTagIndex + 1
+							InfinityIndex = InfinityIndex + 1
 							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
 						end
 					elseif CurrentTagIndex ~= 1 then
 						CurrentTagIndex = CurrentTagIndex - 1
+						InfinityIndex = InfinityIndex - 1
 						SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
 					end
 				elseif Direction[1] == "Right" then
 					if CurrentTagIndex == 4 or CurrentTagIndex == 7  or CurrentTagIndex == 10 or CurrentTagIndex == 13 or CurrentTagIndex == 16 then
 						CurrentTagIndex = CurrentTagIndex - 2
+						InfinityIndex = InfinityIndex - 2
 						SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+					elseif InfinityIndex + 1 <= #TagsToBeAdded then
+						CurrentTagIndex = CurrentTagIndex + 1
+						InfinityIndex = InfinityIndex + 1
+						SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
 					else
-						if CurrentTagIndex + 1 <= NumTags then
-							CurrentTagIndex = CurrentTagIndex + 1
-							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
-						else
-							CurrentTagIndex = NumTags
-							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						for i=1, #TagsToBeAdded do
+							if i*3 + 1 == InfinityIndex - 1 then
+								CurrentTagIndex = CurrentTagIndex - 1
+								InfinityIndex = InfinityIndex - 1
+								SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+								break
+							elseif i*3 + 1 == InfinityIndex - 2 then
+								CurrentTagIndex = CurrentTagIndex - 2
+								InfinityIndex = InfinityIndex - 2
+								SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+								break
+							end
 						end
 					end
 				end
+			elseif #TagsToBeAdded == 0 then
+				CurrentTagIndex = 1
+				InfinityIndex = 0
 			end
 			local Parent = self:GetParent():GetChild(TagPositionNames[CurrentTagIndex])
 			local XPos = Parent:GetX()
@@ -257,108 +452,318 @@ t[#t+1] = Def.Quad{
 			self:queuecommand('BrightenCursor')
 		elseif RemoveTagSubMenu and not AddTagSubMenu and not ManageTagsSubMenu and not CurrentTagSubMenu then
 			if Direction[1] == "Up" then
-				if CurrentTagIndex == 1 then
-					if #AvailableTags >= 13 then
-						CurrentTagIndex = 13
+				if #AvailableTags > 3 then
+					if CurrentTagIndex == 1 then
+						if #AvailableTags >= 22 and InfinityIndex == 1 then
+							for i=1, #AvailableTags do
+								CurrentTagIndex = 22
+								if i*3 + 1 == #AvailableTags then
+									InfinityIndex = #AvailableTags
+									break
+								elseif i*3 + 2 == #AvailableTags then
+									InfinityIndex = #AvailableTags - 1
+									break
+								elseif i*3 == #AvailableTags then
+									InfinityIndex = #AvailableTags - 2
+									break
+								end
+							end
+							MESSAGEMAN:Broadcast("UpdateRemoveTagsText", {PlayerNumber, AvailableTags, InfinityIndex, CurrentTagIndex, "None", Direction[1]} )
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif #AvailableTags > 3 then
+							for i=1, #AvailableTags do
+								if i*3 + 1 == #AvailableTags then
+									InfinityIndex = #AvailableTags
+									CurrentTagIndex = #AvailableTags
+									break
+								elseif i*3 + 2 == #AvailableTags then
+									InfinityIndex = #AvailableTags - 1
+									CurrentTagIndex = #AvailableTags - 1
+									break
+								elseif i*3 == #AvailableTags then
+									InfinityIndex = #AvailableTags - 2
+									CurrentTagIndex = #AvailableTags - 2
+									break
+								end
+							end
+							MESSAGEMAN:Broadcast("UpdateRemoveTagsText", {PlayerNumber, AvailableTags, InfinityIndex, CurrentTagIndex, "None", Direction[1]} )
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						end
+					elseif CurrentTagIndex == 2 then
+						if #AvailableTags >= 23 and InfinityIndex == 2 then
+							for i=1, #AvailableTags do
+								CurrentTagIndex = 23
+								if i*3 + 1 == #AvailableTags then
+									CurrentTagIndex = 22
+									InfinityIndex = #AvailableTags
+									break
+								elseif i*3 + 2 == #AvailableTags then
+									InfinityIndex = #AvailableTags
+									break
+								elseif i*3 == #AvailableTags then
+									InfinityIndex = #AvailableTags - 1
+									break
+								end
+							end
+							MESSAGEMAN:Broadcast("UpdateRemoveTagsText", {PlayerNumber, AvailableTags, InfinityIndex, CurrentTagIndex, "None", Direction[1]} )
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif #AvailableTags > 3 then
+							for i=1, #AvailableTags do
+								if i*3 + 1 == #AvailableTags then
+									InfinityIndex = #AvailableTags
+									CurrentTagIndex = #AvailableTags
+									break
+								elseif i*3 + 2 == #AvailableTags then
+									InfinityIndex = #AvailableTags - 1
+									CurrentTagIndex = #AvailableTags - 1
+									break
+								elseif i*3 == #AvailableTags then
+									InfinityIndex = #AvailableTags - 2
+									CurrentTagIndex = #AvailableTags - 2
+									break
+								end
+							end
+							MESSAGEMAN:Broadcast("UpdateRemoveTagsText", {PlayerNumber, AvailableTags, InfinityIndex, CurrentTagIndex, "None", Direction[1]} )
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						end
+					elseif CurrentTagIndex == 3 then
+						if #AvailableTags >= 24 and InfinityIndex == 3 then
+							for i=1, #AvailableTags do
+								if i*3 + 1 == #AvailableTags then
+									CurrentTagIndex = 22
+									InfinityIndex = #AvailableTags
+									break
+								elseif i*3 + 2 == #AvailableTags then
+									CurrentTagIndex = 23
+									InfinityIndex = #AvailableTags
+									break
+								elseif i*3 == #AvailableTags then
+									CurrentTagIndex = 24
+									InfinityIndex = #AvailableTags
+									break
+								end
+							end
+							MESSAGEMAN:Broadcast("UpdateRemoveTagsText", {PlayerNumber, AvailableTags, InfinityIndex, CurrentTagIndex, "None", Direction[1]} )
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif #AvailableTags > 3 then
+							for i=1, #AvailableTags do
+								if i*3 + 1 == #AvailableTags then
+									InfinityIndex = #AvailableTags
+									CurrentTagIndex = #AvailableTags
+									break
+								elseif i*3 + 2 == #AvailableTags then
+									InfinityIndex = #AvailableTags - 1
+									CurrentTagIndex = #AvailableTags - 1
+									break
+								elseif i*3 == #AvailableTags then
+									InfinityIndex = #AvailableTags - 2
+									CurrentTagIndex = #AvailableTags - 2
+									break
+								end
+							end
+							MESSAGEMAN:Broadcast("UpdateRemoveTagsText", {PlayerNumber, AvailableTags, InfinityIndex, CurrentTagIndex, "None", Direction[1]} )
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						end
 					else
-						CurrentTagIndex = #AvailableTags
+						CurrentTagIndex = CurrentTagIndex - 3
+						InfinityIndex = InfinityIndex - 3
+						SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
 					end
-					SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
-				elseif CurrentTagIndex == 2 then
-					if #AvailableTags >= 14 then
-						CurrentTagIndex = 14
-					else
-						CurrentTagIndex = #AvailableTags
-					end
-					SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
-				elseif CurrentTagIndex == 3 then
-					if #AvailableTags >= 15 then
-						CurrentTagIndex = 15
-					else
-						CurrentTagIndex = #AvailableTags
-					end
-					SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
-				else
-					SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
-					CurrentTagIndex = CurrentTagIndex - 3
 				end
 			elseif Direction[1] == "Down" then
-				if CurrentTagIndex == 13 then
-					CurrentTagIndex = 1
-					SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
-				elseif CurrentTagIndex == 14 then
-					CurrentTagIndex = 2
-					SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
-				elseif CurrentTagIndex == 15 then
-					CurrentTagIndex = 3
-					SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
-				else
-					if CurrentTagIndex + 3 <= #AvailableTags then
-						CurrentTagIndex = CurrentTagIndex + 3
+				if #AvailableTags > 3 then
+					if CurrentTagIndex == 22 then
+						if InfinityIndex + 3 <= #AvailableTags then
+							InfinityIndex = InfinityIndex + 3
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+							MESSAGEMAN:Broadcast("UpdateRemoveTagsText", {PlayerNumber, AvailableTags, InfinityIndex, CurrentTagIndex, "None", Direction[1]} )	
+						else
+							CurrentTagIndex = 1
+							InfinityIndex = 1
+							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+							MESSAGEMAN:Broadcast("UpdatePlayerTagsText", {PlayerNumber, Object} )
+						end
+					elseif CurrentTagIndex == 23 then
+						if InfinityIndex + 3 <= #AvailableTags then
+							InfinityIndex = InfinityIndex + 3
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+							MESSAGEMAN:Broadcast("UpdateRemoveTagsText", {PlayerNumber, AvailableTags, InfinityIndex, CurrentTagIndex, "None", Direction[1]} )
+						elseif InfinityIndex + 2 <= #AvailableTags  then
+							InfinityIndex = #AvailableTags
+							CurrentTagIndex = 22
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+							MESSAGEMAN:Broadcast("UpdateRemoveTagsText", {PlayerNumber, AvailableTags, InfinityIndex, CurrentTagIndex, "None", Direction[1]} )
+						else
+							CurrentTagIndex = 2
+							InfinityIndex = 2
+							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+							MESSAGEMAN:Broadcast("UpdatePlayerTagsText", {PlayerNumber, Object} )
+						end
+					elseif CurrentTagIndex == 24 then
+						if InfinityIndex + 3 <= #AvailableTags then
+							InfinityIndex = InfinityIndex + 3
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+							MESSAGEMAN:Broadcast("UpdateRemoveTagsText", {PlayerNumber, AvailableTags, InfinityIndex, CurrentTagIndex, "None", Direction[1]} )
+						elseif #AvailableTags > InfinityIndex then
+							InfinityIndex = #AvailableTags
+							for i=1, #AvailableTags do
+								if i*3 + 1 == InfinityIndex then
+									CurrentTagIndex = 22
+									break
+								elseif i*3 + 2 == InfinityIndex then
+									CurrentTagIndex = 23
+									break
+								end
+							end
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+							MESSAGEMAN:Broadcast("UpdateRemoveTagsText", {PlayerNumber, AvailableTags, InfinityIndex, CurrentTagIndex, "None", Direction[1]} )
+						else
+							CurrentTagIndex = 3
+							InfinityIndex = 3
+							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+							MESSAGEMAN:Broadcast("UpdatePlayerTagsText", {PlayerNumber, Object} )
+						end
 					else
-						CurrentTagIndex = #AvailableTags
+						if InfinityIndex + 3 <= #AvailableTags then
+							CurrentTagIndex = CurrentTagIndex + 3
+							InfinityIndex = InfinityIndex + 3
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif #AvailableTags > InfinityIndex and #AvailableTags > 24 then	
+							InfinityIndex = #AvailableTags
+							for i=1, #AvailableTags do
+								if i*3 + 1 == InfinityIndex then
+									CurrentTagIndex = 22
+									break
+								elseif i*3 + 2 == InfinityIndex then
+									CurrentTagIndex = 23
+									break
+								elseif i*3 == InfinityIndex then
+									CurrentTagIndex = 24
+									break
+								end
+							end
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif #AvailableTags > InfinityIndex and #AvailableTags < 24 then
+							for i=1, #AvailableTags do
+								if i == 1 and i == InfinityIndex then
+									if #AvailableTags >= 4 then
+										InfinityIndex = InfinityIndex + 3
+										CurrentTagIndex = CurrentTagIndex + 3
+										SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+										break
+									end
+								elseif i == 2 and i == InfinityIndex then
+									if #AvailableTags >= 5 then
+										InfinityIndex = InfinityIndex + 3
+										CurrentTagIndex = CurrentTagIndex + 3
+										SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+										break
+									elseif #AvailableTags == 4 then
+										InfinityIndex = 4
+										CurrentTagIndex = 4
+										SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+										break
+									end
+								elseif i == 3 and i == InfinityIndex then
+									if #AvailableTags >= 6 then
+										InfinityIndex = InfinityIndex + 3
+										CurrentTagIndex = CurrentTagIndex + 3
+										SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+										break
+									elseif #AvailableTags == 5 then
+										InfinityIndex = 5
+										CurrentTagIndex = 5
+										SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+										break
+									elseif #AvailableTags == 4 then
+										InfinityIndex = 4
+										CurrentTagIndex = 4
+										SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+										break
+									end
+								elseif i*3 + 1 == InfinityIndex then
+									CurrentTagIndex = #AvailableTags
+									InfinityIndex = #AvailableTags
+									SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+									break
+								elseif i*3 + 2 == InfinityIndex then
+									CurrentTagIndex = #AvailableTags
+									InfinityIndex = #AvailableTags
+									SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+									break
+								elseif i*3 == InfinityIndex then
+									CurrentTagIndex = #AvailableTags
+									InfinityIndex = #AvailableTags
+									SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+									break
+								end
+							end
+						else
+							CurrentTagIndex = 1
+							InfinityIndex = 1
+							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+							MESSAGEMAN:Broadcast("UpdatePlayerTagsText", {PlayerNumber, Object} )
+						end
+						
 					end
-					SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
 				end
 			elseif Direction[1] == "Left" then
-				if CurrentTagIndex == 1 then
-					if #AvailableTags >= 3 then
-						CurrentTagIndex = 3
-					else
-						CurrentTagIndex = #AvailableTags
+				if CurrentTagIndex == 1 or CurrentTagIndex == 4 or CurrentTagIndex == 7 or CurrentTagIndex == 10 or CurrentTagIndex == 13 or CurrentTagIndex == 16 or CurrentTagIndex == 19 or CurrentTagIndex == 22 then
+					if #AvailableTags >= InfinityIndex + 2 then
+						CurrentTagIndex = CurrentTagIndex + 2
+						InfinityIndex = InfinityIndex + 2
+						SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+					elseif #AvailableTags >= InfinityIndex + 1 then
+						CurrentTagIndex = CurrentTagIndex + 1
+						InfinityIndex = InfinityIndex + 1
+						SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
 					end
-					SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
-				elseif CurrentTagIndex == 4 then
-					if #AvailableTags >= 6 then
-						CurrentTagIndex = 6
-					else
-						CurrentTagIndex = #AvailableTags
-					end
-					SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
-				elseif CurrentTagIndex == 7 then
-					if #AvailableTags >= 9 then
-						CurrentTagIndex = 9
-					else
-						CurrentTagIndex = #AvailableTags
-					end
-					SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
-				elseif CurrentTagIndex == 10 then
-					if #AvailableTags >= 12 then
-						CurrentTagIndex = 12
-					else
-						CurrentTagIndex = #AvailableTags
-					end
-					SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
-				elseif CurrentTagIndex == 13 then
-					if #AvailableTags >= 15 then
-						CurrentTagIndex = 15
-					else
-						CurrentTagIndex = #AvailableTags
-					end
-					SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
 				else
 					CurrentTagIndex = CurrentTagIndex - 1
+					InfinityIndex = InfinityIndex - 1
 					SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
 				end
 			elseif Direction[1] == "Right" then
-				if CurrentTagIndex == 3 then
-					CurrentTagIndex = 1
+				if CurrentTagIndex == 3 or CurrentTagIndex == 6 or CurrentTagIndex == 9 or CurrentTagIndex == 12 or CurrentTagIndex == 15 or CurrentTagIndex == 18 or CurrentTagIndex == 21 or CurrentTagIndex == 24 then
+					CurrentTagIndex = CurrentTagIndex - 2
+					InfinityIndex = InfinityIndex - 2
 					SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
-				elseif CurrentTagIndex == 6 then
-					CurrentTagIndex = 4
-					SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
-				elseif CurrentTagIndex == 9 then
-					CurrentTagIndex = 7
-					SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
-				elseif CurrentTagIndex == 12 then
-					CurrentTagIndex = 10
-					SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
-				elseif CurrentTagIndex == 15 then
-					CurrentTagIndex = 13
-					SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
-				elseif CurrentTagIndex + 1 <= #AvailableTags then
+				elseif InfinityIndex + 1 <= #AvailableTags then
 					CurrentTagIndex = CurrentTagIndex + 1
+					InfinityIndex = InfinityIndex + 1
 					SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+				else
+					for i=1, #AvailableTags do
+						if i == 1 and #AvailableTags > 1 and i == InfinityIndex then
+							CurrentTagIndex = CurrentTagIndex + 1
+							InfinityIndex = InfinityIndex + 1
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif i == 2 and i == InfinityIndex then
+							if #AvailableTags > InfinityIndex + 1 then
+								CurrentTagIndex = CurrentTagIndex + 1
+								InfinityIndex = InfinityIndex + 1
+								SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+							else
+								CurrentTagIndex = 1
+								InfinityIndex = 1
+								SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+							end
+						elseif i == 3 and i == InfinityIndex then
+							CurrentTagIndex = 1
+							InfinityIndex = 1
+							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+						elseif i*3 + 1 == InfinityIndex - 1 then
+							CurrentTagIndex = CurrentTagIndex - 1
+							InfinityIndex = InfinityIndex - 1
+							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+							break
+						elseif i*3 + 1 == InfinityIndex - 2 then
+							CurrentTagIndex = CurrentTagIndex - 2
+							InfinityIndex = InfinityIndex - 2
+							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+							break
+						end
+					end
 				end
 			end
 			local Parent = self:GetParent():GetChild(RemoveTagPositionNames[CurrentTagIndex])
@@ -381,108 +786,328 @@ t[#t+1] = Def.Quad{
 			self:queuecommand('BrightenCursor')
 		elseif ManageTagsSubMenu and not RemoveTagSubMenu and not AddTagSubMenu and not CurrentTagSubMenu then
 			if Direction[1] == "Up" then
-				if CurrentTagIndex == 1 then
-					if #Player_Tags >= 13 then
-						CurrentTagIndex = 13
+				if #Player_Tags > 3 then
+					if CurrentTagIndex == 1 then
+						if #Player_Tags >= 22 and InfinityIndex == 1 then
+							for i=1, #Player_Tags do
+								CurrentTagIndex = 22
+								if i*3 + 1 == #Player_Tags then
+									InfinityIndex = #Player_Tags
+									break
+								elseif i*3 + 2 == #Player_Tags then
+									InfinityIndex = #Player_Tags - 1
+									break
+								elseif i*3 == #Player_Tags then
+									InfinityIndex = #Player_Tags - 2
+									break
+								end
+							end
+							MESSAGEMAN:Broadcast("UpdateManageTagsText", {PlayerNumber, Player_Tags, InfinityIndex, CurrentTagIndex, "None", Direction[1]} )
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif #Player_Tags <= 22 and InfinityIndex == 1 then
+							for i=1, #Player_Tags do
+								if i*3 + 1 == #Player_Tags then
+									InfinityIndex = #Player_Tags
+									CurrentTagIndex = #Player_Tags
+									break
+								elseif i*3 + 2 == #Player_Tags then
+									InfinityIndex = #Player_Tags - 1
+									CurrentTagIndex = #Player_Tags - 1
+									break
+								elseif i*3 == #Player_Tags then
+									InfinityIndex = #Player_Tags - 2
+									CurrentTagIndex = #Player_Tags - 2
+									break
+								end
+							end
+							MESSAGEMAN:Broadcast("UpdateManageTagsText", {PlayerNumber, Player_Tags, InfinityIndex, CurrentTagIndex, "None", Direction[1]} )
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif InfinityIndex >= 4 then
+							InfinityIndex = InfinityIndex - 3
+							MESSAGEMAN:Broadcast("UpdateManageTagsText", {PlayerNumber, Player_Tags, InfinityIndex, CurrentTagIndex, "None", Direction[1]} )
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif InfinityIndex ~= #Player_Tags and #Player_Tags < 4 then
+							InfinityIndex = #Player_Tags
+							CurrentTagIndex = #Player_Tags
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						end
+					elseif CurrentTagIndex == 2 then
+						if #Player_Tags >= 23 and InfinityIndex == 2 then
+							for i=1, #Player_Tags do
+								CurrentTagIndex = 23
+								if i*3 + 1 == #Player_Tags then
+									CurrentTagIndex = 22
+									InfinityIndex = #Player_Tags
+									break
+								elseif i*3 + 2 == #Player_Tags then
+									InfinityIndex = #Player_Tags
+									break
+								elseif i*3 == #Player_Tags then
+									InfinityIndex = #Player_Tags - 1
+									break
+								end
+							end
+							MESSAGEMAN:Broadcast("UpdateManageTagsText", {PlayerNumber, Player_Tags, InfinityIndex, CurrentTagIndex, "None", Direction[1]} )
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif #Player_Tags <= 23 and InfinityIndex == 2 then
+							for i=1, #Player_Tags do
+								if i*3 + 1 == #Player_Tags then
+									CurrentTagIndex = #Player_Tags
+									InfinityIndex = #Player_Tags
+									break
+								elseif i*3 + 2 == #Player_Tags then
+									CurrentTagIndex = #Player_Tags
+									InfinityIndex = #Player_Tags
+									break
+								elseif i*3 == #Player_Tags then
+									CurrentTagIndex = #Player_Tags - 1
+									InfinityIndex = #Player_Tags - 1
+									break
+								end
+							end
+							MESSAGEMAN:Broadcast("UpdateManageTagsText", {PlayerNumber, Player_Tags, InfinityIndex, CurrentTagIndex, "None", Direction[1]} )
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif InfinityIndex >= 4 then
+							InfinityIndex = InfinityIndex - 3
+							MESSAGEMAN:Broadcast("UpdateManageTagsText", {PlayerNumber, Player_Tags, InfinityIndex, CurrentTagIndex, "None", Direction[1]} )
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif InfinityIndex ~= #Player_Tags and #Player_Tags < 4 then
+							InfinityIndex = #Player_Tags
+							CurrentTagIndex = #Player_Tags
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						end
+					elseif CurrentTagIndex == 3 then
+						if #Player_Tags >= 24 and InfinityIndex == 3 then
+							for i=1, #Player_Tags do
+								if i*3 + 1 == #Player_Tags then
+									CurrentTagIndex = 22
+									InfinityIndex = #Player_Tags
+									break
+								elseif i*3 + 2 == #Player_Tags then
+									CurrentTagIndex = 23
+									InfinityIndex = #Player_Tags
+									break
+								elseif i*3 == #Player_Tags then
+									CurrentTagIndex = 24
+									InfinityIndex = #Player_Tags
+									break
+								end
+							end
+							MESSAGEMAN:Broadcast("UpdateManageTagsText", {PlayerNumber, Player_Tags, InfinityIndex, CurrentTagIndex, "None", Direction[1]} )
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif #Player_Tags <= 24 and InfinityIndex == 3 then
+							CurrentTagIndex = #Player_Tags
+							InfinityIndex = #Player_Tags
+							MESSAGEMAN:Broadcast("UpdateManageTagsText", {PlayerNumber, Player_Tags, InfinityIndex, CurrentTagIndex, "None", Direction[1]} )
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif InfinityIndex >= 4 then
+							InfinityIndex = InfinityIndex - 3
+							MESSAGEMAN:Broadcast("UpdateManageTagsText", {PlayerNumber, Player_Tags, InfinityIndex, CurrentTagIndex, "None", Direction[1]} )
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif InfinityIndex ~= #Player_Tags and #Player_Tags < 4 then
+							InfinityIndex = #Player_Tags
+							CurrentTagIndex = #Player_Tags
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						end
 					else
-						CurrentTagIndex = #Player_Tags
+						CurrentTagIndex = CurrentTagIndex - 3
+						InfinityIndex = InfinityIndex - 3
+						SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
 					end
-					SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
-				elseif CurrentTagIndex == 2 then
-					if #Player_Tags >= 14 then
-						CurrentTagIndex = 14
-					else
-						CurrentTagIndex = #Player_Tags
-					end
-					SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
-				elseif CurrentTagIndex == 3 then
-					if #Player_Tags >= 15 then
-						CurrentTagIndex = 15
-					else
-						CurrentTagIndex = #Player_Tags
-					end
-					SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
-				else
-					CurrentTagIndex = CurrentTagIndex - 3
-					SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
 				end
 			elseif Direction[1] == "Down" then
-				if CurrentTagIndex == 13 then
-					CurrentTagIndex = 1
-					SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
-				elseif CurrentTagIndex == 14 then
-					CurrentTagIndex = 2
-					SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
-				elseif CurrentTagIndex == 15 then
-					CurrentTagIndex = 3
-					SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
-				else
-					if CurrentTagIndex + 3 <= #Player_Tags then
-						CurrentTagIndex = CurrentTagIndex + 3
+				if #Player_Tags > 3 then
+					if CurrentTagIndex == 22 then
+						if InfinityIndex + 3 <= #Player_Tags then
+							InfinityIndex = InfinityIndex + 3
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+							MESSAGEMAN:Broadcast("UpdateManageTagsText", {PlayerNumber, Player_Tags, InfinityIndex, CurrentTagIndex, "None", Direction[1]} )
+						else
+							CurrentTagIndex = 1
+							InfinityIndex = 1
+							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+							MESSAGEMAN:Broadcast("UpdateRemovedTag", {PlayerNumber, Player_Tags} )
+						end
+					elseif CurrentTagIndex == 23 then
+						if InfinityIndex + 3 <= #Player_Tags then
+							InfinityIndex = InfinityIndex + 3
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+							MESSAGEMAN:Broadcast("UpdateManageTagsText", {PlayerNumber, Player_Tags, InfinityIndex, CurrentTagIndex, "None", Direction[1]} )
+						elseif InfinityIndex + 2 <= #Player_Tags  then
+							InfinityIndex = #Player_Tags
+							CurrentTagIndex = 22
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+							MESSAGEMAN:Broadcast("UpdateManageTagsText", {PlayerNumber, Player_Tags, InfinityIndex, CurrentTagIndex, "None", Direction[1]} )
+						else
+							CurrentTagIndex = 2
+							InfinityIndex = 2
+							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+							MESSAGEMAN:Broadcast("UpdateRemovedTag", {PlayerNumber, Player_Tags} )
+						end
+					elseif CurrentTagIndex == 24 then
+						if InfinityIndex + 3 <= #Player_Tags then
+							InfinityIndex = InfinityIndex + 3
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+							MESSAGEMAN:Broadcast("UpdateManageTagsText", {PlayerNumber, Player_Tags, InfinityIndex, CurrentTagIndex, "None", Direction[1]} )
+						elseif #Player_Tags > InfinityIndex then
+							InfinityIndex = #Player_Tags
+							for i=1, #Player_Tags do
+								if i*3 + 1 == InfinityIndex then
+									CurrentTagIndex = 22
+									break
+								elseif i*3 + 2 == InfinityIndex then
+									CurrentTagIndex = 23
+									break
+								end
+							end
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+							MESSAGEMAN:Broadcast("UpdateManageTagsText", {PlayerNumber, Player_Tags, InfinityIndex, CurrentTagIndex, "None", Direction[1]} )
+						else
+							CurrentTagIndex = 3
+							InfinityIndex = 3
+							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+							MESSAGEMAN:Broadcast("UpdateRemovedTag", {PlayerNumber, Player_Tags} )
+						end
 					else
-						CurrentTagIndex = #Player_Tags
+						if InfinityIndex + 3 <= #Player_Tags then
+							CurrentTagIndex = CurrentTagIndex + 3
+							InfinityIndex = InfinityIndex + 3
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif #Player_Tags > InfinityIndex and #Player_Tags > 24 then
+							InfinityIndex = #Player_Tags
+							for i=1, #Player_Tags do
+								if i*3 + 1 == InfinityIndex then
+									CurrentTagIndex = 22
+									break
+								elseif i*3 + 2 == InfinityIndex then
+									CurrentTagIndex = 23
+									break
+								elseif i*3 == InfinityIndex then
+									CurrentTagIndex = 24
+									break
+								end
+							end
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif #Player_Tags > InfinityIndex and #Player_Tags < 24 then
+							for i=1, #Player_Tags do
+								if i == 1 and i == InfinityIndex then
+									if #Player_Tags >= 4 then
+										InfinityIndex = InfinityIndex + 3
+										CurrentTagIndex = CurrentTagIndex + 3
+										SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+										break
+									end
+								elseif i == 2 and i == InfinityIndex then
+									if #Player_Tags >= 5 then
+										InfinityIndex = InfinityIndex + 3
+										CurrentTagIndex = CurrentTagIndex + 3
+										SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+										break
+									elseif #Player_Tags == 4 then
+										InfinityIndex = 4
+										CurrentTagIndex = 4
+										SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+										break
+									end
+								elseif i == 3 and i == InfinityIndex then
+									if #Player_Tags >= 6 then
+										InfinityIndex = InfinityIndex + 3
+										CurrentTagIndex = CurrentTagIndex + 3
+										SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+										break
+									elseif #Player_Tags == 5 then
+										InfinityIndex = 5
+										CurrentTagIndex = 5
+										SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+										break
+									elseif #Player_Tags == 4 then
+										InfinityIndex = 4
+										CurrentTagIndex = 4
+										SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+										break
+									end
+								elseif i*3 + 1 == InfinityIndex then
+									CurrentTagIndex = #Player_Tags
+									InfinityIndex = #Player_Tags
+									SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+									break
+								elseif i*3 + 2 == InfinityIndex then
+									CurrentTagIndex = #Player_Tags
+									InfinityIndex = #Player_Tags
+									SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+									break
+								elseif i*3 == InfinityIndex then
+									CurrentTagIndex = #Player_Tags
+									InfinityIndex = #Player_Tags
+									SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+									break
+								end
+							end
+						else
+							CurrentTagIndex = 1
+							InfinityIndex = 1
+							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+							MESSAGEMAN:Broadcast("UpdatePlayerTagsText", {PlayerNumber, Object} )
+						end
 					end
-					SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
 				end
 			elseif Direction[1] == "Left" then
-				if CurrentTagIndex == 1 then
-					if #Player_Tags >= 3 then
-						CurrentTagIndex = 3
-					else
-						CurrentTagIndex = #Player_Tags
+				if CurrentTagIndex == 1 or CurrentTagIndex == 4 or CurrentTagIndex == 7 or CurrentTagIndex == 10 or CurrentTagIndex == 13 or CurrentTagIndex == 16 or CurrentTagIndex == 19 or CurrentTagIndex == 22 then
+					if #Player_Tags >= InfinityIndex + 2 then
+						CurrentTagIndex = CurrentTagIndex + 2
+						InfinityIndex = InfinityIndex + 2
+						SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+					elseif #Player_Tags >= InfinityIndex + 1 then
+						CurrentTagIndex = CurrentTagIndex + 1
+						InfinityIndex = InfinityIndex + 1
+						SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
 					end
-					SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
-				elseif CurrentTagIndex == 4 then
-					if #Player_Tags >= 6 then
-						CurrentTagIndex = 6
-					else
-						CurrentTagIndex = #Player_Tags
-					end
-					SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
-				elseif CurrentTagIndex == 7 then
-					if #Player_Tags >= 9 then
-						CurrentTagIndex = 9
-					else
-						CurrentTagIndex = #Player_Tags
-					end
-					SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
-				elseif CurrentTagIndex == 10 then
-					if #Player_Tags >= 12 then
-						CurrentTagIndex = 12
-					else
-						CurrentTagIndex = #Player_Tags
-					end
-					SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
-				elseif CurrentTagIndex == 13 then
-					if #Player_Tags >= 15 then
-						CurrentTagIndex = 15
-					else
-						CurrentTagIndex = #Player_Tags
-					end
-					SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
 				else
 					CurrentTagIndex = CurrentTagIndex - 1
+					InfinityIndex = InfinityIndex - 1
 					SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
 				end
 			elseif Direction[1] == "Right" then
-				if CurrentTagIndex == 3 then
-					CurrentTagIndex = 1
+				if CurrentTagIndex == 3 or CurrentTagIndex == 6 or CurrentTagIndex == 9 or CurrentTagIndex == 12 or CurrentTagIndex == 15 or CurrentTagIndex == 18 or CurrentTagIndex == 21 or CurrentTagIndex == 24 then
+					CurrentTagIndex = CurrentTagIndex - 2
+					InfinityIndex = InfinityIndex - 2
 					SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
-				elseif CurrentTagIndex == 6 then
-					CurrentTagIndex = 4
-					SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
-				elseif CurrentTagIndex == 9 then
-					CurrentTagIndex = 7
-					SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
-				elseif CurrentTagIndex == 12 then
-					CurrentTagIndex = 10
-					SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
-				elseif CurrentTagIndex == 15 then
-					CurrentTagIndex = 13
-					SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
-				elseif CurrentTagIndex + 1 <= #Player_Tags then
+				elseif InfinityIndex + 1 <= #Player_Tags then
 					CurrentTagIndex = CurrentTagIndex + 1
+					InfinityIndex = InfinityIndex + 1
 					SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+				else
+					for i=1, #Player_Tags do
+						if i == 1 and #Player_Tags > 1 and i == InfinityIndex then
+							CurrentTagIndex = CurrentTagIndex + 1
+							InfinityIndex = InfinityIndex + 1
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif i == 2 and i == InfinityIndex then
+							if #Player_Tags > InfinityIndex + 1 then
+								CurrentTagIndex = CurrentTagIndex + 1
+								InfinityIndex = InfinityIndex + 1
+								SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+							else
+								CurrentTagIndex = 1
+								InfinityIndex = 1
+								SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+							end
+						elseif i == 3 and i == InfinityIndex then
+							CurrentTagIndex = 1
+							InfinityIndex = 1
+							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+						elseif i*3 + 1 == InfinityIndex - 1 then
+							CurrentTagIndex = CurrentTagIndex - 1
+							InfinityIndex = InfinityIndex - 1
+							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+							break
+						elseif i*3 + 1 == InfinityIndex - 2 then
+							CurrentTagIndex = CurrentTagIndex - 2
+							InfinityIndex = InfinityIndex - 2
+							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+							break
+						end
+					end
 				end
 			end
 			local Parent = self:GetParent():GetChild(ManageTagNames[CurrentTagIndex])
@@ -510,8 +1135,13 @@ t[#t+1] = Def.Quad{
 						if CurrentColumn == 1 then
 							if #TagSongs + 1 >= 7 then
 								CurrentTagIndex = 7
+								InfinityIndex = #TagSongs
+								if #TagSongs > 6 then
+									MESSAGEMAN:Broadcast("UpdateCurrentSongTagsText", {PlayerNumber, Tag, InfinityIndex, Direction[1]})
+								end
 								SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
 							elseif #TagSongs ~= 0 then
+								InfinityIndex = #TagSongs
 								CurrentTagIndex = #TagSongs + 1
 								SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
 							elseif #TagPacks > 0 then
@@ -521,48 +1151,121 @@ t[#t+1] = Def.Quad{
 								else
 									CurrentTagIndex = #TagPacks + 1
 								end
+								if #TagPacks > 6 then
+									MESSAGEMAN:Broadcast("UpdateCurrentPackTagsText", {PlayerNumber, Tag, InfinityIndex, Direction[1]})
+								end
 								SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
 							end
 						elseif CurrentColumn == 2 then
-							if #TagPacks + 1 >= 7 then
-								CurrentTagIndex = 7
-							else
-								CurrentTagIndex = #TagPacks + 1
+							if #TagPacks > 0 then
+								if #TagPacks + 1 >= 7 then
+									CurrentTagIndex = 7
+									InfinityIndex = #TagPacks
+								else
+									CurrentTagIndex = #TagPacks + 1
+									InfinityIndex = #TagPacks
+								end
+								if #TagPacks > 6 then
+									MESSAGEMAN:Broadcast("UpdateCurrentPackTagsText", {PlayerNumber, Tag, InfinityIndex, Direction[1]})
+								end
+							elseif #TagSongs > 0 then
+								CurrentColumn = 1
+								if #TagSongs + 1 >= 7 then
+									CurrentTagIndex = 7
+									InfinityIndex = #TagSongs
+									if #TagSongs > 6 then
+										MESSAGEMAN:Broadcast("UpdateCurrentSongTagsText", {PlayerNumber, Tag, InfinityIndex, Direction[1]})
+									end
+									SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+								else 
+									InfinityIndex = #TagSongs
+									CurrentTagIndex = #TagSongs + 1
+									SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+								end
 							end
 							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
 						end
 					else
-						CurrentTagIndex = CurrentTagIndex - 1
+						if CurrentTagIndex == 2 and InfinityIndex > 1 then
+							InfinityIndex = InfinityIndex - 1
+							if CurrentColumn == 1 then
+								if #TagSongs > 6 then
+									MESSAGEMAN:Broadcast("UpdateCurrentSongTagsText", {PlayerNumber, Tag, InfinityIndex, Direction[1]})
+								end
+							elseif CurrentColumn == 2 then
+								if #TagPacks > 6 then
+									MESSAGEMAN:Broadcast("UpdateCurrentPackTagsText", {PlayerNumber, Tag, InfinityIndex, Direction[1]})
+								end
+							end
+						else
+							InfinityIndex = InfinityIndex - 1
+							CurrentTagIndex = CurrentTagIndex - 1
+						end
 						SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
 					end
 				elseif Direction[1] == "Down" then
 					if CurrentTagIndex == 7 then
-						CurrentTagIndex = 1
-						SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+						if CurrentColumn == 1 then
+							if #TagSongs + 1 <= 7 or InfinityIndex == #TagSongs then
+								InfinityIndex = 0
+								CurrentTagIndex = 1
+								SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+								if #TagSongs > 6 then
+									MESSAGEMAN:Broadcast("UpdateCurrentSongTagsText", {PlayerNumber, Tag, InfinityIndex, Direction[1]})
+								end
+							else
+								InfinityIndex = InfinityIndex + 1
+								if #TagSongs > 6 then
+									MESSAGEMAN:Broadcast("UpdateCurrentSongTagsText", {PlayerNumber, Tag, InfinityIndex, Direction[1]})
+								end
+								SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+							end
+						elseif CurrentColumn == 2 then
+							if #TagPacks + 1 < 7 or InfinityIndex == #TagPacks then
+								InfinityIndex = 0
+								CurrentTagIndex = 1
+								SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+								if #TagPacks > 6 then
+									MESSAGEMAN:Broadcast("UpdateCurrentPackTagsText", {PlayerNumber, Tag, InfinityIndex, Direction[1]})
+								end
+							else
+								InfinityIndex = InfinityIndex + 1
+								if #TagPacks > 6 then
+									MESSAGEMAN:Broadcast("UpdateCurrentPackTagsText", {PlayerNumber, Tag, InfinityIndex, Direction[1]})
+								end
+								SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+							end
+						end
 					elseif CurrentColumn == 1 and CurrentTagIndex == #TagSongs + 1 and #TagSongs ~= 0 then
 						CurrentTagIndex = 1
+						InfinityIndex = 0
 						SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
 					elseif CurrentColumn == 2 and CurrentTagIndex == #TagPacks + 1 and #TagPacks > 0 then
 						CurrentTagIndex = 1
+						InfinityIndex = 0
 						SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
 					elseif #TagSongs == 0 and CurrentTagIndex == 1 and #TagPacks > 0 then
 						CurrentColumn = 2
 						CurrentTagIndex = CurrentTagIndex + 1
+						InfinityIndex = InfinityIndex + 1
 						SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
 					elseif #TagPacks == 0 and CurrentTagIndex == 1 and #TagSongs > 0 and CurrentColumn == 2 then
 						CurrentColumn = 1
+						InfinityIndex = 0
 						CurrentTagIndex = CurrentTagIndex + 1
 						SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
 					else
+						InfinityIndex = InfinityIndex + 1
 						CurrentTagIndex = CurrentTagIndex + 1
 						SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
 					end
-				elseif Direction[1] == "Left" or Direction[1] == "Right" then
+				elseif Direction[1] == "Left" or Direction[1] == "Right" then		
 						if CurrentColumn == 1 and CurrentTagIndex ~= 1 then
 							if #TagPacks + 1 > 0 then
 								CurrentColumn = 2
 								if CurrentTagIndex > #TagPacks + 1 then
 									CurrentTagIndex = #TagPacks + 1
+									InfinityIndex = CurrentTagIndex - 1
 								end
 							end
 							if Direction[1] == "Right" then
@@ -575,6 +1278,7 @@ t[#t+1] = Def.Quad{
 								CurrentColumn = 1
 								if CurrentTagIndex > #TagSongs + 1 then
 									CurrentTagIndex = #TagSongs + 1
+									InfinityIndex = CurrentTagIndex - 1	
 								end
 							end
 							if Direction[1] == "Right" then
@@ -583,7 +1287,14 @@ t[#t+1] = Def.Quad{
 								SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
 							end
 						end
-						
+						if #TagSongs > 6 then
+							InfinityIndex = CurrentTagIndex - 1
+							MESSAGEMAN:Broadcast("UpdateCurrentSongTagsText", {PlayerNumber, Tag, InfinityIndex, Direction[1]})
+						end
+						if #TagPacks > 6 then
+							MESSAGEMAN:Broadcast("UpdateCurrentPackTagsText", {PlayerNumber, Tag, InfinityIndex, Direction[1]})
+							InfinityIndex = CurrentTagIndex - 1
+						end
 				end
 			end
 			local Parent 
@@ -690,9 +1401,14 @@ t[#t+1] = Def.Quad{
 				end
 			end
 			if CurrentTagIndex == MaxIndex then
-				SOUND:PlayOnce( THEME:GetPathS("ScreenPlayerOptions", "cancel all.ogg") )
-				MESSAGEMAN:Broadcast("InitializeTagsMenu")
-				MESSAGEMAN:Broadcast("ToggleTagsMenu")
+				if not HaveTagsChanged then
+					SOUND:PlayOnce( THEME:GetPathS("ScreenPlayerOptions", "cancel all.ogg") )
+					MESSAGEMAN:Broadcast("InitializeTagsMenu")
+					MESSAGEMAN:Broadcast("ToggleTagsMenu")
+				else
+					SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "sort.ogg") )
+					MESSAGEMAN:Broadcast("ReloadSSMDD")
+				end
 			end
 		elseif AddTagSubMenu and not RemoveTagSubMenu and not ManageTagsSubMenu and not CurrentTagSubMenu then
 			local SongOrGroup
@@ -707,26 +1423,14 @@ t[#t+1] = Def.Quad{
 			if CurrentTagIndex == 1 then
 				MESSAGEMAN:Broadcast('AddCurrentTagText', {PlayerNumber, SongOrGroup, Player_Tags})
 			else
-				local TagObjects = GetObjectsPerTag(Player_Tags[CurrentTagIndex-1], PlayerNumber, SongOrGroup)
-				local DoesObjectHaveTag = false
-				for i=1, #TagObjects do
-					if TagObjects[i] == Object then
-						DoesObjectHaveTag = true
-						break
-					end
-				end
-				if not DoesObjectHaveTag then
-					MESSAGEMAN:Broadcast('AddCurrentTag', {PlayerNumber, Player_Tags[CurrentTagIndex-1], SongOrGroup})
-				else
-					SM("This "..SongOrGroup:lower().." already has this tag!")
-				end
+				MESSAGEMAN:Broadcast('AddCurrentTag', {PlayerNumber, TagsToBeAdded[InfinityIndex], SongOrGroup})
 			end
 		elseif RemoveTagSubMenu and not AddTagSubMenu and not ManageTagsSubMenu and not CurrentTagSubMenu then
 			AvailableTags = GetCurrentObjectTags(CurrentObject, PlayerNumber)
-			Tag = AvailableTags[CurrentTagIndex]
+			Tag = AvailableTags[InfinityIndex]
 			MESSAGEMAN:Broadcast('RemoveCurrentTag', {PlayerNumber, Tag, CurrentObject})
 		elseif ManageTagsSubMenu and not RemoveTagSubMenu and not AddTagSubMenu and not CurrentTagSubMenu then
-			Tag = Player_Tags[CurrentTagIndex]
+			Tag = Player_Tags[InfinityIndex]
 			TagSongs = GetObjectsPerTag(Tag, PlayerNumber, "Song")
 			TagPacks = GetObjectsPerTag(Tag, PlayerNumber, "Pack")
 			CurrentTagSubMenu = true
@@ -739,9 +1443,9 @@ t[#t+1] = Def.Quad{
 				MESSAGEMAN:Broadcast("RenameCurrentTagText", {PlayerNumber, Tag})
 			else
 				if CurrentColumn == 1 then
-					MESSAGEMAN:Broadcast( "RemoveCurrentObject", {PlayerNumber, TagSongs[CurrentTagIndex-1], Tag} )
+					MESSAGEMAN:Broadcast( "RemoveCurrentObject", {PlayerNumber, TagSongs[InfinityIndex], Tag} )
 				elseif CurrentColumn == 2 then
-					MESSAGEMAN:Broadcast( "RemoveCurrentObject", {PlayerNumber, TagPacks[CurrentTagIndex-1], Tag} )
+					MESSAGEMAN:Broadcast( "RemoveCurrentObject", {PlayerNumber, TagPacks[InfinityIndex], Tag} )
 				end
 			end
 			
@@ -750,26 +1454,41 @@ t[#t+1] = Def.Quad{
 	ToggleAddTagsMenuMessageCommand=function(self)
 		self:stoptweening()
 		CurrentTagIndex = 1
+		InfinityIndex = 0
+		local Object
+		if IsSong() then
+			Object = GAMESTATE:GetCurrentSong()
+		elseif IsGroup() then
+			Object = NameOfGroup
+		end
+		TagsToBeAdded = GetAvailableTagsToAdd(Object, PlayerNumber)
 		self:queuecommand('UpdateTagCursor')
 	end,
 	ToggleRemoveTagsMenuMessageCommand=function(self, params)
 		self:stoptweening()
 		CurrentTagIndex = 1
 		self:queuecommand('UpdateTagCursor')
+		InfinityIndex = 1
 		if not params then return end
 		Object = params[1]
 		CurrentObject = params[1]
 		AvailableTags = GetCurrentObjectTags(Object, PlayerNumber)
-		
 	end,
 	ToggleManageTagsMenuMessageCommand=function(self)
 		self:stoptweening()
 		CurrentTagIndex = 1
+		InfinityIndex = 1
 		self:queuecommand('UpdateTagCursor')
 	end,
 	ToggleCurrentTagMenuMessageCommand=function(self)
 		self:stoptweening()
 		CurrentTagIndex = 1
+		if CurrentTagSubMenu then
+			InfinityIndex = 0
+		else
+			MESSAGEMAN:Broadcast('UpdateRemovedTag', {PlayerNumber, Player_Tags})
+			InfinityIndex = 1
+		end
 		self:queuecommand('UpdateTagCursor')
 	end,
 	-- i hate that I need to do this but im lazy so
@@ -799,8 +1518,21 @@ t[#t+1] = Def.Quad{
 		self:queuecommand('UpdateTagCursor')
 	end,
 	UpdateRemovedTagMessageCommand=function(self, params)
-		SM("HUH")
 		Player_Tags = params[2]
+	end,
+	UpdateAddedTagsMessageCommand=function(self, params)
+		local PlayerNum = params[1]
+		self:stoptweening()
+		CurrentTagIndex = 1
+		InfinityIndex = 0
+		local Object
+		if IsSong() then
+			Object = GAMESTATE:GetCurrentSong()
+		elseif IsGroup() then
+			Object = NameOfGroup
+		end
+		TagsToBeAdded = GetAvailableTagsToAdd(Object, PlayerNumber)
+		self:queuecommand('UpdateTagCursor')
 	end,
 }
 

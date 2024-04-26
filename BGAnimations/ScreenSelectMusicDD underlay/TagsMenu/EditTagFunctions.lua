@@ -31,7 +31,9 @@ local function PleaseSortMe(Taggles)
 			end
 			
 			if a.Song and b.Song then
-				return a.line:lower() < b.line:lower()
+				local song_title_a = SONGMAN:FindSong(a.line)
+				local song_title_b = SONGMAN:FindSong(b.line)
+				return song_title_a:GetDisplayMainTitle():lower() < song_title_b:GetDisplayMainTitle():lower()
 			end
 		end
 	end)
@@ -178,6 +180,8 @@ AddCurrentTagMessageCommand=function(self, params)
 	
 	WriteToTagFile(dir, Taggles)
 	SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
+	MESSAGEMAN:Broadcast("UpdatePlayerTagsText", {PlayerNumber})
+	MESSAGEMAN:Broadcast("UpdateAddedTags", {PlayerNumber})
 	SM('Tag "'..CurrentTag..'" added to current '..SongOrGroup:lower()..' for '..PROFILEMAN:GetPlayerName(PlayerNumber)..' successfully!')
 end,
 
@@ -319,7 +323,6 @@ RemoveCurrentObjectMessageCommand=function(self, params)
 	local PlayerNumber = params[1]
 	local Object = params[2]
 	local CurrentTag = params[3]
-	
 	if Object:find("Song:") then
 		local song = SONGMAN:FindSong(Object:sub(7))
 		Object = song:GetSongDir():sub(8):sub(1, -2)
@@ -379,7 +382,7 @@ RemoveCurrentObjectMessageCommand=function(self, params)
 			end
 		end
 	end
-	
+	PleaseSortMe(Taggles)
 	WriteToTagFile(dir, Taggles)
 	SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 	SM('Removed '..SongOrGroup..' from tag "'..CurrentTag..'" for '..PROFILEMAN:GetPlayerName(PlayerNumber)..' successfully!')

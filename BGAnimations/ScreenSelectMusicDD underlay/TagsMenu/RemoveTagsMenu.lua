@@ -14,7 +14,7 @@ local Player_Tags
 t[#t+1] = Def.Quad{}
 
 -- player tags
-for i=1, 15 do
+for i=1, 24 do
 		t[#t+1] = Def.BitmapText{
 			Font="Miso/_miso",
 			Name="RemovePlayerTags"..i,
@@ -40,13 +40,13 @@ for i=1, 15 do
 					else
 						self:settext(Player_Tags[i])	
 					end
-					if i == 2 or i == 5 or i == 8 or i == 11 or i == 14 then
+					if i == 2 or i == 5 or i == 8 or i == 11 or i == 14 or i == 17 or i == 20 or i == 23 then
 						self:x(TagXPosition + 100)
-					elseif i == 3 or i == 6 or i == 9 or i == 12 or i == 15 then
+					elseif i == 3 or i == 6 or i == 9 or i == 12 or i == 15 or i == 18 or i == 21 or i == 24 then
 						self:x(TagXPosition + 200)
 					end
 					
-					if i == 4 or i == 5 or i == 6 then
+					if i > 3 and i < 7 then
 						self:y(TagYPosition + 20)
 					elseif  i == 7 or i == 8 or i == 9 then
 						self:y(TagYPosition + 40)
@@ -54,8 +54,72 @@ for i=1, 15 do
 						self:y(TagYPosition + 60)
 					elseif i == 13 or i == 14 or i == 15 then
 						self:y(TagYPosition + 80)
+					elseif i == 16 or i == 17 or i == 18 then
+						self:y(TagYPosition + 100)
+					elseif i == 19 or i == 20 or i == 21 then
+						self:y(TagYPosition + 120)
+					elseif i == 22 or i == 23 or i ==24 then
+						self:y(TagYPosition + 140)
 					end
 				end
+			end,
+			UpdateRemoveTagsTextMessageCommand=function(self, params)
+				if not params then return end
+				local PlayerNumber = params[1]
+				local AvailableTags = params[2]
+				local Index = params [3]
+				local FakeIndex = params[4]
+				local Wrap = params[5]
+				local Direction = params[6]
+				
+				local Difference = 0
+				if FakeIndex ~= nil then
+					Difference = Index - FakeIndex
+				else
+					Difference = -24
+				end
+				
+				if Wrap == "Top" then 
+					Difference = 0
+				end
+				
+				if Direction == "Down" then
+					if Difference < 3 then
+						if Difference < 0 then
+							Difference = 0
+						else
+							Difference = 3
+						end
+					end
+				end
+				
+				if i + Difference > #AvailableTags then
+					self:settext("")
+				else
+					self:settext(AvailableTags[i + Difference])	
+				end
+				if i == 2 or i == 5 or i == 8 or i == 11 or i == 14 or i == 17 or i == 20 or i == 23 then
+					self:x(TagXPosition + 100)
+				elseif i == 3 or i == 6 or i == 9 or i == 12 or i == 15 or i == 18 or i == 21 or i == 24 then
+					self:x(TagXPosition + 200)
+				end
+				
+				if i > 3 and i < 7 then
+					self:y(TagYPosition + 20)
+				elseif  i == 7 or i == 8 or i == 9 then
+					self:y(TagYPosition + 40)
+				elseif  i == 10 or i == 11 or i == 12 then
+					self:y(TagYPosition + 60)
+				elseif i == 13 or i == 14 or i == 15 then
+					self:y(TagYPosition + 80)
+				elseif i == 16 or i == 17 or i == 18 then
+					self:y(TagYPosition + 100)
+				elseif i == 19 or i == 20 or i == 21 then
+					self:y(TagYPosition + 120)
+				elseif i == 22 or i == 23 or i ==24 then
+					self:y(TagYPosition + 140)
+				end
+				
 			end,
 			ToggleAddTagsMenuMessageCommand=function(self)
 				self:visible(false)

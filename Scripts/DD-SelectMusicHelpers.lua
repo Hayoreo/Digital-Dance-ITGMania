@@ -333,3 +333,25 @@ GetObjectsPerTag = function (Tag, PlayerNumber, Object)
 	
 	return Objects
 end
+
+GetAvailableTagsToAdd = function(Object, PlayerNumber)
+	local AllTags = GetCurrentPlayerTags(PlayerNumber)
+	local TakenTags = GetCurrentObjectTags(Object, PlayerNumber)
+	local TagsToBeAdded = {}
+		
+	for i=1, #AllTags do
+		local IsMatch = false
+		local CurrentAvail = AllTags[i]
+		for j=1, #TakenTags do
+			if CurrentAvail == TakenTags[j] then
+				IsMatch = true
+				break
+			end
+		end
+		if not IsMatch then
+			TagsToBeAdded[#TagsToBeAdded+1] = CurrentAvail
+		end
+	end
+	
+	return TagsToBeAdded
+end

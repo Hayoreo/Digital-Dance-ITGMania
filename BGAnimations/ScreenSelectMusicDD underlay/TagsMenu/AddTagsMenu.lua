@@ -11,6 +11,25 @@ local TagYPosition = SCREEN_CENTER_Y - quadheight/2 + 88
 local Player_Tags
 local MaxTagLength = 22
 
+local function IsSong()
+	if (Input.WheelWithFocus == SongWheel and Input.WheelWithFocus:get_info_at_focus_pos() ~= "CloseThisFolder") or
+	(Input.WheelWithFocus == GroupWheel and Input.WheelWithFocus:get_info_at_focus_pos() == "RANDOM-PORTAL") then
+		return true
+	else
+		return false
+	end
+end
+
+local function IsGroup()
+	if (Input.WheelWithFocus == GroupWheel and Input.WheelWithFocus:get_info_at_focus_pos() ~= "RANDOM-PORTAL") or 
+		(Input.WheelWithFocus == SongWheel and Input.WheelWithFocus:get_info_at_focus_pos() == "CloseThisFolder") then 
+		if GetMainSortPreference() == 1 then
+			return true
+		end
+	else
+		return false
+	end
+end
 
 --- I still do not understand why i have to throw in a random actor frame before everything else will work????
 t[#t+1] = Def.Quad{}
@@ -210,11 +229,70 @@ for i=1, 15 do
 			UpdatePlayerTagsTextMessageCommand=function(self, params)
 				local PlayerNumber = params[1]
 				local text = ""
-				Player_Tags = GetCurrentPlayerTags(PlayerNumber)
-				if i > #Player_Tags then
+				local Object
+				if IsSong() then
+					Object = GAMESTATE:GetCurrentSong()
+				elseif IsGroup() then
+					Object = NameOfGroup
+				end
+				TagsToBeAdded = GetAvailableTagsToAdd(Object, PlayerNumber)
+				if i > #TagsToBeAdded then
 					self:settext("")
 				else
-					self:settext(Player_Tags[i])	
+					self:settext(TagsToBeAdded[i])	
+				end
+				if i == 2 or i == 5 or i == 8 or i == 11 or i == 14 then
+					self:x(TagXPosition + 100)
+				elseif i == 3 or i == 6 or i == 9 or i == 12 or i == 15 then
+					self:x(TagXPosition + 200)
+				end
+				
+				if i == 4 or i == 5 or i == 6 then
+					self:y(TagYPosition + 20)
+				elseif  i == 7 or i == 8 or i == 9 then
+					self:y(TagYPosition + 40)
+				elseif  i == 10 or i == 11 or i == 12 then
+					self:y(TagYPosition + 60)
+				elseif i == 13 or i == 14 or i == 15 then
+					self:y(TagYPosition + 80)
+				end
+			end,
+			UpdateAddTagsTextMessageCommand=function(self, params)
+				if not params then return end
+				local PlayerNumber = params[1]
+				local Tags = params[2]
+				local Index = params [3]
+				local FakeIndex = params[4] - 1
+				local Wrap = params[5]
+				local Direction = params[6]
+				local text = ""
+				
+				local Difference = 0
+				if FakeIndex ~= nil then
+					Difference = Index - FakeIndex
+				else
+					Difference = -24
+				end
+				
+				if Wrap == "Top" then 
+					Difference = 0
+				end
+				
+				if Direction == "Down" then
+					if Difference < 3 then
+						if Difference < 0 then
+							Difference = 0
+						else
+							Difference = 3
+						end
+					end
+				end
+				
+				
+				if i + Difference > #Tags then
+					self:settext("")
+				else
+					self:settext(Tags[i + Difference])	
 				end
 				if i == 2 or i == 5 or i == 8 or i == 11 or i == 14 then
 					self:x(TagXPosition + 100)

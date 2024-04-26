@@ -10,6 +10,8 @@ local TagXPosition = SCREEN_CENTER_X - quadwidth/2 + 10
 local TagYPosition = SCREEN_CENTER_Y - quadheight/2 + 74
 local CurrentTagName
 local MaxTagLength = 22
+local PositionSong = nil
+local PositionPack = nil
 
 
 --- I still do not understand why i have to throw in a random actor frame before everything else will work????
@@ -223,7 +225,7 @@ for i=1, 6 do
 			else
 				self:visible(true)
 			end
-			
+			PositionSong = nil
 		end,
 		ManageCurrentTagMessageCommand=function(self, params)
 			local TagSongs = params[1]
@@ -252,6 +254,40 @@ for i=1, 6 do
 			else
 				self:settext("")
 			end
+		end,
+		UpdateCurrentSongTagsTextMessageCommand=function(self, params)
+			if not params then return end
+			local PlayerNumber = params[1]
+			local Tag = params[2]
+			local Index = params[3]
+			local Direction = params[4]
+			local TagSongs = GetObjectsPerTag(Tag, PlayerNumber, "Song")
+			
+			local Difference = Index - 6
+			
+			if Difference < 0 then
+				if Index > 1 then
+					Difference = Index - 1
+				else
+					Difference = 0
+				end
+			end
+			
+			if Direction == "Left" or Direction == "Right" then
+				Difference = 0
+			end
+			
+			if #TagSongs > 0 then
+				if i+Difference > #TagSongs then
+					self:settext("")
+				else
+					self:y( TagYPosition + (i-1)*20)
+					self:settext(TagSongs[i+Difference])
+				end
+			else
+				self:settext("")
+			end
+		
 		end,
 	}
 end
@@ -309,6 +345,40 @@ for i=1, 6 do
 				self:settext("")
 			end
 		end,
+		UpdateCurrentPackTagsTextMessageCommand=function(self, params)
+			if not params then return end
+			local PlayerNumber = params[1]
+			local Tag = params[2]
+			local Index = params[3]
+			local Direction = params[4]
+			local TagPacks = GetObjectsPerTag(Tag, PlayerNumber, "Pack")
+			
+			local Difference = Index - 6
+			
+			if Difference < 0 then
+				if Index > 1 then
+					Difference = Index - 1
+				else
+					Difference = 0
+				end
+			end
+			
+			if Direction == "Left" or Direction == "Right" then
+				Difference = 0
+			end
+			
+			if #TagPacks > 0 then
+				if i+Difference > #TagPacks then
+					self:settext("")
+				else
+					self:y( TagYPosition + (i-1)*20)
+					self:settext(TagPacks[i+Difference])
+				end
+			else
+				self:settext("")
+			end
+			
+		end
 	}
 end
 
