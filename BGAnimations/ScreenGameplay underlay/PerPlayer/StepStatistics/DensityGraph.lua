@@ -128,7 +128,7 @@ local text = LoadFont("Common Normal")..{
 			self:x(_screen.w*0.5 - SL_WideScale(6,182))
 
 			if NoteFieldIsCentered then
-				self:x(_screen.w*0.5 - 134)
+				self:x(_screen.w*0.5 - SL_WideScale(6,270)):maxwidth(150)
 			end
 			if IsUltraWide and #GAMESTATE:GetHumanPlayers() > 1 then
 				self:x(52)
@@ -136,7 +136,7 @@ local text = LoadFont("Common Normal")..{
 		elseif player == PLAYER_2 and stylename ~= "double" then
 			self:x(SL_WideScale(6,182))
 			if NoteFieldIsCentered then
-				self:x(26)
+				self:x(140):maxwidth(150)
 			end
 			if IsUltraWide and #GAMESTATE:GetHumanPlayers() > 1 then
 				self:x(180)

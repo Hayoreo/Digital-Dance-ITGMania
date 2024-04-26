@@ -34,9 +34,8 @@ else
 end
 
 if not IsUltraWide then
-	if NoteFieldIsCentered and IsUsingWideScreen() and not stylename == "double"   then
+	if NoteFieldIsCentered and IsUsingWideScreen() and stylename ~= "double"   then
 		sidepane_width = (_screen.w - GetNotefieldWidth()) / 2
-
 		if player==PLAYER_1 then
 			sidepane_pos_x = _screen.cx + notefield_width + (sidepane_width-notefield_width)/2
 		else
