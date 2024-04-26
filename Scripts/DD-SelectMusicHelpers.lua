@@ -197,7 +197,7 @@ IsCurrentSongTagged = function(song, PlayerNum)
 	local PlayerNum = PlayerNum
 	local song = song
 	local SongPath = song:GetSongDir():sub(8):sub(1, -2)
-	local tag_path = PROFILEMAN:GetProfileDir(PlayerNum) .. "/Tags-"..style..".txt"
+	local tag_path = PROFILEMAN:GetProfileDir(PlayerNum) .. "Tags-"..style..".txt"
 	local tag_lines = GetFileContents(tag_path)
 	local Value = false
 	for line in ivalues(tag_lines) do
@@ -220,7 +220,7 @@ IsCurrentGroupTagged = function(group, PlayerNum)
 	local song = song
 	local Group = group
 	local GroupName = Group.."/*"
-	local tag_path = PROFILEMAN:GetProfileDir(PlayerNum) .. "/Tags-"..style..".txt"
+	local tag_path = PROFILEMAN:GetProfileDir(PlayerNum) .. "Tags-"..style..".txt"
 	local tag_lines = GetFileContents(tag_path)
 	local Value = false
 	for line in ivalues(tag_lines) do
@@ -239,7 +239,7 @@ GetCurrentPlayerTags = function(PlayerNum)
 	else
 		style = "single"
 	end
-	local tag_path = PROFILEMAN:GetProfileDir(PlayerNum) .. "/Tags-"..style..".txt"
+	local tag_path = PROFILEMAN:GetProfileDir(PlayerNum) .. "Tags-"..style..".txt"
 	local tag_lines = GetFileContents(tag_path)
 	local player_tags = {}
 	for line in ivalues(tag_lines) do
@@ -259,7 +259,7 @@ GetCurrentObjectTags = function(Object, PlayerNumber)
 	end
 	local Object = Object
 	local SongOrGroup
-	local tag_path = PROFILEMAN:GetProfileDir(PlayerNumber) .. "/Tags-"..style..".txt"
+	local tag_path = PROFILEMAN:GetProfileDir(PlayerNumber) .. "Tags-"..style..".txt"
 	local tag_lines = GetFileContents(tag_path)
 	local Tag
 	local NewTag
@@ -312,7 +312,7 @@ GetObjectsPerTag = function (Tag, PlayerNumber, Object)
 	else
 		style = "single"
 	end
-	local tag_path = PROFILEMAN:GetProfileDir(PlayerNumber) .. "/Tags-"..style..".txt"
+	local tag_path = PROFILEMAN:GetProfileDir(PlayerNumber) .. "Tags-"..style..".txt"
 	local tag_lines = GetFileContents(tag_path)
 	local Objects = {}
 	local NewTag
