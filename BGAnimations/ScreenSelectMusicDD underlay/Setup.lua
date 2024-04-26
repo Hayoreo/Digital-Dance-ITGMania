@@ -296,19 +296,15 @@ local UpdatePrunedSongs = function()
 		end
 		local tag_path
 		if DDStats.GetStat(PlayerNumber, 'LastStyle') == "Single" then
-			tag_path = PROFILEMAN:GetProfileDir(pn) .. "/Tags-single.txt"
+			tag_path = PROFILEMAN:GetProfileDir(pn) .. "Tags-single.txt"
 		else
-			tag_path = PROFILEMAN:GetProfileDir(pn) .. "/Tags-double.txt"
+			tag_path = PROFILEMAN:GetProfileDir(pn) .. "Tags-double.txt"
 		end
 		local tag_lines = GetFileContents(tag_path)
-		local tag_group
+		local tag_group	
 		
 		if NumPlayers == 2 then
-			if DDStats.GetStat(PLAYER_2, 'LastStyle') == "Single" then
-				P2TagPath = PROFILEMAN:GetProfileDir(1) .. "/Tags-single.txt"
-			else
-				P2TagPath = PROFILEMAN:GetProfileDir(1) .. "/Tags-double.txt"
-			end
+			P2TagPath = PROFILEMAN:GetProfileDir(1) .. "Tags-single.txt"
 			P2TagLines =  GetFileContents(P2TagPath)
 			--- combine P1 and P2 taglines
 			for line in ivalues(P2TagLines) do
@@ -649,17 +645,17 @@ local GetGroups = function()
 		end
 		local tag_path
 		if DDStats.GetStat(PlayerNumber, 'LastStyle') == "Single" then
-			tag_path = PROFILEMAN:GetProfileDir(pn) .. "/Tags-single.txt"
+			tag_path = PROFILEMAN:GetProfileDir(pn) .. "Tags-single.txt"
 		else
-			tag_path = PROFILEMAN:GetProfileDir(pn) .. "/Tags-double.txt"
+			tag_path = PROFILEMAN:GetProfileDir(pn) .. "Tags-double.txt"
 		end
 		local tag_lines = GetFileContents(tag_path)
 		
 		if NumPlayers == 2 then
 			if DDStats.GetStat(PLAYER_2, 'LastStyle') == "Single" then
-				P2TagPath = PROFILEMAN:GetProfileDir(1) .. "/Tags-single.txt"
+				P2TagPath = PROFILEMAN:GetProfileDir(1) .. "Tags-single.txt"
 			else
-				P2TagPath = PROFILEMAN:GetProfileDir(1) .. "/Tags-double.txt"
+				P2TagPath = PROFILEMAN:GetProfileDir(1) .. "Tags-double.txt"
 			end
 			P2TagLines =  GetFileContents(P2TagPath)
 			--- combine P1 and P2 taglines
