@@ -23,7 +23,9 @@ local PlayerNumber
 local AvailableTags
 local TagsToBeAdded
 local TagSongs
+local TagSongsLines
 local TagPacks
+local TagPacksLines
 local Tag
 local Object
 
@@ -1443,8 +1445,8 @@ t[#t+1] = Def.Quad{
 			MESSAGEMAN:Broadcast('RemoveCurrentTag', {PlayerNumber, Tag, CurrentObject})
 		elseif ManageTagsSubMenu and not RemoveTagSubMenu and not AddTagSubMenu and not CurrentTagSubMenu then
 			Tag = Player_Tags[InfinityIndex]
-			TagSongs = GetObjectsPerTag(Tag, PlayerNumber, "Song")
-			TagPacks = GetObjectsPerTag(Tag, PlayerNumber, "Pack")
+			TagSongs, TagSongsLines = GetObjectsPerTag(Tag, PlayerNumber, "Song")
+			TagPacks, TagPacksLines = GetObjectsPerTag(Tag, PlayerNumber, "Pack")
 			CurrentTagSubMenu = true
 			ManageTagsSubMenu = false
 			SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "expand.ogg") )
@@ -1455,9 +1457,9 @@ t[#t+1] = Def.Quad{
 				MESSAGEMAN:Broadcast("RenameCurrentTagText", {PlayerNumber, Tag})
 			else
 				if CurrentColumn == 1 then
-					MESSAGEMAN:Broadcast( "RemoveCurrentObject", {PlayerNumber, TagSongs[InfinityIndex], Tag} )
+					MESSAGEMAN:Broadcast( "RemoveCurrentObject", {PlayerNumber, Tag, TagSongsLines[InfinityIndex]} )
 				elseif CurrentColumn == 2 then
-					MESSAGEMAN:Broadcast( "RemoveCurrentObject", {PlayerNumber, TagPacks[InfinityIndex], Tag} )
+					MESSAGEMAN:Broadcast( "RemoveCurrentObject", {PlayerNumber, Tag, TagPacksLines[InfinityIndex]} )
 				end
 			end
 			
@@ -1840,8 +1842,8 @@ t[#t+1] = Def.Quad{
 	UpdateRemovedObjectsMessageCommand=function(self, params)
 		local PlayerNum = params[1]
 		local CurrentTag = params[2]
-		TagSongs = GetObjectsPerTag(CurrentTag, PlayerNumber, "Song")
-		TagPacks = GetObjectsPerTag(CurrentTag, PlayerNumber, "Pack")
+		TagSongs, TagSongsLines = GetObjectsPerTag(CurrentTag, PlayerNumber, "Song")
+		TagPacks, TagPacksLines = GetObjectsPerTag(CurrentTag, PlayerNumber, "Pack")
 		self:stoptweening()
 		CurrentTagIndex = 1
 		InfinityIndex = 0

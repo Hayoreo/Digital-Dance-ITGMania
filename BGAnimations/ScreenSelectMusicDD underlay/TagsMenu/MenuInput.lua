@@ -50,7 +50,6 @@ local uppercaseSpecialCharacters = {
 }
 
 local IllegalCharacters = {
- "#",
  "/",
 }
 

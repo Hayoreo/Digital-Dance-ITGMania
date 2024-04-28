@@ -319,16 +319,8 @@ end,
 RemoveCurrentObjectMessageCommand=function(self, params)
 	if not params then return end
 	local PlayerNumber = params[1]
-	local Object = params[2]
-	local CurrentTag = params[3]
-	if Object:find("Song:") then
-		local song = SONGMAN:FindSong(Object:sub(7))
-		Object = song:GetSongDir():sub(7):sub(1, -2)
-		SongOrGroup = "song"
-	else
-		Object = "/"..Object:sub(7).."/*"
-		SongOrGroup = "group"
-	end
+	local CurrentTag = params[2]
+	local CurrentLine = params[3]
 	
 	local dir = getPlayerProfileDir(PlayerNumber)
 	if dir == nil then
@@ -349,7 +341,7 @@ RemoveCurrentObjectMessageCommand=function(self, params)
 				line = line,
 			}
 		elseif line:sub(1,1) ~= "#" then
-			if line ~= Object then
+			if line ~= CurrentLine then
 				if line:find("/%*") then
 					Taggles[#Taggles+1] = {
 						Tag = AnTag,

@@ -315,6 +315,7 @@ GetObjectsPerTag = function (Tag, PlayerNumber, Object)
 	local tag_path = PROFILEMAN:GetProfileDir(PlayerNumber) .. "Tags-"..style..".txt"
 	local tag_lines = GetFileContents(tag_path)
 	local Objects = {}
+	local Lines = {}
 	local NewTag
 	
 	for line in ivalues(tag_lines) do
@@ -324,14 +325,16 @@ GetObjectsPerTag = function (Tag, PlayerNumber, Object)
 		if Tag == NewTag and line:sub(1,1) ~= "#" then
 			if line:find("/%*") and Object == "Pack" then
 				Objects[#Objects+1] = "Pack: "..line:sub(2):gsub("/.*", "")
+				Lines[#Lines+1] = line
 			elseif Object == "Song" and not line:find("/%*") then
 				local song = SONGMAN:FindSong(line)
 				Objects[#Objects+1] = "Song: "..song:GetDisplayMainTitle()
+				Lines[#Lines+1] = line
 			end
 		end
 	end
 	
-	return Objects
+	return Objects, Lines
 end
 
 GetAvailableTagsToAdd = function(Object, PlayerNumber)
