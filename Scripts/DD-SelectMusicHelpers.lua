@@ -196,7 +196,7 @@ IsCurrentSongTagged = function(song, PlayerNum)
 	end
 	local PlayerNum = PlayerNum
 	local song = song
-	local SongPath = song:GetSongDir():sub(8):sub(1, -2)
+	local SongPath = song:GetSongDir():sub(7):sub(1, -2)
 	local tag_path = PROFILEMAN:GetProfileDir(PlayerNum) .. "Tags-"..style..".txt"
 	local tag_lines = GetFileContents(tag_path)
 	local Value = false
@@ -219,7 +219,7 @@ IsCurrentGroupTagged = function(group, PlayerNum)
 	local PlayerNum = PlayerNum
 	local song = song
 	local Group = group
-	local GroupName = Group.."/*"
+	local GroupName = "/"..Group.."/*"
 	local tag_path = PROFILEMAN:GetProfileDir(PlayerNum) .. "Tags-"..style..".txt"
 	local tag_lines = GetFileContents(tag_path)
 	local Value = false
@@ -280,14 +280,14 @@ GetCurrentObjectTags = function(Object, PlayerNumber)
 					NewTag = line:sub(2)
 				end
 				if SongOrGroup == "Song" then
-					if Object:GetSongDir():sub(8):sub(1, -2) == line then
+					if Object:GetSongDir():sub(7):sub(1, -2) == line then
 						if NewTag == Tag then
 							FoundObject = true
 							break
 						end
 					end
 				elseif SongOrGroup == "Group" then
-					if Object.."/*" == line then
+					if "/"..Object.."/*" == line then
 						if NewTag == Tag then
 							FoundObject = true
 							break
@@ -323,7 +323,7 @@ GetObjectsPerTag = function (Tag, PlayerNumber, Object)
 		end
 		if Tag == NewTag and line:sub(1,1) ~= "#" then
 			if line:find("/%*") and Object == "Pack" then
-				Objects[#Objects+1] = "Pack: "..line:gsub("/.*", "")
+				Objects[#Objects+1] = "Pack: "..line:sub(2):gsub("/.*", "")
 			elseif Object == "Song" and not line:find("/%*") then
 				local song = SONGMAN:FindSong(line)
 				Objects[#Objects+1] = "Song: "..song:GetDisplayMainTitle()

@@ -318,6 +318,7 @@ local UpdatePrunedSongs = function()
 			elseif line:sub(1,1) ~= "#" and tag_group ~= nil then
 				if line:find("/%*") then
 					local song_group = line:gsub("/.*", "")
+					song_group = song_group:sub(2)
 					for song in ivalues(AllSongs) do
 						if song:GetGroupName():lower() == song_group:lower() then
 							if songs_by_group[tag_group] == nil then

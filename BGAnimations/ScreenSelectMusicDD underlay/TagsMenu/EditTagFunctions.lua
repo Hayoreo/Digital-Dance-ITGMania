@@ -61,9 +61,9 @@ CreateNewTagFromTextMessageCommand=function(self, params)
 	local Object
 	
 	if SongOrGroup == "Song" then
-		Object = GAMESTATE:GetCurrentSong():GetSongDir():sub(8):sub(1, -2)
+		Object = GAMESTATE:GetCurrentSong():GetSongDir():sub(7):sub(1, -2)
 	else
-		Object = NameOfGroup.."/*"
+		Object = "/"..NameOfGroup.."/*"
 	end
 	
 	local dir = getPlayerProfileDir(PlayerNumber)
@@ -120,9 +120,9 @@ AddCurrentTagMessageCommand=function(self, params)
 	local SongOrGroup = params[3]
 	local Object
 	if SongOrGroup == "Song" then
-		Object = GAMESTATE:GetCurrentSong():GetSongDir():sub(8):sub(1, -2)
+		Object = GAMESTATE:GetCurrentSong():GetSongDir():sub(7):sub(1, -2)
 	else
-		Object = NameOfGroup.."/*"
+		Object = "/"..NameOfGroup.."/*"
 	end
 	
 	local dir = getPlayerProfileDir(PlayerNumber)
@@ -134,7 +134,6 @@ AddCurrentTagMessageCommand=function(self, params)
 	local TagLines = GetFileContents(dir)
 	local Taggles = {}
 	local AnTag
-	
 	for line in ivalues(TagLines) do
 		if line:sub(1,1) == "#" then
 			AnTag = line
@@ -150,7 +149,7 @@ AddCurrentTagMessageCommand=function(self, params)
 						Song = "b",
 						line = Object,
 					}
-				elseif SongOrGroup == "Group" then
+				elseif SongOrGroup == "Pack" then
 					Taggles[#Taggles+1] = {
 						Tag = AnTag,
 						Pack = "a",
@@ -182,7 +181,7 @@ AddCurrentTagMessageCommand=function(self, params)
 	SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 	MESSAGEMAN:Broadcast("UpdatePlayerTagsText", {PlayerNumber})
 	MESSAGEMAN:Broadcast("UpdateAddedTags", {PlayerNumber})
-	SM('Tag "'..CurrentTag..'" added to current '..SongOrGroup:lower()..' for '..PROFILEMAN:GetPlayerName(PlayerNumber)..' successfully!')
+	--SM('Tag "'..CurrentTag..'" added to current '..SongOrGroup:lower()..' for '..PROFILEMAN:GetPlayerName(PlayerNumber)..' successfully!')
 end,
 
 -- Remove an existing song or group from a tag
@@ -193,10 +192,10 @@ RemoveCurrentTagMessageCommand=function(self, params)
 	local Object = params[3]
 	local SongOrGroup
 	if Object ~= NameOfGroup then
-		Object = GAMESTATE:GetCurrentSong():GetSongDir():sub(8):sub(1, -2)
+		Object = GAMESTATE:GetCurrentSong():GetSongDir():sub(7):sub(1, -2)
 		SongOrGroup = "song"
 	else
-		Object = Object.."/*"
+		Object = "/"..Object.."/*"
 		SongOrGroup = "group"
 	end
 	
@@ -324,10 +323,10 @@ RemoveCurrentObjectMessageCommand=function(self, params)
 	local CurrentTag = params[3]
 	if Object:find("Song:") then
 		local song = SONGMAN:FindSong(Object:sub(7))
-		Object = song:GetSongDir():sub(8):sub(1, -2)
+		Object = song:GetSongDir():sub(7):sub(1, -2)
 		SongOrGroup = "song"
 	else
-		Object = Object:sub(7).."/*"
+		Object = "/"..Object:sub(7).."/*"
 		SongOrGroup = "group"
 	end
 	

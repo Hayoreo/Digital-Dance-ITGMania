@@ -1844,6 +1844,7 @@ t[#t+1] = Def.Quad{
 		TagPacks = GetObjectsPerTag(CurrentTag, PlayerNumber, "Pack")
 		self:stoptweening()
 		CurrentTagIndex = 1
+		InfinityIndex = 0
 		self:queuecommand('UpdateTagCursor')
 	end,
 	UpdateRemovedTagMessageCommand=function(self, params)
