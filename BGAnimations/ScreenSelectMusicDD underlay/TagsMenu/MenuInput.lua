@@ -96,6 +96,10 @@ local InputHandler = function( event )
 	if event.type == "InputEventType_FirstPress" and (event.DeviceInput.button == "DeviceButton_left shift" or event.DeviceInput.button == "DeviceButton_right shift") then
 		holdingShift = holdingShift + 1
 	end
+	-- Mouse input here
+	if event.type == "InputEventType_FirstPress" and event.type ~= "InputEventType_Release" and event.DeviceInput.button == "DeviceButton_left mouse button" and IsMouseOnScreen() then
+		MESSAGEMAN:Broadcast('TagMenuLeftClick')
+	end
 	-- Handle keyboard input for text entry
 	if event.type == "InputEventType_FirstPress" or event.type == "InputEventType_Repeat" then
 		if event.DeviceInput.device == "InputDevice_Key" then

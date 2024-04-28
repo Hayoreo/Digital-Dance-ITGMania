@@ -192,7 +192,6 @@ RemoveCurrentTagMessageCommand=function(self, params)
 	local CurrentTag = params[2]
 	local Object = params[3]
 	local SongOrGroup
-
 	if Object ~= NameOfGroup then
 		Object = GAMESTATE:GetCurrentSong():GetSongDir():sub(8):sub(1, -2)
 		SongOrGroup = "song"

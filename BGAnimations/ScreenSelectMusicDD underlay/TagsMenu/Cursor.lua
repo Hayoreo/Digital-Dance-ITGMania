@@ -470,7 +470,7 @@ t[#t+1] = Def.Quad{
 							end
 							MESSAGEMAN:Broadcast("UpdateRemoveTagsText", {PlayerNumber, AvailableTags, InfinityIndex, CurrentTagIndex, "None", Direction[1]} )
 							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
-						elseif #AvailableTags > 3 then
+						elseif #AvailableTags <= 22 and InfinityIndex == 1 then
 							for i=1, #AvailableTags do
 								if i*3 + 1 == #AvailableTags then
 									InfinityIndex = #AvailableTags
@@ -488,6 +488,10 @@ t[#t+1] = Def.Quad{
 							end
 							MESSAGEMAN:Broadcast("UpdateRemoveTagsText", {PlayerNumber, AvailableTags, InfinityIndex, CurrentTagIndex, "None", Direction[1]} )
 							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif InfinityIndex ~= 1 then
+							InfinityIndex = InfinityIndex - 3
+							MESSAGEMAN:Broadcast("UpdateRemoveTagsText", {PlayerNumber, AvailableTags, InfinityIndex, CurrentTagIndex, "Top", Direction[1]} )
+							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
 						end
 					elseif CurrentTagIndex == 2 then
 						if #AvailableTags >= 23 and InfinityIndex == 2 then
@@ -507,7 +511,7 @@ t[#t+1] = Def.Quad{
 							end
 							MESSAGEMAN:Broadcast("UpdateRemoveTagsText", {PlayerNumber, AvailableTags, InfinityIndex, CurrentTagIndex, "None", Direction[1]} )
 							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
-						elseif #AvailableTags > 3 then
+						elseif #AvailableTags <= 23 and InfinityIndex == 1 then
 							for i=1, #AvailableTags do
 								if i*3 + 1 == #AvailableTags then
 									InfinityIndex = #AvailableTags
@@ -525,6 +529,10 @@ t[#t+1] = Def.Quad{
 							end
 							MESSAGEMAN:Broadcast("UpdateRemoveTagsText", {PlayerNumber, AvailableTags, InfinityIndex, CurrentTagIndex, "None", Direction[1]} )
 							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif InfinityIndex ~= 1 then
+							InfinityIndex = InfinityIndex - 3
+							MESSAGEMAN:Broadcast("UpdateRemoveTagsText", {PlayerNumber, AvailableTags, InfinityIndex, CurrentTagIndex, "Top", Direction[1]} )
+							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
 						end
 					elseif CurrentTagIndex == 3 then
 						if #AvailableTags >= 24 and InfinityIndex == 3 then
@@ -545,7 +553,7 @@ t[#t+1] = Def.Quad{
 							end
 							MESSAGEMAN:Broadcast("UpdateRemoveTagsText", {PlayerNumber, AvailableTags, InfinityIndex, CurrentTagIndex, "None", Direction[1]} )
 							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
-						elseif #AvailableTags > 3 then
+						elseif #AvailableTags <= 24 and InfinityIndex == 1 then
 							for i=1, #AvailableTags do
 								if i*3 + 1 == #AvailableTags then
 									InfinityIndex = #AvailableTags
@@ -563,6 +571,10 @@ t[#t+1] = Def.Quad{
 							end
 							MESSAGEMAN:Broadcast("UpdateRemoveTagsText", {PlayerNumber, AvailableTags, InfinityIndex, CurrentTagIndex, "None", Direction[1]} )
 							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif InfinityIndex ~= 1 then
+							InfinityIndex = InfinityIndex - 3
+							MESSAGEMAN:Broadcast("UpdateRemoveTagsText", {PlayerNumber, AvailableTags, InfinityIndex, CurrentTagIndex, "Top", Direction[1]} )
+							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
 						end
 					else
 						CurrentTagIndex = CurrentTagIndex - 3
@@ -1449,6 +1461,323 @@ t[#t+1] = Def.Quad{
 				end
 			end
 			
+		end
+	end,
+	TagMenuLeftClickMessageCommand=function(self)
+		local MouseIndex
+		local ClickConnect = false
+		-- Main menu of tag menu
+		if not AddTagSubMenu and not RemoveTagSubMenu and not ManageTagsSubMenu and not CurrentTagSubMenu then
+			for i=1, #CursorPositionNames do
+				local Parent = self:GetParent():GetChild(CursorPositionNames[i])
+				local ObjectX = Parent:GetX()
+				local ObjectY = Parent:GetY()
+				local ObjectWidth = Parent:GetWidth()
+				local ObjectHeight = Parent:GetHeight()
+				local HAlign = Parent:GetHAlign()
+				local VAlign = Parent:GetVAlign()
+				ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+				ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+				if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) then
+					MouseIndex = i
+					ClickConnect = true
+					break
+				end
+			end
+			
+			if ClickConnect then
+				if NumPlayers == 2 then
+					FakeIndex = MouseIndex - 2
+					if FakeIndex == -1 then
+						CurrentTagIndex = 1
+						if Player == PLAYER_2 or Player == "PlayerNumber_P2" then
+							Player = PLAYER_1
+							PlayerNumber = 0
+							self:stoptweening():diffuse(PlayerColor(Player)):diffusealpha(0.4):queuecommand('DimCursor')
+							MESSAGEMAN:Broadcast("ChangeTabPlayerColor")
+							SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "expand.ogg") )
+							return
+						end
+					elseif FakeIndex == 0 then
+						CurrentTagIndex = 2
+						if Player == PLAYER_1 or Player == "PlayerNumber_P1" then
+							Player = PLAYER_2
+							PlayerNumber = 1
+							self:stoptweening():diffuse(PlayerColor(Player)):diffusealpha(0.4):queuecommand('DimCursor')
+							MESSAGEMAN:Broadcast("ChangeTabPlayerColor")
+							SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "expand.ogg") )
+							return
+						end
+					end
+				else
+					FakeIndex = MouseIndex
+				end
+				if FakeIndex == 1 then
+					CurrentTagIndex = 1
+					if IsSong() then
+						AddTagSubMenu = true
+						local Song = GAMESTATE:GetCurrentSong()
+						MESSAGEMAN:Broadcast("ToggleAddTagsMenu", {Song, Player})
+						SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "expand.ogg") )
+					else
+						SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "change.ogg") )
+					end
+				elseif FakeIndex == 2 then
+					CurrentTagIndex = 2
+					if IsGroup() then
+						SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "expand.ogg") )
+						AddTagSubMenu = true
+						SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "expand.ogg") )
+						MESSAGEMAN:Broadcast("ToggleAddTagsMenu", {NameOfGroup, Player})
+					elseif (Input.WheelWithFocus == GroupWheel and Input.WheelWithFocus:get_info_at_focus_pos() ~= "RANDOM-PORTAL") or 
+							(Input.WheelWithFocus == SongWheel and Input.WheelWithFocus:get_info_at_focus_pos() == "CloseThisFolder") then
+						if GetMainSortPreference ~= 1 then
+							SM('Main sort must be set to "GROUP"!')
+						end
+						SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "change.ogg") )
+					else
+						SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "change.ogg") )
+					end
+				elseif FakeIndex == 3 then
+					CurrentTagIndex = 3
+					if IsSong() and IsCurrentSongTagged(GAMESTATE:GetCurrentSong(), PlayerNumber) then
+						SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "expand.ogg") )
+						RemoveTagSubMenu = true
+						local Song = GAMESTATE:GetCurrentSong()
+						MESSAGEMAN:Broadcast("ToggleRemoveTagsMenu", {Song, Player})
+					else
+						SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "change.ogg") )
+					end
+				elseif FakeIndex == 4 then
+					CurrentTagIndex = 4
+					if IsGroup() and IsCurrentGroupTagged(NameOfGroup, PlayerNumber) then
+						SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "expand.ogg") )
+						RemoveTagSubMenu = true
+						MESSAGEMAN:Broadcast("ToggleRemoveTagsMenu", {NameOfGroup, Player})
+					elseif IsSong() and IsCurrentGroupTagged(NameOfGroup, PlayerNumber) then	
+						SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "expand.ogg") )
+						RemoveTagSubMenu = true
+						MESSAGEMAN:Broadcast("ToggleRemoveTagsMenu", {NameOfGroup, Player, "GroupTag"})
+					else
+						SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "change.ogg") )
+					end
+				elseif FakeIndex == 5 then
+					CurrentTagIndex = 5
+					if #GetCurrentPlayerTags(PlayerNumber) > 0 then
+						ManageTagsSubMenu = true
+						MESSAGEMAN:Broadcast("ToggleManageTagsMenu", {PlayerNumber})
+						SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "expand.ogg") )
+					else
+						SM("No tags to manage!")
+						SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "change.ogg") )
+					end
+				end
+				if FakeIndex == 6 then
+					CurrentTagIndex = MaxIndex
+					if not HaveTagsChanged then
+						SOUND:PlayOnce( THEME:GetPathS("ScreenPlayerOptions", "cancel all.ogg") )
+						MESSAGEMAN:Broadcast("InitializeTagsMenu")
+						MESSAGEMAN:Broadcast("ToggleTagsMenu")
+					else
+						SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "sort.ogg") )
+						MESSAGEMAN:Broadcast("ReloadSSMDD")
+					end
+				end
+				
+				if NumPlayers == 2 then
+					CurrentTagIndex = FakeIndex + 2
+				end
+				MESSAGEMAN:Broadcast('UpdateTagCursor')
+			end
+		--- Add tags menu	
+		elseif AddTagSubMenu and not RemoveTagSubMenu and not ManageTagsSubMenu and not CurrentTagSubMenu then
+			for i=1, #TagPositionNames do
+				local Parent = self:GetParent():GetChild(TagPositionNames[i])
+				local ObjectX = Parent:GetX()
+				local ObjectY = Parent:GetY()
+				local ObjectWidth
+				local ObjectHeight
+				if i == 1 then
+					ObjectWidth = Parent:GetZoomX()
+					ObjectHeight = Parent:GetZoomY()
+				else
+					ObjectWidth = Parent:GetWidth()
+					ObjectHeight = Parent:GetHeight()
+				end
+				local HAlign = Parent:GetHAlign()
+				local VAlign = Parent:GetVAlign()
+				ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+				ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+				if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) then
+					MouseIndex = i
+					ClickConnect = true
+					break
+				end
+			end
+			if ClickConnect then
+				if MouseIndex == 1 then
+					CurrentTagIndex = 1
+					InfinityIndex = 0
+					MESSAGEMAN:Broadcast("UpdateTagCursor")
+					MESSAGEMAN:Broadcast("UpdatePlayerTagsText", {PlayerNumber, Object} )
+					SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "change.ogg") )
+				else
+					local Difference = MouseIndex - CurrentTagIndex
+					CurrentTagIndex = CurrentTagIndex + Difference
+					InfinityIndex = InfinityIndex + Difference
+					MESSAGEMAN:Broadcast("UpdateTagCursor")
+					SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "change.ogg") )
+				end
+			end
+		-- Remove tags menu
+		elseif RemoveTagSubMenu and not AddTagSubMenu and not ManageTagsSubMenu and not CurrentTagSubMenu then
+			for i=1, #RemoveTagPositionNames do
+				local Parent = self:GetParent():GetChild(RemoveTagPositionNames[i])
+				local ObjectX = Parent:GetX()
+				local ObjectY = Parent:GetY()
+				local ObjectWidth = Parent:GetWidth()
+				local ObjectHeight = Parent:GetHeight()
+				local HAlign = Parent:GetHAlign()
+				local VAlign = Parent:GetVAlign()
+				ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+				ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+				if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) then
+					MouseIndex = i
+					ClickConnect = true
+					break
+				end
+			end
+			
+			if ClickConnect then
+				local Difference = MouseIndex - CurrentTagIndex
+				CurrentTagIndex = CurrentTagIndex + Difference
+				InfinityIndex = InfinityIndex + Difference
+				MESSAGEMAN:Broadcast("UpdateTagCursor")
+				SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "change.ogg") )
+			end
+		--- Manage tags menu	
+		elseif ManageTagsSubMenu and not RemoveTagSubMenu and not AddTagSubMenu and not CurrentTagSubMenu then
+			for i=1, #ManageTagNames do
+				local Parent = self:GetParent():GetChild(ManageTagNames[i])
+				local Zoom = Parent:GetZoom()
+				local ObjectX = Parent:GetX()
+				local ObjectY = Parent:GetY()
+				local ObjectWidth = Parent:GetWidth() * Zoom
+				local ObjectHeight = Parent:GetHeight() * Zoom
+				if ObjectWidth > (quadwidth-quadborder)/2.75 then
+					ObjectWidth = (quadwidth-quadborder)/2.75 * Zoom
+				end
+				local HAlign = Parent:GetHAlign()
+				local VAlign = Parent:GetVAlign()
+				ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+				ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+				if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) then
+					MouseIndex = i
+					ClickConnect = true
+					break
+				end
+			end
+			
+			if ClickConnect then
+				local Difference = MouseIndex - CurrentTagIndex
+				CurrentTagIndex = CurrentTagIndex + Difference
+				InfinityIndex = InfinityIndex + Difference
+				MESSAGEMAN:Broadcast("UpdateTagCursor")
+				SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "change.ogg") )
+			end
+			
+		--- Current Tag menu
+		elseif CurrentTagSubMenu and not ManageTagsSubMenu and not RemoveTagSubMenu and not AddTagSubMenu then
+			-- Text Entry Quad
+			local ParentQuad = self:GetParent():GetChild("RenameTagQuad")
+			local QuadX = ParentQuad:GetX()
+			local QuadY = ParentQuad:GetY()
+			local QuadWidth = ParentQuad:GetZoomX()
+			local QuadHeight = ParentQuad:GetZoomY()
+			local HAlignQuad = ParentQuad:GetHAlign()
+			local VAlignQuad = ParentQuad:GetVAlign()
+			QuadX = QuadX + (0.5-HAlignQuad)*QuadWidth
+			QuadY = QuadY + (0.5-VAlignQuad)*QuadHeight
+			if IsMouseGucci(QuadX, QuadY, QuadWidth, QuadHeight) then
+				CurrentTagIndex = 1
+				InfinityIndex = 0
+				MESSAGEMAN:Broadcast("UpdateTagCursor")
+				SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "change.ogg") )
+			end
+			-- Tag Songs
+			for i=1, #CurrentTagSongNames do
+				local SongParent = self:GetParent():GetChild(CurrentTagSongNames[i])
+				local Zoom = SongParent:GetZoom()
+				local ObjectX = SongParent:GetX()
+				local ObjectY = SongParent:GetY()
+				local ObjectWidth = SongParent:GetWidth()
+				local ObjectHeight = SongParent:GetHeight()
+				
+				if ObjectWidth > (quadwidth-quadborder)/1.75 then
+					ObjectWidth = (quadwidth-quadborder)/1.75
+				end
+				
+				local HAlign = SongParent:GetHAlign()
+				local VAlign = SongParent:GetVAlign()
+				ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth * Zoom
+				ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight * Zoom
+				if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) then
+					if CurrentColumn == 2 then
+						CurrentColumn = 1
+						CurrentTagIndex = i
+						InfinityIndex = i - 1
+						MESSAGEMAN:Broadcast("UpdateCurrentPackTagsText", {PlayerNumber, Tag, InfinityIndex, "Left"})
+						MESSAGEMAN:Broadcast("UpdateTagCursor")
+						SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "change.ogg") )
+						break
+					else
+						MouseIndex = i
+						ClickConnect = true
+						break
+					end
+				end
+			end
+			-- Tag packs
+			for i=1, #CurrentTagPackNames do
+				local PackParent = self:GetParent():GetChild(CurrentTagPackNames[i])
+				local Zoom = PackParent:GetZoom()
+				local ObjectX = PackParent:GetX()
+				local ObjectY = PackParent:GetY()
+				local ObjectWidth = PackParent:GetWidth()
+				local ObjectHeight = PackParent:GetHeight()
+				if ObjectWidth > (quadwidth-quadborder)/1.75 then
+					ObjectWidth = (quadwidth-quadborder)/1.75
+				end
+				
+				local HAlign = PackParent:GetHAlign()
+				local VAlign = PackParent:GetVAlign()
+				ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth * Zoom
+				ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight * Zoom
+				if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) then
+					if CurrentColumn == 1 then
+						CurrentColumn = 2
+						CurrentTagIndex = i
+						InfinityIndex = i - 1
+						MESSAGEMAN:Broadcast("UpdateCurrentSongTagsText", {PlayerNumber, Tag, InfinityIndex, "Right"})
+						MESSAGEMAN:Broadcast("UpdateTagCursor")
+						SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "change.ogg") )
+						break
+					else
+						MouseIndex = i
+						ClickConnect = true
+						MESSAGEMAN:Broadcast("UpdateTagCursor")
+						SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "change.ogg") )
+						break
+					end
+				end
+			end
+			if ClickConnect then
+				local Difference = MouseIndex - CurrentTagIndex
+				CurrentTagIndex = CurrentTagIndex + Difference
+				InfinityIndex = InfinityIndex + Difference
+				MESSAGEMAN:Broadcast("UpdateTagCursor")
+				SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "change.ogg") )
+			end
 		end
 	end,
 	ToggleAddTagsMenuMessageCommand=function(self)
