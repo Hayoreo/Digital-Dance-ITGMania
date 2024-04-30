@@ -17,6 +17,12 @@ local style = ToEnumShortString(GAMESTATE:GetCurrentStyle():GetStyleType())
 local players = GAMESTATE:GetHumanPlayers()
 
 local mpn = GAMESTATE:GetMasterPlayerNumber()
+local stats = STATSMAN:GetCurStageStats():GetPlayerStageStats(mpn)
+local PercentDP = stats:GetPercentDancePoints()
+local percent = FormatPercentScore(PercentDP)
+-- Format the Percentage string, removing the % symbol
+percent = percent:gsub("%%", "")
+
 
 -- since we're potentially retrieving from player profile
 -- perform some rudimentary validation by clamping both
@@ -25,7 +31,13 @@ local mpn = GAMESTATE:GetMasterPlayerNumber()
 --        so this is more like "validation" than validation
 
 local primary_i   = clamp(SL[ToEnumShortString(mpn)].EvalPanePrimary,   1, num_panes)
-local secondary_i = clamp(SL[ToEnumShortString(mpn)].EvalPaneSecondary, 1, num_panes)
+local secondary_i
+-- if the player has a score above 99% show the timing graph pane regardless of if FA+ was used or not.
+if tonumber(percent) >= 99 then
+	secondary_i = clamp(4, 1, num_panes)
+else
+	secondary_i = clamp(SL[ToEnumShortString(mpn)].EvalPaneSecondary, 1, num_panes)
+end
 
 -- -----------------------------------------------------------------------
 -- initialize local tables (panes, active_pane) for the the input handling function to use
