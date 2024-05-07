@@ -137,6 +137,72 @@ local function update_exscore(self)
 
 end
 
+local function update_itl_rank(self)
+	for player in ivalues(GAMESTATE:GetHumanPlayers()) do
+		local pn = ToEnumShortString(player)
+		-- Only display EX score if a profile is found for an enabled player.
+		if not GAMESTATE:IsPlayerEnabled(player) or not PROFILEMAN:IsPersistentProfile(player) then
+			self[pn..'ITLRank']:visible(false)
+			return
+		end
+
+		if self.song ~= "CloseThisFolder" and self.song ~= "Random-Portal" and self.song ~= nil and GAMESTATE:GetNumSidesJoined() == 1 then
+			local song = self.song
+			local song_dir = song:GetSongDir()
+			if song_dir ~= nil and #song_dir ~= 0 then
+				if SL[pn].ITLData["pathMap"][song_dir] ~= nil then
+					local hash = SL[pn].ITLData["pathMap"][song_dir]
+					if SL[pn].ITLData["hashMap"][hash] ~= nil then
+						if SL[pn].ITLData["hashMap"][hash]["rank"] ~= nil then
+							if SL[pn].ITLData["hashMap"][hash]["rank"] ~= nil then
+								local rank = SL[pn].ITLData["hashMap"][hash]["rank"]
+								self[pn..'ITLRank']:settext(tostring(rank))
+								local style = GAMESTATE:GetCurrentStyle():GetName()
+								if 		rank <=	(style == "single" and 10 or 5) 	then self[pn..'ITLRank']:diffuse(SL.JudgmentColors["FA+"][1])
+								elseif	rank <= (style == "single" and 25 or 20)	then self[pn..'ITLRank']:diffuse(SL.JudgmentColors["FA+"][2])
+								elseif	rank <= (style == "single" and 50 or 40) 	then self[pn..'ITLRank']:diffuse(SL.JudgmentColors["FA+"][3])
+								elseif	rank <= (style == "single" and 75 or 50) 	then self[pn..'ITLRank']:diffuse(SL.JudgmentColors["FA+"][4])
+								elseif	rank <= (style == "single" and 85 or 55)	then self[pn..'ITLRank']:diffuse(SL.JudgmentColors["FA+"][5])
+								else self[pn..'ITLRank']:diffuse(Color.Red)
+								end
+							end
+						end
+						self[pn..'ITLRank']:visible(true)
+						return
+					end
+				end
+			end
+		end
+		self[pn..'ITLRank']:visible(false)
+	end
+
+end
+
+local function update_itl_points(self)
+	for player in ivalues(GAMESTATE:GetHumanPlayers()) do
+		local pn = ToEnumShortString(player)
+		-- Only display EX score if a profile is found for an enabled player.
+		if not GAMESTATE:IsPlayerEnabled(player) or not PROFILEMAN:IsPersistentProfile(player) then
+			self[pn..'ITLPoints']:visible(false)
+			return
+		end
+		
+		if self.song ~= "CloseThisFolder" and self.song ~= "Random-Portal" and self.song ~= nil and GAMESTATE:GetNumSidesJoined() == 1 then
+			local song = self.song
+			local song_dir = song:GetSongDir()
+			if SL[pn].ITLData["pathMap"][song_dir] ~= nil then
+				local hash = SL[pn].ITLData["pathMap"][song_dir]
+				if SL[pn].ITLData["hashMap"][hash] ~= nil then
+					self[pn..'ITLPoints']:settext(SL[pn].ITLData["hashMap"][hash]["points"])
+					self[pn..'ITLPoints']:visible(true)
+					return
+				end
+			end
+		end
+		self[pn..'ITLPoints']:visible(false)
+	end
+end
+
 local song_mt = {
 	__index = {
 		create_actors = function(self, name)
@@ -187,6 +253,8 @@ local song_mt = {
 				CurrentStepsChangedMessageCommand=function(subself, params)
 					update_grade(self)
 					update_exscore(self)
+					update_itl_rank(self)
+					update_itl_points(self)
 				end,
 				
 				SongIsReloadingMessageCommand=function(subself)
@@ -247,11 +315,15 @@ local song_mt = {
 				else side = 1 end
 				local grade_position
 				local ExScore_position
+				local rank_position
+				local point_position = 30
 				if pn == 'P1' then
 					grade_position = -130
+					rank_position = -112
 					ExScore_position = 17
 				else
 					grade_position = -112
+					rank_position = -132
 					ExScore_position = 28
 				end
 				-- Player grades
@@ -274,18 +346,46 @@ local song_mt = {
 					Text="",
 					InitCommand=function(subself)
 						subself:visible(false)
-						:zoom(0.2)
+						:zoom(0.15)
 						:horizalign(right)
 						:x( _screen.w/6 )
 						:diffuse(SL.JudgmentColors["FA+"][1])
 						if NumPlayers == 2 then
 							subself:y(ExScore_position):zoom(0.14)
 						else
-							subself:y(22)
+							subself:y(18)
 						end
 						self[pn..'ex_score'] = subself 
 					end,
 				}
+				
+				if NumPlayers == 1 then
+					--- Player ExScore Rank
+					af[#af+1] = Def.BitmapText{
+						Font="Common Normal",
+						Text="",
+						InitCommand=function(subself)
+							self[pn..'ITLRank'] = subself
+							subself:visible(true)			
+								   :zoom(0.75)
+								   :xy(rank_position, 25)
+						end,	
+					}
+					--- Player ITL Points
+					af[#af+1] = Def.BitmapText{
+						Font="Common Normal",
+						Text="",
+						InitCommand=function(subself)
+							self[pn..'ITLPoints'] = subself
+							subself:visible(true)			
+								   :zoom(0.5)
+								   :horizalign(center)
+								   :xy( _screen.w/6.75 , point_position)
+						end,	
+					}
+				
+				end
+				
 			end
 
 			return af
@@ -411,6 +511,8 @@ local song_mt = {
 			update_grade(self)
 			update_exscore(self)
 			update_edit(self)
+			update_itl_rank(self)
+			update_itl_points(self)
 			
 		end,
 	}
