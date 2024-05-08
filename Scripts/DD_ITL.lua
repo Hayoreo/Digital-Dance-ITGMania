@@ -173,6 +173,9 @@ ReadItlFile = function(player)
 	--     "totalRolls" -> total number of rolls in the chart
 	--  },
 	if itlData["fixedEx"] == nil then
+		itlData["fixedEx"] = true
+	end
+	if itlData["fixedEx2024"] == nil then
 		local hashMap = itlData["hashMap"]
 		local keys = { "W0", "W1", "W2", "W3", "W4", "W5", "Miss" }
 
@@ -183,14 +186,7 @@ ReadItlFile = function(player)
 				local totalHolds = counts["totalHolds"]
 				local totalRolls = counts["totalRolls"]
 
-				-- SL.ExWeights["W0"] may have been modified for tournament mode.
-				-- Try and set a fallback (3.5) so that things are still calculated correctly.
-				local SameW0Weight = (ThemePrefs.Get("EnableTournamentMode") and
-										ThemePrefs.Get("ScoringSystem") == "EX" and
-										ThemePrefs.Get("FantasticPlusWindowWeight") == "Same")
-				W0Weight = SameW0Weight and 3.5 or SL.ExWeights["W0"]
-
-				local total_possible = totalSteps * W0Weight + (totalHolds + totalRolls) * SL.ExWeights["Held"]
+				local total_possible = totalSteps * SL.ExWeights["W0"] + (totalHolds + totalRolls) * SL.ExWeights["Held"]
 				local total_points = 0
 
 				for key in ivalues(keys) do
@@ -213,7 +209,51 @@ ReadItlFile = function(player)
 			end
 		end
 
-		itlData["fixedEx"] = true
+		itlData["fixedEx2024"] = true
+	end
+	
+	-- Fix points that got default-stored as empty strings in an earlier
+	-- version of my remote ITL score pull code to 0. If the data is already
+	-- fixed, then skip this step. -Zankoku
+	if itlData["fixedPoints"] == nil then
+		local hashMap = itlData["hashMap"]
+		
+		if hashMap ~= nil then
+			for hash, data in pairs(hashMap) do
+				if data["points"] == "" then
+					data["points"] = 0
+				end
+				local counts = data["judgments"]
+			end
+		end
+		
+		itlData["fixedPoints"] = true
+	end
+	
+	-- As of ITL 2024, there is a separate ranking for singles and doubles.
+	-- Old json file didn't store stepsType, so do a one time sweep to populate
+	if itlData["fixedStepsType"] == nil then
+		-- Loop through pathMap to find the stepsType of all the songs, and update it in the hashMap		
+		local pathMap = itlData["pathMap"]
+		local hashMap = itlData["hashMap"]
+		
+		for path, hash in pairs(pathMap) do
+			if hashMap[hash] ~= nil then
+				local songPath = path:gsub("/Songs","")		
+				local song = SONGMAN:FindSong(songPath)
+				if song ~= nil then
+					local allSteps = song:GetAllSteps()
+					-- Songs with more than one chart will be from the original pack i.e. not ITL.
+					-- These ones could have both singles and doubles, so it won't be accurate
+					if #allSteps == 1 then				
+						local steps = allSteps[1]
+						local stepsType = steps:GetStepsType() == "StepsType_Dance_Single" and "single" or "double"
+						hashMap[hash]["stepsType"] = stepsType		
+					end	
+				end
+			end
+		end
+		itlData["fixedStepsType"] = true
 	end
 
 	SL[pn].ITLData = itlData
