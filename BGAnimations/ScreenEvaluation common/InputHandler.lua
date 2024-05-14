@@ -1,6 +1,8 @@
 local af, num_panes = unpack(...)
 local screen   = SCREENMAN:GetTopScreen()
 local overlay  = screen:GetChild("Overlay"):GetChild("ScreenEval Common")
+local holdingCtrl = false
+local CtrlHeld = 0
 
 if not af
 or type(num_panes) ~= "number"
@@ -120,7 +122,30 @@ local OtherController = {
 }
 
 return function(event)
-
+	-- Allow restarting the song from evaluation.
+	if event.type == "InputEventType_FirstPress" then
+		if event.DeviceInput.button == "DeviceButton_left ctrl" or event.DeviceInput.button == "DeviceButton_right ctrl"  then
+			CtrlHeld = CtrlHeld + 1
+			holdingCtrl = true
+		elseif event.DeviceInput.button == "DeviceButton_r" then
+			if holdingCtrl then
+				SCREENMAN:GetTopScreen():SetNextScreenName("ScreenGameplay"):StartTransitioningScreen("SM_GoToNextScreen")
+			end
+		end
+	elseif event.type == "InputEventType_Release" then
+		if event.DeviceInput.button == "DeviceButton_left ctrl" or event.DeviceInput.button == "DeviceButton_right ctrl" then
+			if CtrlHeld <= 0 then
+				CtrlHeld = 0
+			else
+				CtrlHeld = CtrlHeld - 1
+			end
+			if CtrlHeld == 0 then
+				holdingCtrl = false
+			end
+		end
+	end
+	
+	--- Toggle event menu with shift or clicking on the bottom button.
 	if event.DeviceInput.button == "DeviceButton_left shift" or 
 	(event.DeviceInput.button == "DeviceButton_left mouse button" and IsMouseGucci(SCREEN_CENTER_X, SCREEN_CENTER_Y + (SCREEN_HEIGHT/2) - 13, 104, 19, "center", "middle", 1) )
 	and event.type ~= "InputEventType_Release" then
