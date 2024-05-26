@@ -2,6 +2,7 @@ local player = ...
 local pn = ToEnumShortString(player)
 local CurrentTab
 local CurrentTabNumber
+local CurrentHash
 
 if pn == "P1" and GAMESTATE:IsHumanPlayer(pn) then
 	if DDStats.GetStat(PLAYER_1, 'LastTab') ~= nil then
@@ -332,8 +333,8 @@ local LeaderboardRequestProcessor = function(res, master)
 
 			if data[playerStr]["itl"]["itlLeaderboard"] then
 				for entry in ivalues(data[playerStr]["itl"]["itlLeaderboard"]) do
-					if entry["isSelf"] then
-						UpdateItlExScore(player, SL[pn].Streams.Hash, entry["score"])
+					if entry["isSelf"] and CurrentHash ~= nil then
+						UpdateItlExScore(player, CurrentHash, entry["score"])
 					end					
 					entryCount = entryCount + 1
 					SetScoreData(4, entryCount,
@@ -384,6 +385,7 @@ local af = Def.ActorFrame{
 	OffCommand=function(self) self:stoptweening() end,
 	CurrentSongChangedMessageCommand=function(self)
 		self:stoptweening()
+		CurrentHash = nil
 		if GAMESTATE:GetCurrentSong() == nil then
 			for i=1, num_scores do
 				self:stoptweening()
@@ -540,6 +542,7 @@ local af = Def.ActorFrame{
 			}
 			if SL[pn].ApiKey ~= "" then
 				query["chartHashP"..n] = SL[pn].Streams.Hash
+				CurrentHash = SL[pn].Streams.Hash
 				headers["x-api-key-player-"..n] = SL[pn].ApiKey
 				sendRequest = true
 			end
