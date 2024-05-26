@@ -436,7 +436,7 @@ CreateCommentString = function(player)
 	local sl_pn = SL[ToEnumShortString(player)]
 	local mods = sl_pn.ActiveModifiers
 	
-	if mods.ShowFaPlusWindow or mods.ShowEXScore then
+	if mods.ShowFaPlusWindow == true or mods.ShowEXScore == true then
 		local FAsuffix = "w"
 		local counts =  GetExJudgmentCounts(player)
 		local WNumber = counts["W1"]
