@@ -3,6 +3,10 @@ local pn = ToEnumShortString(player)
 local mods = SL[pn].ActiveModifiers
 local sprite
 
+-- In case anyone is playing on a profile that previously was using the toggle judgment tilt.
+if mods.JudgmentTilt == false or mods.JudgmentTilt == true then
+	mods.JudgmentTilt = 0
+end
 -- helper function for returning the player AF
 -- works as expected in ScreenGameplay
 --     arguments:  pn is short string PlayerNumber like "P1" or "P2"
