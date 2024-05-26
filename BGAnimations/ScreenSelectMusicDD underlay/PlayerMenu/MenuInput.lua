@@ -25,7 +25,7 @@ local ColumnPerRow2 = {
 5,
 4,
 4,
-2,
+1,
 4,
 3,
 1,
@@ -185,15 +185,15 @@ local InputHandler = function( event )
 				else
 					CurrentColumn = CurrentColumn + 1
 				end
-				if CurrentTab == 1 and CurrentRow ~= 2 and CurrentRow ~= 3 and CurrentRow ~= 10 then
+				if CurrentTab == 1 and ColumnPerRow1[CurrentRow] > 1 then
 					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
-				elseif CurrentTab == 2 and CurrentRow ~= 7 and CurrentRow ~= 8 and CurrentRow ~= 9 then
+				elseif CurrentTab == 2 and ColumnPerRow2[CurrentRow] > 1 then
 					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
-				elseif CurrentTab == 3 and CurrentRow ~= 3 and CurrentRow ~= 13 then
+				elseif CurrentTab == 3 and ColumnPerRow3[CurrentRow] > 1 then
 					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
-				elseif CurrentTab == 4 then
+				elseif CurrentTab == 4 and ColumnPerRow4[CurrentRow] > 1 then
 					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
-				elseif CurrentTab == 5 and CurrentRow ~= 4 and CurrentRow ~= 5 and CurrentRow ~= 8 and CurrentRow ~= 9 and CurrentRow ~= 10 and CurrentRow ~= 11 and CurrentRow ~= 14 then
+				elseif CurrentTab == 5 and ColumnPerRow5[CurrentRow] > 1 then
 					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 				end
 				
@@ -214,15 +214,15 @@ local InputHandler = function( event )
 				else
 					CurrentColumn = CurrentColumn - 1
 				end
-				if CurrentTab == 1 and CurrentRow ~= 2 and CurrentRow ~= 3 and CurrentRow ~= 10 then
+				if CurrentTab == 1 and ColumnPerRow1[CurrentRow] > 1 then
 					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
-				elseif CurrentTab == 2 and CurrentRow ~= 7 and CurrentRow ~= 8 and CurrentRow ~= 9 then
+				elseif CurrentTab == 2 and ColumnPerRow2[CurrentRow] > 1 then
 					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
-				elseif CurrentTab == 3 and CurrentRow ~= 3 and CurrentRow ~= 13 then
+				elseif CurrentTab == 3 and ColumnPerRow3[CurrentRow] > 1 then
 					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
-				elseif CurrentTab == 4 then
+				elseif CurrentTab == 4 and ColumnPerRow4[CurrentRow] > 1 then
 					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
-				elseif CurrentTab == 5 and CurrentRow ~= 4 and CurrentRow ~= 5 and CurrentRow ~= 8 and CurrentRow ~= 9 and CurrentRow ~= 10 and CurrentRow ~= 11 and CurrentRow ~= 14 then
+				elseif CurrentTab == 5 and ColumnPerRow5[CurrentRow] > 1 then
 					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 				end
 			end

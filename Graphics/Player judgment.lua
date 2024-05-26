@@ -141,10 +141,11 @@ return Def.ActorFrame{
 
 			sprite:visible(true):setstate(frame)
 
-			if SL[ToEnumShortString(player)].ActiveModifiers.JudgmentTilt then
+			if mods.JudgmentTilt ~= nil and tonumber(mods.JudgmentTilt) > 0 then
+				local TiltAmount = tonumber(mods.JudgmentTilt) * 15
 				-- How much to rotate.
 				-- We cap it at 50ms (15px) since anything after likely to be too distracting.
-				local offset = math.min(math.abs(param.TapNoteOffset), 0.050) * 300
+				local offset = math.min(math.abs(param.TapNoteOffset), 0.050) * TiltAmount
 				-- Which direction to rotate.
 				local direction = param.TapNoteOffset < 0 and -1 or 1
 				sprite:rotationz(direction * offset)
@@ -212,11 +213,12 @@ return Def.ActorFrame{
 
 		sprite:visible(true):setstate(frame)
 
-		if mods.JudgmentTilt then
+		if mods.JudgmentTilt ~= nil and tonumber(mods.JudgmentTilt) > 0 then
 			if tns ~= "Miss" then
+				local TiltAmount = tonumber(mods.JudgmentTilt) * 15
 				-- How much to rotate.
 				-- We cap it at 50ms (15px) since anything after likely to be too distracting.
-				local offset = math.min(math.abs(param.TapNoteOffset), 0.050) * 300
+				local offset = math.min(math.abs(param.TapNoteOffset), 0.050) * TiltAmount
 				-- Which direction to rotate.
 				local direction = param.TapNoteOffset < 0 and -1 or 1
 				sprite:rotationz(direction * offset)

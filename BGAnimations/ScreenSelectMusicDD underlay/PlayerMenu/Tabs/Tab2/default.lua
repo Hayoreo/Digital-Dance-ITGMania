@@ -1235,83 +1235,22 @@ af[#af+1] = Def.Quad{
 }
 
 -----------------------------------------------------------------------------------
--- Judgment Tilt
-local TiltMods={
-THEME:GetString("OptionNames","Off"),
-THEME:GetString("OptionNames","On"),
-}
-
---- Judgment Tilt Options
-for i=1,#TiltMods do
-	af[#af+1] = Def.BitmapText{
-		Font="Miso/_miso",
-		Name=pn.."TiltMod"..i,
-		InitCommand=function(self)
-			local zoom = 0.6
-			local Parent = self:GetParent():GetChild(pn.."VisualMods5")
-			local TextZoom = Parent:GetZoom()
-			local TextWidth = Parent:GetWidth() * TextZoom
-			local TextHeight = Parent:GetHeight() * TextZoom
-			local TextXPosition = Parent:GetX()
-			local TextYPosition = Parent:GetY()
-			local PastWidth
-			local PastX
-			local CurrentX
-			if i == 1 then
-				self:x(TextXPosition + TextWidth + 5)
-			else
-				PastWidth = self:GetParent():GetChild(pn.."TiltMod"..i-1):GetWidth() * zoom
-				PastX = self:GetParent():GetChild(pn.."TiltMod"..i-1):GetX()
-				CurrentX = PastX + PastWidth + 8
-				self:x(CurrentX)
-			end
-			self:horizalign(left):vertalign(middle):shadowlength(1)
-				:draworder(2)
-				:y(TextYPosition + TextHeight/1.75 )
-				:maxwidth((width/zoom) - 20)
-				:zoom(zoom)
-				:settext(TiltMods[i])
-				:queuecommand("UpdateDisplayedTab")
-		end,
-		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 2 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 2 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
-		end,
-	}
-end
-
-local IsTilt = mods.JudgmentTilt or false
-
-local TiltNumber = IsTilt == true and 2 or 1
-
---- Tilt Selector
+-- Judgment Tilt box
 af[#af+1] = Def.Quad{
-	Name=pn.."TiltSelector",
+	Name=pn.."JudgmentTiltBox1",
 	InitCommand=function(self)
-		local Parent = self:GetParent():GetChild(pn.."TiltMod"..TiltNumber)
+		local Parent = self:GetParent():GetChild(pn.."VisualMods5")
 		local TextZoom = Parent:GetZoom()
 		local TextWidth = Parent:GetWidth() * TextZoom
 		local TextHeight = Parent:GetHeight()
 		local TextXPosition = Parent:GetX()
 		local TextYPosition = Parent:GetY()
-		local color = PlayerColor(player)
-		self:diffuse(color)
+		self:diffuse(color("#4d4d4d"))
 			:draworder(1)
-			:zoomto(TextWidth, 3)
+			:zoomto(40, TextHeight)
 			:vertalign(top):horizalign(left)
-			:x(TextXPosition)
-			:y(TextYPosition + TextHeight/3)
+			:x(TextXPosition + TextWidth + 5)
+			:y(TextYPosition - (TextHeight*TextZoom)/4)
 			:queuecommand("UpdateDisplayedTab")
 	end,
 	UpdateDisplayedTabCommand=function(self)
@@ -1329,40 +1268,8 @@ af[#af+1] = Def.Quad{
 			end
 		end
 	end,
-	["PlayerMenuSelection"..pn.."MessageCommand"]=function(self)
-		local CurrentTab, CurrentRow, CurrentColumn
-		if pn == "P1" then
-			CurrentTab = CurrentTabP1
-			CurrentRow = CurrentRowP1
-			CurrentColumn = CurrentColumnP1
-		elseif pn == "P2" then
-			CurrentTab = CurrentTabP2
-			CurrentRow = CurrentRowP2
-			CurrentColumn = CurrentColumnP2
-		end
-		if CurrentTab == 2 and CurrentRow == 5 then
-			SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
-			if CurrentColumn == 1 then
-				TiltNumber = 1
-				mods.JudgmentTilt = false
-			elseif CurrentColumn == 2 then
-				TiltNumber = 2
-				mods.JudgmentTilt = true
-			end
-			local Parent = self:GetParent():GetChild(pn.."TiltMod"..CurrentColumn)
-			local TextZoom = Parent:GetZoom()
-			local TextXPosition = Parent:GetX()
-			local TextYPosition = Parent:GetY()
-			local TextHeight = Parent:GetHeight()
-			local TextWidth = Parent:GetWidth() * TextZoom
-			self:zoomto(TextWidth, 3)
-			:x(TextXPosition)
-			:y(TextYPosition + TextHeight/3)
-		end
-	end,
 	LeftMouseClickUpdateMessageCommand=function(self)
 		local CurrentTab, CurrentRow, CurrentColumn
-		local MadeSelection = false
 		if pn == "P1" then
 			CurrentTab = CurrentTabP1
 			CurrentRow = CurrentRowP1
@@ -1375,58 +1282,26 @@ af[#af+1] = Def.Quad{
 		if pn == "P1" and not PlayerMenuP1 then return end
 		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 2 then return end
-		for j=1,#TiltMods do
-			local Parent = self:GetParent():GetChild(pn.."TiltMod"..j)
-			local ObjectZoom = Parent:GetZoom()
-			local ObjectWidth = Parent:GetWidth() * ObjectZoom
-			local ObjectHeight = Parent:GetHeight()
-			local ObjectX = Parent:GetX()
-			local ObjectY = Parent:GetY()
-			local HAlign = Parent:GetHAlign()
-			local VAlign = Parent:GetVAlign()
-			ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
-			ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
-			
-			if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 2 then
-				if j == 1 then
-					if CurrentRow ~= 5 and TiltNumber == 1 then
-						if CurrentRow < 5 then
-							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
-						elseif CurrentRow > 5 then
-							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
-						end
-					elseif TiltNumber ~= 1 then
-						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
-					end
-					CurrentRow = 5
-					CurrentColumn = 1
-					TiltNumber = 1
-					mods.JudgmentTilt = false
-				elseif j == 2 then
-					if CurrentRow ~= 5 and TiltNumber == 2 then
-						if CurrentRow < 5 then
-							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
-						elseif CurrentRow > 5 then
-							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
-						end
-					elseif TiltNumber ~= 2 then
-						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
-					end
-					CurrentRow = 5
-					CurrentColumn = 2
-					TiltNumber = 2
-					mods.JudgmentTilt = true
+		local Parent = self:GetParent():GetChild(pn.."JudgmentTiltBox1")
+		local ObjectWidth = Parent:GetZoomX()
+		local ObjectHeight = Parent:GetZoomY()
+		local ObjectX = Parent:GetX()
+		local ObjectY = Parent:GetY()
+		local HAlign = Parent:GetHAlign()
+		local VAlign = Parent:GetVAlign()
+		ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+		ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+		
+		if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 2 then
+			if CurrentRow ~= 5 then
+				if CurrentRow < 5 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+				elseif CurrentRow > 5 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
 				end
-				MadeSelection = true
 			end
-		end
-		if MadeSelection then
-			local Parent2 = self:GetParent():GetChild(pn.."TiltMod"..CurrentColumn)
-			local TextZoom = Parent2:GetZoom()
-			local TextXPosition = Parent2:GetX()
-			local TextYPosition = Parent2:GetY()
-			local TextHeight = Parent2:GetHeight()
-			local TextWidth = Parent2:GetWidth() * TextZoom
+			CurrentRow = 5
+			CurrentColumn = 1
 			if pn == "P1" then
 				CurrentTabP1 = CurrentTab
 				CurrentRowP1 = CurrentRow
@@ -1436,14 +1311,96 @@ af[#af+1] = Def.Quad{
 				CurrentRowP2 = CurrentRow
 				CurrentColumnP2 = CurrentColumn
 			end
-			self:zoomto(TextWidth, 3)
-					:x(TextXPosition)
-					:y(TextYPosition + TextHeight/3)
 			MESSAGEMAN:Broadcast("UpdateMenuCursorPosition"..pn, {})
 		end
+	
 	end,
 }
 
+local PlayerJudgmentTilt = tonumber(mods.JudgmentTilt) or 0
+local MinTilt = 0
+local MaxTilt = 100
+
+--- JudgmentTilt Value
+af[#af+1] = Def.BitmapText{
+	Font="Miso/_miso",
+	Name=pn.."JudgmentTiltText",
+	InitCommand=function(self)
+		local zoom = 0.7
+		local Parent = self:GetParent():GetChild(pn.."VisualMods5")
+		local TextZoom = Parent:GetZoom()
+		local QuadWidth = self:GetParent():GetChild(pn.."JudgmentTiltBox1"):GetZoomX()
+		local TextHeight = Parent:GetHeight() * TextZoom
+		local QuadXPosition = self:GetParent():GetChild(pn.."JudgmentTiltBox1"):GetX()
+		local TextYPosition = Parent:GetY()
+		local PastWidth
+		local PastX
+		local CurrentX
+		self:horizalign(center):vertalign(middle):shadowlength(1)
+			:draworder(2)
+			:y(TextYPosition + TextHeight/2)
+			:x(QuadXPosition + QuadWidth/2) 
+			:maxwidth((QuadWidth-2)/zoom)
+			:zoom(zoom)
+			:settext(PlayerJudgmentTilt.."%")
+			:queuecommand("UpdateDisplayedTab")
+	end,
+	UpdateDisplayedTabCommand=function(self)
+		if pn == "P1" then
+			if CurrentTabP1 == 2 then
+				self:visible(true)
+			else
+				self:visible(false)
+			end
+		elseif pn == "P2" then
+			if CurrentTabP2 == 2 then
+				self:visible(true)
+			else
+				self:visible(false)
+			end
+		end
+	end,
+	["UpdateMenuCursorPosition"..pn.."MessageCommand"]=function(self, params)
+		local CurrentTab, CurrentRow, CurrentColumn
+		if pn == "P1" then
+			 CurrentTab = CurrentTabP1
+			 CurrentRow = CurrentRowP1
+			 CurrentColumn = CurrentColumnP1
+		elseif pn == "P2" then
+			CurrentTab = CurrentTabP2
+			 CurrentRow = CurrentRowP2
+			 CurrentColumn = CurrentColumnP2
+		end
+		
+		if CurrentTab == 2 and CurrentRow == 5 then
+			if params[1] == "left" then
+				if PlayerJudgmentTilt <= MinTilt then
+					if params[2] == false then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+						PlayerJudgmentTilt = MaxTilt
+					end
+				else
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+					PlayerJudgmentTilt = PlayerJudgmentTilt - 1
+				end
+				mods.JudgmentTilt = PlayerJudgmentTilt
+				self:settext(PlayerJudgmentTilt.."%")
+			elseif params[1] == "right" then
+				if PlayerJudgmentTilt >= MaxTilt then
+					if not params[2] == true then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+						PlayerJudgmentTilt = MinTilt
+					end
+				else
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+					PlayerJudgmentTilt = PlayerJudgmentTilt + 1
+				end
+				mods.JudgmentTilt = PlayerJudgmentTilt
+				self:settext(PlayerJudgmentTilt.."%")
+			end
+		end
+	end,
+}
 -----------------------------------------------------------------------------------
 
 local Hide = {

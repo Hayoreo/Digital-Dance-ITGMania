@@ -34,7 +34,7 @@ local NameTable =
 		"ScrollBox",
 		"ScreenFilter",
 		"MeasureLines",
-		"TiltMod",
+		"JudgmentTiltBox",
 		"HideBox",
 		"HideBox2_",
 		"NotefieldXBox",
