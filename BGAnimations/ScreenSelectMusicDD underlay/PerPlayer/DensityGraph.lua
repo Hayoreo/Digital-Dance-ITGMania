@@ -282,6 +282,8 @@ af2[#af2+1] = Def.Quad{
 			local XPos = SongPosition * Ratio
 			self:x(XPos)
 			self:queuecommand('DrawCursor')
+		else
+			CurrentSong = nil
 		end
 	end,
 	DrawCursorCommand=function(self)
