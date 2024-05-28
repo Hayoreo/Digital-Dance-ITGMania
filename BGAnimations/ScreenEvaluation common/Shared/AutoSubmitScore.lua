@@ -183,7 +183,7 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 						local PercentDP = stats:GetPercentDancePoints()
 						local percent = FormatPercentScore(PercentDP)
 						if percent == "100.00%" then
-							MESSAGEMAN:Broadcast("PlayRandomWRSound")
+							MESSAGEMAN:Broadcast("PlayRandomWRSound", {"P"..side})
 						end
 						
 						
@@ -252,10 +252,10 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 							if personalRank == 1 then
 								IsUntiedWR = true
 								recordText:settext("Untied World Record!")
-								MESSAGEMAN:Broadcast("PlayRandomWRSound")
+								MESSAGEMAN:Broadcast("PlayRandomWRSound", {"P"..side})
 							elseif isWr then
 								recordText:settext("World Record!")
-								MESSAGEMAN:Broadcast("PlayRandomWRSound")
+								MESSAGEMAN:Broadcast("PlayRandomWRSound", {"P"..side})
 							else
 								recordText:settext("Personal Best!")
 							end
