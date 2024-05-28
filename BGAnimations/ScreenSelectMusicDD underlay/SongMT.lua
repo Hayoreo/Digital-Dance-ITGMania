@@ -253,8 +253,10 @@ local song_mt = {
 				CurrentStepsChangedMessageCommand=function(subself, params)
 					update_grade(self)
 					update_exscore(self)
-					update_itl_rank(self)
-					update_itl_points(self)
+					if NumPlayers == 1 then
+						update_itl_rank(self)
+						update_itl_points(self)
+					end
 				end,
 				
 				SongIsReloadingMessageCommand=function(subself)
@@ -511,8 +513,10 @@ local song_mt = {
 			update_grade(self)
 			update_exscore(self)
 			update_edit(self)
-			update_itl_rank(self)
-			update_itl_points(self)
+			if NumPlayers == 1 then
+				update_itl_rank(self)
+				update_itl_points(self)
+			end
 			
 		end,
 	}
