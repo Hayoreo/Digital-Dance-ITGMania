@@ -227,6 +227,7 @@ for i=1, 15 do
 				self:maxwidth((quadwidth-quadborder)/2.75)
 			end,
 			UpdatePlayerTagsTextMessageCommand=function(self, params)
+				if not params then return end
 				local PlayerNumber = params[1]
 				local text = ""
 				local Object
