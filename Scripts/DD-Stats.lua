@@ -9,7 +9,25 @@ local function getPlayerProfileDir(playerNum)
 	if not profileSlots[playerNum] then
 		return nil
 	end
-
+	local pn
+	if playerNum == PLAYER_1 then
+		pn = 0
+	elseif playerNum == PLAYER_2 then
+		pn = 1
+	end
+	
+	if PROFILEMAN:GetProfile(pn):GetDisplayName() == nil or PROFILEMAN:GetProfile(pn):GetDisplayName() == "" then
+		local GuestDir
+		if pn == 0 then
+			GuestDir = THEME:GetCurrentThemeDirectory() .. "Other/GuestStatsP1.txt"
+		elseif pn == 1 then
+			GuestDir = THEME:GetCurrentThemeDirectory() .. "Other/GuestStatsP2.txt"
+		end
+		return GuestDir
+	end
+	
+	
+	
 	local dir = PROFILEMAN:GetProfileDir(profileSlots[playerNum])
 
 	return dir .. 'DDStats.txt'

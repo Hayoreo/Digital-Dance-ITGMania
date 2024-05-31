@@ -584,6 +584,21 @@ t.Handler = function(event)
 					PlayerMenuP2 = false
 					return false
 				end
+				for i=1,2 do
+					local player
+					local pn
+					if i == 1 then
+						player = PLAYER_1
+						pn = 0
+					elseif i == 2 then
+						player = PLAYER_2
+						pn = 1
+					end
+					
+					if GAMESTATE:IsPlayerEnabled(pn) and (PROFILEMAN:GetProfile(pn):GetDisplayName() == nil or PROFILEMAN:GetProfile(pn):GetDisplayName() == "") then
+						MESSAGEMAN:Broadcast('ResetGuestStats', {player})
+					end
+				end
 				SCREENMAN:GetTopScreen():SetNextScreenName( Branch.SSMCancel() ):StartTransitioningScreen("SM_GoToNextScreen")
 			end
 		end

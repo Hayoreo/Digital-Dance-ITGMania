@@ -111,6 +111,61 @@ local t = Def.ActorFrame{
 			SCREENMAN:GetTopScreen():StartTransitioningScreen("SM_GoToNextScreen")
 		end
 	end,
+	
+	ResetGuestStatsMessageCommand=function(self, params)
+		local playerNum = params[1]
+		----- Default preference values
+		local DefaultMainSort = 1
+		local DefaultSubSort = 2
+		local DefaultSubSort2 = 2
+		local DefaultLowerMeter = 0
+		local DefaultUpperMeter = 0
+		local DefaultDifficulty = 1
+		local DefaultLowerBPM = 49
+		local DefaultUpperBPM = 49
+		local DefaultLowerLength = 0
+		local DefaultUpperLength = 0
+		local DefaultGroovestats = 1
+		local DefaultAutogen = 1
+		--- other dd-stat variables that don't effect sort/filters
+		local DefaultLastStyle = "Single"
+		local DefaultLastTab = "Steps"
+		local DefaultSongOrCourse = "Song"
+		local DefaultLastSong = ""
+		local DefaultLastDifficulty = ""
+		local DefaultLastCourse = ""
+		local DefaultLastCourseDifficulty = ""
+		local DefaultDDColumnCueTime = 0
+		
+		
+		DDStats.SetStat(playerNum, 'MainSortPreference', DefaultMainSort)
+		DDStats.SetStat(playerNum, 'SubSortPreference', DefaultSubSort)
+		DDStats.SetStat(playerNum, 'SubSort2Preference', DefaultSubSort2)
+		DDStats.SetStat(playerNum, 'LowerMeterFilter', DefaultLowerMeter)
+		DDStats.SetStat(playerNum, 'UpperMeterFilter', DefaultUpperMeter)
+		DDStats.SetStat(playerNum, "Beginner", DefaultDifficulty)
+		DDStats.SetStat(playerNum, "Easy", DefaultDifficulty)
+		DDStats.SetStat(playerNum, "Medium", DefaultDifficulty)
+		DDStats.SetStat(playerNum, "Hard", DefaultDifficulty)
+		DDStats.SetStat(playerNum, "Challenge", DefaultDifficulty)
+		DDStats.SetStat(playerNum, "Edit", DefaultDifficulty)
+		DDStats.SetStat(playerNum, 'LowerBPMFilter', DefaultLowerBPM)
+		DDStats.SetStat(playerNum, 'UpperBPMFilter', DefaultUpperBPM)
+		DDStats.SetStat(playerNum, 'LowerLengthFilter', DefaultLowerLength)
+		DDStats.SetStat(playerNum, 'UpperLengthFilter', DefaultUpperLength)
+		DDStats.SetStat(playerNum, 'GroovestatsFilter', DefaultGroovestats)
+		DDStats.SetStat(playerNum, 'AutogenFilter', DefaultAutogen)
+		DDStats.SetStat(playerNum, 'LastStyle', DefaultLastStyle)
+		DDStats.SetStat(playerNum, 'LastTab', DefaultLastTab)
+		DDStats.SetStat(playerNum, 'AreCourseOrSong', DefaultSongOrCourse)
+		DDStats.SetStat(playerNum, 'LastSong', DefaultLastSong)
+		DDStats.SetStat(playerNum, 'LastDifficulty', DefaultLastDifficulty)
+		DDStats.SetStat(playerNum, 'LastCourse', DefaultLastCourse)
+		DDStats.SetStat(playerNum, 'LastCourseDifficulty', DefaultLastCourseDifficulty)
+		DDStats.SetStat(playerNum, 'DDColumnCueTime', DefaultDDColumnCueTime)
+		
+		DDStats.Save(playerNum)
+	end,
 }
 
 return t
