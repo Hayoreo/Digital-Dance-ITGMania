@@ -295,9 +295,10 @@ local UpdatePrunedSongs = function()
 			PlayerNumber = PLAYER_2
 		end
 		local tag_path
+		local style = ToEnumShortString(GAMESTATE:GetCurrentStyle():GetStyleType())
 		if DDStats.GetStat(PlayerNumber, 'LastStyle') == "Single" then
 			tag_path = PROFILEMAN:GetProfileDir(pn) .. "Tags-single.txt"
-		else
+		elseif style == "OnePlayerTwoSides" then
 			tag_path = PROFILEMAN:GetProfileDir(pn) .. "Tags-double.txt"
 		end
 		local tag_lines = GetFileContents(tag_path)
@@ -644,24 +645,17 @@ local GetGroups = function()
 			PlayerNumber = PLAYER_2
 		end
 		local tag_path
-		if DDStats.GetStat(PlayerNumber, 'LastStyle') == nil or "" then
-			DDStats.SetStat(PlayerNumber, 'LastStyle', "Single")
-			DDStats.Save(PlayerNumber)
-		end
+		local style = ToEnumShortString(GAMESTATE:GetCurrentStyle():GetStyleType())
 		
 		if DDStats.GetStat(PlayerNumber, 'LastStyle') == "Single" then
 			tag_path = PROFILEMAN:GetProfileDir(pn) .. "Tags-single.txt"
-		else
+		elseif style == "OnePlayerTwoSides" then
 			tag_path = PROFILEMAN:GetProfileDir(pn) .. "Tags-double.txt"
 		end
 		local tag_lines = GetFileContents(tag_path)
 		
 		if NumPlayers == 2 then
-			if DDStats.GetStat(PLAYER_2, 'LastStyle') == "Single" then
-				P2TagPath = PROFILEMAN:GetProfileDir(1) .. "Tags-single.txt"
-			else
-				P2TagPath = PROFILEMAN:GetProfileDir(1) .. "Tags-double.txt"
-			end
+			P2TagPath = PROFILEMAN:GetProfileDir(1) .. "Tags-single.txt"
 			P2TagLines =  GetFileContents(P2TagPath)
 			--- combine P1 and P2 taglines
 			for line in ivalues(P2TagLines) do
