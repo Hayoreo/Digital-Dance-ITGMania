@@ -3,6 +3,7 @@ local pn = ToEnumShortString(player)
 local mods = SL[pn].ActiveModifiers
 local opts = GAMESTATE:GetPlayerState(player):GetCurrentPlayerOptions()
 local layout = GetGameplayLayout(player, opts:Reverse() ~= 0)
+local course_index = 0
 
 local af = Def.ActorFrame{
   Name="NoteFieldContainer"..pn,
@@ -31,6 +32,18 @@ local af = Def.ActorFrame{
       end
     end
 	
+  end,
+  --- Only the notefield y (and not x) value resets in course mode, but only on the 2nd song and then it's fine for the rest
+  --- ???????????????????????????????????????????????????????????????????????????????????????????
+  CurrentSongChangedMessageCommand=function(self)
+	if GAMESTATE:IsCourseMode() then
+		course_index = course_index + 1
+		if course_index == 2 then
+			self:addy(mods.NoteFieldOffsetY * 2)
+			local player = SCREENMAN:GetTopScreen():GetChild("Player"..pn)
+			player:addy(mods.NoteFieldOffsetY)
+		end
+	end
   end,
 }
 
