@@ -300,6 +300,9 @@ local UpdatePrunedSongs = function()
 			tag_path = PROFILEMAN:GetProfileDir(pn) .. "Tags-single.txt"
 		elseif style == "OnePlayerTwoSides" then
 			tag_path = PROFILEMAN:GetProfileDir(pn) .. "Tags-double.txt"
+		-- just in case they have a new profile with nothing setup yet
+		else
+			tag_path = PROFILEMAN:GetProfileDir(pn) .. "Tags-single.txt"
 		end
 		local tag_lines = GetFileContents(tag_path)
 		local tag_group	
@@ -651,6 +654,9 @@ local GetGroups = function()
 			tag_path = PROFILEMAN:GetProfileDir(pn) .. "Tags-single.txt"
 		elseif style == "OnePlayerTwoSides" then
 			tag_path = PROFILEMAN:GetProfileDir(pn) .. "Tags-double.txt"
+		-- just in case they have a new profile with nothing setup yet
+		else
+			tag_path = PROFILEMAN:GetProfileDir(pn) .. "Tags-single.txt"
 		end
 		local tag_lines = GetFileContents(tag_path)
 		
