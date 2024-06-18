@@ -445,7 +445,7 @@ local af = Def.ActorFrame{
 		end
 		self:GetChild("EXScoreLogo"):visible(IsServiceAllowed(SL.GrooveStats.GetScores) and song)
 		self:GetChild("EXText"):visible(IsServiceAllowed(SL.GrooveStats.GetScores) and song)
-		self:GetChild("SRPG6Logo"):visible(song)
+		self:GetChild("SRPGLogo"):visible(song)
 		self:GetChild("ITLLogo"):visible(song)
 		self:GetChild("MachineLogo"):visible(song)
 		if song then
@@ -570,7 +570,7 @@ local af = Def.ActorFrame{
 				end	
 				self:GetParent():GetChild("EXScoreLogo"):diffusealpha(0):visible(false)
 				self:GetParent():GetChild("EXText"):diffusealpha(0):visible(false)
-				self:GetParent():GetChild("SRPG6Logo"):diffusealpha(0):visible(false)
+				self:GetParent():GetChild("SRPGLogo"):diffusealpha(0):visible(false)
 				self:GetParent():GetChild("ITLLogo"):diffusealpha(0):visible(false)
 				self:GetParent():GetChild("MachineLogo"):diffusealpha(0):visible(false)
 				
@@ -661,9 +661,9 @@ local af = Def.ActorFrame{
 	-- SRPG Logo
 	Def.Sprite{
 		Texture=THEME:GetPathG("", "SRPG/logo_main (doubleres).png"),
-		Name="SRPG6Logo",
+		Name="SRPGLogo",
 		InitCommand=function(self)
-			self:diffusealpha(0.4):zoom(0.18):diffusealpha(0):x(80)
+			self:diffusealpha(0.4):zoom(0.06):diffusealpha(0):x(80)
 		end,
 		UpdateScoreboxCommand=function(self)
 			self:stoptweening()
