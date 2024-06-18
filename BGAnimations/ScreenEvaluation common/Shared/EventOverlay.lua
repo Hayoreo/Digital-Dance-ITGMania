@@ -1,8 +1,8 @@
 local NumEntries = 13
 local RowHeight = 24
-local RpgGreen = color("#009b7f")
-local RpgTextGreen = color("#00e6bc")
-local RpgTextBody = color("#d8e87c")
+local RpgYellow = color("#CDAA9B")
+local RpgText = Color.White
+local RpgTextBody = color("1,0.945,0.557,1")
 local ItlPink = color("1,0.2,0.406,1")
 IsEvent = false
 
@@ -13,16 +13,20 @@ local paneHeight = 360
 local borderWidth = 2
 
 local SetRpgStyle = function(eventAf)
-	eventAf:GetChild("MainBorder"):diffuse(RpgGreen)
+	eventAf:GetChild("MainBorder"):diffuse(RpgYellow)
 	eventAf:GetChild("BackgroundImage"):visible(true)
-	eventAf:GetChild("BackgroundColor"):diffuse(color("0,0,0,0.7"))
+	eventAf:GetChild("BackgroundColor"):diffuse(color("0,0,0,0.8"))
 	eventAf:GetChild("BackgroundColor2"):visible(true):diffuse(color("1,1,1,0.05")):faderight(0.1):fadeleft(0.1)
-	eventAf:GetChild("HeaderBorder"):diffuse(RpgGreen)
-	eventAf:GetChild("HeaderBackground"):diffusetopedge(color("#033c2f")):diffusebottomedge(color("#1c6f4c"))
-	eventAf:GetChild("Header"):diffuse(color("#a2e87c"))
+	eventAf:GetChild("HeaderBorder"):diffuse(RpgYellow)
+	
+	eventAf:GetChild("HeaderBackground")
+			:diffusetopedge(color("#412147"))
+			:diffusebottomedge(color("#634B80"))
+	eventAf:GetChild("Header"):diffuse(RpgText)
+	
 	eventAf:GetChild("EX"):visible(false)
 	eventAf:GetChild("BodyText"):diffuse(Color.White)
-	eventAf:GetChild("PaneIcons"):GetChild("Text"):diffuse(RpgGreen)
+	eventAf:GetChild("PaneIcons"):GetChild("Text"):diffuse(RpgText)
 
 	local leaderboard = eventAf:GetChild("Leaderboard")
 	for i=1, NumEntries do
@@ -88,7 +92,7 @@ local BannerAndSong = function(x, y, zoom)
 		Name="SongName",
 		InitCommand=function(self)
 			local songtitle = (GAMESTATE:IsCourseMode() and GAMESTATE:GetCurrentCourse():GetDisplayFullTitle()) or GAMESTATE:GetCurrentSong():GetDisplayFullTitle()
-			if songtitle then self:settext(songtitle):zoom(1.5):maxwidth(500):vertalign("top"):y(90) end
+			if songtitle then self:settext(songtitle):zoom(2):maxwidth(500):vertalign("top"):y(90):diffuse(color("1,0.972,0.792,1")) end
 		end
 	}
 
@@ -105,6 +109,7 @@ local SetEntryText = function(rank, name, score, date, actor)
 end
 
 local SetLeaderboardData = function(eventAf, leaderboardData, event)
+	if leaderboardData == nil then return end
 	local entryNum = 1
 	local rivalNum = 1
 	local leaderboard = eventAf:GetChild("Leaderboard")
@@ -274,7 +279,6 @@ local GetRpgPaneFunctions = function(eventAf, rpgData, player)
 				bodyText:zoom(zoomVal)
 				bodyText:wrapwidthpixels(paneWidth/(zoomVal))
 				bodyText:settext(text):visible(true)
-				Trace(bodyText:GetHeight() * zoomVal)
 				if bodyText:GetHeight() * zoomVal <= paneHeight - RowHeight*1.5 then
 					break
 				end
@@ -292,7 +296,7 @@ local GetRpgPaneFunctions = function(eventAf, rpgData, player)
 				-- Extract the actual numeric text.
 				local substring = string.sub(text, i, j)
 
-				local clr = RpgTextGreen
+				local clr = RpgText
 
 				-- Except negatives should be red.
 				if substring:sub(1, 1) == "-" then
@@ -324,7 +328,7 @@ local GetRpgPaneFunctions = function(eventAf, rpgData, player)
 
 				bodyText:AddAttribute(i-1, {
 					Length=#substring,
-					Diffuse=RpgTextGreen
+					Diffuse=RpgText
 				})
 
 				offset = j + 1

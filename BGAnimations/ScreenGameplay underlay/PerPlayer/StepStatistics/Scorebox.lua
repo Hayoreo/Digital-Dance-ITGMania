@@ -365,9 +365,9 @@ local af = Def.ActorFrame{
 	-- SRPG Logo
 	Def.Sprite{
 		Texture=THEME:GetPathG("", "SRPG/logo_main (doubleres).png"),
-		Name="SRPG6Logo",
+		Name="SRPGLogo",
 		InitCommand=function(self)
-			self:diffusealpha(0.4):zoom(0.18):diffusealpha(0)
+			self:diffusealpha(0.4):zoom(0.06):diffusealpha(0)
 		end,
 		LoopScoreboxCommand=function(self)
 			if cur_style == 2 then
