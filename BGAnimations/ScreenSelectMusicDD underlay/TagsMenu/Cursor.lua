@@ -1457,9 +1457,11 @@ t[#t+1] = Def.Quad{
 				MESSAGEMAN:Broadcast("RenameCurrentTagText", {PlayerNumber, Tag})
 			else
 				if CurrentColumn == 1 then
-					MESSAGEMAN:Broadcast( "RemoveCurrentObject", {PlayerNumber, Tag, TagSongsLines[InfinityIndex]} )
+					local SongOrGroup = "Song"
+					MESSAGEMAN:Broadcast( "RemoveCurrentObject", {PlayerNumber, Tag, TagSongsLines[InfinityIndex], SongOrGroup} )
 				elseif CurrentColumn == 2 then
-					MESSAGEMAN:Broadcast( "RemoveCurrentObject", {PlayerNumber, Tag, TagPacksLines[InfinityIndex]} )
+					local SongOrGroup = "Group"
+					MESSAGEMAN:Broadcast( "RemoveCurrentObject", {PlayerNumber, Tag, TagPacksLines[InfinityIndex], SongOrGroup} )
 				end
 			end
 			

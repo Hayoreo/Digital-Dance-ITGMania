@@ -321,6 +321,7 @@ RemoveCurrentObjectMessageCommand=function(self, params)
 	local PlayerNumber = params[1]
 	local CurrentTag = params[2]
 	local CurrentLine = params[3]
+	local SongOrGroup = params[4]
 	
 	local dir = getPlayerProfileDir(PlayerNumber)
 	if dir == nil then
@@ -375,7 +376,7 @@ RemoveCurrentObjectMessageCommand=function(self, params)
 	PleaseSortMe(Taggles)
 	WriteToTagFile(dir, Taggles)
 	SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
-	SM('Removed '..SongOrGroup..' from tag "'..CurrentTag..'" for '..PROFILEMAN:GetPlayerName(PlayerNumber)..' successfully!')
+	SM('Removed '..SongOrGroup:lower()..' from tag "'..CurrentTag..'" for '..PROFILEMAN:GetPlayerName(PlayerNumber)..' successfully!')
 	MESSAGEMAN:Broadcast("UpdateRemovedObjects", {PlayerNumber, CurrentTag})
 end,
 
