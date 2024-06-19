@@ -15,7 +15,7 @@ for _,group_name in ipairs(SONGMAN:GetSongGroupNames()) do
 	group_durations[group_name] = 0
 
 	for _,song in ipairs(SONGMAN:GetSongsInGroup(group_name)) do
-		group_durations[group_name] = group_durations[group_name] + song:MusicLengthSeconds()
+		group_durations[group_name] = group_durations[group_name] + song:GetLastSecond()
 	end
 end
 
@@ -222,7 +222,7 @@ af[#af+1] = Def.ActorFrame{
 			if SelectedType == "WheelItemDataType_Song" or "SwitchFocusToSingleSong" then
 				local song = GAMESTATE:GetCurrentSong()
 				if song then
-					seconds = song:MusicLengthSeconds()
+					seconds = song:GetLastSecond()
 				end
 
 			elseif SelectedType == "WheelItemDataType_Section" then

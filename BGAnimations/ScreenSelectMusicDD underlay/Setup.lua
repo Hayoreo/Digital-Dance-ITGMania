@@ -45,7 +45,7 @@ local function GetMaxIndexBelowOrEqual(values, exact_value)
 end
 
 local GetSongLengthGroup = function(song)
-	local exact_length = song:MusicLengthSeconds()
+	local exact_length = song:GetLastSecond()
 	local index = GetMaxIndexBelowOrEqual(song_lengths, exact_length)
 
 	if index == #song_lengths then
@@ -194,7 +194,7 @@ local subsort_funcs = {
 	function(g, s) return s:GetGroupName() end,
 	function(g, s) return s:GetDisplayMainTitle():lower() end,
 	function(g, s) return s:GetDisplayArtist():lower() end,
-	function(g, s) return s:MusicLengthSeconds() end,
+	function(g, s) return s:GetLastSecond() end,
 	function(g, s) return s:GetDisplayBpms()[2] end,
 	GetStepCount,
 	GetHighestDifficulty,
@@ -208,7 +208,7 @@ local main_sort_funcs = {
 	-- Artist
 	function(g, s) return s:GetDisplayArtist():lower() end,
 	-- Song Length
-	function(g, s) return math.floor(s:MusicLengthSeconds()) end,
+	function(g, s) return math.floor(s:GetLastSecond()) end,
 	-- Song BPM
 	function(g, s) return round(s:GetDisplayBpms()[2], 0) end,
 	-- Difficulty (only subsort)
@@ -355,13 +355,13 @@ local UpdatePrunedSongs = function()
 				local passesFilters = true
 				--- Filter for Length
 				if GetLowerLengthFilter() ~= 0 then
-					if GetLowerLengthFilter() > song:MusicLengthSeconds() then
+					if GetLowerLengthFilter() > song:GetLastSecond() then
 						passesFilters = false
 					end
 				end
 
 				if GetUpperLengthFilter() ~= 0 then
-					if GetUpperLengthFilter() < song:MusicLengthSeconds() then
+					if GetUpperLengthFilter() < song:GetLastSecond() then
 						passesFilters = false
 					end
 				end
