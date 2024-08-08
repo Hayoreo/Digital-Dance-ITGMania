@@ -312,8 +312,8 @@ ValidForGrooveStats = function(player)
 	-- bit cumbersome to handle so just requre TimingWindowScale and LifeDifficultyScale these to be set
 	-- to 4.
 	
-	-- There's no point in disqualfying a player for using harsher timing and/or lifebar mechanics than stock ITG. It's harder man.
-	valid[5] = PREFSMAN:GetPreference("TimingWindowScale") <= 1
+	-- There's no point in disqualfying a player for using a harsher lifebar than stock ITG. It's harder man.
+	valid[5] = PREFSMAN:GetPreference("TimingWindowScale") == 1
 	valid[6] = PREFSMAN:GetPreference("LifeDifficultyScale") <= 1
 
 	-- Validate all other metrics.
