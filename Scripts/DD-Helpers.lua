@@ -721,10 +721,13 @@ GetHeldMissGraphics = function()
 	local held_miss = {}
 
 	for i,filename in ipairs(files) do
+		-- we want "none" to show up at the end/beginning of the list.
+		if filename ~= "None 1x2.png" then
 			table.insert(held_miss, filename)
+		end
 	end
 	held_miss[#held_miss+1] = "None"
-
+	
 	return held_miss
 end
 
