@@ -80,7 +80,7 @@ end
 for index, label in ipairs(RadarCategories) do
 	if index == 1 then
 		text = nil
-		if SL[pn].ActiveModifiers.ShowEXScore or SL[pn].ActiveModifiers.ShowFaPlusWindow then
+		if SL[pn].ActiveModifiers.ShowEXScore then
 			text = "ITG"
 		else
 			text = "EX"
@@ -92,7 +92,7 @@ for index, label in ipairs(RadarCategories) do
 			BeginCommand=function(self)
 				self:x( (controller == PLAYER_1 and -160) or 90 )
 				self:y(38)
-				if SL[pn].ActiveModifiers.ShowEXScore or SL[pn].ActiveModifiers.ShowFaPlusWindow then
+				if SL[pn].ActiveModifiers.ShowEXScore then
 					self:diffuse(Color.White)
 				else
 					self:diffuse( SL.JudgmentColors[SL.Global.GameMode][1] )
