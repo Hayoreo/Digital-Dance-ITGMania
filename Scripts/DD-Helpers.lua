@@ -714,6 +714,21 @@ GetComboFonts = function()
 end
 
 -------------------------------------------------------------------------
+
+GetHeldMissGraphics = function()
+	local path = THEME:GetCurrentThemeDirectory().."Graphics/_HeldMiss/"
+	local files = FILEMAN:GetDirListing(path)
+	local held_miss = {}
+
+	for i,filename in ipairs(files) do
+			table.insert(held_miss, filename)
+	end
+	held_miss[#held_miss+1] = "None"
+
+	return held_miss
+end
+
+-------------------------------------------------------------------------
 IsHumanPlayer = function(player)
 	return GAMESTATE:GetPlayerState(player):GetPlayerController() == "PlayerController_Human"
 end

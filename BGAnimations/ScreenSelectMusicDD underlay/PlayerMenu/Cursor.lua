@@ -23,6 +23,7 @@ local NameTable =
 		"JudgmentBox",
 		"ComboBox",
 		"HoldJBox",
+		"HeldMissesBox",
 		"TurnBox",
 		"TurnBox2",
 		"MusicRateBox",
