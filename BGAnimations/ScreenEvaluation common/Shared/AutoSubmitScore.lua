@@ -177,7 +177,7 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 					local personalRank = nil
 					local wrScore = nil
 					local isWr = false
-					if not data[playerStr]["isRanked"] then
+					if data[playerStr]["gsLeaderboard"] then
 						-- We still want to play a WR Sound if you get a quad on a chart not ranked
 						local stats = STATSMAN:GetCurStageStats():GetPlayerStageStats("P".. i)
 						local PercentDP = stats:GetPercentDancePoints()
@@ -186,15 +186,6 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 							MESSAGEMAN:Broadcast("PlayRandomWRSound", {"P"..side})
 						end
 						
-						
-						QRPane:GetChild("QRCode"):queuecommand("Hide")
-						QRPane:GetChild("HelpText"):settext("This chart is not ranked on GrooveStats.")
-						if i == 1 and P1SubmitText then
-							P1SubmitText:queuecommand("ChartNotRanked")
-						elseif i == 2 and P2SubmitText then
-							P2SubmitText:queuecommand("ChartNotRanked")
-						end
-					elseif data[playerStr]["gsLeaderboard"] then
 						if #data[playerStr]["gsLeaderboard"] > 0 then
 							wrScore = data[playerStr]["gsLeaderboard"][1]["score"]
 						end
@@ -276,15 +267,7 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 					entry:stoptweening()
 					-- We didn't get any scores if i is still == 1.
 					if j == 1 then
-						if data and data[playerStr] then
-							if data[playerStr]["isRanked"] then
-								SetEntryText("", "No Scores", "", "", entry)
-							else
-								SetEntryText("", "Chart Not Ranked", "", "", entry)
-							end
-						else
-							SetEntryText("", "No Scores", "", "", entry)
-						end
+						SetEntryText("", "No Scores", "", "", entry)
 					else
 						-- Empty out the remaining rows.
 						SetEntryText("---", "----", "------", "----------", entry)
@@ -435,9 +418,6 @@ af[#af+1] = LoadFont("Miso/_miso").. {
 		self:zoom(0.8)
 		self:visible(GAMESTATE:IsSideJoined(PLAYER_1))
 	end,
-	ChartNotRankedCommand=function(self)
-		self:settext("Chart Not Ranked")
-	end,
 	SubmitCommand=function(self)
 		self:settext("Submitted!")
 	end,
@@ -458,9 +438,6 @@ af[#af+1] = LoadFont("Miso/_miso").. {
 		self:shadowlength(shadowLength)
 		self:zoom(0.8)
 		self:visible(GAMESTATE:IsSideJoined(PLAYER_2))
-	end,
-	ChartNotRankedCommand=function(self)
-		self:settext("Chart Not Ranked")
 	end,
 	SubmitCommand=function(self)
 		self:settext("Submitted!")
