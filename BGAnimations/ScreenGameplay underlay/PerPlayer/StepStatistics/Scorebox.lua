@@ -103,7 +103,10 @@ local LeaderboardRequestProcessor = function(res, master)
 	if data and data[playerStr] then
 		-- These will get overwritten if we have any entries in the leaderboard below.
 		SetScoreData(1, 1, "", "No Scores", "", false, false, false, false)
-		SetScoreData(2, 1, "", "No Scores", "", false, false, false, false)
+		-- Don't use ex leaderboard if not using EX scoring.
+		if SL["P"..n].ActiveModifiers.ShowEXScore or SL["P"..n].ActiveModifiers.ShowFaPlusWindow then
+			SetScoreData(2, 1, "", "No Scores", "", false, false, false, false)
+		end
 
 		local numEntries = 0
 		if SL["P"..n].ActiveModifiers.ShowEXScore then
@@ -140,7 +143,7 @@ local LeaderboardRequestProcessor = function(res, master)
 				end
 			end
 		else
-			-- Display the main GrooveStats leaderboard first if player is not using EX scoring.
+			-- Display the main GrooveStats leaderboard first and if player is not using EX scoring OR FA+ don't show the EX leaderboard.
 			if data[playerStr]["gsLeaderboard"] then
 				numEntries = 0
 				for entry in ivalues(data[playerStr]["gsLeaderboard"]) do
@@ -156,20 +159,23 @@ local LeaderboardRequestProcessor = function(res, master)
 								)
 				end
 			end
-
-			if data[playerStr]["exLeaderboard"] then
-				numEntries = 0
-				for entry in ivalues(data[playerStr]["exLeaderboard"]) do
-					numEntries = numEntries + 1
-					SetScoreData(2, numEntries,
-									tostring(entry["rank"]),
-									entry["name"],
-									string.format("%.2f", entry["score"]/100),
-									entry["isSelf"],
-									entry["isRival"],
-									entry["isFail"],
-									true
-								)
+			
+			-- If not using EXScoring, but using FA+ show the EX Score leaderboard 2nd instead of 1st.
+			if SL["P"..n].ActiveModifiers.ShowFaPlusWindow then
+				if data[playerStr]["exLeaderboard"] then
+					numEntries = 0
+					for entry in ivalues(data[playerStr]["exLeaderboard"]) do
+						numEntries = numEntries + 1
+						SetScoreData(2, numEntries,
+										tostring(entry["rank"]),
+										entry["name"],
+										string.format("%.2f", entry["score"]/100),
+										entry["isSelf"],
+										entry["isRival"],
+										entry["isFail"],
+										true
+									)
+					end
 				end
 			end
 		end
