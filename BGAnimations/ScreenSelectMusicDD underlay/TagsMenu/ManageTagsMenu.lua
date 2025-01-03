@@ -144,7 +144,6 @@ for i=1, 24 do
 				local FakeIndex = params[4]
 				local Wrap = params[5]
 				local Direction = params[6]
-				
 				local Difference = 0
 				if FakeIndex ~= nil then
 					Difference = Index - FakeIndex

@@ -324,12 +324,17 @@ GetObjectsPerTag = function (Tag, PlayerNumber, Object)
 		end
 		if Tag == NewTag and line:sub(1,1) ~= "#" then
 			if line:find("/%*") and Object == "Pack" then
-				Objects[#Objects+1] = "Pack: "..line:sub(2):gsub("/.*", "")
-				Lines[#Lines+1] = line
+				if SONGMAN:DoesSongGroupExist(line:sub(2):gsub("/.*", "")) then
+					Objects[#Objects+1] = "Pack: "..line:sub(2):gsub("/.*", "")
+					Lines[#Lines+1] = line
+				end
 			elseif Object == "Song" and not line:find("/%*") then
 				local song = SONGMAN:FindSong(line)
-				Objects[#Objects+1] = "Song: "..song:GetDisplayMainTitle()
-				Lines[#Lines+1] = line
+				-- don't load songs that no longer exist.
+				if SONGMAN:FindSong(line) then
+					Objects[#Objects+1] = "Song: "..song:GetDisplayMainTitle()
+					Lines[#Lines+1] = line
+				end
 			end
 		end
 	end

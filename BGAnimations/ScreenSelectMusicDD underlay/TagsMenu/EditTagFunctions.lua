@@ -88,17 +88,23 @@ CreateNewTagFromTextMessageCommand=function(self, params)
 			}
 		elseif line:sub(1,1) ~= "#" then
 			if line:find("/%*") then
-				Taggles[#Taggles+1] = {
-					Tag = AnTag,
-					Pack = "a",
-					line = line,
-				}
+				-- only include groups that exist
+				if SONGMAN:DoesSongGroupExist(line:sub(2):gsub("/.*", "")) then
+					Taggles[#Taggles+1] = {
+						Tag = AnTag,
+						Pack = "a",
+						line = line,
+					}
+				end
 			elseif not line:find("/%*") then
-				Taggles[#Taggles+1] = {
-					Tag = AnTag,
-					Song = "b",
-					line = line,
-				}
+				-- only include songs that exist
+				if SONGMAN:FindSong(line) then
+					Taggles[#Taggles+1] = {
+						Tag = AnTag,
+						Song = "b",
+						line = line,
+					}
+				end
 			end
 		end
 		
@@ -159,17 +165,23 @@ AddCurrentTagMessageCommand=function(self, params)
 			end
 		elseif line:sub(1,1) ~= "#" then
 			if line:find("/%*") then
-				Taggles[#Taggles+1] = {
-					Tag = AnTag,
-					Pack = "a",
-					line = line,
-				}
+				-- only include groups that exist
+				if SONGMAN:DoesSongGroupExist(line:sub(2):gsub("/.*", "")) then
+					Taggles[#Taggles+1] = {
+						Tag = AnTag,
+						Pack = "a",
+						line = line,
+					}
+				end
 			elseif not line:find("/%*") then
-				Taggles[#Taggles+1] = {
-					Tag = AnTag,
-					Song = "b",
-					line = line,
-				}
+				-- only include songs that exist
+				if SONGMAN:FindSong(line) then
+					Taggles[#Taggles+1] = {
+						Tag = AnTag,
+						Song = "b",
+						line = line,
+					}
+				end
 			end
 		end
 	
@@ -220,31 +232,43 @@ RemoveCurrentTagMessageCommand=function(self, params)
 		elseif line:sub(1,1) ~= "#" then
 			if line ~= Object then
 				if line:find("/%*") then
-					Taggles[#Taggles+1] = {
-						Tag = AnTag,
-						Pack = "a",
-						line = line,
-					}
+					-- only include groups that exist
+					if SONGMAN:DoesSongGroupExist(line:sub(2):gsub("/.*", "")) then
+						Taggles[#Taggles+1] = {
+							Tag = AnTag,
+							Pack = "a",
+							line = line,
+						}
+					end
 				elseif not line:find("/%*") then
-					Taggles[#Taggles+1] = {
-						Tag = AnTag,
-						Song = "b",
-						line = line,
-					}
+					-- only include songs that exist
+					if SONGMAN:FindSong(line) then
+						Taggles[#Taggles+1] = {
+							Tag = AnTag,
+							Song = "b",
+							line = line,
+						}
+					end
 				end
 			elseif AnTag:sub(2) ~= CurrentTag then
 				if line:find("/%*") then
-					Taggles[#Taggles+1] = {
-						Tag = AnTag,
-						Pack = "a",
-						line = line,
-					}
+					-- only include groups that exist
+					if SONGMAN:DoesSongGroupExist(line:sub(2):gsub("/.*", "")) then
+						Taggles[#Taggles+1] = {
+							Tag = AnTag,
+							Pack = "a",
+							line = line,
+						}
+					end
 				elseif not line:find("/%*") then
-					Taggles[#Taggles+1] = {
-						Tag = AnTag,
-						Song = "b",
-						line = line,
-					}
+					-- only include songs that exist
+					if SONGMAN:FindSong(line) then
+						Taggles[#Taggles+1] = {
+							Tag = AnTag,
+							Song = "b",
+							line = line,
+						}
+					end
 				end
 			end
 		end
@@ -293,17 +317,23 @@ RenameCurrentTagMessageCommand=function(self, params)
 			end
 		else
 			if line:find("/%*") then
-				Taggles[#Taggles+1] = {
-					Tag = AnTag,
-					Pack = "a",
-					line = line,
-				}
+				-- only include groups that exist
+				if SONGMAN:DoesSongGroupExist(line:sub(2):gsub("/.*", "")) then
+					Taggles[#Taggles+1] = {
+						Tag = AnTag,
+						Pack = "a",
+						line = line,
+					}
+				end
 			elseif not line:find("/%*") then
-				Taggles[#Taggles+1] = {
-					Tag = AnTag,
-					Song = "b",
-					line = line,
-				}
+				-- only include songs that exist
+				if SONGMAN:FindSong(line) then
+					Taggles[#Taggles+1] = {
+						Tag = AnTag,
+						Song = "b",
+						line = line,
+					}
+				end
 			end
 		end
 	end
@@ -344,31 +374,43 @@ RemoveCurrentObjectMessageCommand=function(self, params)
 		elseif line:sub(1,1) ~= "#" then
 			if line ~= CurrentLine then
 				if line:find("/%*") then
-					Taggles[#Taggles+1] = {
-						Tag = AnTag,
-						Pack = "a",
-						line = line,
-					}
+					-- only include groups that exist
+					if SONGMAN:DoesSongGroupExist(line:sub(2):gsub("/.*", "")) then
+						Taggles[#Taggles+1] = {
+							Tag = AnTag,
+							Pack = "a",
+							line = line,
+						}
+					end
 				elseif not line:find("/%*") then
-					Taggles[#Taggles+1] = {
-						Tag = AnTag,
-						Song = "b",
-						line = line,
-					}
+					-- only include songs that exist
+					if SONGMAN:FindSong(line) then
+						Taggles[#Taggles+1] = {
+							Tag = AnTag,
+							Song = "b",
+							line = line,
+						}
+					end
 				end
 			elseif AnTag:sub(2) ~= CurrentTag then
 				if line:find("/%*") then
-					Taggles[#Taggles+1] = {
-						Tag = AnTag,
-						Pack = "a",
-						line = line,
-					}
+					-- only include groups that exist
+					if SONGMAN:DoesSongGroupExist(line:sub(2):gsub("/.*", "")) then
+						Taggles[#Taggles+1] = {
+							Tag = AnTag,
+							Pack = "a",
+							line = line,
+						}
+					end
 				elseif not line:find("/%*") then
-					Taggles[#Taggles+1] = {
-						Tag = AnTag,
-						Song = "b",
-						line = line,
-					}
+					-- only include songs that exist
+					if SONGMAN:FindSong(line) then
+						Taggles[#Taggles+1] = {
+							Tag = AnTag,
+							Song = "b",
+							line = line,
+						}
+					end
 				end
 			end
 		end
@@ -405,17 +447,23 @@ DeleteCurrentTagMessageCommand=function(self, params)
 			end
 		elseif line:sub(1,1) ~= "#" and AnTag:sub(2) ~= CurrentTag then
 			if line:find("/%*") then
-				Taggles[#Taggles+1] = {
-					Tag = AnTag,
-					Pack = "a",
-					line = line,
-				}
+				-- only include groups that exist
+				if SONGMAN:DoesSongGroupExist(line:sub(2):gsub("/.*", "")) then
+					Taggles[#Taggles+1] = {
+						Tag = AnTag,
+						Pack = "a",
+						line = line,
+					}
+				end
 			elseif not line:find("/%*") then
-				Taggles[#Taggles+1] = {
-					Tag = AnTag,
-					Song = "b",
-					line = line,
-				}
+				-- only include songs that exist
+				if SONGMAN:FindSong(line) then
+					Taggles[#Taggles+1] = {
+						Tag = AnTag,
+						Song = "b",
+						line = line,
+					}
+				end
 			end
 		end
 	
