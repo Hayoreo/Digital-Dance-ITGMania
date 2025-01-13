@@ -153,10 +153,20 @@ af[#af+1] = Def.Quad{
 				PlayerMenuP1 = false
 				SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "expand.ogg") )
 				MESSAGEMAN:Broadcast("HidePlayerMenuP1")
+				if not PlayerMenuP2 then
+					if MusicWheelNeedsResetting then
+						MESSAGEMAN:Broadcast("ReloadSSMDD")
+					end
+				end
 			elseif pn == "P2" and PlayerMenuP2 then
 				PlayerMenuP2 = false
 				SOUND:PlayOnce( THEME:GetPathS("MusicWheel", "expand.ogg") )
 				MESSAGEMAN:Broadcast("HidePlayerMenuP2")
+				if not PlayerMenuP1 then
+					if MusicWheelNeedsResetting then
+						MESSAGEMAN:Broadcast("ReloadSSMDD")
+					end
+				end
 			end
 		
 		end
