@@ -77,7 +77,11 @@ end
 local bmt = LoadFont(font)
 
 bmt.InitCommand=function(self)
-	self:diffuse(color("#ff55cc"))
+	if mods.ShowEXScore then
+		self:diffuse(SL.JudgmentColors["FA+"][1])
+	else
+		self:diffuse(color("#ff55cc"))
+	end
 	self:zoom(0.35):shadowlength(1):horizalign(center)
 
 	local width = GetNotefieldWidth()
