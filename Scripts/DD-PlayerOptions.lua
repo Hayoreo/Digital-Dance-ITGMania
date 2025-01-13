@@ -504,7 +504,7 @@ local Overrides = {
 		SelectType = "SelectMultiple",
 		Values = function()
 			-- GameplayExtras will be presented as a single OptionRow when WideScreen
-			local vals = { "ColumnFlashOnMiss", "SubtractiveScoring", "Pacemaker", "JudgmentTilt", "NPSGraphAtTop" }
+			local vals = { "ColumnFlashOnMiss", "SubtractiveScoring", "Pacemaker", "NPSGraphAtTop" }
 
 			-- if not WideScreen (traditional DDR cabinets running at 640x480)
 			-- remove the last two choices to be appended an additional OptionRow (GameplayExtrasB below).
@@ -535,6 +535,36 @@ local Overrides = {
 	TimingWindowOptions = {
 		SelectType = "SelectMultiple",
 		Values = { "HideEarlyDecentWayOffJudgments", "HideEarlyDecentWayOffFlash" }
+	},
+	-------------------------------------------------------------------------
+	JudgmentTilt = {
+		LayoutType = "ShowOneInRow",
+		ExportOnChange = true,
+		Choices = function()
+			local first	= 0
+			local last 	= 100
+			local step 	= 1
+
+			return range(first, last, step)
+		end,
+		LoadSelections = function(self, list, pn)
+			local val = tonumber(SL[ToEnumShortString(pn)].ActiveModifiers.JudgmentTilt) or 0
+			for i,v in ipairs(self.Choices) do
+				if v == val then
+					list[i] = true
+					break
+				end
+			end
+			return list
+		end,
+		SaveSelections = function(self, list, pn)
+			for i,v in ipairs(self.Choices) do
+				if list[i] then
+					SL[ToEnumShortString(pn)].ActiveModifiers.JudgmentTilt = v
+					break
+				end
+			end
+		end
 	},
 	-------------------------------------------------------------------------
 	NoteFieldOffsetX = {
