@@ -1,4 +1,4 @@
-# Digital Dance v1.0.9.2
+# Digital Dance v1.0.9.3
 
 # ------------ Differences from 1.0.9 ------------
 - Added mid-session set summary! Can be accessed via the player menu.
