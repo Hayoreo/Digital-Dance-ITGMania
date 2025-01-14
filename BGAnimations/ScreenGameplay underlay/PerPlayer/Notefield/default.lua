@@ -13,8 +13,8 @@ local af = Def.ActorFrame{
     self:addx(mods.NoteFieldOffsetX * 2)
     self:addy(mods.NoteFieldOffsetY * 2)
     local player = SCREENMAN:GetTopScreen():GetChild("Player"..pn)
-    player:addx(mods.NoteFieldOffsetX)
-    player:addy(mods.NoteFieldOffsetY)
+    player:addx(mods.NoteFieldOffsetX * 2)
+    player:addy(mods.NoteFieldOffsetY * 2)
 
     local notefield = player:GetChild("NoteField")
     if mods.MeasureLines == "Off" then
@@ -56,6 +56,5 @@ af[#af+1] = LoadActor("ErrorBar/default.lua", player, layout.ErrorBar)
 af[#af+1] = LoadActor("MeasureCounter.lua", player, layout.MeasureCounter)
 af[#af+1] = LoadActor("SubtractiveScoring.lua", player, layout.SubtractiveScoring)
 af[#af+1] = LoadActor("ColumnCues.lua", player)
-af[#af+1] = LoadActor("NoteFieldOffset.lua", player)
 
 return af
