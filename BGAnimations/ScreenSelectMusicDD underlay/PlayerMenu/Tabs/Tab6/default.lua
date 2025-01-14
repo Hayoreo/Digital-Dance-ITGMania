@@ -40,6 +40,11 @@ if IsServiceAllowed(SL.GrooveStats.Leaderboard) then
 	SystemNames[#SystemNames+1] = THEME:GetString("DDPlayerMenu","Leaderboards")
 end
 
+-- Show player set summary mid set only if they've played at least one song.
+if SL.Global.Stages.PlayedThisGame > 0 then
+	SystemNames[#SystemNames+1] = THEME:GetString("DDPlayerMenu","ViewSetSummary")
+end
+
 -- test input
 SystemNames[#SystemNames+1] = THEME:GetString("DDPlayerMenu","TestInput")
 
@@ -121,6 +126,9 @@ for i=1, #SystemNames do
 					else
 						SM("No song selected!")
 					end
+				elseif CurrentText == THEME:GetString("DDPlayerMenu","ViewSetSummary") then
+					SCREENMAN:GetTopScreen():SetNextScreenName("ScreenEvaluationSummarySet")
+					SCREENMAN:GetTopScreen():StartTransitioningScreen("SM_GoToNextScreen")
 				elseif CurrentText == THEME:GetString("DDPlayerMenu","TestInput") then
 					InputMenuHasFocus = true
 					MESSAGEMAN:Broadcast("ShowTestInput")
@@ -209,6 +217,9 @@ for i=1, #SystemNames do
 						else
 							SM("No song selected!")
 						end
+					elseif CurrentText == THEME:GetString("DDPlayerMenu","ViewSetSummary") then
+						SCREENMAN:GetTopScreen():SetNextScreenName("ScreenEvaluationSummarySet")
+						SCREENMAN:GetTopScreen():StartTransitioningScreen("SM_GoToNextScreen")
 					elseif CurrentText == THEME:GetString("DDPlayerMenu","TestInput") then
 						InputMenuHasFocus = true
 						MESSAGEMAN:Broadcast("ShowTestInput")
@@ -263,6 +274,11 @@ Mod6Descriptions[#Mod6Descriptions+1] =  THEME:GetString("OptionExplanations","G
 -- GS Leaderboard
 if IsServiceAllowed(SL.GrooveStats.Leaderboard) then
 	Mod6Descriptions[#Mod6Descriptions+1] =  THEME:GetString("OptionExplanations","Leaderboards")
+end
+
+-- View Set Summary
+if SL.Global.Stages.PlayedThisGame > 0 then
+	Mod6Descriptions[#Mod6Descriptions+1] =  THEME:GetString("OptionExplanations","ViewSetSummary")
 end
 
 -- test input

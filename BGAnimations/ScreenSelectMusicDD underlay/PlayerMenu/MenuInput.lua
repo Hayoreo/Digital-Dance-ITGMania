@@ -109,6 +109,11 @@ if IsServiceAllowed(SL.GrooveStats.Leaderboard) then
 	ColumnPerRow6[#ColumnPerRow6+1] = 1
 end
 
+-- View Set Summary
+if SL.Global.Stages.PlayedThisGame > 0 then
+	ColumnPerRow6[#ColumnPerRow6+1] = 1
+end
+
 -- test input
 ColumnPerRow6[#ColumnPerRow6+1] = 1
 
