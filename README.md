@@ -2,6 +2,7 @@
 
 # ------------ Differences from 1.0.9 ------------
 - Added mid-session set summary! Can be accessed via the player menu.
+- Held miss indicator graphics have been added! Can be accessed via the player menu.
 - Player tags have been added!
 - Player tag menu can be accessed via "ctrl + t" on screen select music.
 - Player tags are seperated between single and double.
@@ -16,15 +17,13 @@
 - Added Step Statistics to double mode.
 - New "Digital" judgment graphic has been added.
 - Mouse Input is always enabled now.
-- Fixed Column Cues bug with both players enabled.
-- Added sound effects to the Player Menu.
 - Fixed notefield UI in regards to NoteFieldX and NoteFieldY player mods.
 - Changed subtractive score behavior for EXScore to stop constantly rounding.
 - Fixed rounding issue in the Player Menu.
 - Various bug fixes
 
 ## Player WR Sounds
-	This is set up similarly to how WRSounds were before. Now instead of using the Sounds folder in the theme you need to go to your profile folder (Save/Local Profiles/[Your Profile Folder Here]) and then add a folder called "WRSounds". Within that folder you can then add any .mp3 or .ogg files you wish that will be randomly selected to play when you achieve a world record or a quad/quint. These sounds are seperated by player now so each player's sounds will only play if they get the record.
+This is set up similarly to how WRSounds were before. Now instead of using the Sounds folder in the theme you need to go to your profile folder (Save/Local Profiles/[Your Profile Folder Here]) and then add a folder called "WRSounds". Within that folder you can then add any .mp3 or .ogg files you wish that will be randomly selected to play when you achieve a world record or a quad/quint. These sounds are seperated by player now so each player's sounds will only play if they get the record.
 
 ## ITGMANIA ONLY
 - As noted in the "About" section this theme is intended for use with ITGMania only.
@@ -32,9 +31,12 @@
 
 # -- General things to note --
 - This theme is intended for home use only.
+- This theme is optimized for keyboard and mouse use.
 
 # ------------ Future endeavors ------------
 - Add keyboard support for number fields in the player menu.
+- Allow keyboard input on ScreenNameEntry.
 - Add more detailed sorts/filters.
+- Add tech parsing for double (it does not work at all right now).
 - Add a way for a single player to switch sides without ending a session.
 - Give all screens mouse functionality.
