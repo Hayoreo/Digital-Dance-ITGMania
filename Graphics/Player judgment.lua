@@ -244,10 +244,6 @@ return Def.ActorFrame{
 			-- frame displays based on what judgment the player earns
 			self:animate(false):visible(false)
 			
-			local mini = mods.Mini:gsub("%%","") / 100
-			self:addx((mods.NoteFieldOffsetX/2 * (1 + mini)) * 2)
-			self:addy((mods.NoteFieldOffsetY/2 * (1 + mini)) * 2)
-			
 			-- if we are on ScreenEdit, judgment graphic is always "Digital"
 			-- because ScreenEdit is a mess and not worth bothering with.
 			if string.match(tostring(SCREENMAN:GetTopScreen()), "ScreenEdit") then
