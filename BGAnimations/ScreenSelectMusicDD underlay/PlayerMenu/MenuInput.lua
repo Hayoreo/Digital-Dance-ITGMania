@@ -186,16 +186,24 @@ local InputHandler = function( event )
 				else
 					CurrentColumn = CurrentColumn + 1
 				end
-				if CurrentTab == 1 and ColumnPerRow1[CurrentRow] > 1 then
-					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+				if CurrentTab == 1 then
+					if ColumnPerRow1[CurrentRow] > 1 then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+					elseif CurrentRow >= 4 and CurrentRow <= 8 then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+					end
 				elseif CurrentTab == 2 and ColumnPerRow2[CurrentRow] > 1 then
 					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 				elseif CurrentTab == 3 and ColumnPerRow3[CurrentRow] > 1 then
 					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 				elseif CurrentTab == 4 and ColumnPerRow4[CurrentRow] > 1 then
 					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
-				elseif CurrentTab == 5 and ColumnPerRow5[CurrentRow] > 1 then
-					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+				elseif CurrentTab == 5 then
+					if ColumnPerRow1[CurrentRow] > 1 then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+					elseif CurrentRow >= 1 and CurrentRow <= 3 then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+					end
 				end
 				
 			end
@@ -215,16 +223,24 @@ local InputHandler = function( event )
 				else
 					CurrentColumn = CurrentColumn - 1
 				end
-				if CurrentTab == 1 and ColumnPerRow1[CurrentRow] > 1 then
-					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+				if CurrentTab == 1 then
+					if ColumnPerRow1[CurrentRow] > 1 then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+					elseif CurrentRow >= 4 and CurrentRow <= 8 then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+					end
 				elseif CurrentTab == 2 and ColumnPerRow2[CurrentRow] > 1 then
 					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 				elseif CurrentTab == 3 and ColumnPerRow3[CurrentRow] > 1 then
 					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 				elseif CurrentTab == 4 and ColumnPerRow4[CurrentRow] > 1 then
 					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
-				elseif CurrentTab == 5 and ColumnPerRow5[CurrentRow] > 1 then
-					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+				elseif CurrentTab == 5 then
+					if ColumnPerRow1[CurrentRow] > 1 then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+					elseif CurrentRow >= 1 and CurrentRow <= 3 then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+					end
 				end
 			end
 		elseif event.GameButton == "MenuUp" then
