@@ -1,6 +1,7 @@
 # Digital Dance v1.0.9.2
 
 # ------------ Differences from 1.0.9 ------------
+- Added mid-session set summary! Can be accessed via the player menu.
 - Player tags have been added!
 - Player tag menu can be accessed via "ctrl + t" on screen select music.
 - Player tags are seperated between single and double.
@@ -20,6 +21,7 @@
 - Fixed notefield UI in regards to NoteFieldX and NoteFieldY player mods.
 - Changed subtractive score behavior for EXScore to stop constantly rounding.
 - Fixed rounding issue in the Player Menu.
+- Various bug fixes
 
 ## Player WR Sounds
 	This is set up similarly to how WRSounds were before. Now instead of using the Sounds folder in the theme you need to go to your profile folder (Save/Local Profiles/[Your Profile Folder Here]) and then add a folder called "WRSounds". Within that folder you can then add any .mp3 or .ogg files you wish that will be randomly selected to play when you achieve a world record or a quad/quint. These sounds are seperated by player now so each player's sounds will only play if they get the record.
