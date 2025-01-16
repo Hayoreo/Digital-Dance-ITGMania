@@ -202,6 +202,9 @@ local InputHandler = function( event )
 		elseif event.type == "InputEventType_Release" then
 			if event.DeviceInput.button == "DeviceButton_left shift" or event.DeviceInput.button == "DeviceButton_right shift" then
 				holdingShift = holdingShift - 1
+				if holdingShift < 0 then
+					holdingShift = 0
+				end
 			end
 		end
 	end
