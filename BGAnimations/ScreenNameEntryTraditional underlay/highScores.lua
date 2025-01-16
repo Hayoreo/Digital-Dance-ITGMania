@@ -50,7 +50,7 @@ for i=NumStages,1,-1 do
 		-- if the new highscore is sixth, show 2, 3, 4, 5, 6
 		-- if the new highscore is ninth, show 5, 6, 7, 8, 9
 		local lower = 1
-		local upper = 5
+		local upper = 10
 
 		if MaxHighScores > upper and index > upper then
 			lower = lower + (index-upper)
@@ -82,8 +82,8 @@ for i=NumStages,1,-1 do
 				Name="HighScore" .. i .. "Row" .. s .. ToEnumShortString(player),
 				InitCommand=function(self)
 					self:zoom(0.95)
-						:x( (player == PLAYER_1 and _screen.cx-160) or (_screen.cx+160))
-						:y(_screen.cy+60)
+						:x( (player == PLAYER_1 and _screen.cx-280) or (_screen.cx+280))
+						:y(_screen.cy)
 					--if this row represents the new highscore, highlight it
 					if (highscores[s] and pss:GetHighScore():GetPercentDP() == highscores[s]:GetPercentDP() )
 					or s == index then
@@ -113,7 +113,7 @@ for i=NumStages,1,-1 do
 
 			row[#row+1] = LoadFont("Miso/_miso")..{
 				Text=name,
-				InitCommand=cmd(horizalign,left; xy, -110, (s-(lower-1))*22 )
+				InitCommand=cmd(horizalign,left; xy, -110, (s-(lower-1))*22; maxwidth, 85 )
 			}
 
 			row[#row+1] = LoadFont("Miso/_miso")..{

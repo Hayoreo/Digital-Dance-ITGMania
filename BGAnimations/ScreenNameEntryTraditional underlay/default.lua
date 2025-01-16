@@ -1,4 +1,3 @@
-local AlphabetWheels = {}
 local Players = GAMESTATE:GetHumanPlayers()
 
 ---------------------------------------------------------------------------
@@ -6,25 +5,7 @@ local Players = GAMESTATE:GetHumanPlayers()
 local NumStages = SL.Global.Stages.PlayedThisGame
 -- The duration (in seconds) each stage should display onscreen before cycling to the next
 local DurationPerStage = 4
----------------------------------------------------------------------------
-for player in ivalues(Players) do
-	if SL[ToEnumShortString(player)].HighScores.EnteringName then
-		-- Add one AlphabetWheel per human player
-		AlphabetWheels[ToEnumShortString(player)] = setmetatable({}, sick_wheel_mt)
-	end
-end
----------------------------------------------------------------------------
--- Add the reusable metatable for a generic alphabet character
-local alphabet_character_mt = LoadActor("./AlphabetCharacterMT.lua")
 
----------------------------------------------------------------------------
--- Alphanumeric Characters available to our players for highscore name use
-local PossibleCharacters = {
-	"&BACK;", "&OK;",
-	"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
-	"N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
-	"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "?", "!"
-}
 ---------------------------------------------------------------------------
 -- Primary ActorFrame
 local t = Def.ActorFrame {
@@ -33,24 +14,6 @@ local t = Def.ActorFrame {
 	end,
 	CaptureInputCommand=function(self)
 		local topscreen = SCREENMAN:GetTopScreen()
-
-		for player in ivalues(Players) do
-			local wheel = AlphabetWheels[ToEnumShortString(player)]
-
-			if wheel then
-				local profile = PROFILEMAN:GetProfile(player)
-				-- if a profile is in use and has a HighScoreName, make the starting index 2 ("ok"); otherwise, 3 ("A")
-				local StartingCharIndex = (profile and (profile:GetLastUsedHighScoreName() ~= "") and 2) or 3
-
-				-- set_info_set() takes two arguments:
-				--		a table of meaningful data to divvy up to wheel items
-				--		the index of which wheel item we want to initially give focus to
-				-- here, we are passing it all the possible characters,
-				-- and either 2 ("ok") or 3 ("A") as the starting index
-				AlphabetWheels[ToEnumShortString(player)]:set_info_set(PossibleCharacters, StartingCharIndex)
-			end
-		end
-
 		-- actually attach the InputHandler function to our screen
 		topscreen:AddInputCallback( LoadActor("InputHandler.lua", {self, AlphabetWheels}) )
 	end,
@@ -81,7 +44,7 @@ t[#t+1] = Def.ActorFrame {
 
 	--fallback banner
 	LoadActor( THEME:GetPathB("ScreenSelectMusicDD", "underlay/default banner.png"))..{
-		OnCommand=cmd(xy, _screen.cx, 121.5; zoom, 0.7)
+		OnCommand=cmd(xy, _screen.cx, 107; zoom, 0.7)
 	},
 
 	Def.Quad{
@@ -99,7 +62,18 @@ t[#t+1] = Def.ActorFrame {
 		Name="RightMask",
 		InitCommand=cmd(halign,1),
 		OnCommand=cmd(xy, _screen.w, _screen.cy; zoomto, _screen.cx-272, _screen.h; MaskSource)
-	}
+	},
+	
+	-- Song name
+	Def.Quad{
+		Name="SongTitleQuad",
+		OnCommand=function(self)
+			self:setsize(418,30)
+				:xy(SCREEN_CENTER_X,39)
+				:diffuse(color("0,0,0,0.7"))
+				:zoom(0.7)
+		end
+	},
 }
 
 -- Banner(s) and Title(s)
@@ -130,7 +104,7 @@ for i=1,NumStages do
 	-- song name
 	SongNameAndBanner[#SongNameAndBanner+1] = LoadFont("Miso/_miso")..{
 		Name="SongName"..i,
-		InitCommand=cmd(xy, _screen.cx, 54; maxwidth, 294),
+		InitCommand=cmd(xy, _screen.cx, 38; maxwidth, 294),
 		OnCommand=function(self)
 			if string.match(tostring(SongOrCourse), "Course") then
 				self:settext(SongOrCourse:GetDisplayFullTitle() or "???")
@@ -143,7 +117,7 @@ for i=1,NumStages do
 	-- song banner
 	SongNameAndBanner[#SongNameAndBanner+1] = Def.Banner{
 		Name="SongBanner"..i,
-		InitCommand=cmd(xy, _screen.cx, 121.5),
+		InitCommand=cmd(xy, _screen.cx, 107),
 		OnCommand=function(self)
 			if SongOrCourse then
 				if string.match(tostring(SongOrCourse), "Course") then
@@ -177,16 +151,17 @@ for player in ivalues(Players) do
 	--		a metatable defining a generic item in the wheel
 	--		x position
 	--		y position
-	if SL[pn].HighScores.EnteringName then
-		t[#t+1] = AlphabetWheels[pn]:create_actors( "AlphabetWheel_"..pn, 7, alphabet_character_mt, _screen.cx + x_offset, _screen.cy+38)
-	end
+	if SL[pn].HighScores.EnteringName then end
 end
 
 -- ActorSounds
-t[#t+1] = LoadActor( THEME:GetPathS("", "_change value"))..{ Name="delete", SupportPan = true }
+t[#t+1] = LoadActor( THEME:GetPathS("ScreenTextEntry", "backspace"))..{ Name="delete", SupportPan = true }
 t[#t+1] = LoadActor( THEME:GetPathS("Common", "start"))..{ Name="enter", SupportPan = true }
-t[#t+1] = LoadActor( THEME:GetPathS("MusicWheel", "change"))..{ Name="move", SupportPan = true }
 t[#t+1] = LoadActor( THEME:GetPathS("common", "invalid"))..{ Name="invalid", SupportPan = true }
+t[#t+1] = LoadActor( THEME:GetPathS("ScreenTextEntry", "type.ogg"))..{ Name="type", SupportPan = true }
+
+-- Header
+t[#t+1] = LoadActor("Header.lua")
 
 --
 return t

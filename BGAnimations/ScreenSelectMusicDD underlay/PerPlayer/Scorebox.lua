@@ -879,7 +879,7 @@ for i=1,num_scores do
 		Name="MachineName"..i,
 		Text="",
 		InitCommand=function(self)
-			self:diffuse(Color.White):xy(-width/2 + 30, y):horizalign(left):zoom(zoom)
+			self:diffuse(Color.White):xy(-width/2 + 30, y):horizalign(left):zoom(zoom):maxwidth(90)
 		end,
 		UpdateMachineScoresCommand=function(self)
 			self:stoptweening():linear(transition_seconds/2):diffusealpha(0):queuecommand("SetMachineScores")
