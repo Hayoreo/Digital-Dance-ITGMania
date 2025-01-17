@@ -45,9 +45,9 @@ local t = Def.ActorFrame{
 
 	-- the quads behind the playerName
 	Def.Quad{
+		Name="NameFrame",
 		InitCommand=cmd(diffuse,PlayerColor(Player); zoomto, 280, _screen.h/7.5),
 	},
-	
 	Def.Quad{
 		InitCommand=cmd(diffuse,color("0,0,0,0.75"); zoomto, 275, _screen.h/8),
 	},

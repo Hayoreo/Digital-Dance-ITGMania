@@ -104,6 +104,7 @@ end
 local InputHandler = function(event)
 
 	if not event then return end
+	
 	-- a local function to delete a character from a player's highscore name
 	local function RemoveLastCharacter(pn)
 		if SL[pn].HighScores.Name:len() > 0 then
@@ -116,6 +117,38 @@ local InputHandler = function(event)
 		else
 			-- there's nothing to delete, so play the "invalid" sound
 			t:GetChild("invalid"):playforplayer(PlayerNum)
+		end
+	end
+	
+	-- Swap sides if mouse click
+	if event.DeviceInput.button == "DeviceButton_left mouse button" and event.type == "InputEventType_FirstPress"  then
+		for i=1,2 do
+			local self = t:GetChild("PlayerNameAndDecorations_P" .. i):GetChild("NameFrame")
+			
+			local QuadX = self:GetParent():GetX()
+			local QuadY = self:GetParent():GetY()
+			local QuadWidth = self:GetZoomX()
+			local QuadHeight = self:GetZoomY()
+			local Horizontal = 	self:GetHAlign()
+			local Vertical = self:GetVAlign()
+			QuadX = QuadX + (0.5-Horizontal)*QuadWidth
+			QuadY = QuadY + (0.5-Vertical)*QuadHeight
+			
+			if IsMouseGucci(QuadX, QuadY, QuadWidth, QuadHeight) then
+				if i == 1 and SL["P1"].HighScores.EnteringName and pn ~= "P1" then
+					MESSAGEMAN:Broadcast('SwapNameEntrySides')
+					pn = "P1"
+					PlayerNum = "PlayerNumber_P1"
+					SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+					MESSAGEMAN:Broadcast("SetNamePlayer", {pn})
+				elseif i == 2 and SL["P2"].HighScores.EnteringName and pn ~= "P2" then
+					pn = "P2"
+					PlayerNum = "PlayerNumber_P2"
+					SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+					MESSAGEMAN:Broadcast("SetNamePlayer", {pn})
+				end
+			end
+			
 		end
 	end
 
