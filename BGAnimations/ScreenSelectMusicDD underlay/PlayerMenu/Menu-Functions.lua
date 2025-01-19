@@ -93,6 +93,7 @@ local t = Def.ActorFrame{
 		local current_GameMode = GAMESTATE:GetPlayMode()
 		if current_GameMode == 'PlayMode_Regular' then
 			GAMESTATE:SetCurrentSong(nil)
+			GAMESTATE:SetCurrentPlayMode(1)
 			local value = "Course"
 			for i,playerNum in ipairs(GAMESTATE:GetHumanPlayers()) do
 				DDStats.SetStat(playerNum, 'AreCourseOrSong', value)
@@ -102,6 +103,7 @@ local t = Def.ActorFrame{
 			SCREENMAN:GetTopScreen():StartTransitioningScreen("SM_GoToNextScreen")
 		else
 			GAMESTATE:SetCurrentCourse(nil)
+			GAMESTATE:SetCurrentPlayMode(0)
 			local value = "Song"
 			for i,playerNum in ipairs(GAMESTATE:GetHumanPlayers()) do
 				DDStats.SetStat(playerNum, 'AreCourseOrSong', value)
