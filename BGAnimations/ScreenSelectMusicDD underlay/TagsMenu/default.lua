@@ -1,6 +1,3 @@
--- don't load in course mode... for now?
-if GAMESTATE:IsCourseMode() then return end
-
 local args = ...
 local GroupWheel = args[1]
 local SongWheel = args[2]
