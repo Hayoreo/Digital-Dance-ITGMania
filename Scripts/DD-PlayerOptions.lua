@@ -40,6 +40,44 @@ SetEngineMod = function(player, name, value)
     mods[name](mods, value)
 end
 
+GetEffectiveSpeedModType = function(player, type)
+	type = type or "X"
+
+	if type ~= "D" then return type end
+
+	-- TODO : Course mode does not work.
+	--[[
+	if GAMESTATE:IsCourseMode() then
+		SM("WTF")
+		return "M"
+	end
+	]]--
+
+	local steps = GAMESTATE:GetCurrentSteps(player)
+
+	if steps == nil then return "M" end
+	
+	local timingData = steps:GetTimingData()
+	
+	local displayBpms = steps:GetDisplayBpms()
+	
+	local hasShit = (
+		timingData:HasDelays()
+		or timingData:HasScrollChanges()
+		or timingData:HasSpeedChanges()
+		or timingData:HasStops()
+		or timingData:HasWarps()
+	)
+
+	local hasBpms = #displayBpms == 2 and displayBpms[1] ~= displayBpms[2]
+
+	if hasBpms or hasShit then
+		return "M"
+	else
+		return "C"
+	end
+end
+
 -- -----------------------------------------------------------------------
 -- when to use Choices() vs. Values()
 --
@@ -92,7 +130,7 @@ local Overrides = {
 
 	-------------------------------------------------------------------------
 	SpeedModType = {
-		Values = { "X", "C", "M" },
+		Values = { "X", "C", "M", "D" },
 		ExportOnChange = true,
 		LayoutType = "ShowOneInRow",
 		SaveSelections = function(self, list, pn)
@@ -112,7 +150,9 @@ local Overrides = {
 		LayoutType = "ShowOneInRow",
 		SaveSelections = function(self, list, pn)
 			local mods, playeroptions = GetModsAndPlayerOptions(pn)
-			local type  = mods.SpeedModType or "X"
+
+			local type = GetEffectiveSpeedModType(pn, mods.SpeedModType)
+
 			local speed = mods.SpeedMod or 1.00
 
 			playeroptions[type.."Mod"](playeroptions, speed)

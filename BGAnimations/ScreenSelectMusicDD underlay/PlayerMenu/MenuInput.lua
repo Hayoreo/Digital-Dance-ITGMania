@@ -8,7 +8,7 @@ CurrentRowP2 = 0
 CurrentColumnP2 = 1
 
 local ColumnPerRow1 = {
-3,
+4,
 1,
 1,
 1,

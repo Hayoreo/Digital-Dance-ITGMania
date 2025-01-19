@@ -115,6 +115,7 @@ local SpeedTypes ={
 "C",
 "M",
 "X",
+"D",
 }
 
 local PlayerSpeedType, PlayerSpeedMod, PastSpeedType
@@ -252,6 +253,13 @@ af[#af+1] = Def.Quad{
 					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 					MESSAGEMAN:Broadcast("SpeedTypeHasChanged"..pn, {PastSpeedType, PlayerSpeedType})
 				end
+			elseif CurrentColumn == 4 then
+				if PlayerSpeedType ~= "D" then
+					PlayerSpeedType = "D"
+					mods.SpeedModType = "D"
+					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
+					MESSAGEMAN:Broadcast("SpeedTypeHasChanged"..pn, {PastSpeedType, PlayerSpeedType})
+				end
 			end
 			local Parent = self:GetParent():GetChild(pn.."SpeedTypes"..CurrentColumn)
 			local TextZoom = Parent:GetZoom()
@@ -336,6 +344,22 @@ af[#af+1] = Def.Quad{
 					if PlayerSpeedType ~= "X" then
 						PlayerSpeedType = "X"
 						mods.SpeedModType = "X"
+						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
+						MESSAGEMAN:Broadcast("SpeedTypeHasChanged"..pn, {PastSpeedType, PlayerSpeedType})
+					end
+				elseif i == 4 then
+					if CurrentRow ~= 1 and PlayerSpeedType == "D" then
+						if CurrentRow < 1 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+						elseif CurrentRow > 1 then
+							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+						end
+					end
+					CurrentRow = 1
+					CurrentColumn = 4
+					if PlayerSpeedType ~= "D" then
+						PlayerSpeedType = "D"
+						mods.SpeedModType = "D"
 						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						MESSAGEMAN:Broadcast("SpeedTypeHasChanged"..pn, {PastSpeedType, PlayerSpeedType})
 					end
@@ -514,7 +538,7 @@ af[#af+1] = Def.BitmapText{
 						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 						PlayerSpeedMod = round(PlayerSpeedMod - 0.05, 2)
 					end
-				elseif PlayerSpeedType == "C" or PlayerSpeedType == "M" then
+				else
 					if PlayerSpeedMod <= MinCMod then
 						if not params[2] == true then
 							SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
@@ -546,7 +570,7 @@ af[#af+1] = Def.BitmapText{
 						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 						PlayerSpeedMod = round(PlayerSpeedMod + 0.05, 2)
 					end
-				elseif PlayerSpeedType == "C" or PlayerSpeedType == "M" then
+				else
 					if PlayerSpeedMod >= MaxCMod then
 						if not params[2] == true then
 							SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
@@ -576,12 +600,13 @@ af[#af+1] = Def.BitmapText{
 		if GAMESTATE:GetCurrentSong() ~= nil then
 			CurBPM = GAMESTATE:GetCurrentSong():GetDisplayBpms()[2]
 		end
-		if params[1] == "X" and (params[2] == "C" or params[2] == "M") then
+
+		if params[1] == "X" and params[2] ~= "X" then
 			PlayerSpeedMod = PlayerSpeedMod * CurBPM
 			PlayerSpeedMod = round(PlayerSpeedMod/5)*5
 			mods.SpeedMod = PlayerSpeedMod
 			self:settext(PlayerSpeedMod)
-		elseif (params[1] == "C" or params[1] == "M") and params[2] == "X" then
+		elseif params[1] ~= "X" and params[2] == "X" then
 			PlayerSpeedMod = PlayerSpeedMod/CurBPM
 			PlayerSpeedMod = round(PlayerSpeedMod/0.05)*0.05
 			mods.SpeedMod = PlayerSpeedMod
@@ -590,15 +615,19 @@ af[#af+1] = Def.BitmapText{
 		self:queuecommand("SetMod")
 		MESSAGEMAN:Broadcast("UpdateScrollSpeedText")
 	end,
+	["CurrentSteps"..pn.."ChangedMessageCommand"]=function(self)
+		self:queuecommand("SetMod")
+	end,
 	SetModCommand=function(self)
-		if PlayerSpeedType == "X" then
+		local type = GetEffectiveSpeedModType(player, PlayerSpeedType)
+
+		if type == "X" then
 			SetEngineMod(player, "XMod", PlayerSpeedMod)
-		elseif PlayerSpeedType == "M" then
+		elseif type == "M" then
 			SetEngineMod(player, "MMod", PlayerSpeedMod)
-		elseif PlayerSpeedType == "C" then
+		elseif type == "C" then
 			SetEngineMod(player, "CMod", PlayerSpeedMod)
 		end
-	
 	end,
 }
 
@@ -713,7 +742,9 @@ af[#af+1] = Def.BitmapText{
 			end
 		end
 		 
-		if PlayerSpeedType == "X" then
+		local speedType = GetEffectiveSpeedModType(player, PlayerSpeedType)
+
+		if speedType == "X" then
 			if OneBPM ~= nil then
 				SpeedText = PlayerSpeedMod * OneBPM
 				self:settext(round(SpeedText))
@@ -723,7 +754,7 @@ af[#af+1] = Def.BitmapText{
 				SpeedText = Scroll1.." - "..Scroll2
 				self:settext(SpeedText)
 			end
-		elseif PlayerSpeedType == "M" then
+		elseif speedType == "M" then
 			if OneBPM ~= nil then
 				self:settext(PlayerSpeedMod)
 			else
@@ -732,7 +763,7 @@ af[#af+1] = Def.BitmapText{
 				SpeedText = Scroll1.." - "..Scroll2
 				self:settext(SpeedText)
 			end
-		elseif PlayerSpeedType == "C" then
+		elseif speedType == "C" then
 			self:settext(PlayerSpeedMod)
 		end
 	end,
@@ -749,7 +780,10 @@ af[#af+1] = Def.BitmapText{
 				OneBPM = BPM2
 			end
 		end
-		if PlayerSpeedType == "X" then
+
+		local speedType = GetEffectiveSpeedModType(player, PlayerSpeedType)
+
+		if speedType == "X" then
 			if OneBPM ~= nil then
 				SpeedText = PlayerSpeedMod * OneBPM
 				self:settext(round(SpeedText))
@@ -759,7 +793,7 @@ af[#af+1] = Def.BitmapText{
 				SpeedText = Scroll1.." - "..Scroll2
 				self:settext(SpeedText)
 			end
-		elseif PlayerSpeedType == "M" then
+		elseif speedType == "M" then
 			if OneBPM ~= nil then
 				self:settext(PlayerSpeedMod)
 			else
