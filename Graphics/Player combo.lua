@@ -5,18 +5,21 @@ local mods = SL[pn].ActiveModifiers
 local available_fonts = GetComboFonts()
 local combo_font = (FindInTable(mods.ComboFont, available_fonts) ~= nil and mods.ComboFont) or available_fonts[1] or nil
 
+local worst_judgment = 1
+
 if mods.HideCombo or combo_font == nil then
 	return Def.Actor{ InitCommand=function(self) self:visible(false) end }
 end
 
 -- combo colors used in ITG
 local colors = {}
+colors.FullComboW0 = {color("#F7C0FE"), color("#EF76FE")} -- magenta combo
 colors.FullComboW1 = {color("#C8FFFF"), color("#6BF0FF")} -- blue combo
 colors.FullComboW2 = {color("#FDFFC9"), color("#FDDB85")} -- gold combo
 colors.FullComboW3 = {color("#C9FFC9"), color("#94FEC1")} -- green combo
 colors.FullComboW4 = {color("#FFFFFF"), color("#FFFFFF")} -- white combo
 
-
+local Quinting = mods.ShowFaPlusWindow and true or false 
 local ShowComboAt = THEME:GetMetric("Combo", "ShowComboAt")
 
 local af = Def.ActorFrame{
@@ -51,6 +54,27 @@ local combo_bmt = LoadFont("_Combo Fonts/" .. combo_font .."/" .. combo_font)..{
 		self:settext( params.Combo or params.Misses or "" )
 		self:diffuseshift():effectperiod(0.8):playcommand("Color", params)
 	end,
+	JudgmentMessageCommand=function(self, params)
+		if params.Player ~= player then return end
+		if not params.TapNoteScore then return end
+		if not Quinting then return end
+		if params.HoldNoteScore then return end
+		
+		local tns = ToEnumShortString(params.TapNoteScore)
+		if tns == "AvoidMine" or tns == "HitMine" then return end
+		
+		if tns == "Miss" then
+			worst_judgment = 1
+		else
+			worst_judgment = math.max(worst_judgment, string.sub(tns,2,2))
+			if worst_judgment >= 4 then
+				worst_judgment = 1
+			end
+		end
+
+		-- Cringe quint support
+		if not IsW0Judgment(params, player) then Quinting = false end
+	end,
 	ColorCommand=function(self, params)
 		-- Though this if/else chain may seem strange (why not reduce it to a single table for quick lookup?)
 		-- the FullCombo params passed in from the engine are also strange, so this accommodates.
@@ -70,8 +94,11 @@ local combo_bmt = LoadFont("_Combo Fonts/" .. combo_font .."/" .. combo_font)..{
 		-- And so on. While the information is technically true (a FullComboW2 does imply a FullComboW3), the
 		-- explicit presence of all those parameters makes checking truthiness here in the theme a little
 		-- awkward.  We need to explicitly check for W1 first, then W2, then W3, and so on...
-
-		if params.FullComboW1 then
+		
+		-- Cringe quint support
+		if worst_judgment == 1 and Quinting then
+			self:effectcolor1(colors.FullComboW0[1]):effectcolor2(colors.FullComboW0[2])
+		elseif params.FullComboW1 then
 			self:effectcolor1(colors.FullComboW1[1]):effectcolor2(colors.FullComboW1[2])
 
 		elseif params.FullComboW2 then
