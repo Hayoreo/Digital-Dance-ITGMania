@@ -176,46 +176,89 @@ local InputHandler = function(event)
 	if event.type == "InputEventType_FirstPress" and event.type ~= "InputEventType_Release" then
 		if event.DeviceInput.button == "DeviceButton_left mouse button" then
 			-- Player one join
-			if IsMouseGucci(_screen.cx - 150, _screen.cy,184,216, "center", "middle") then
-				if IsP1Ready then return end
+			if IsMouseGucci(_screen.cx - 150, _screen.cy,184,216, "center", "middle") and not IsP1Ready then
 				if not GAMESTATE:IsHumanPlayer("PlayerNumber_P1") then
 					-- pass -1 to SetProfileIndex() to join that player
 					-- see ScreenSelectProfile.cpp for details
 					nsj = nsj + 1
 					topscreen:SetProfileIndex("PlayerNumber_P1", -1)
-				elseif IsMouseGucci(_screen.cx - 150, _screen.cy,184,216, "center", "middle") then
-					if nsj == 1 then
-						MESSAGEMAN:Broadcast("StartButton")
-						topscreen:queuecommand("Off"):sleep(0.4)
-					elseif nsj == 2 then
-						IsP1Ready = true
-						if not IsP2Ready then
+				end
+			end
+			
+			for i=1, 7 do
+				if IsMouseGucci(_screen.cx - 197, ((_screen.cy - 140) + (35 *i)), 125, 35) then
+					if IsP1Ready then return end
+					-- we select the current profile
+					if i == 4 then
+						if nsj == 1 then
 							MESSAGEMAN:Broadcast("StartButton")
-						end
-						MESSAGEMAN:Broadcast("P1ProfileReady")
-						if IsP1Ready and IsP2Ready then
-							-- we only bother checking scrollers to see if both players are
-							-- trying to choose the same profile if there are scrollers because
-							-- there are local profiles.  If there are no local profiles, there are
-							-- no scrollers to compare.
-							if PROFILEMAN:GetNumLocalProfiles() > 0
-							-- and if both players have joined and neither is using a memorycard
-							and #GAMESTATE:GetHumanPlayers() > 1 and not GAMESTATE:IsAnyHumanPlayerUsingMemoryCard() then
-								-- and both players are trying to choose the same profile
-								if scrollers[PLAYER_1]:get_info_at_focus_pos().index == scrollers[PLAYER_2]:get_info_at_focus_pos().index
-								-- and that profile they are both trying to choose isn't [GUEST]
-								and scrollers[PLAYER_1]:get_info_at_focus_pos().index ~= 0 then
-									-- broadcast an InvalidChoice message to play the "Common invalid" sound
-									-- and "shake" the playerframe for the player that just pressed start
-									IsP1Ready = false
-									MESSAGEMAN:Broadcast("P1ProfileUnReady")
-									MESSAGEMAN:Broadcast("InvalidChoice", {PlayerNumber="PlayerNumber_P1"})
-									return
-								end
-								-- otherwise, play the StartButton sound
+							topscreen:queuecommand("Off"):sleep(0.4)
+						elseif nsj == 2 then
+							IsP1Ready = true
+							if not IsP2Ready then
 								MESSAGEMAN:Broadcast("StartButton")
-								-- and queue the OffCommand for the entire screen
-								topscreen:queuecommand("Off"):sleep(0.4)
+							end
+							MESSAGEMAN:Broadcast("P1ProfileReady")
+							if IsP1Ready and IsP2Ready then
+								-- we only bother checking scrollers to see if both players are
+								-- trying to choose the same profile if there are scrollers because
+								-- there are local profiles.  If there are no local profiles, there are
+								-- no scrollers to compare.
+								if PROFILEMAN:GetNumLocalProfiles() > 0
+								-- and if both players have joined and neither is using a memorycard
+								and #GAMESTATE:GetHumanPlayers() > 1 and not GAMESTATE:IsAnyHumanPlayerUsingMemoryCard() then
+									-- and both players are trying to choose the same profile
+									if scrollers[PLAYER_1]:get_info_at_focus_pos().index == scrollers[PLAYER_2]:get_info_at_focus_pos().index
+									-- and that profile they are both trying to choose isn't [GUEST]
+									and scrollers[PLAYER_1]:get_info_at_focus_pos().index ~= 0 then
+										-- broadcast an InvalidChoice message to play the "Common invalid" sound
+										-- and "shake" the playerframe for the player that just pressed start
+										IsP1Ready = false
+										MESSAGEMAN:Broadcast("P1ProfileUnReady")
+										MESSAGEMAN:Broadcast("InvalidChoice", {PlayerNumber="PlayerNumber_P1"})
+										return
+									end
+									-- otherwise, play the StartButton sound
+									MESSAGEMAN:Broadcast("StartButton")
+									-- and queue the OffCommand for the entire screen
+									topscreen:queuecommand("Off"):sleep(0.4)
+								end
+							end
+						end
+					-- we scroll down
+					elseif i > 4 then
+						event.PlayerNumber = "PlayerNumber_P1"
+						if MEMCARDMAN:GetCardState(event.PlayerNumber) == 'MemoryCardState_none' then
+							local info = scrollers[event.PlayerNumber]:get_info_at_focus_pos()
+							local index = type(info)=="table" and info.index or 0
+
+							if index+i-4 <= PROFILEMAN:GetNumLocalProfiles() then
+								MESSAGEMAN:Broadcast("DirectionButton")
+								scrollers[event.PlayerNumber]:scroll_by_amount(i-4)
+
+								local data = profile_data[index+index_padding+i-4]
+								local frame = af:GetChild(ToEnumShortString(event.PlayerNumber) .. 'Frame')
+								frame:GetChild("SelectedProfileText"):settext(data and data.displayname or "")
+								frame:GetChild("ReadyText"):settext(data and data.displayname.."\nREADY" or "READY"):y(data and 45 or 40)
+								frame:playcommand("Set", data)
+							end
+						end
+					-- we scroll up
+					elseif i < 4 then
+						event.PlayerNumber = "PlayerNumber_P1"
+						if MEMCARDMAN:GetCardState(event.PlayerNumber) == 'MemoryCardState_none' then
+							local info = scrollers[event.PlayerNumber]:get_info_at_focus_pos()
+							local index = type(info)=="table" and info.index or 0
+
+							if index + i-4 >= 0 then
+								MESSAGEMAN:Broadcast("DirectionButton")
+								scrollers[event.PlayerNumber]:scroll_by_amount(i-4)
+
+								local data = profile_data[index+index_padding+i-4]
+								local frame = af:GetChild(ToEnumShortString(event.PlayerNumber) .. 'Frame')
+								frame:GetChild("SelectedProfileText"):settext(data and data.displayname or "")
+								frame:GetChild("ReadyText"):settext(data and data.displayname.."\nREADY" or "READY"):y(data and 45 or 40)
+								frame:playcommand("Set", data)
 							end
 						end
 					end
@@ -223,46 +266,87 @@ local InputHandler = function(event)
 			end
 			
 			-- Player two join
-			if IsMouseGucci(_screen.cx + 150, _screen.cy,184,216, "center", "middle") then
-				if IsP2Ready then return end
+			if IsMouseGucci(_screen.cx + 150, _screen.cy,184,216, "center", "middle") and not IsP2Ready then
 				if not GAMESTATE:IsHumanPlayer("PlayerNumber_P2") then
 					-- pass -1 to SetProfileIndex() to join that player
 					-- see ScreenSelectProfile.cpp for details
 					nsj = nsj + 1
 					topscreen:SetProfileIndex("PlayerNumber_P2", -1)
-				elseif IsMouseGucci(_screen.cx + 150, _screen.cy,184,216, "center", "middle") then
-					if nsj == 1 then
-						MESSAGEMAN:Broadcast("StartButton")
-						topscreen:queuecommand("Off"):sleep(0.4)
-					elseif nsj == 2 then
-						IsP2Ready = true
-						if not IsP1Ready then
+				end
+			end
+				
+			for i=1, 7 do
+				if IsMouseGucci(_screen.cx + 103, ((_screen.cy - 140) + (35 *i)), 125, 35) then
+					if IsP2Ready then return end
+					
+					if i == 4 then
+						if nsj == 1 then
 							MESSAGEMAN:Broadcast("StartButton")
-						end
-						MESSAGEMAN:Broadcast("P2ProfileReady")
-						if IsP1Ready and IsP2Ready then
-							-- we only bother checking scrollers to see if both players are
-							-- trying to choose the same profile if there are scrollers because
-							-- there are local profiles.  If there are no local profiles, there are
-							-- no scrollers to compare.
-							if PROFILEMAN:GetNumLocalProfiles() > 0
-							-- and if both players have joined and neither is using a memorycard
-							and #GAMESTATE:GetHumanPlayers() > 1 and not GAMESTATE:IsAnyHumanPlayerUsingMemoryCard() then
-								-- and both players are trying to choose the same profile
-								if scrollers[PLAYER_1]:get_info_at_focus_pos().index == scrollers[PLAYER_2]:get_info_at_focus_pos().index
-								-- and that profile they are both trying to choose isn't [GUEST]
-								and scrollers[PLAYER_1]:get_info_at_focus_pos().index ~= 0 then
-									-- broadcast an InvalidChoice message to play the "Common invalid" sound
-									-- and "shake" the playerframe for the player that just pressed start
-									IsP2Ready = false
-									MESSAGEMAN:Broadcast("P2ProfileUnReady")
-									MESSAGEMAN:Broadcast("InvalidChoice", {PlayerNumber="PlayerNumber_P2"})
-									return
-								end
-								-- otherwise, play the StartButton sound
+							topscreen:queuecommand("Off"):sleep(0.4)
+						elseif nsj == 2 then
+							IsP2Ready = true
+							if not IsP1Ready then
 								MESSAGEMAN:Broadcast("StartButton")
-								-- and queue the OffCommand for the entire screen
-								topscreen:queuecommand("Off"):sleep(0.4)
+							end
+							MESSAGEMAN:Broadcast("P2ProfileReady")
+							if IsP1Ready and IsP2Ready then
+								-- we only bother checking scrollers to see if both players are
+								-- trying to choose the same profile if there are scrollers because
+								-- there are local profiles.  If there are no local profiles, there are
+								-- no scrollers to compare.
+								if PROFILEMAN:GetNumLocalProfiles() > 0
+								-- and if both players have joined and neither is using a memorycard
+								and #GAMESTATE:GetHumanPlayers() > 1 and not GAMESTATE:IsAnyHumanPlayerUsingMemoryCard() then
+									-- and both players are trying to choose the same profile
+									if scrollers[PLAYER_1]:get_info_at_focus_pos().index == scrollers[PLAYER_2]:get_info_at_focus_pos().index
+									-- and that profile they are both trying to choose isn't [GUEST]
+									and scrollers[PLAYER_1]:get_info_at_focus_pos().index ~= 0 then
+										-- broadcast an InvalidChoice message to play the "Common invalid" sound
+										-- and "shake" the playerframe for the player that just pressed start
+										IsP2Ready = false
+										MESSAGEMAN:Broadcast("P2ProfileUnReady")
+										MESSAGEMAN:Broadcast("InvalidChoice", {PlayerNumber="PlayerNumber_P2"})
+										return
+									end
+									-- otherwise, play the StartButton sound
+									MESSAGEMAN:Broadcast("StartButton")
+									-- and queue the OffCommand for the entire screen
+									topscreen:queuecommand("Off"):sleep(0.4)
+								end
+							end
+						end
+					elseif i > 4 then
+						event.PlayerNumber = "PlayerNumber_P2"
+						if MEMCARDMAN:GetCardState(event.PlayerNumber) == 'MemoryCardState_none' then
+							local info = scrollers[event.PlayerNumber]:get_info_at_focus_pos()
+							local index = type(info)=="table" and info.index or 0
+
+							if index+i-4 <= PROFILEMAN:GetNumLocalProfiles() then
+								MESSAGEMAN:Broadcast("DirectionButton")
+								scrollers[event.PlayerNumber]:scroll_by_amount(i-4)
+
+								local data = profile_data[index+index_padding+i-4]
+								local frame = af:GetChild(ToEnumShortString(event.PlayerNumber) .. 'Frame')
+								frame:GetChild("SelectedProfileText"):settext(data and data.displayname or "")
+								frame:GetChild("ReadyText"):settext(data and data.displayname.."\nREADY" or "READY"):y(data and 45 or 40)
+								frame:playcommand("Set", data)
+							end
+						end
+					elseif i < 4 then
+						event.PlayerNumber = "PlayerNumber_P2"
+						if MEMCARDMAN:GetCardState(event.PlayerNumber) == 'MemoryCardState_none' then
+							local info = scrollers[event.PlayerNumber]:get_info_at_focus_pos()
+							local index = type(info)=="table" and info.index or 0
+
+							if index + i-4 >= 0 then
+								MESSAGEMAN:Broadcast("DirectionButton")
+								scrollers[event.PlayerNumber]:scroll_by_amount(i-4)
+
+								local data = profile_data[index+index_padding+i-4]
+								local frame = af:GetChild(ToEnumShortString(event.PlayerNumber) .. 'Frame')
+								frame:GetChild("SelectedProfileText"):settext(data and data.displayname or "")
+								frame:GetChild("ReadyText"):settext(data and data.displayname.."\nREADY" or "READY"):y(data and 45 or 40)
+								frame:playcommand("Set", data)
 							end
 						end
 					end
