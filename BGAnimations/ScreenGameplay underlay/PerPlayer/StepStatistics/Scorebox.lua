@@ -1,6 +1,7 @@
 local player = ...
 local pn = ToEnumShortString(player)
 local stylename = GAMESTATE:GetCurrentStyle():GetName()
+local BlackList = GetBlackList()
 
 if SL[pn].ApiKey == "" then
 	return
@@ -113,61 +114,20 @@ local LeaderboardRequestProcessor = function(res, master)
 			-- If the player is using EX scoring, then we want to display the EX leaderboard first.
 			if data[playerStr]["exLeaderboard"] then
 				numEntries = 0
+				local IsBlackListed
+				local NumBlackListed = 0
 				for entry in ivalues(data[playerStr]["exLeaderboard"]) do
-					numEntries = numEntries + 1
-					SetScoreData(2, numEntries,
-									tostring(entry["rank"]),
-									entry["name"],
-									string.format("%.2f", entry["score"]/100),
-									entry["isSelf"],
-									entry["isRival"],
-									entry["isFail"],
-									true
-								)
-				end
-			end
-
-			if data[playerStr]["gsLeaderboard"] then
-				numEntries = 0
-				for entry in ivalues(data[playerStr]["gsLeaderboard"]) do
-					numEntries = numEntries + 1
-					SetScoreData(1, numEntries,
-									tostring(entry["rank"]),
-									entry["name"],
-									string.format("%.2f", entry["score"]/100),
-									entry["isSelf"],
-									entry["isRival"],
-									entry["isFail"],
-									false
-								)
-				end
-			end
-		else
-			-- Display the main GrooveStats leaderboard first and if player is not using EX scoring OR FA+ don't show the EX leaderboard.
-			if data[playerStr]["gsLeaderboard"] then
-				numEntries = 0
-				for entry in ivalues(data[playerStr]["gsLeaderboard"]) do
-					numEntries = numEntries + 1
-					SetScoreData(1, numEntries,
-									tostring(entry["rank"]),
-									entry["name"],
-									string.format("%.2f", entry["score"]/100),
-									entry["isSelf"],
-									entry["isRival"],
-									entry["isFail"],
-									false
-								)
-				end
-			end
-			
-			-- If not using EXScoring, but using FA+ show the EX Score leaderboard 2nd instead of 1st.
-			if SL["P"..n].ActiveModifiers.ShowFaPlusWindow then
-				if data[playerStr]["exLeaderboard"] then
-					numEntries = 0
-					for entry in ivalues(data[playerStr]["exLeaderboard"]) do
+					IsBlackListed = false
+					for i=1, #BlackList do
+						if entry["name"] == BlackList[i] then
+							IsBlackListed = true
+							NumBlackListed = NumBlackListed + 1
+						end
+					end
+					if not IsBlackListed then
 						numEntries = numEntries + 1
 						SetScoreData(2, numEntries,
-										tostring(entry["rank"]),
+										tostring(entry["rank"] - NumBlackListed),
 										entry["name"],
 										string.format("%.2f", entry["score"]/100),
 										entry["isSelf"],
@@ -178,44 +138,151 @@ local LeaderboardRequestProcessor = function(res, master)
 					end
 				end
 			end
+
+			if data[playerStr]["gsLeaderboard"] then
+				numEntries = 0
+				local IsBlackListed
+				local NumBlackListed = 0
+				for entry in ivalues(data[playerStr]["gsLeaderboard"]) do
+					IsBlackListed = false
+					for i=1, #BlackList do
+						if entry["name"] == BlackList[i] then
+							IsBlackListed = true
+							NumBlackListed = NumBlackListed + 1
+						end
+					end
+					if not IsBlackListed then
+						numEntries = numEntries + 1
+						SetScoreData(1, numEntries,
+										tostring(entry["rank"] - NumBlackListed),
+										entry["name"],
+										string.format("%.2f", entry["score"]/100),
+										entry["isSelf"],
+										entry["isRival"],
+										entry["isFail"],
+										false
+									)
+					end
+				end
+			end
+		else
+			-- Display the main GrooveStats leaderboard first and if player is not using EX scoring OR FA+ don't show the EX leaderboard.
+			if data[playerStr]["gsLeaderboard"] then
+				numEntries = 0
+				local IsBlackListed
+				local NumBlackListed = 0
+				for entry in ivalues(data[playerStr]["gsLeaderboard"]) do
+					IsBlackListed = false
+					for i=1, #BlackList do
+						if entry["name"] == BlackList[i] then
+							IsBlackListed = true
+							NumBlackListed = NumBlackListed + 1
+						end
+					end
+					if not IsBlackListed then
+						numEntries = numEntries + 1
+						SetScoreData(1, numEntries,
+										tostring(entry["rank"] - NumBlackListed),
+										entry["name"],
+										string.format("%.2f", entry["score"]/100),
+										entry["isSelf"],
+										entry["isRival"],
+										entry["isFail"],
+										false
+									)
+					end
+				end
+			end
+			
+			-- If not using EXScoring, but using FA+ show the EX Score leaderboard 2nd instead of 1st.
+			if SL["P"..n].ActiveModifiers.ShowFaPlusWindow then
+				if data[playerStr]["exLeaderboard"] then
+					numEntries = 0
+					local IsBlackListed
+					local NumBlackListed = 0
+					for entry in ivalues(data[playerStr]["exLeaderboard"]) do
+						IsBlackListed = false
+						for i=1, #BlackList do
+							if entry["name"] == BlackList[i] then
+								IsBlackListed = true
+								NumBlackListed = NumBlackListed + 1
+							end
+						end
+						if not IsBlackListed then
+							numEntries = numEntries + 1
+							SetScoreData(2, numEntries,
+											tostring(entry["rank"] - NumBlackListed),
+											entry["name"],
+											string.format("%.2f", entry["score"]/100),
+											entry["isSelf"],
+											entry["isRival"],
+											entry["isFail"],
+											true
+										)
+						end
+					end
+				end
+			end
 		end
 
 		if data[playerStr]["rpg"] then
 			local entryCount = 0
+			local IsBlackListed
+			local NumBlackListed = 0
 			SetScoreData(3, 1, "", "No Scores", "", false, false, false)
 
 			if data[playerStr]["rpg"]["rpgLeaderboard"] then
 				for entry in ivalues(data[playerStr]["rpg"]["rpgLeaderboard"]) do
-					entryCount = entryCount + 1
-					SetScoreData(3, entryCount,
-									tostring(entry["rank"]),
-									entry["name"],
-									string.format("%.2f", entry["score"]/100),
-									entry["isSelf"],
-									entry["isRival"],
-									entry["isFail"],
-									false
-								)
+					IsBlackListed = false
+					for i=1, #BlackList do
+						if entry["name"] == BlackList[i] then
+							IsBlackListed = true
+							NumBlackListed = NumBlackListed + 1
+						end
+					end
+					if not IsBlackListed then
+						entryCount = entryCount + 1
+						SetScoreData(3, entryCount,
+										tostring(entry["rank"] - NumBlackListed),
+										entry["name"],
+										string.format("%.2f", entry["score"]/100),
+										entry["isSelf"],
+										entry["isRival"],
+										entry["isFail"],
+										false
+									)
+					end
 				end
 			end
 		end
 
 		if data[playerStr]["itl"] then
 			local numEntries = 0
+			local IsBlackListed
+			local NumBlackListed = 0
 			SetScoreData(4, 1, "", "No Scores", "", false, false, false)
 
 			if data[playerStr]["itl"]["itlLeaderboard"] then
 				for entry in ivalues(data[playerStr]["itl"]["itlLeaderboard"]) do
-					numEntries = numEntries + 1
-					SetScoreData(4, numEntries,
-									tostring(entry["rank"]),
-									entry["name"],
-									string.format("%.2f", entry["score"]/100),
-									entry["isSelf"],
-									entry["isRival"],
-									entry["isFail"],
-									true
-								)
+					IsBlackListed = false
+					for i=1, #BlackList do
+						if entry["name"] == BlackList[i] then
+							IsBlackListed = true
+							NumBlackListed = NumBlackListed + 1
+						end
+					end
+					if not IsBlackListed then
+						numEntries = numEntries + 1
+						SetScoreData(4, numEntries,
+										tostring(entry["rank"] - NumBlackListed),
+										entry["name"],
+										string.format("%.2f", entry["score"]/100),
+										entry["isSelf"],
+										entry["isRival"],
+										entry["isFail"],
+										true
+									)
+					end
 				end
 			end
 		end

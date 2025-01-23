@@ -955,3 +955,13 @@ GetPlayerOptionsString = function(player)
 
 	return optionslist
 end
+
+GetBlackList=function(self)
+	local List = {
+		"dragwassup4",
+		"DF.Happy Feet!",
+		"RhythmIO",
+		"StarrySergal",
+	}
+	return List
+end

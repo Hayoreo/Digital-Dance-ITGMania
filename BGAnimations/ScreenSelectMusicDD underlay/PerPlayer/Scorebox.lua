@@ -3,6 +3,7 @@ local pn = ToEnumShortString(player)
 local CurrentTab
 local CurrentTabNumber
 local CurrentHash
+local BlackList = GetBlackList()
 
 if pn == "P1" and GAMESTATE:IsHumanPlayer(pn) then
 	if DDStats.GetStat(PLAYER_1, 'LastTab') ~= nil then
@@ -205,7 +206,7 @@ local LeaderboardRequestProcessor = function(res, master)
 					SetScoreData(3, i, "", "", "", "", false, false, false, false)
 				end
 				SetScoreData(1, 1, "", "No Scores", "", "", false, false, false, false)
-				SetScoreData(2, 1, "", "Chart Not Ranked", "", "", false, false, false, false)
+				SetScoreData(2, 1, "", "No Scores", "", "", false, false, false, false)
 				SetScoreData(3, 1, "", "Chart Not Ranked", "", "", false, false, false, false)
 				isRanked = false
 			end
@@ -213,30 +214,43 @@ local LeaderboardRequestProcessor = function(res, master)
 
 		if data[playerStr]["gsLeaderboard"] then
 			local entryCount = 0
+			local IsBlackListed
+			local NumBlackListed = 0
 			for entry in ivalues(data[playerStr]["gsLeaderboard"]) do
-				entryCount = entryCount + 1
-				SetScoreData(1, entryCount,
-								tostring(entry["rank"]),
-								entry["name"],
-								string.format("%.2f", entry["score"]/100),
-								ParseGroovestatsDate(entry["date"]),
-								entry["isSelf"],
-								entry["isRival"],
-								entry["isFail"],
-								false)
-			end
-			entryCount = entryCount + 1
-			if entryCount > 1 then
-				for i=entryCount,num_scores,1 do
-					SetScoreData(1, i,
-									"",
-									"",
-									"",
-									"",
-									false,
-									false,
-									false,
+				IsBlackListed = false
+				for i=1, #BlackList do
+					if entry["name"] == BlackList[i] then
+						IsBlackListed = true
+						NumBlackListed = NumBlackListed + 1
+					end
+				end
+				if not IsBlackListed then
+					entryCount = entryCount + 1
+					SetScoreData(1, entryCount,
+									tostring(entry["rank"] - NumBlackListed),
+									entry["name"],
+									string.format("%.2f", entry["score"]/100),
+									ParseGroovestatsDate(entry["date"]),
+									entry["isSelf"],
+									entry["isRival"],
+									entry["isFail"],
 									false)
+				end
+			end
+			if not IsBlackListed then
+				entryCount = entryCount + 1
+				if entryCount > 1 then
+					for i=entryCount,num_scores,1 do
+						SetScoreData(1, i,
+										"",
+										"",
+										"",
+										"",
+										false,
+										false,
+										false,
+										false)
+					end
 				end
 			end
 		else
@@ -248,41 +262,56 @@ local LeaderboardRequestProcessor = function(res, master)
 		
 		if data[playerStr]["exLeaderboard"] then
 			local entryCount = 0
+			local IsBlackListed
+			local NumBlackListed = 0
 			for entry in ivalues(data[playerStr]["exLeaderboard"]) do
+				IsBlackListed = false
+				for i=1, #BlackList do
+					if entry["name"] == BlackList[i] then
+						IsBlackListed = true
+						NumBlackListed = NumBlackListed + 1
+					end
+				end
+				if not IsBlackListed then
+					entryCount = entryCount + 1
+					SetScoreData(2, entryCount,
+									tostring(entry["rank"] - NumBlackListed),
+									entry["name"],
+									string.format("%.2f", entry["score"]/100),
+									ParseGroovestatsDate(entry["date"]),
+									entry["isSelf"],
+									entry["isRival"],
+									entry["isFail"],
+									true)
+				end
+			end
+			if not IsBlackListed then
 				entryCount = entryCount + 1
-				SetScoreData(2, entryCount,
-								tostring(entry["rank"]),
-								entry["name"],
-								string.format("%.2f", entry["score"]/100),
-								ParseGroovestatsDate(entry["date"]),
-								entry["isSelf"],
-								entry["isRival"],
-								entry["isFail"],
-								true)
-			end
-			entryCount = entryCount + 1
-			if entryCount > 1 then
-				for i=entryCount,num_scores,1 do
-					SetScoreData(2, i,
-									"",
-									"",
-									"",
-									"",
-									false,
-									false,
-									false,
-									false)
+				if entryCount > 1 then
+					for i=entryCount,num_scores,1 do
+						SetScoreData(2, i,
+										"",
+										"",
+										"",
+										"",
+										false,
+										false,
+										false,
+										false)
+					end
 				end
-			else
-				for i=1,num_scores do
-					SetScoreData(2, i, "", "", "", "", false, false, false, false)
-				end
-				SetScoreData(2, 1, "", "No Scores", "", "", false, false, false, false)
 			end
+		else
+			for i=1,num_scores do
+				SetScoreData(2, i, "", "", "", "", false, false, false, false)
+			end
+			SetScoreData(2, 1, "", "No Scores", "", "", false, false, false, false)
 		end
 
 		if data[playerStr]["rpg"] then
 			local entryCount = 0
+			local IsBlackListed
+			local NumBlackListed = 0
 			all_data[3].has_data = false
 			for i=1,num_scores do
 				SetScoreData(3, i, "", "", "", "", false, false, false, false)
@@ -291,29 +320,40 @@ local LeaderboardRequestProcessor = function(res, master)
 
 			if data[playerStr]["rpg"]["rpgLeaderboard"] then
 				for entry in ivalues(data[playerStr]["rpg"]["rpgLeaderboard"]) do
-					entryCount = entryCount + 1
-					SetScoreData(3, entryCount,
-									tostring(entry["rank"]),
-									entry["name"],
-									string.format("%.2f", entry["score"]/100),
-									ParseGroovestatsDate(entry["date"]),
-									entry["isSelf"],
-									entry["isRival"],
-									entry["isFail"],
-									false
-								)
+					IsBlackListed = false
+					for i=1, #BlackList do
+						if entry["name"] == BlackList[i] then
+							IsBlackListed = true
+							NumBlackListed = NumBlackListed + 1
+						end
+					end
+					if not IsBlackListed then
+						entryCount = entryCount + 1
+						SetScoreData(3, entryCount,
+										tostring(entry["rank"] - NumBlackListed),
+										entry["name"],
+										string.format("%.2f", entry["score"]/100),
+										ParseGroovestatsDate(entry["date"]),
+										entry["isSelf"],
+										entry["isRival"],
+										entry["isFail"],
+										false
+									)
+					end
 				end
-				entryCount = entryCount + 1
-				for i=entryCount,num_scores,1 do
-					SetScoreData(3, i,
-									"",
-									"",
-									"",
-									"",
-									false,
-									false,
-									false,
-									false)
+				if not IsBlackListed then
+					entryCount = entryCount + 1
+					for i=entryCount,num_scores,1 do
+						SetScoreData(3, i,
+										"",
+										"",
+										"",
+										"",
+										false,
+										false,
+										false,
+										false)
+					end
 				end
 			end
 		else
@@ -325,6 +365,8 @@ local LeaderboardRequestProcessor = function(res, master)
 
 		if data[playerStr]["itl"] then
 			local entryCount = 0
+			local IsBlackListed
+			local NumBlackListed = 0
 			all_data[4].has_data = false
 			for i=1,num_scores do
 				SetScoreData(4, i, "", "", "", "", false, false, false, false)
@@ -333,32 +375,43 @@ local LeaderboardRequestProcessor = function(res, master)
 
 			if data[playerStr]["itl"]["itlLeaderboard"] then
 				for entry in ivalues(data[playerStr]["itl"]["itlLeaderboard"]) do
-					if entry["isSelf"] and CurrentHash ~= nil then
-						UpdateItlExScore(player, CurrentHash, entry["score"])
-					end					
-					entryCount = entryCount + 1
-					SetScoreData(4, entryCount,
-									tostring(entry["rank"]),
-									entry["name"],
-									string.format("%.2f", entry["score"]/100),
-									ParseGroovestatsDate(entry["date"]),
-									entry["isSelf"],
-									entry["isRival"],
-									entry["isFail"],
-									true
-								)
+					IsBlackListed = false
+					for i=1, #BlackList do
+						if entry["name"] == BlackList[i] then
+							IsBlackListed = true
+							NumBlackListed = NumBlackListed + 1
+						end
+					end
+					if not IsBlackListed then
+						if entry["isSelf"] and CurrentHash ~= nil then
+							UpdateItlExScore(player, CurrentHash, entry["score"])
+						end					
+						entryCount = entryCount + 1
+						SetScoreData(4, entryCount,
+										tostring(entry["rank"] - NumBlackListed),
+										entry["name"],
+										string.format("%.2f", entry["score"]/100),
+										ParseGroovestatsDate(entry["date"]),
+										entry["isSelf"],
+										entry["isRival"],
+										entry["isFail"],
+										true
+									)
+					end
 				end
-				entryCount = entryCount + 1
-				for i=entryCount,num_scores,1 do
-					SetScoreData(4, i,
-									"",
-									"",
-									"",
-									"",
-									false,
-									false,
-									false,
-									false)
+				if not IsBlackListed then
+					entryCount = entryCount + 1
+					for i=entryCount,num_scores,1 do
+						SetScoreData(4, i,
+										"",
+										"",
+										"",
+										"",
+										false,
+										false,
+										false,
+										false)
+					end
 				end
 			end
 		else

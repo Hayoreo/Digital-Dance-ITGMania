@@ -1,5 +1,6 @@
 local NumEntries = 13
 local RowHeight = 24
+local BlackList = GetBlackList()
 
 local SetEntryText = function(rank, name, score, date, actor)
 	if actor == nil then return end
@@ -33,46 +34,57 @@ local SetLeaderboardForPlayer = function(player_num, leaderboard, leaderboardDat
 		end
 		
 		if leaderboardData["Data"] then
+			local IsBlackListed
+			local NumBlackListed = 0
 			for gsEntry in ivalues(leaderboardData["Data"]) do
 				local entry = leaderboard:GetChild("LeaderboardEntry"..entryNum)
-				SetEntryText(
-					gsEntry["rank"]..".",
-					gsEntry["name"],
-					string.format("%.2f%%", gsEntry["score"]/100),
-					ParseGroovestatsDate(gsEntry["date"]),
-					entry
-				)
-				if gsEntry["isRival"] then
-					if gsEntry["isFail"] then
-						entry:GetChild("Rank"):diffuse(Color.Black)
-						entry:GetChild("Name"):diffuse(Color.Black)
-						entry:GetChild("Score"):diffuse(Color.Red)
-						entry:GetChild("Date"):diffuse(Color.Black)
-					else
-						entry:diffuse(Color.Black)
+				IsBlackListed = false
+				for i=1, #BlackList do
+					if gsEntry["name"] == BlackList[i] then
+						IsBlackListed = true
+						NumBlackListed = NumBlackListed + 1
 					end
-					leaderboard:GetChild("Rival"..rivalNum):y(entry:GetY()):visible(true)
-					rivalNum = rivalNum + 1
-				elseif gsEntry["isSelf"] then
-					if gsEntry["isFail"] then
-						entry:GetChild("Rank"):diffuse(Color.Black)
-						entry:GetChild("Name"):diffuse(Color.Black)
-						entry:GetChild("Score"):diffuse(Color.Red)
-						entry:GetChild("Date"):diffuse(Color.Black)
-					else
-						entry:diffuse(Color.Black)
-					end
-					leaderboard:GetChild("Self"):y(entry:GetY()):visible(true)
-				else
-					entry:diffuse(Color.White)
 				end
+				if not IsBlackListed then
+					SetEntryText(
+						gsEntry["rank"] - NumBlackListed..".",
+						gsEntry["name"],
+						string.format("%.2f%%", gsEntry["score"]/100),
+						ParseGroovestatsDate(gsEntry["date"]),
+						entry
+					)
+					if gsEntry["isRival"] then
+						if gsEntry["isFail"] then
+							entry:GetChild("Rank"):diffuse(Color.Black)
+							entry:GetChild("Name"):diffuse(Color.Black)
+							entry:GetChild("Score"):diffuse(Color.Red)
+							entry:GetChild("Date"):diffuse(Color.Black)
+						else
+							entry:diffuse(Color.Black)
+						end
+						leaderboard:GetChild("Rival"..rivalNum):y(entry:GetY()):visible(true)
+						rivalNum = rivalNum + 1
+					elseif gsEntry["isSelf"] then
+						if gsEntry["isFail"] then
+							entry:GetChild("Rank"):diffuse(Color.Black)
+							entry:GetChild("Name"):diffuse(Color.Black)
+							entry:GetChild("Score"):diffuse(Color.Red)
+							entry:GetChild("Date"):diffuse(Color.Black)
+						else
+							entry:diffuse(Color.Black)
+						end
+						leaderboard:GetChild("Self"):y(entry:GetY()):visible(true)
+					else
+						entry:diffuse(Color.White)
+					end
 
-				-- Why does this work for normal entries but not for Rivals/Self where
-				-- I have to explicitly set the colors for each child??
-				if gsEntry["isFail"] then
-					entry:GetChild("Score"):diffuse(Color.Red)
+					-- Why does this work for normal entries but not for Rivals/Self where
+					-- I have to explicitly set the colors for each child??
+					if gsEntry["isFail"] then
+						entry:GetChild("Score"):diffuse(Color.Red)
+					end
+					entryNum = entryNum + 1
 				end
-				entryNum = entryNum + 1
 			end
 		end
 	end
@@ -84,11 +96,7 @@ local SetLeaderboardForPlayer = function(player_num, leaderboard, leaderboardDat
 		local entry = leaderboard:GetChild("LeaderboardEntry"..i)
 		-- We didn't get any scores if i is still == 1.
 		if i == 1 then
-			if isRanked then
-				SetEntryText("", "No Scores", "", "", entry)
-			else
-				SetEntryText("", "Chart Not Ranked", "", "", entry)
-			end
+			SetEntryText("", "No Scores", "", "", entry)
 		else
 			-- Empty out the remaining rows.
 			SetEntryText("", "", "", "", entry)
@@ -537,11 +545,7 @@ for player in ivalues( PlayerNumber ) do
 		af2[#af2+1] = Def.ActorFrame{
 			Name="LeaderboardEntry"..i,
 			InitCommand=function(self)
-				if NumEntries % 2 == 1 then
-					self:y(RowHeight*(i - (NumEntries+1)/2) )
-				else
-					self:y(RowHeight*(i - NumEntries/2))
-				end
+				self:y((-RowHeight * 7) + RowHeight*i)
 			end,
 			RefreshCommand=function(self)
 				local width = self:GetParent():GetWidth()
