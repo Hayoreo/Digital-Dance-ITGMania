@@ -1,5 +1,5 @@
 if not IsServiceAllowed(SL.GrooveStats.AutoSubmit) then return end
-
+local BlackList = GetBlackList()
 local NumEntries = 10
 
 local SetEntryText = function(rank, name, score, date, actor)
@@ -178,6 +178,8 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 					local wrScore = nil
 					local isWr = false
 					if data[playerStr]["gsLeaderboard"] then
+						local IsBlackListed
+						local NumBlackListed = 0
 						-- We still want to play a WR Sound if you get a quad on a chart not ranked
 						local stats = STATSMAN:GetCurStageStats():GetPlayerStageStats("P".. i)
 						local PercentDP = stats:GetPercentDancePoints()
@@ -191,28 +193,37 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 						end
 						for gsEntry in ivalues(data[playerStr]["gsLeaderboard"]) do
 							local entry = highScorePane:GetChild("HighScoreList"):GetChild("HighScoreEntry"..entryNum)
-							entry:stoptweening()
-							entry:diffuse(Color.White)
-							SetEntryText(
-								gsEntry["rank"]..".",
-								GetMachineTag(gsEntry),
-								string.format("%.2f%%", gsEntry["score"]/100),
-								ParseGroovestatsDate(gsEntry["date"]),
-								entry
-							)
-							if gsEntry["isRival"] then
-								entry:diffuse(color("#BD94FF"))
-								rivalNum = rivalNum + 1
-							elseif gsEntry["isSelf"] then
-								entry:diffuse(color("#A1FF94"))
-								personalRank = gsEntry["rank"]
-								isWr = gsEntry["score"] >= wrScore
+							IsBlackListed = false
+							for i=1, #BlackList do
+								if gsEntry["name"] == BlackList[i] then
+									IsBlackListed = true
+									NumBlackListed = NumBlackListed + 1
+								end
 							end
+							if not IsBlackListed then
+								entry:stoptweening()
+								entry:diffuse(Color.White)
+								SetEntryText(
+									gsEntry["rank"]-NumBlackListed..".",
+									GetMachineTag(gsEntry),
+									string.format("%.2f%%", gsEntry["score"]/100),
+									ParseGroovestatsDate(gsEntry["date"]),
+									entry
+								)
+								if gsEntry["isRival"] then
+									entry:diffuse(color("#BD94FF"))
+									rivalNum = rivalNum + 1
+								elseif gsEntry["isSelf"] then
+									entry:diffuse(color("#A1FF94"))
+									personalRank = gsEntry["rank"] - NumBlackListed
+									isWr = gsEntry["score"] >= wrScore
+								end
 
-							if gsEntry["isFail"] then
-								entry:GetChild("Score"):diffuse(Color.Red)
+								if gsEntry["isFail"] then
+									entry:GetChild("Score"):diffuse(Color.Red)
+								end
+								entryNum = entryNum + 1
 							end
-							entryNum = entryNum + 1
 						end
 						QRPane:GetChild("QRCode"):queuecommand("Hide")
 						QRPane:GetChild("HelpText"):settext("Score has already been submitted :)")
