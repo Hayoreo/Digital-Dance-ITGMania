@@ -6,8 +6,9 @@ SongSearchSSMDDMessageCommand = function(self)
 	
 	if SongSearchAnswer ~= "" or ArtistSearchAnswer ~= "" or ChartSearchAnswer ~= "" then
 		for i,song in ipairs(SongsAvailable) do
-			local title = song:GetDisplayFullTitle():lower()
-			local artist = song:GetDisplayArtist():lower()
+			-- Check for both normal and translated text for song name/artist
+			local title = song:GetDisplayFullTitle():lower().. song:GetTranslitFullTitle():lower()
+			local artist = song:GetDisplayArtist():lower().. song:GetTranslitArtist():lower()
 			local steps_type = GAMESTATE:GetCurrentStyle():GetStepsType()
 			-- the query "xl grind" will match a song called "Axle Grinder" no matter
 			-- what the chart info says
