@@ -149,8 +149,10 @@ local InputHandler = function( event )
 		if not LeadboardHasFocus and not InputMenuHasFocus then
 			if event.DeviceInput.button == "DeviceButton_left mouse button" and event.type == "InputEventType_FirstPress"  then
 				MESSAGEMAN:Broadcast("LeftMouseClickUpdate")
+				return
 			elseif event.DeviceInput.button == "DeviceButton_right mouse button" and event.type == "InputEventType_FirstPress"  then
 				MESSAGEMAN:Broadcast("RightMouseClickUpdate")
+				return
 			end
 		end
 	end

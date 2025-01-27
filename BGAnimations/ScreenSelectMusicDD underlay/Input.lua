@@ -396,7 +396,7 @@ t.Handler = function(event)
 				end
 			--- Test input mouse controls
 			elseif InputMenuHasFocus and not LeadboardHasFocus then
-				if event.DeviceInput.button == "DeviceButton_left mouse button" or event.DeviceInput.button == "DeviceButton_right mouse button" then
+				if event.DeviceInput.button == "DeviceButton_right mouse button" then
 					InputMenuHasFocus = false
 					SOUND:PlayOnce( THEME:GetPathS("common", "start.ogg") )
 					MESSAGEMAN:Broadcast("HideTestInput")

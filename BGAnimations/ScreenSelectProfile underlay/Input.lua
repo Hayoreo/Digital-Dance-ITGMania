@@ -182,6 +182,7 @@ local InputHandler = function(event)
 					-- see ScreenSelectProfile.cpp for details
 					nsj = nsj + 1
 					topscreen:SetProfileIndex("PlayerNumber_P1", -1)
+					return
 				end
 			end
 			
@@ -272,6 +273,7 @@ local InputHandler = function(event)
 					-- see ScreenSelectProfile.cpp for details
 					nsj = nsj + 1
 					topscreen:SetProfileIndex("PlayerNumber_P2", -1)
+					return
 				end
 			end
 				
