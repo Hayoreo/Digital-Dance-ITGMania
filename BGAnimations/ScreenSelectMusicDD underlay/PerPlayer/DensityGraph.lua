@@ -130,7 +130,19 @@ af[#af+1] = Def.ActorFrame{
 			self:GetChild("NPS"):visible(true)
 			self:GetChild("Breakdown"):visible(true)
 			self:GetChild("Total Measures"):visible(true)
-			self:GetChild("ProgressBar"):visible(true)
+			local song = GAMESTATE:GetCurrentSong()
+			if song then
+				CurrentSong = NewSong
+				local SongLength = song:GetLastSecond()
+				local SongPosition = song:GetSampleStart()
+				local Ratio = width/SongLength
+				local XPos = SongPosition * Ratio
+				if XPos > width - 1 then
+					self:GetChild("ProgressBar"):visible(false)
+				else
+					self:GetChild("ProgressBar"):visible(true)
+				end
+			end
 			self:queuecommand("Redraw")
 		end
 	end,
@@ -280,8 +292,13 @@ af2[#af2+1] = Def.Quad{
 			local SongPosition = song:GetSampleStart()
 			local Ratio = width/SongLength
 			local XPos = SongPosition * Ratio
-			self:x(XPos)
-			self:queuecommand('DrawCursor')
+			if XPos > width - 1 then
+				self:x(XPos)
+				self:visible(false)
+			else
+				self:x(XPos)
+				self:queuecommand('DrawCursor')
+			end
 		else
 			CurrentSong = nil
 		end
