@@ -128,6 +128,9 @@ local t = Def.ActorFrame{
 					self:diffuse(color("#a10000"))
 				end
 			end,
+			OffCommand=function(self)
+				self:stoptweening()
+			end,
 		},
 		
 		-- search button text
@@ -151,6 +154,9 @@ local t = Def.ActorFrame{
 					self:settext(THEME:GetString("ScreenSelectMusicDD", "Exit"))
 				end
 			end,
+			OffCommand=function(self)
+				self:stoptweening()
+			end,
 		},
 
 		Def.Actor {
@@ -167,6 +173,9 @@ local t = Def.ActorFrame{
 					MESSAGEMAN:Broadcast("UpdateChartSearchText")
 				end
 				self:sleep(0.5):queuecommand('Blink')
+			end,
+			OffCommand=function(self)
+				self:stoptweening()
 			end,
 		},
 
@@ -192,6 +201,9 @@ local t = Def.ActorFrame{
 					self:settext(SongSearchAnswer)
 				end
 			end,
+			OffCommand=function(self)
+				self:stoptweening()
+			end,
 		},
 		
 		-- artist search input text
@@ -216,6 +228,9 @@ local t = Def.ActorFrame{
 					self:settext(ArtistSearchAnswer)
 				end
 			end,
+			OffCommand=function(self)
+				self:stoptweening()
+			end,
 		},
 		
 		-- chart search input text
@@ -239,6 +254,9 @@ local t = Def.ActorFrame{
 				else
 					self:settext(ChartSearchAnswer)
 				end
+			end,
+			OffCommand=function(self)
+				self:stoptweening()
 			end,
 		},
 		
