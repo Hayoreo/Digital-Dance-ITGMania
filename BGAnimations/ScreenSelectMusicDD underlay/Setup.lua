@@ -456,8 +456,9 @@ local UpdatePrunedSongs = function()
 				----- Filter For song search
 				if SongSearchSSMDD == true then
 					local match = true
-					local title = song:GetDisplayFullTitle():lower()
-					local artist = song:GetDisplayArtist():lower()
+					-- Check for both normal and translated text for song name/artist
+					local title = song:GetDisplayFullTitle():lower() .. song:GetTranslitFullTitle():lower()
+					local artist = song:GetDisplayArtist():lower() .. song:GetTranslitArtist():lower()
 					-- the query "xl grind" will match a song called "Axle Grinder" no matter
 					-- what the chart info says
 					if title == "Random-Portal" or title == "RANDOM-PORTAL" then
