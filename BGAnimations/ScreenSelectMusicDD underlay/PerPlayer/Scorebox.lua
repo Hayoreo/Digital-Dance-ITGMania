@@ -4,7 +4,6 @@ local CurrentTab
 local CurrentTabNumber
 local CurrentHash
 local BlackList = GetBlackList()
-BlackList[#BlackList+1] = "rynker"
 
 if pn == "P1" and GAMESTATE:IsHumanPlayer(pn) then
 	if DDStats.GetStat(PLAYER_1, 'LastTab') ~= nil then
