@@ -473,19 +473,29 @@ for i=1,NumEntries do
 
 	-- Rank 1 gets a crown.
 	if i == 1 then
-		af[#af+1] = Def.Sprite{
+		af[#af+1] = LoadFont("Common Normal")..{
 			Name="Rank"..i,
-			Texture=THEME:GetPathG("", "crown.png"),
+			Text="",
 			InitCommand=function(self)
-				self:zoom(0.09):xy(-width/2 + 14, y):diffusealpha(0)
-			end,
+				self:diffuse(Color.White):xy(-width/2 + 27, y):maxwidth(30):horizalign(right):zoom(zoom)
+				end,
 			LoopScoreboxCommand=function(self)
 				self:linear(transition_seconds/2):diffusealpha(0):queuecommand("SetScorebox")
 			end,
 			SetScoreboxCommand=function(self)
 				local score = all_data[cur_style+1]["scores"][i]
-				if score.rank ~= "" then
+				local clr = Color.White
+				if score.rank == 1 .. "." then
+					self:settext("🏅"):zoom(0.7)
 					self:linear(transition_seconds/2):diffusealpha(1)
+				else
+					self:settext(score.rank):zoom(zoom)
+					if score.isSelf then
+						clr = self_color
+					elseif score.isRival then
+						clr = rival_color
+					end
+					self:linear(transition_seconds/2):diffusealpha(1):diffuse(clr)
 				end
 			end
 		}
