@@ -123,7 +123,7 @@ bmt.JudgmentMessageCommand=function(self, params)
 	if player == params.Player and not mods.ShowEXScore and not HasFailed then
 		tns = ToEnumShortString(params.TapNoteScore)
 		hns = params.HoldNoteScore and ToEnumShortString(params.HoldNoteScore)
-		self:playcommand("SetScore")
+		self:queuecommand("SetScore")
 	end
 end
 
