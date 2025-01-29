@@ -3,35 +3,34 @@ local pn = ToEnumShortString(player)
 local mods = SL[pn].ActiveModifiers
 
 if not mods.SubtractiveScoring then return end
+local chart = GAMESTATE:GetCurrentSteps(player)
+
+local NoteCount = chart:GetRadarValues(player):GetValue('RadarCategory_TapsAndHolds')
+local HoldCount = chart:GetRadarValues(player):GetValue('RadarCategory_Holds')
+local RollCount = chart:GetRadarValues(player):GetValue('RadarCategory_Rolls')
+local MineCount = chart:GetRadarValues(player):GetValue('RadarCategory_Mines')
+local Score
+local PossibleScore
+local CurrentPossibleScore
+local ActualScore
+local HasFailed = false
+local IsNumber = true
 local FAPlusCount = 0
 local HeldCount = 0
 local ex_actual
 local ex_possible
 local ex_score
-local HasFailed = false
-local possible_dp
-local current_possible_dp
-local actual_dp
-local score
+local MinesHit = 0
+local HoldsRollsDropped = 0
 -- -----------------------------------------------------------------------
 
-local undesirable_judgment = "W2"
-
--- flag to determine whether to bother to continue counting excellents
--- or whether to just display percent away from 100%
-local received_judgment_lower_than_desired = false
-
--- this starts at 0 for each song/course
--- (but does not reset to 0 between each song in a course)
+local undesirable_judgment = mods.ShowEXScore and "W1" or "W2"
 local undesirable_judgment_count = 0
-
--- variables for tapnotescore and holdnotescore that need file scope
-local tns, hns
 
 local pss = STATSMAN:GetCurStageStats():GetPlayerStageStats(player)
 
 -- which font should we use for the BitmapText actor?
-local font = mods.ComboFont
+local font = mods.ComboFont or "Wendy"
 
 -- most ComboFonts have their own dedicated sprite sheets in ./Digital Dance/Fonts/_Combo Fonts/
 -- "Wendy" and "Wendy (Cursed)" are exceptions for the time being; reroute both to use "./Fonts/Wendy/_wendy small"
@@ -42,10 +41,46 @@ else
 end
 
 -- -----------------------------------------------------------------------
+local GetCurrentExScore = function(player, ex_counts, PotentialNotes, PotentialHoldsRolls)
+	local StepsOrTrail = (GAMESTATE:IsCourseMode() and GAMESTATE:GetCurrentTrail(player)) or GAMESTATE:GetCurrentSteps(player)
+	
+	local W0Weight = SL.ExWeights["W0"]
+	local total_possible = NoteCount * W0Weight + (HoldCount + RollCount) * SL.ExWeights["Held"]
+
+	local total_points = 0
+	
+	local po = GAMESTATE:GetPlayerState(player):GetPlayerOptions("ModsLevel_Preferred")
+
+	-- If mines are disabled, they should still be accounted for in EX Scoring based on the weight assigned to it.
+	-- Stamina community does often play with no-mines on, but because EX scoring is more timing centric where mines
+	-- generally have a negative weight, it's a better experience to make sure the EX score reflects that.
+	if po:NoMines() then
+		local totalMines = StepsOrTrail:GetRadarValues(player):GetValue( "RadarCategory_Mines" ) - MinesHit
+		total_points = total_points + totalMines * SL.ExWeights["HitMine"];
+	end
+	
+	local keys = { "W0", "W1", "W2", "W3", "W4", "W5", "Miss", "Held", "LetGo", "HitMine" }
+	local counts = ex_counts
+	counts["W0"] = counts["W0"] + PotentialNotes
+	counts["Held"] = counts["Held"] + PotentialHoldsRolls
+	-- Just for validation, but shouldn't happen in normal gameplay.
+	if counts == nil then return 0 end
+	for key in ivalues(keys) do
+		local value = counts[key]
+		if value ~= nil then		
+			total_points = total_points + value * SL.ExWeights[key]
+		end
+	end
+	return math.max(0, math.floor(total_points/total_possible * 10000) / 100)
+end
+
+-- -----------------------------------------------------------------------
 local GetPossibleExScore = function(counts)
 	local best_counts = {}
-
-	local keys = { "W0", "W1", "W2", "W3", "W4", "W5", "Miss", "Held", "LetGo", "HitMine" }
+	local TotalStepsHit = 0
+	local PotentialNotes = 0
+	local PotentialHoldsRolls = 0
+	local keys = { "W0", "W1", "W2", "W3", "W4", "W5", "Miss", "Held", "LetGo", "HitMine", "MissedHold" }
 
 	for key in ivalues(keys) do
 		local value = counts[key]
@@ -56,20 +91,29 @@ local GetPossibleExScore = function(counts)
 			end
 
 			-- Upgrade dropped holds/rolls to held.
-			if key == "LetGo" or key == "Held" then
-				best_counts["Held"] = best_counts["Held"] + value
-			-- We never hit any mines.
+			best_counts[key] = best_counts[key] + value
+			if key == "W0" or key == "W1" or key == "W2" or key == "W3" or key == "W4" or key == "W5" or key == "Miss" then
+				TotalStepsHit = TotalStepsHit + value
+			elseif key ==  "Held" then
+				PotentialHoldsRolls = PotentialHoldsRolls + value
 			elseif key == "HitMine" then
-				best_counts[key] = 0
-			-- Upgrade to FA+ window.
-			else
-				best_counts["W0"] = best_counts["W0"] + value
+				MinesHit = MinesHit + 1
 			end
 		end
 	end
-
-	return CalculateExScore(player, best_counts)
+	if IsNumber then
+		if best_counts["W1"] > 10 then
+			IsNumber = false
+		else
+			undesirable_judgment_count = best_counts["W1"]
+		end
+	end
+	PotentialNotes = NoteCount - TotalStepsHit
+	PotentialHoldsRolls = HoldCount - PotentialHoldsRolls
+	return GetCurrentExScore(player, best_counts, PotentialNotes, PotentialHoldsRolls)
 end
+
+
 
 -- -----------------------------------------------------------------------
 
@@ -108,109 +152,87 @@ end
 bmt.JudgmentMessageCommand=function(self, params)
 	-- stop updating subtractive score and show the total lost score if the player failed.
 	if GAMESTATE:GetPlayerState(player):GetHealthState() == "HealthState_Dead" and HasFailed == false then
+		HasFailed = true
 		if mods.ShowEXScore then
-			local percent
-			HasFailed = true
-			percent = 100 - ex_actual
-			self:settext( ("-%.2f%%"):format(percent) )
+			
 		else
-			HasFailed = true
-			local dance_points = STATSMAN:GetCurStageStats():GetPlayerStageStats(player):GetPercentDancePoints() * 100
+			local dance_points = pss:GetPercentDancePoints() * 100
 			local percent = 100-dance_points
 			self:settext( ("-%.2f%%"):format(percent) )
 		end
 	end
 	if player == params.Player and not mods.ShowEXScore and not HasFailed then
-		tns = ToEnumShortString(params.TapNoteScore)
-		hns = params.HoldNoteScore and ToEnumShortString(params.HoldNoteScore)
-		self:queuecommand("SetScore")
+		-- Check to see if we still want to show the players excellent count
+		if IsNumber then
+			if ToEnumShortString(params.TapNoteScore) == undesirable_judgment and undesirable_judgment_count < 11 then
+				undesirable_judgment_count = undesirable_judgment_count + 1
+			elseif 	params.TapNoteScore ~= nil and 
+					ToEnumShortString(params.TapNoteScore) ~= "W1" and 
+					ToEnumShortString(params.TapNoteScore) ~= "W2" and 
+					ToEnumShortString(params.TapNoteScore) ~= "AvoidMine" then
+				IsNumber = false
+			elseif params.HoldNoteScore ~= nil and ToEnumShortString(params.HoldNoteScore) ~= "Held" then
+				IsNumber = false
+			end
+		end
+		self:queuecommand('SetScore')
+	end
+	if player == params.Player and mods.ShowEXScore and not HasFailed then
+		if IsNumber then
+			if params.TapNoteScore ~= nil and 
+					ToEnumShortString(params.TapNoteScore) ~= "W1" and 
+					ToEnumShortString(params.TapNoteScore) ~= "AvoidMine" then
+				IsNumber = false
+			elseif params.HoldNoteScore ~= nil and ToEnumShortString(params.HoldNoteScore) ~= "Held" then
+				IsNumber = false
+			end
+		end
 	end
 end
 
 bmt.ExCountsChangedMessageCommand=function(self, params)
 	if player == params.Player and mods.ShowEXScore then
-		local update = true
-		-- don't update the score if we have the best judgement because constantly rounding is distracting/annoying.
-		if params.ExCounts["W0"] == FAPlusCount + 1 then
-			FAPlusCount = FAPlusCount + 1
-			update = false
-		elseif params.ExCounts["Held"] == HeldCount + 1 then
-			HeldCount = HeldCount + 1
-			update = false
-		end
-		
-		ex_actual = params.ExScore
 		ex_possible = GetPossibleExScore(params.ExCounts)
-		ex_score = ex_possible - ex_actual
-
-		-- handle floating point equality.
-		if ex_score >= 0.0001 and update then
-			self:settext( ("-%.2f%%"):format(ex_score) )
+		if undesirable_judgment_count > 10 then
+			IsNumber = false
+		end
+		if not IsNumber then
+			ex_actual = params.ExScore
+			ex_score = 100 - ex_possible
+			-- handle floating point equality.
+			if ex_score >= 0.0001 then
+				self:settext( ("-%.2f%%"):format(ex_score) )
+			end
+		elseif undesirable_judgment_count > 0 and undesirable_judgment_count < 11 then
+			self:settext("-" .. undesirable_judgment_count)
+		else
+			self:settext("")
 		end
 	end
 end
 
--- This is a bit convoluted!
--- If this is a W2/undesirable_judgment, then we want to count up to 10 with them,
--- unless we get some other judgment worse than W2/undesirable_judgment.
--- The complication is in how hold notes are counted.
---
--- Hold note judgments contain a copy of the tap
--- note judgment that started it (because it affects your life regen?), so
--- we have to be careful not to double count it against you.  But we also
--- want a dropped hold to trigger the percentage scoring.  So the
--- choice is having a more straightforward if else structure, but at the
--- expense of repeating the percent displaying code vs a more complicated
--- if else structure. DRY, so second.
-
-bmt.SetScoreCommand=function(self, params)
-	-- used to determine if a player has failed yet
-	local topscreen = SCREENMAN:GetTopScreen()
-
-	-- if the player adjusts the sync of the stepchart during gameplay, they will eventually
-	-- reach ScreenPrompt, where they'll be prompted to accept or reject the sync changes.
-	-- Although the screen changes, this Lua sticks around, and the TopScreen will no longer
-	-- have a GetLifeMeter() method.
-	if topscreen.GetLifeMeter == nil then return end
-
-	-- if this is an undesirable judgment AND we can still count up AND it's not a dropped hold
-	if tns == undesirable_judgment
-	and not received_judgment_lower_than_desired
-	and undesirable_judgment_count < 10
-	and (hns ~= "LetGo") then
-		-- if this is the tail of a hold note, don't double count it
-		if not hns then
-			-- increment for the first ten
-			undesirable_judgment_count = undesirable_judgment_count + 1
-			-- and specify literal W2 count
-			self:settext("-" .. undesirable_judgment_count)
+bmt.SetScoreCommand=function(self, params)	
+	if not mods.ShowEXScore then
+		if undesirable_judgment_count > 10 then
+			IsNumber = false
 		end
-
-	-- else if this wouldn't subtract from percentage (W1 or mine miss)
-	elseif tns ~= "W1" and tns ~= "AvoidMine"
-	-- unless it actually would subtract from percentage (W1 + let go)
-	or (hns == "LetGo")
-	-- or we're already dead (and so can't gain any percentage.)
-	or (topscreen:GetLifeMeter(player):IsFailing()) then
-
-		received_judgment_lower_than_desired = true
-
-		-- FIXME: I really need to figure out what the calculations are doing and describe that here.  -quietly
-
-		-- PossibleDancePoints and CurrentPossibleDancePoints change as the song progresses and judgments
-		-- are earned by the player; these values need to be continually fetched from the engine
-		possible_dp = pss:GetPossibleDancePoints()
-		current_possible_dp = pss:GetCurrentPossibleDancePoints()
-
-		-- max to prevent subtractive scoring reading more than -100%
-		actual_dp = math.max(pss:GetActualDancePoints(), 0)
-
-		score = current_possible_dp - actual_dp
-		score = math.floor(((possible_dp - score) / possible_dp) * 10000) / 100
-
-		-- specify percent away from 100%
-		if 100-score >= 0.01 then
-			self:settext( ("-%.2f%%"):format(100-score) )
+		if not IsNumber then
+			PossibleScore = pss:GetPossibleDancePoints()
+			CurrentPossibleScore = pss:GetCurrentPossibleDancePoints()
+			
+			ActualScore = pss:GetActualDancePoints()
+			Score = CurrentPossibleScore - ActualScore
+			
+			Score = math.floor(((PossibleScore - Score) / PossibleScore) * 10000) / 100
+			
+			-- specify percent away from 100%
+			if 100-Score >= 0.001 then
+				self:settext( ("-%.2f%%"):format(100-Score) )
+			else
+				self:settext("")
+			end
+		elseif undesirable_judgment_count > 0 then
+			self:settext("-" .. undesirable_judgment_count)
 		else
 			self:settext("")
 		end
