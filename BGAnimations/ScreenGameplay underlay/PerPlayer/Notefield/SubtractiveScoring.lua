@@ -80,7 +80,7 @@ local GetPossibleExScore = function(counts)
 	local TotalStepsHit = 0
 	local PotentialNotes = 0
 	local PotentialHoldsRolls = 0
-	local keys = { "W0", "W1", "W2", "W3", "W4", "W5", "Miss", "Held", "LetGo", "HitMine", "MissedHold" }
+	local keys = { "W0", "W1", "W2", "W3", "W4", "W5", "Miss", "Held", "LetGo", "HitMine" }
 
 	for key in ivalues(keys) do
 		local value = counts[key]
@@ -94,7 +94,7 @@ local GetPossibleExScore = function(counts)
 			best_counts[key] = best_counts[key] + value
 			if key == "W0" or key == "W1" or key == "W2" or key == "W3" or key == "W4" or key == "W5" or key == "Miss" then
 				TotalStepsHit = TotalStepsHit + value
-			elseif key ==  "Held" then
+			elseif key ==  "Held" or key ==  "LetGo" then
 				PotentialHoldsRolls = PotentialHoldsRolls + value
 			elseif key == "HitMine" then
 				MinesHit = MinesHit + 1

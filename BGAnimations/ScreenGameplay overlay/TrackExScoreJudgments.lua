@@ -25,7 +25,7 @@ local valid_tns = {
 
 local valid_hns = {
 	LetGo = true,
-	Held = true
+	Held = true,
 }
 
 return Def.Actor{
