@@ -151,15 +151,11 @@ end
 
 bmt.JudgmentMessageCommand=function(self, params)
 	-- stop updating subtractive score and show the total lost score if the player failed.
-	if GAMESTATE:GetPlayerState(player):GetHealthState() == "HealthState_Dead" and HasFailed == false then
+	if GAMESTATE:GetPlayerState(player):GetHealthState() == "HealthState_Dead" and HasFailed == false and not mods.ShowEXScore then
 		HasFailed = true
-		if mods.ShowEXScore then
-			
-		else
-			local dance_points = pss:GetPercentDancePoints() * 100
-			local percent = 100-dance_points
-			self:settext( ("-%.2f%%"):format(percent) )
-		end
+		local dance_points = pss:GetPercentDancePoints() * 100
+		local percent = 100-dance_points
+		self:settext( ("-%.2f%%"):format(percent) )
 	end
 	if player == params.Player and not mods.ShowEXScore and not HasFailed then
 		-- Check to see if we still want to show the players excellent count
@@ -177,7 +173,7 @@ bmt.JudgmentMessageCommand=function(self, params)
 		end
 		self:queuecommand('SetScore')
 	end
-	if player == params.Player and mods.ShowEXScore and not HasFailed then
+	if player == params.Player and mods.ShowEXScore then
 		if IsNumber then
 			if params.TapNoteScore ~= nil and 
 					ToEnumShortString(params.TapNoteScore) ~= "W1" and 
@@ -192,26 +188,33 @@ end
 
 bmt.ExCountsChangedMessageCommand=function(self, params)
 	if player == params.Player and mods.ShowEXScore then
-		ex_possible = GetPossibleExScore(params.ExCounts)
-		if undesirable_judgment_count > 10 then
-			IsNumber = false
+		if params.HasFailed then
+			local ExScore = params.ExScore
+			local percent = 100 - ExScore
+			self:settext( ("-%.2f%%"):format(percent) )
 		end
-		if not IsNumber then
-			ex_score = 100 - ex_possible
-			-- handle floating point equality.
-			if ex_score >= 0.0001 then
-				self:settext( ("-%.2f%%"):format(ex_score) )
+		if not params.HasFailed then
+			ex_possible = GetPossibleExScore(params.ExCounts)
+			if undesirable_judgment_count > 10 then
+				IsNumber = false
 			end
-		elseif undesirable_judgment_count > 0 and undesirable_judgment_count < 11 then
-			self:settext("-" .. undesirable_judgment_count)
-		else
-			self:settext("")
+			if not IsNumber then
+				ex_score = 100 - ex_possible
+				-- handle floating point equality.
+				if ex_score >= 0.0001 then
+					self:settext( ("-%.2f%%"):format(ex_score) )
+				end
+			elseif undesirable_judgment_count > 0 and undesirable_judgment_count < 11 then
+				self:settext("-" .. undesirable_judgment_count)
+			else
+				self:settext("")
+			end
 		end
 	end
 end
 
 bmt.SetScoreCommand=function(self, params)	
-	if not mods.ShowEXScore then
+	if not mods.ShowEXScore and not HasFailed then
 		if undesirable_judgment_count > 10 then
 			IsNumber = false
 		end

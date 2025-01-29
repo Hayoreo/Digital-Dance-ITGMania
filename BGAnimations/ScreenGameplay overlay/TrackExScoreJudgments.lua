@@ -8,6 +8,7 @@ local player = ...
 
 local stats = STATSMAN:GetCurStageStats():GetPlayerStageStats(player)
 local storage = SL[ToEnumShortString(player)].Stages.Stats[SL.Global.Stages.PlayedThisGame + 1]
+local HasFailed = false
 
 local valid_tns = {
 	-- Emulated, not a real TNS.
@@ -55,7 +56,6 @@ return Def.Actor{
 	JudgmentMessageCommand=function(self, params)
 		if params.Player ~= player then return end
 		if IsAutoplay(player) then return end
-		
 		local count_updated = false
 		if params.HoldNoteScore then
 			local HNS = ToEnumShortString(params.HoldNoteScore)
@@ -98,6 +98,10 @@ return Def.Actor{
 		if count_updated then
 			-- Broadcast so other elements on ScreenGameplay can process the updated count.
 			MESSAGEMAN:Broadcast("ExCountsChanged", { Player=player, ExCounts=storage.ex_counts, ExScore=CalculateExScore(player) })
+		end
+		if stats:GetFailed() and HasFailed == false then
+			HasFailed = true
+			MESSAGEMAN:Broadcast("ExCountsChanged", { Player=player, ExCounts=storage.ex_counts, ExScore=CalculateExScore(player), HasFailed=true })
 		end
 	end,
 }
