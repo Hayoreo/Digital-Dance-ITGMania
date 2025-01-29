@@ -197,7 +197,6 @@ bmt.ExCountsChangedMessageCommand=function(self, params)
 			IsNumber = false
 		end
 		if not IsNumber then
-			ex_actual = params.ExScore
 			ex_score = 100 - ex_possible
 			-- handle floating point equality.
 			if ex_score >= 0.0001 then
