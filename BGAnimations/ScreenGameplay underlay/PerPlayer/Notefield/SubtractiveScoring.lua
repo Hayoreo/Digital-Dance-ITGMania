@@ -113,8 +113,6 @@ local GetPossibleExScore = function(counts)
 	return GetCurrentExScore(player, best_counts, PotentialNotes, PotentialHoldsRolls)
 end
 
-
-
 -- -----------------------------------------------------------------------
 
 -- the BitmapText actor
