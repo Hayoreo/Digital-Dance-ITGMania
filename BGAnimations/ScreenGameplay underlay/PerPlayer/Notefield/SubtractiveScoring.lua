@@ -148,19 +148,17 @@ bmt.InitCommand=function(self)
 end
 
 bmt.JudgmentMessageCommand=function(self, params)
-	-- stop updating subtractive score and show the total lost score if the player failed.
-	if GAMESTATE:GetPlayerState(player):GetHealthState() == "HealthState_Dead" and HasFailed == false and not mods.ShowEXScore then
-		HasFailed = true
-		local dance_points = pss:GetPercentDancePoints() * 100
-		local percent = 100-dance_points
-		self:settext( ("-%.2f%%"):format(percent) )
-	end
 	if player == params.Player and not mods.ShowEXScore and not HasFailed then
+		-- stop updating subtractive score and show the total lost score if the player failed.
+		if GAMESTATE:GetPlayerState(player):GetHealthState() == "HealthState_Dead" and HasFailed == false then
+			HasFailed = true
+			local dance_points = pss:GetPercentDancePoints() * 100
+			local percent = 100-dance_points
+			self:settext( ("-%.2f%%"):format(percent) )
+		end
 		-- Check to see if we still want to show the players excellent count
 		if IsNumber then
-			if ToEnumShortString(params.TapNoteScore) == undesirable_judgment and undesirable_judgment_count < 11 then
-				undesirable_judgment_count = undesirable_judgment_count + 1
-			elseif 	params.TapNoteScore ~= nil and 
+			if 	params.TapNoteScore ~= nil and 
 					ToEnumShortString(params.TapNoteScore) ~= "W1" and 
 					ToEnumShortString(params.TapNoteScore) ~= "W2" and 
 					ToEnumShortString(params.TapNoteScore) ~= "AvoidMine" then
@@ -171,7 +169,7 @@ bmt.JudgmentMessageCommand=function(self, params)
 		end
 		self:queuecommand('SetScore')
 	end
-	if player == params.Player and mods.ShowEXScore then
+	if player == params.Player and mods.ShowEXScore and not HasFailed then
 		if IsNumber then
 			if params.TapNoteScore ~= nil and 
 					ToEnumShortString(params.TapNoteScore) ~= "W1" and 
@@ -187,11 +185,12 @@ end
 bmt.ExCountsChangedMessageCommand=function(self, params)
 	if player == params.Player and mods.ShowEXScore then
 		if params.HasFailed then
+			HasFailed = true
 			local ExScore = params.ExScore
 			local percent = 100 - ExScore
 			self:settext( ("-%.2f%%"):format(percent) )
 		end
-		if not params.HasFailed then
+		if not HasFailed then
 			ex_possible = GetPossibleExScore(params.ExCounts)
 			if undesirable_judgment_count > 10 then
 				IsNumber = false
@@ -213,6 +212,7 @@ end
 
 bmt.SetScoreCommand=function(self, params)	
 	if not mods.ShowEXScore and not HasFailed then
+		undesirable_judgment_count = pss:GetTapNoteScores('TapNoteScore_W2')
 		if undesirable_judgment_count > 10 then
 			IsNumber = false
 		end
