@@ -958,6 +958,7 @@ end
 
 GetBlackList=function(self)
 	local List = {
+		"adry",
 		"dragwassup4",
 		"DF.Happy Feet!",
 		"RhythmIO",
