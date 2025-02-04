@@ -3,8 +3,6 @@ local pn = ToEnumShortString(player)
 local P1 = GAMESTATE:IsHumanPlayer(PLAYER_1)
 local P2 = GAMESTATE:IsHumanPlayer(PLAYER_2)	
 
--- I feel like this surely must be the wrong way to do this...
-local GlobalOffsetSeconds = PREFSMAN:GetPreference("GlobalOffsetSeconds")
 local GetStepsToDisplay = LoadActor("../StepsDisplayList/StepsToDisplay.lua")
 
 local RowIndex = 1
@@ -34,14 +32,14 @@ return Def.Sprite{
 		if not Initialize then 
 			self:queuecommand("Set")
 		else  
-			self:stoptweening():sleep(0.2):queuecommand("Set") 
+			self:stoptweening():queuecommand("Set") 
 		end
 	end,
-	CurrentCourseChangedMessageCommand=function(self) 				self:stoptweening():sleep(0.2):queuecommand("Set") end,
-	["CurrentSteps"..pn.."ChangedMessageCommand"]=function(self) 	self:stoptweening():sleep(0.2):queuecommand("Set") end,
-	["CurrentTrail"..pn.."ChangedMessageCommand"]=function(self) 	self:stoptweening():sleep(0.2):queuecommand("Set") end,
+	CurrentCourseChangedMessageCommand=function(self) 				self:stoptweening():queuecommand("Set") end,
+	["CurrentSteps"..pn.."ChangedMessageCommand"]=function(self) 	self:stoptweening():queuecommand("Set") end,
+	["CurrentTrail"..pn.."ChangedMessageCommand"]=function(self) 	self:stoptweening():queuecommand("Set") end,
 	SongIsReloadingMessageCommand=function(self)					self:stoptweening():sleep(0.2):queuecommand("Set") end,
-	CloseThisFolderHasFocusMessageCommand=function(self) 			self:stoptweening():sleep(0.2):queuecommand("Dissappear") end,
+	CloseThisFolderHasFocusMessageCommand=function(self) 			self:stoptweening():queuecommand("Dissappear") end,
 	
 	SetCommand=function(self)
 		local song = (GAMESTATE:IsCourseMode() and GAMESTATE:GetCurrentCourse()) or GAMESTATE:GetCurrentSong()
