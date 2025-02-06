@@ -218,6 +218,28 @@ local InputHandler = function(event)
 
 				-- check if we're ready to save scores and proceed to the next screen
 				t:queuecommand("AttemptToFinish")
+			elseif event.GameButton == "Start" then
+				local pnid = ToEnumShortString(event.PlayerNumber)
+				
+				if SL[pnid].HighScores.EnteringName then
+					SL[pnid].HighScores.EnteringName = false
+					t:GetChild("enter"):playforplayer(event.PlayerNumber)
+					-- Swap input to the other player if they need to submit still.
+					if pnid == "P1" then
+						if SL["P2"].HighScores.EnteringName then
+							pn = "P2"
+							PlayerNum = "PlayerNumber_P2"
+						end
+					elseif pnid == "P2" then
+						if SL["P1"].HighScores.EnteringName then
+							pn = "P1"
+							PlayerNum = "PlayerNumber_P1"
+						end
+					end
+					MESSAGEMAN:Broadcast("SetNamePlayer", {pn})
+				end
+				-- check if we're ready to save scores and proceed to the next screen
+				t:queuecommand("AttemptToFinish")
 			elseif event.DeviceInput.button == 'DeviceButton_backspace' and SL[pn].HighScores.EnteringName then
 				RemoveLastCharacter(pn)
 			elseif  SL[pn].HighScores.Name:len() < CharacterLimit then
