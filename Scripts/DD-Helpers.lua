@@ -958,11 +958,12 @@ end
 
 GetBlackList=function(self)
 	local List = {
-		"adry",
+		--- Leave this commented out until hopefully sometime in the future when the API for leaderboards changes so that this can work as intended.
+		--[["adry",
 		"dragwassup4",
 		"DF.Happy Feet!",
 		"RhythmIO",
-		"StarrySergal",
+		"StarrySergal",--]]
 	}
 	return List
 end
