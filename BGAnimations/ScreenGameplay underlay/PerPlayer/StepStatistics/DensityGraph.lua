@@ -229,7 +229,14 @@ local graph_and_lifeline = Def.ActorFrame{
 				if seconds > last_second then return end
 
 				local x = scale( seconds, first_second, last_second, 0, scaled_width )
-				local y = scale( LifeMeter:GetLife(), 1, 0, 0, height )
+				local y 
+				
+				--- If the player has the lifebar hidden, don't show it on the density graph either (default to full life)
+				if SL[pn].ActiveModifiers.HideLifebar then
+					y = scale( 1, 1, 0, 0, height )
+				else
+					y = scale( LifeMeter:GetLife(), 1, 0, 0, height )
+				end
 
 				-- if the slopes of the newest line segment is similar
 				-- to the previous segment, just extend the old one.
