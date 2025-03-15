@@ -154,27 +154,10 @@ end
 
 -- EX score is a number like 92.67
 -- NOTE: This function is not accurate for ITL 2025.
-GetITLPointsForSong = function(maxPoints, exScore)
-	local thresholdEx = 50.0
-	local percentPoints = 40.0
-
-	-- Helper function to take the logarithm with a specific base.
-	local logn = function(x, y)
-		return math.log(x) / math.log(y)
-	end
-
-	-- The first half (logarithmic portion) of the scoring curve.
-	local first = logn(
-		math.min(exScore, thresholdEx) + 1,
-		math.pow(thresholdEx + 1, 1 / percentPoints)
-	)
-
-	-- The seconf half (exponential portion) of the scoring curve.
-	local second = math.pow(
-		100 - percentPoints + 1,
-		math.max(0, exScore - thresholdEx) / (100 - thresholdEx)
-	) - 1
-
+GetITLPointsForSong = function(passingPoints, maxScoringPoints, exScore)
+	local scalar = 40.0
+	local curve = (math.pow(scalar, math.max(0, exScore) / scalar) - 1) * (100.0 / (math.pow(scalar, 100 / scalar) - 1.0))
+	
 	-- Helper function to round to a specific number of decimal places.
 	-- We want 100% EX to actually grant 100% of the points.
 	-- We don't want to  lose out on any single points if possible. E.g. If
@@ -186,8 +169,9 @@ GetITLPointsForSong = function(maxPoints, exScore)
 		return math.floor(x * factor + 0.5) / factor
 	end
 
-	local percent = roundPlaces((first + second) / 100.0, 6)
-	return math.floor(maxPoints * percent)
+	local percent = roundPlaces(curve / 100.0, 6)
+	local scoringPoints = math.floor(maxScoringPoints * percent)
+	return passingPoints + scoringPoints
 end
 
 -- Helper function used within UpdateItlData() below.
@@ -240,23 +224,33 @@ local DataForSong = function(player, prevData)
 	-- Note that playing OUTSIDE of the ITL pack will result in 0 points for all upscores.
 	-- Technically this number isn't displayed, but players can opt to swap the EX score in the
 	-- wheel with this value instead if they prefer.
-	local maxPoints = chartName:gsub(" pts", "")
-	if #maxPoints == 0 then
-		maxPoints = nil
-	else
-		maxPoints = tonumber(maxPoints)
+	function ParseNumbers(input)
+		local num1, num2 = input:match("(%d+)%s+%(P%)%s+%+%s+(%d+)%s+%(S%)")
+		return tonumber(num1) or nil, tonumber(num2) or nil
 	end
-
-	if maxPoints == nil then
-		--  See if we already have these points stored if we failed to parse it.
-		if prevData ~= nil and prevData["maxPoints"] ~= nil then
-			maxPoints = prevData["maxPoints"]
+	
+	local passingPoints, maxScoringPoints = ParseNumbers(chartName)
+	
+	if passingPoints == nil then
+		-- See if we already have these points stored if we failed to parse it.
+		if prevData ~= nil and prevData["passingPoints"] ~= nil then
+			passingPoints = prevData["passingPoints"]
 		-- Otherwise we don't know how many points this chart is. Default to 0.
 		else
-			maxPoints = 0
+			passingPoints = 0
 		end
 	end
 	
+	if maxScoringPoints == nil then
+		-- See if we already have these points stored if we failed to parse it.
+		if prevData ~= nil and prevData["maxScoringPoints"] ~= nil then
+			maxScoringPoints = prevData["maxScoringPoints"]
+		-- Otherwise we don't know how many points this chart is. Default to 0.
+		else
+			maxScoringPoints = 0
+		end
+	end
+	local maxPoints = passingPoints + maxScoringPoints
 	
 	-- Assume C-Mod is okay by default.
 	local noCmod = false
@@ -285,7 +279,7 @@ local DataForSong = function(player, prevData)
 	local judgments = GetExJudgmentCounts(player)
 	local ex = CalculateExScore(player)
 	local clearType = GetClearType(judgments)
-	--local points = GetITLPointsForSong(maxPoints, ex)
+	local points = GetITLPointsForSong(passingPoints, maxScoringPoints, ex)
 	local usedCmod = GAMESTATE:GetPlayerState(pn):GetPlayerOptions("ModsLevel_Preferred"):CMod() ~= nil
 	local date = ("%04d-%02d-%02d"):format(year, month, day)
 	
@@ -293,10 +287,12 @@ local DataForSong = function(player, prevData)
 		["judgments"] = judgments,
 		["ex"] = ex * 100,
 		["clearType"] = clearType,
-		--["points"] = points,
+		["points"] = points,
 		["usedCmod"] = usedCmod,
 		["date"] = date,
 		["noCmod"] = noCmod,
+		["passingPoints"] = passingPoints,
+		["maxScoringPoints"] = maxScoringPoints,
 		["maxPoints"] = maxPoints,
 	}
 end
@@ -396,11 +392,14 @@ UpdateItlExScore = function(player, hash, exscore)
 			["judgments"] = {},
 			["ex"] = 0,
 			["clearType"] = 1,
-			--["points"] = 0,
+			["points"] = data["points"],
 			["usedCmod"] = false,
 			["date"] = "",
 			["maxPoints"] = 0,
 			["noCmod"] = false,
+			["passingPoints"] = data["passingPoints"],
+			["maxScoringPoints"] = data["maxScoringPoints"],
+			["maxPoints"] = data["maxPoints"],
 			-- ITL has doubles now. populate the steps type of the song
 			["stepsType"] = steps:GetStepsType() == "StepsType_Dance_Single" and "single" or "double",
 		}
@@ -560,6 +559,8 @@ UpdateItlData = function(player)
 				hashMap[hash]["usedCmod"] = data["usedCmod"]
 				hashMap[hash]["date"] = data["date"]
 				hashMap[hash]["noCmod"] = data["noCmod"]
+				hashMap[hash]["passingPoints"] = data["passingPoints"]
+				hashMap[hash]["maxScoringPoints"] = data["maxScoringPoints"]
 				hashMap[hash]["maxPoints"] = data["maxPoints"]
 			end
 		end
