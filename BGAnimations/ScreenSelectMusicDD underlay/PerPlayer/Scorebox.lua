@@ -530,7 +530,7 @@ local af = Def.ActorFrame{
 				HasLocalScores = true
 				rank = i
 				score = FormatPercentScore(HighScores[i]:GetPercentDP())
-				date = ParseGroovestatsDate(HighScores[i]:GetDate())
+				date = ParseGrooveStatsDate(HighScores[i]:GetDate())
 				name = HighScores[i]:GetName()
 				
 				MachineScores[#MachineScores+1] = {
@@ -895,7 +895,11 @@ for i=1,num_scores do
 			elseif score.isRival then
 				clr = rival_color
 			end
-			self:settext(score.date)
+			if score.date then
+				self:settext(score.date)
+			else
+				self:settext("")
+			end
 			self:linear(transition_seconds/2):diffusealpha(1):diffuse(clr)
 		end,
 		OffCommand=function(self) self:stoptweening() end
