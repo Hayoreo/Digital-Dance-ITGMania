@@ -50,7 +50,7 @@ local SetLeaderboardForPlayer = function(player_num, leaderboard, leaderboardDat
 						gsEntry["rank"] - NumBlackListed..".",
 						gsEntry["name"],
 						string.format("%.2f%%", gsEntry["score"]/100),
-						ParseGroovestatsDate(gsEntry["date"]),
+						ParseGrooveStatsDate(gsEntry["date"]),
 						entry
 					)
 					if gsEntry["isRival"] then

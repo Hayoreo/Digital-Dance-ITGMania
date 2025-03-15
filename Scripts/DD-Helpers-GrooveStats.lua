@@ -541,7 +541,7 @@ end
 
 -- -----------------------------------------------------------------------
 
-ParseGroovestatsDate = function(date)
+ParseGrooveStatsDate = function(date)
 	if not date or #date == 0 then return "" end
 
 	-- Dates are formatted like:
@@ -709,7 +709,26 @@ DownloadEventUnlock = function(url, unlockName, packName)
 							SL.GrooveStats.UnlocksCache[url] = {}
 						end
 						SL.GrooveStats.UnlocksCache[url][packName] = true
-
+						-- If Pack.ini doesn't exist (new unlock for this player), create it.
+						local group = string.lower(packName)
+						local year = 2025
+						if string.find(group, "itl online "..year.." unlocks") then
+							local packIniPath = destinationPack.."Pack.ini"
+							if not FILEMAN:DoesFileExist(packIniPath) then
+								IniFile.WriteFile(packIniPath, {
+									["Group"]={
+										["Version"]=1,
+										["DisplayTitle"]=packName,
+										["TranslitTitle"]=packName,
+										["SortTitle"]=packName,
+										["Series"]="ITL Online",
+										["Year"]=year,
+										["Banner"]="",
+										["SyncOffset"]="ITG",
+									}
+								})
+							end
+						end
 						WriteUnlocksCache()
 					end
 				else

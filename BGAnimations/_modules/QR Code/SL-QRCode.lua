@@ -6,7 +6,7 @@ local qrencode = loadfile(THEME:GetPathB("", "_modules/QR Code/qrencode.lua"))()
 -- args passed in as an indexed table (an "array")
 --
 -- index 1 is the string to encode into a QR Code
---    for our purposes, this is the groovestats url
+--    for our purposes, this is the GrooveStats url
 --
 -- index 2 is the pixel size (both width and height since QR codes are square)
 --    of the ActorMultiVertex returned from this file

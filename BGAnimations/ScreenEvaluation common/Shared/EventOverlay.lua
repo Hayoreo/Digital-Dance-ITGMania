@@ -128,7 +128,7 @@ local SetLeaderboardData = function(eventAf, leaderboardData, event)
 			gsEntry["rank"]..".",
 			gsEntry["name"],
 			string.format("%.2f%%", gsEntry["score"]/100),
-			ParseGroovestatsDate(gsEntry["date"]),
+			ParseGrooveStatsDate(gsEntry["date"]),
 			entry
 		)
 		if gsEntry["isRival"] then
@@ -358,31 +358,12 @@ local GetItlPaneFunctions = function(eventAf, itlData, player)
 	local steps = GAMESTATE:GetCurrentSteps(player)
 	local chartName = steps:GetChartName()
 
-	local maxPoints = 0
-	local hash = SL[pn].Streams.Hash
-	if itlData["maxPoints"] ~= nil then
-		-- First try and fetch the maxPoints from the response.
-		maxPoints = itlData["maxPoints"]
-	elseif SL[pn].ITLData["hashMap"][hash] ~= nil then
-		-- Then if it doesn't exist, try and parse it from ITL hashMap
-		maxPoints = SL[pn].ITLData["hashMap"][hash]["maxPoints"]
-	else
-		-- Then if it still doesn't exist, try and parse it from the chartName.
-
-		-- Note that playing OUTSIDE of the ITL pack will result in 0 points for all
-		-- upscores since it won't have the relevant points data.
-		local pointsStr = chartName:gsub(" pts", "")
-		maxPoints = tonumber(pointsStr)
-	end
-
-	if maxPoints == nil then
-		maxPoints = 0
-	end
-
-	local currentPoints = itlData["curTopScorePoints"]
+	local currentPoints = itlData["topScorePoints"]
 	local previousPoints = itlData["prevTopScorePoints"]
 	local pointDelta = currentPoints - previousPoints
 
+	local totalPasses = itlData["totalPasses"]
+	
 	local currentRankingPointTotal = itlData["currentRankingPointTotal"]
 	local previousRankingPointTotal = itlData["previousRankingPointTotal"]
 	local rankingDelta = currentRankingPointTotal - previousRankingPointTotal
@@ -422,7 +403,8 @@ local GetItlPaneFunctions = function(eventAf, itlData, player)
 				["currentExPointTotal"] = currentExPointTotal,
 				["totalExDelta"] = totalExDelta,
 				["currentPointTotal"] = currentPointTotal,
-				["totalDelta"] = totalDelta
+				["totalDelta"] = totalDelta,
+				["totalPasses"] = totalPasses,
 			},
 		})
 	end
@@ -519,23 +501,23 @@ local GetItlPaneFunctions = function(eventAf, itlData, player)
 					local tier = reward["tier"]
 					if tier ~= "Default" then
 						table.insert(achievementStrings, string.format(
-							"%s Tier\n",
+							"\"%s\" Tier",
 							tier
 						))
 					end
 					for requirement in ivalues(reward["requirements"]) do
 						table.insert(achievementStrings, string.format(
-							"- %s\n",
+							"%s",
 							requirement
 						))
 					end
 					if reward["titleUnlocked"] then
 						table.insert(achievementStrings, string.format(
-							"    Unlocked the \"%s\" Title!\n",
+							"Unlocked the \"%s\" Title!",
 							reward["titleUnlocked"]
 						))
 					end
-					table.insert(achievementStrings, "\n")
+					table.insert(achievementStrings, "")
 				end
 				table.insert(achievements, table.concat(achievementStrings, "\n"))
 			end
@@ -549,6 +531,7 @@ local GetItlPaneFunctions = function(eventAf, itlData, player)
 		"Song Points: %d (%+d)\n"..
 		"EX Points: %d (%+d)\n"..
 		"Total Points: %d (%+d)\n\n"..
+		"You've passed the chart %d times\n\n"..
 		"%s",
 		score, scoreDelta,
 		currentPoints, pointDelta,
@@ -556,6 +539,7 @@ local GetItlPaneFunctions = function(eventAf, itlData, player)
 		currentSongPointTotal, totalSongDelta,
 		currentExPointTotal, totalExDelta,
 		currentPointTotal, totalDelta,
+		totalPasses,
 		#statImprovements == 0 and "" or table.concat(statImprovements, "\n").."\n\n"
 	))
 
@@ -618,7 +602,15 @@ local GetItlPaneFunctions = function(eventAf, itlData, player)
 
 				offset = j + 1
 			end
-
+			
+			-- Have special coloring for the quoted tiers.
+			local tierMap = {
+				["Bronze"] = color("#966832"),
+				["Silver"] = color("#A1AEC1"),
+				["Gold"] = color("#F6AB2D"),
+				["Prismatic"] = color("#8731D2"),
+			}
+			
 			offset = 0
 
 			while offset <= #text do
@@ -631,11 +623,20 @@ local GetItlPaneFunctions = function(eventAf, itlData, player)
 				-- Extract the actual quoted text.
 				local substring = string.sub(text, i, j)
 
-				bodyText:AddAttribute(i-1, {
-					Length=#substring,
-					Diffuse=Color.Green
-				})
-
+				local text = string.sub(substring, 2, #substring-1)
+				
+				if tierMap[text] ~= nil then
+					bodyText:AddAttribute(i-1, {
+						Length=#substring,
+						Diffuse=tierMap[text]
+					})
+				else
+					bodyText:AddAttribute(i-1, {
+						Length=#substring,
+						Diffuse=Color.Green
+					})
+				end
+				
 				offset = j + 1
 			end
 

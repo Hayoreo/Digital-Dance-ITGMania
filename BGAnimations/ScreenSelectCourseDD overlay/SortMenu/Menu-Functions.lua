@@ -36,7 +36,7 @@ local t = Def.ActorFrame{
 		local DefaultUpperBPM = 49
 		local DefaultLowerLength = 0
 		local DefaultUpperLength = 0
-		local DefaultGroovestats = 1
+		local DefaultGrooveStats = 1
 		local DefaultAutogen = 1
 
 		if 
@@ -49,7 +49,7 @@ local t = Def.ActorFrame{
 		GetUpperBPMFilter() ~= DefaultUpperBPM or
 		GetLowerLengthFilter() ~= DefaultLowerLength or
 		GetUpperLengthFilter() ~= DefaultUpperLength or
-		GetGroovestatsFilter() ~= DefaultGroovestats or
+		GetGrooveStatsFilter() ~= DefaultGrooveStats or
 		GetAutogenFilter() ~= DefaultAutogen
 		then
 			SetMainCourseSortPreference(DefaultMainCourseSort)
@@ -60,7 +60,7 @@ local t = Def.ActorFrame{
 			SetUpperBPMFilter(DefaultUpperBPM)
 			SetLowerLengthFilter(DefaultLowerLength)
 			SetUpperLengthFilter(DefaultUpperLength)
-			SetGroovestatsFilter(DefaultGroovestats)
+			SetGrooveStatsFilter(DefaultGrooveStats)
 			SetAutogenFilter(DefaultAutogen)
 			SongSearchWheelNeedsResetting = false
 			SortMenuNeedsUpdating = false

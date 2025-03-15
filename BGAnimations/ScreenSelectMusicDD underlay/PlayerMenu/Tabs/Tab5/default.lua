@@ -41,8 +41,8 @@ local CurrentLowerLength = InitialLowerLength
 local InitialUpperLength = GetUpperLengthFilter()
 local CurrentUpperLength = InitialUpperLength
 
-local InitialGroovestats = GetGroovestatsFilter()
-local CurrentGroovestats = InitialGroovestats
+local InitialGrooveStats = GetGrooveStatsFilter()
+local CurrentGrooveStats = InitialGrooveStats
 
 local InitialAutogen = GetAutogenFilter()
 local CurrentAutogen = InitialAutogen
@@ -80,7 +80,7 @@ local HaveSortsFiltersChanged = function(self)
 	elseif CurrentUpperBPM ~= InitialUpperBPM then return true
 	elseif CurrentLowerLength ~= InitialLowerLength then return true
 	elseif CurrentUpperLength ~= InitialUpperLength then return true
-	elseif CurrentGroovestats ~= InitialGroovestats then return true
+	elseif CurrentGrooveStats ~= InitialGrooveStats then return true
 	elseif CurrentAutogen ~= InitialAutogen then return true
 	end
 	
@@ -97,7 +97,7 @@ THEME:GetString("DDPlayerMenu","FilterDifficulty"),
 THEME:GetString("DDPlayerMenu","FilterDifficulty"),
 THEME:GetString("DDPlayerMenu","FilterBPM"),
 THEME:GetString("DDPlayerMenu","FilterLength"),
-THEME:GetString("DDPlayerMenu","FilterGroovestats"),
+THEME:GetString("DDPlayerMenu","FilterGrooveStats"),
 THEME:GetString("DDPlayerMenu","FilterAutogen"),
 "",
 "",
@@ -2597,11 +2597,11 @@ THEME:GetString("DDPlayerMenu","OnlyShow"),
 THEME:GetString("DDPlayerMenu","HideAll"),
 }
 
--- Groovestats Filter
+-- GrooveStats Filter
 for i=1,#FilterOptions do
 	af[#af+1] = Def.BitmapText{
 		Font="Miso/_miso",
-		Name=pn.."Groovestats"..i,
+		Name=pn.."GrooveStats"..i,
 		InitCommand=function(self)
 			local zoom = 0.55
 			local Parent = self:GetParent():GetChild(pn.."SortsFilters9")
@@ -2616,8 +2616,8 @@ for i=1,#FilterOptions do
 			if i == 1 then
 				self:x(TextXPosition + TextWidth + 5)
 			else
-				PastWidth = self:GetParent():GetChild(pn.."Groovestats"..i-1):GetWidth() * zoom
-				PastX = self:GetParent():GetChild(pn.."Groovestats"..i-1):GetX()
+				PastWidth = self:GetParent():GetChild(pn.."GrooveStats"..i-1):GetWidth() * zoom
+				PastX = self:GetParent():GetChild(pn.."GrooveStats"..i-1):GetX()
 				CurrentX = PastX + PastWidth + 10
 				self:x(CurrentX)
 			end
@@ -2647,11 +2647,11 @@ for i=1,#FilterOptions do
 	}
 end
 
--- Groovestats Selector
+-- GrooveStats Selector
 af[#af+1] = Def.Quad{
-	Name=pn.."GroovestatsSelector",
+	Name=pn.."GrooveStatsSelector",
 	InitCommand=function(self)
-		local Parent = self:GetParent():GetChild(pn.."Groovestats"..CurrentGroovestats)
+		local Parent = self:GetParent():GetChild(pn.."GrooveStats"..CurrentGrooveStats)
 		local TextZoom = Parent:GetZoom()
 		local TextWidth = Parent:GetWidth() * TextZoom
 		local TextHeight = Parent:GetHeight()
@@ -2694,16 +2694,16 @@ af[#af+1] = Def.Quad{
 		end
 		if CurrentTab == 5 and CurrentRow == 12 then
 			if CurrentColumn == 1 then
-				CurrentGroovestats = 1
-				SetGroovestatsFilter(CurrentGroovestats)
+				CurrentGrooveStats = 1
+				SetGrooveStatsFilter(CurrentGroovestats)
 			elseif CurrentColumn == 2 then
-				CurrentGroovestats = 2
-				SetGroovestatsFilter(CurrentGroovestats)
+				CurrentGrooveStats = 2
+				SetGrooveStatsFilter(CurrentGrooveStats)
 			elseif CurrentColumn == 3 then
-				CurrentGroovestats = 3
-				SetGroovestatsFilter(CurrentGroovestats)
+				CurrentGrooveStats = 3
+				SetGrooveStatsFilter(CurrentGrooveStats)
 			end
-			local Parent = self:GetParent():GetChild(pn.."Groovestats"..CurrentColumn)
+			local Parent = self:GetParent():GetChild(pn.."GrooveStats"..CurrentColumn)
 			local TextZoom = Parent:GetZoom()
 			local TextXPosition = Parent:GetX()
 			local TextYPosition = Parent:GetY()
@@ -2741,7 +2741,7 @@ af[#af+1] = Def.Quad{
 		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 5 then return end
 		for j=1,#FilterOptions do
-			local Parent = self:GetParent():GetChild(pn.."Groovestats"..j)
+			local Parent = self:GetParent():GetChild(pn.."GrooveStats"..j)
 			local ObjectZoom = Parent:GetZoom()
 			local ObjectWidth = Parent:GetWidth() * ObjectZoom
 			local ObjectHeight = Parent:GetHeight()
@@ -2754,53 +2754,53 @@ af[#af+1] = Def.Quad{
 			
 			if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 5 then
 				if j == 1 then
-					if CurrentRow ~= 12 and CurrentGroovestats == 1 then
+					if CurrentRow ~= 12 and CurrentGrooveStats == 1 then
 						if CurrentRow < 12 then
 							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
 						elseif CurrentRow > 12 then
 							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
 						end
-					elseif CurrentGroovestats ~= 1 then
+					elseif CurrentGrooveStats ~= 1 then
 						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 					end
 					CurrentRow = 12
 					CurrentColumn = 1
-					CurrentGroovestats = 1
-					SetGroovestatsFilter(CurrentGroovestats)
+					CurrentGrooveStats = 1
+					SetGrooveStatsFilter(CurrentGrooveStats)
 				elseif j == 2 then
-					if CurrentRow ~= 12 and CurrentGroovestats == 2 then
+					if CurrentRow ~= 12 and CurrentGrooveStats == 2 then
 						if CurrentRow < 12 then
 							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
 						elseif CurrentRow > 12 then
 							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
 						end
-					elseif CurrentGroovestats ~= 2 then
+					elseif CurrentGrooveStats ~= 2 then
 						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 					end
 					CurrentRow = 12
 					CurrentColumn = 2
-					CurrentGroovestats = 2
-					SetGroovestatsFilter(CurrentGroovestats)
+					CurrentGrooveStats = 2
+					SetGrooveStatsFilter(CurrentGrooveStats)
 				elseif j == 3 then
-					if CurrentRow ~= 12 and CurrentGroovestats == 3 then
+					if CurrentRow ~= 12 and CurrentGrooveStats == 3 then
 						if CurrentRow < 12 then
 							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
 						elseif CurrentRow > 12 then
 							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
 						end
-					elseif CurrentGroovestats ~= 3 then
+					elseif CurrentGrooveStats ~= 3 then
 						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 					end
 					CurrentRow = 12
 					CurrentColumn = 3
-					CurrentGroovestats = 3
-					SetGroovestatsFilter(CurrentGroovestats)
+					CurrentGrooveStats = 3
+					SetGrooveStatsFilter(CurrentGrooveStats)
 				end
 				MadeSelection = true
 			end
 		end
 		if MadeSelection then
-			local Parent2 = self:GetParent():GetChild(pn.."Groovestats"..CurrentColumn)
+			local Parent2 = self:GetParent():GetChild(pn.."GrooveStats"..CurrentColumn)
 			local TextZoom = Parent2:GetZoom()
 			local TextXPosition = Parent2:GetX()
 			local TextYPosition = Parent2:GetY()
@@ -2886,7 +2886,7 @@ end
 
 -- Autogen Selector
 af[#af+1] = Def.Quad{
-	Name=pn.."GroovestatsSelector",
+	Name=pn.."GrooveStatsSelector",
 	InitCommand=function(self)
 		local Parent = self:GetParent():GetChild(pn.."Autogen"..CurrentAutogen)
 		local TextZoom = Parent:GetZoom()
@@ -3255,7 +3255,7 @@ THEME:GetString("OptionExplanations","BPMFilter"),
 THEME:GetString("OptionExplanations","BPMFilter"),
 THEME:GetString("OptionExplanations","LengthFilter"),
 THEME:GetString("OptionExplanations","LengthFilter"),
-THEME:GetString("OptionExplanations","GroovestatsFilter"),
+THEME:GetString("OptionExplanations","GrooveStatsFilter"),
 THEME:GetString("OptionExplanations","AutogenFilter"),
 THEME:GetString("OptionExplanations","ResetSortsFilters"),
 "",

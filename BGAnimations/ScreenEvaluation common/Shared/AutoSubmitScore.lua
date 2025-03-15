@@ -154,7 +154,7 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 			local entryNum = 1
 			local rivalNum = 1
 			local data = JsonDecode(res.body)
-			-- Pane 7 is the groovestats highscores pane.
+			-- Pane 7 is the GrooveStats highscores pane.
 			local highScorePane = panes:GetChild("Pane7_SideP"..i):GetChild("")
 			local QRPane = panes:GetChild("Pane6_SideP"..i):GetChild("")
 
@@ -207,7 +207,7 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 									gsEntry["rank"]-NumBlackListed..".",
 									GetMachineTag(gsEntry),
 									string.format("%.2f%%", gsEntry["score"]/100),
-									ParseGroovestatsDate(gsEntry["date"]),
+									ParseGrooveStatsDate(gsEntry["date"]),
 									entry
 								)
 								if gsEntry["isRival"] then

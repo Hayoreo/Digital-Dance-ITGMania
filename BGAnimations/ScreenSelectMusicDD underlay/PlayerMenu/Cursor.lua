@@ -93,7 +93,7 @@ local NameTable =
 	"BPMFilter2Box",
 	"LengthFilter1Box",
 	"LengthFilter2Box",
-	"Groovestats",
+	"GrooveStats",
 	"Autogen",
 	"ResetButtonOutline",
 	},

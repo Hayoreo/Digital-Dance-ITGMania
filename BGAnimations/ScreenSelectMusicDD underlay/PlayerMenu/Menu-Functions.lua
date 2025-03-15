@@ -50,7 +50,7 @@ local t = Def.ActorFrame{
 		local DefaultUpperBPM = 49
 		local DefaultLowerLength = 0
 		local DefaultUpperLength = 0
-		local DefaultGroovestats = 1
+		local DefaultGrooveStats = 1
 		local DefaultAutogen = 1
 
 		if 
@@ -73,7 +73,7 @@ local t = Def.ActorFrame{
 			SetUpperBPMFilter(DefaultUpperBPM)
 			SetLowerLengthFilter(DefaultLowerLength)
 			SetUpperLengthFilter(DefaultUpperLength)
-			SetGroovestatsFilter(DefaultGroovestats)
+			SetGrooveStatsFilter(DefaultGrooveStats)
 			SetAutogenFilter(DefaultAutogen)
 			SongSearchWheelNeedsResetting = false
 			MESSAGEMAN:Broadcast("ReloadSSMDD")
@@ -127,7 +127,7 @@ local t = Def.ActorFrame{
 		local DefaultUpperBPM = 49
 		local DefaultLowerLength = 0
 		local DefaultUpperLength = 0
-		local DefaultGroovestats = 1
+		local DefaultGrooveStats = 1
 		local DefaultAutogen = 1
 		--- other dd-stat variables that don't effect sort/filters
 		local DefaultLastStyle = "Single"
@@ -155,7 +155,7 @@ local t = Def.ActorFrame{
 		DDStats.SetStat(playerNum, 'UpperBPMFilter', DefaultUpperBPM)
 		DDStats.SetStat(playerNum, 'LowerLengthFilter', DefaultLowerLength)
 		DDStats.SetStat(playerNum, 'UpperLengthFilter', DefaultUpperLength)
-		DDStats.SetStat(playerNum, 'GroovestatsFilter', DefaultGroovestats)
+		DDStats.SetStat(playerNum, 'GrooveStatsFilter', DefaultGrooveStats)
 		DDStats.SetStat(playerNum, 'AutogenFilter', DefaultAutogen)
 		DDStats.SetStat(playerNum, 'LastStyle', DefaultLastStyle)
 		DDStats.SetStat(playerNum, 'LastTab', DefaultLastTab)

@@ -74,8 +74,8 @@ local function GetSongBpmGroup(song)
 	end
 end
 
--- Initialize Groovestats filter
-local path = THEME:GetCurrentThemeDirectory() .. "Other/Groovestats-Groups.txt"
+-- Initialize GrooveStats filter
+local path = THEME:GetCurrentThemeDirectory() .. "Other/GrooveStats-Groups.txt"
 local groovestats_groups = GetFileContents(path)
 local groovestats_groups_set = {}
 if groovestats_groups ~= nil then
@@ -378,12 +378,12 @@ local UpdatePrunedSongs = function()
 					end
 				end
 
-				---- Filter for Groovestats
-				if GetGroovestatsFilter() == 2 then
+				---- Filter for GrooveStats
+				if GetGrooveStatsFilter() == 2 then
 					if not groovestats_groups_set[song:GetGroupName()] then
 						passesFilters = false
 					end
-				elseif GetGroovestatsFilter() == 3 then
+				elseif GetGrooveStatsFilter() == 3 then
 					if groovestats_groups_set[song:GetGroupName()] then
 						passesFilters = false
 					end

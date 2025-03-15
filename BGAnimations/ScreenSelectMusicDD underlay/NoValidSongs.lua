@@ -8,7 +8,7 @@ local DefaultLowerBPM = 49
 local DefaultUpperBPM = 49
 local DefaultLowerLength = 0
 local DefaultUpperLength = 0
-local DefaultGroovestats = 1
+local DefaultGrooveStats = 1
 local DefaultAutogen = 1
 local DefaultDifficulty = 1
 local DefaultMainSort = 1
@@ -26,7 +26,7 @@ GetLowerBPMFilter() ~= DefaultLowerBPM or
 GetUpperBPMFilter() ~= DefaultUpperBPM or
 GetLowerLengthFilter() ~= DefaultLowerLength or
 GetUpperLengthFilter() ~= DefaultUpperLength or
-GetGroovestatsFilter() ~= DefaultGroovestats or
+GetGrooveStatsFilter() ~= DefaultGrooveStats or
 GetAutogenFilter() ~= DefaultAutogen then
 	SetMainSortPreference(DefaultMainSort)
 	SetLowerMeterFilter(DefaultLowerMeter)
@@ -41,7 +41,7 @@ GetAutogenFilter() ~= DefaultAutogen then
 	SetUpperBPMFilter(DefaultUpperBPM)
 	SetLowerLengthFilter(DefaultLowerLength)
 	SetUpperLengthFilter(DefaultUpperLength)
-	SetGroovestatsFilter(DefaultGroovestats)
+	SetGrooveStatsFilter(DefaultGrooveStats)
 	SetAutogenFilter(DefaultAutogen)
 	HasResetFilterPreferences = true
 end

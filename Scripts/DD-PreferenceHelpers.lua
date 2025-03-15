@@ -267,13 +267,13 @@ function SetUpperLengthFilter(value)
 	end
 end
 
----- Groovestats profile preference
-function GetGroovestatsFilter()
+---- GrooveStats profile preference
+function GetGrooveStatsFilter()
 	local value
 	if GAMESTATE:IsPlayerEnabled(PLAYER_1) then
-		value = DDStats.GetStat(PLAYER_1, 'GroovestatsFilter')
+		value = DDStats.GetStat(PLAYER_1, 'GrooveStatsFilter')
 	else
-		value = DDStats.GetStat(PLAYER_2, 'GroovestatsFilter')
+		value = DDStats.GetStat(PLAYER_2, 'GrooveStatsFilter')
 	end
 
 	if value == nil or value == "No" or value == "Yes" then
@@ -283,9 +283,9 @@ function GetGroovestatsFilter()
 	return tonumber(value)
 end
 
-function SetGroovestatsFilter(value)
+function SetGrooveStatsFilter(value)
 	for i,playerNum in ipairs(GAMESTATE:GetHumanPlayers()) do
-		DDStats.SetStat(playerNum, 'GroovestatsFilter', value)
+		DDStats.SetStat(playerNum, 'GrooveStatsFilter', value)
 		DDStats.Save(playerNum)
 	end
 end
@@ -327,7 +327,7 @@ function IsUsingFilters()
 	elseif GetUpperBPMFilter() ~= nil and GetUpperBPMFilter() ~= 49 then return true
 	elseif GetLowerLengthFilter() ~= nil and GetLowerLengthFilter() ~= 0 then return true
 	elseif GetUpperLengthFilter() ~= nil and GetUpperLengthFilter() ~= 0 then return true
-	elseif GetGroovestatsFilter() ~= nil and GetGroovestatsFilter() ~= 1 then return true
+	elseif GetGrooveStatsFilter() ~= nil and GetGrooveStatsFilter() ~= 1 then return true
 	elseif GetAutogenFilter() ~= nil and GetAutogenFilter() ~= 1 then return true
 	end
 	
