@@ -148,118 +148,12 @@ ReadItlFile = function(player)
 		f:destroy()
 		itlData = JsonDecode(existing)
 	end
-	-- SL 5.2.0 had a bug where the EX scores weren't calculated correctly.
-	-- If that's the case, then recalculate the scores the first time the v5.2.1 theme
-	-- is loaded. Use this variable called "fixedEx" to determine if the EX scores
-	-- have been fixed. Luckily we can use the judgment counts, which have all the info,
-	-- in order to calculate the values.
-	--
-	-- Judgment spread has the following keys:
-	--
-	-- "judgments" : {
-	--             "W0" -> the fantasticPlus count
-	--             "W1" -> the fantastic count
-	--             "W2" -> the excellent count
-	--             "W3" -> the great count
-	--             "W4" -> the decent count (may not exist if window is disabled)
-	--             "W5" -> the way off count (may not exist if window is disabled)
-	--           "Miss" -> the miss count
-	--     "totalSteps" -> the total number of steps in the chart (including hold heads)
-	--          "Holds" -> total number of holds held
-	--     "totalHolds" -> total number of holds in the chart
-	--          "Mines" -> total number of mines hit
-	--     "totalMines" -> total number of mines in the chart
-	--          "Rolls" -> total number of rolls held
-	--     "totalRolls" -> total number of rolls in the chart
-	--  },
-	if itlData["fixedEx"] == nil then
-		itlData["fixedEx"] = true
-	end
-	if itlData["fixedEx2025"] == nil then
-		local hashMap = itlData["hashMap"]
-		local keys = { "W0", "W1", "W2", "W3", "W4", "W5", "Miss" }
-
-		if hashMap ~= nil then
-			for hash, data in pairs(hashMap) do
-				local counts = data["judgments"]
-				local totalSteps = counts["totalSteps"]
-				local totalHolds = counts["totalHolds"]
-				local totalRolls = counts["totalRolls"]
-
-				local total_possible = totalSteps * SL.ExWeights["W0"] + (totalHolds + totalRolls) * SL.ExWeights["Held"]
-				local total_points = 0
-
-				for key in ivalues(keys) do
-					local value = counts[key]
-					if value ~= nil then		
-						total_points = total_points + value * SL.ExWeights[key]
-					end
-				end
-
-				local held = counts["Holds"] + counts["Rolls"]
-				total_points = total_points + held * SL.ExWeights["Held"]
-
-				local letGo = (totalHolds - counts["Holds"]) + (totalRolls - counts["Rolls"])
-				total_points = total_points + letGo * SL.ExWeights["LetGo"]
-
-				local hitMine = counts["Mines"]
-				total_points = total_points + hitMine * SL.ExWeights["HitMine"]
-
-				data["ex"] = math.max(0, math.floor(total_points/total_possible * 10000))
-			end
-		end
-
-		itlData["fixedEx2025"] = true
-	end
 	
-	-- Fix points that got default-stored as empty strings in an earlier
-	-- version of my remote ITL score pull code to 0. If the data is already
-	-- fixed, then skip this step. -Zankoku
-	if itlData["fixedPoints"] == nil then
-		local hashMap = itlData["hashMap"]
-		
-		if hashMap ~= nil then
-			for hash, data in pairs(hashMap) do
-				if data["points"] == "" then
-					data["points"] = 0
-				end
-				local counts = data["judgments"]
-			end
-		end
-		
-		itlData["fixedPoints"] = true
-	end
-	
-	-- As of ITL 2024, there is a separate ranking for singles and doubles.
-	-- Old json file didn't store stepsType, so do a one time sweep to populate
-	if itlData["fixedStepsType"] == nil then
-		-- Loop through pathMap to find the stepsType of all the songs, and update it in the hashMap		
-		local pathMap = itlData["pathMap"]
-		local hashMap = itlData["hashMap"]
-		
-		for path, hash in pairs(pathMap) do
-			if hashMap[hash] ~= nil then
-				local songPath = path:gsub("/Songs","")		
-				local song = SONGMAN:FindSong(songPath)
-				if song ~= nil then
-					local allSteps = song:GetAllSteps()
-					-- Songs with more than one chart will be from the original pack i.e. not ITL.
-					-- These ones could have both singles and doubles, so it won't be accurate
-					if #allSteps == 1 then				
-						local steps = allSteps[1]
-						local stepsType = steps:GetStepsType() == "StepsType_Dance_Single" and "single" or "double"
-						hashMap[hash]["stepsType"] = stepsType		
-					end	
-				end
-			end
-		end
-		itlData["fixedStepsType"] = true
-	end
-
 	SL[pn].ITLData = itlData
 end
 
 -- EX score is a number like 92.67
+-- NOTE: This function is not accurate for ITL 2025.
 GetITLPointsForSong = function(maxPoints, exScore)
 	local thresholdEx = 50.0
 	local percentPoints = 40.0
@@ -391,7 +285,7 @@ local DataForSong = function(player, prevData)
 	local judgments = GetExJudgmentCounts(player)
 	local ex = CalculateExScore(player)
 	local clearType = GetClearType(judgments)
-	local points = GetITLPointsForSong(maxPoints, ex)
+	--local points = GetITLPointsForSong(maxPoints, ex)
 	local usedCmod = GAMESTATE:GetPlayerState(pn):GetPlayerOptions("ModsLevel_Preferred"):CMod() ~= nil
 	local date = ("%04d-%02d-%02d"):format(year, month, day)
 	
@@ -399,7 +293,7 @@ local DataForSong = function(player, prevData)
 		["judgments"] = judgments,
 		["ex"] = ex * 100,
 		["clearType"] = clearType,
-		["points"] = points,
+		--["points"] = points,
 		["usedCmod"] = usedCmod,
 		["date"] = date,
 		["noCmod"] = noCmod,
@@ -502,7 +396,7 @@ UpdateItlExScore = function(player, hash, exscore)
 			["judgments"] = {},
 			["ex"] = 0,
 			["clearType"] = 1,
-			["points"] = 0,
+			--["points"] = 0,
 			["usedCmod"] = false,
 			["date"] = "",
 			["maxPoints"] = 0,
@@ -627,7 +521,7 @@ UpdateItlData = function(player)
 		else
 			if data["ex"] >= hashMap[hash]["ex"] then
 				hashMap[hash]["ex"] = data["ex"]
-				hashMap[hash]["points"] = data["points"]
+				--hashMap[hash]["points"] = data["points"]
 				
 				if data["ex"] > hashMap[hash]["ex"] then
 					-- EX count is strictly better, copy the judgments over.

@@ -82,12 +82,12 @@ end
 
 
 -- -----------------------------------------------------------------------
--- use StepManiaVersionIsSupported() to check if Simply Love supports the version of SM5 in use
+-- use StepManiaVersionIsSupported() to check if Digital Dance supports the version of ITGMania in use
 
 StepManiaVersionIsSupported = function()
-	-- ITGmania >= 0.8.0
+	-- ITGmania >= 1.0.0
 	if IsITGmania() then
-		return IsMinimumProductVersion(0, 8, 0)
+		return IsMinimumProductVersion(1, 0, 0)
 	end
 
 	return false
