@@ -55,6 +55,7 @@ local InputHandler = function(event)
 			SCREENMAN:GetTopScreen():Cancel()
 
 		elseif event.GameButton == "Start" then
+			SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 			SCREENMAN:GetTopScreen():StartTransitioningScreen("SM_GoToNextScreen")
 		end
 	end

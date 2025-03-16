@@ -24,7 +24,13 @@ return Def.Actor{
 		-- a PLayerStageStats object from the engine
 		-- see: http://quietly-turning.github.io/Lua-For-SM5/LuaAPI#Actors-PlayerStageStats
 		local pss = STATSMAN:GetCurStageStats():GetPlayerStageStats(player)
-
+		
+		if PROFILEMAN:IsPersistentProfile(pn) then
+			storage.profile = PROFILEMAN:GetProfile(player):GetDisplayName()
+		else
+			storage.profile = '[GUEST]'
+		end
+		
 		storage.grade = pss:GetGrade()
 		storage.score = pss:GetPercentDancePoints()
 		storage.exscore = CalculateExScore(player)
