@@ -226,7 +226,7 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 							end
 						end
 						QRPane:GetChild("QRCode"):queuecommand("Hide")
-						QRPane:GetChild("HelpText"):settext(THEME:GetText("Groovestats", "ScoreAlreadySubmitted"))
+						QRPane:GetChild("HelpText"):settext(THEME:GetString("Groovestats", "ScoreAlreadySubmitted"))
 						if i == 1 and P1SubmitText then
 							P1SubmitText:queuecommand("Submit")
 						elseif i == 2 and P2SubmitText then

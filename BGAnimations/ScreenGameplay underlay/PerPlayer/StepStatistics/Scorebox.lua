@@ -88,9 +88,9 @@ local LeaderboardRequestProcessor = function(res, master)
 		local error = res.error and ToEnumShortString(res.error) or nil
 		local text = ""
 		if error == "Timeout" then
-			text = text = THEME:GetString("Groovestats", "TimedOut")
+			text = THEME:GetString("Groovestats", "TimedOut")
 		elseif error or (res.statusCode ~= nil and res.statusCode ~= 200) then
-			text = text = THEME:GetString("Groovestats", "FailedToLoad")
+			text = THEME:GetString("Groovestats", "FailedToLoad")
 		end
 		SetScoreData(1, 1, "", text, "", false, false, false, false)
 		master:queuecommand("CheckScorebox")
