@@ -83,6 +83,7 @@ local PlayerDefaults = {
 			
 			-- The GrooveStats API key loaded for this player
 			self.ApiKey = ""
+			self.GrooveStatsUsername = ""
 			-- Whether or not the player is playing on pad.
 			self.IsPadPlayer = false
 			

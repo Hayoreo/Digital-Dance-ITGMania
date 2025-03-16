@@ -88,9 +88,9 @@ local LeaderboardRequestProcessor = function(res, master)
 		local error = res.error and ToEnumShortString(res.error) or nil
 		local text = ""
 		if error == "Timeout" then
-			text = "Timed Out"
+			text = text = THEME:GetString("Groovestats", "TimedOut")
 		elseif error or (res.statusCode ~= nil and res.statusCode ~= 200) then
-			text = "Failed to Load 😞"
+			text = text = THEME:GetString("Groovestats", "FailedToLoad")
 		end
 		SetScoreData(1, 1, "", text, "", false, false, false, false)
 		master:queuecommand("CheckScorebox")
@@ -368,7 +368,7 @@ local af = Def.ActorFrame{
 			-- both players will have their own individual scoreboxes.
 			-- Should be fine though.
 			if sendRequest then
-				self:GetParent():GetChild("Name1"):settext("Loading...")
+				self:GetParent():GetChild("Name1"):settext(THEME:GetString("Groovestats", "Loading"))
 				self:playcommand("MakeGrooveStatsRequest", {
 					endpoint="player-leaderboards.php?"..NETWORK:EncodeQueryParameters(query),
 					method="GET",

@@ -39,6 +39,25 @@ end
 
 if not Branch then Branch = {} end
 
+Branch.GroovestatsCheck = function()
+	-- If we only want to sometimes display QR Login, only do so if at least one
+	-- of the chosen profiles doesn't already have an API key saved.
+	local allApiKeys = true
+	for player in ivalues(GAMESTATE:GetHumanPlayers()) do
+		local pn = ToEnumShortString(player)
+		if SL[pn].ApiKey == "" then
+			allApiKeys = false
+			break
+		end
+	end
+	if SL.GrooveStats.IsConnected and
+	(ThemePrefs.Get("QRLogin") == "Always" or (ThemePrefs.Get("QRLogin") == "Sometimes" and not allApiKeys)) then
+		return "ScreenGrooveStatsLogin"
+	else
+		return "ScreenProfileLoad"
+	end
+end
+ 
 Branch.AfterScreenProfileLoad = function()
 	SetGameModePreferences()
 	local nsj = GAMESTATE:GetNumSidesJoined()

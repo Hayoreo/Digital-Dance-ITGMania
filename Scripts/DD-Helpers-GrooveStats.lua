@@ -189,7 +189,7 @@ end
 -- Sets the API key for a player if it's found in their profile.
 
 ParseGrooveStatsIni = function(player)
-	if not player then return "" end
+	if not player then return end
 
 	local profile_slot = {
 		[PLAYER_1] = "ProfileSlot_Player1",
@@ -210,6 +210,7 @@ ParseGrooveStatsIni = function(player)
 		IniFile.WriteFile(path, {
 			["GrooveStats"]={
 				["ApiKey"]="",
+				["Username"]="",
 				["IsPadPlayer"]=0,
 			}
 		})
@@ -226,6 +227,8 @@ ParseGrooveStatsIni = function(player)
 				else
 					SL[pn].ApiKey = v
 				end
+			elseif k == "Username" then
+				SL[pn].GrooveStatsUsername = v
 			elseif k == "IsPadPlayer" then
 				-- Must be explicitly set to 1.
 				if v == 1 then
@@ -235,7 +238,44 @@ ParseGrooveStatsIni = function(player)
 				end
 			end
 		end
+		-- Always write the file back to disk to ensure it's up to date with
+		-- any new fields that may have been added.
+		IniFile.WriteFile(path, {
+			["GrooveStats"]={
+				["ApiKey"]=SL[pn].ApiKey,
+				["Username"]=SL[pn].GrooveStatsUsername,
+				["IsPadPlayer"]=SL[pn].IsPadPlayer and "1" or "0",
+			}
+		})
 	end
+end
+
+-- -----------------------------------------------------------------------
+WriteGrooveStatsIni = function(player)
+	if not player then return end
+	
+	local profile_slot = {
+		[PLAYER_1] = "ProfileSlot_Player1",
+		[PLAYER_2] = "ProfileSlot_Player2"
+	}
+	
+	if not profile_slot[player] then return "" end
+	
+	local dir = PROFILEMAN:GetProfileDir(profile_slot[player])
+	local pn = ToEnumShortString(player)
+	
+	-- We require an explicit profile to be loaded.
+	if not dir or #dir == 0 then return "" end
+	
+	local path = dir .. "GrooveStats.ini"
+	
+	IniFile.WriteFile(path, {
+		["GrooveStats"]={
+			["ApiKey"]=SL[pn].ApiKey,
+			["Username"]=SL[pn].GrooveStatsUsername,
+			["IsPadPlayer"]=SL[pn].IsPadPlayer and "1" or "0",
+		}
+	})
 end
 
 -- -----------------------------------------------------------------------

@@ -71,7 +71,6 @@ local filename =  theme_name .. " UserPrefs.ini"
 
 -- function assigned to "CustomLoadFunction" under [Profile] in metrics.ini
 LoadProfileCustom = function(profile, dir)
-
 	local path =  dir .. filename
 	local player, pn, filecontents
 
@@ -142,7 +141,6 @@ end
 
 -- function assigned to "CustomSaveFunction" under [Profile] in metrics.ini
 SaveProfileCustom = function(profile, dir)
-
 	local path =  dir .. filename
 
 	for player in ivalues( GAMESTATE:GetHumanPlayers() ) do
@@ -160,7 +158,8 @@ SaveProfileCustom = function(profile, dir)
 			output.PlayerOptionsString = SL[pn].PlayerOptionsString
 
 			IniFile.WriteFile( path, {[theme_name]=output} )
-
+			WriteGrooveStatsIni(player)
+			
 			-- Write to the ITL file if we need to.
 			-- The ITLData table will only contain data for memory cards.
 			if #SL[pn].ITLData ~= 0 then

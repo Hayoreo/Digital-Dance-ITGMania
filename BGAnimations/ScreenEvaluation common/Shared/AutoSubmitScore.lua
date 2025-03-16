@@ -226,7 +226,7 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 							end
 						end
 						QRPane:GetChild("QRCode"):queuecommand("Hide")
-						QRPane:GetChild("HelpText"):settext("Score has already been submitted :)")
+						QRPane:GetChild("HelpText"):settext(THEME:GetText("Groovestats", "ScoreAlreadySubmitted"))
 						if i == 1 and P1SubmitText then
 							P1SubmitText:queuecommand("Submit")
 						elseif i == 2 and P2SubmitText then
@@ -253,13 +253,13 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 							-- differentiate between an Untied WR vs a Tied WR
 							if personalRank == 1 then
 								IsUntiedWR = true
-								recordText:settext("Untied World Record!")
+								recordText:settext(THEME:GetString("Groovestats", "UntiedWorldRecord"))
 								MESSAGEMAN:Broadcast("PlayRandomWRSound", {"P"..side})
 							elseif isWr then
-								recordText:settext("World Record!")
+								recordText:settext(THEME:GetString("Groovestats", "WorldRecord"))
 								MESSAGEMAN:Broadcast("PlayRandomWRSound", {"P"..side})
 							else
-								recordText:settext("Personal Best!")
+								recordText:settext(THEME:GetString("Groovestats", "PersonalBest"))
 							end
 							local recordTextXStart = recordText:GetX() - recordText:GetWidth()*recordText:GetZoom()/2
 							local GSIconWidth = GSIcon:GetWidth()*GSIcon:GetZoom()
@@ -398,8 +398,8 @@ local af = Def.ActorFrame {
 			-- Only send the request if it's applicable.
 			if sendRequest then
 				-- Unjoined players won't have the text displayed.
-				self:GetParent():GetChild("P1SubmitText"):settext("Submitting ...")
-				self:GetParent():GetChild("P2SubmitText"):settext("Submitting ...")
+				self:GetParent():GetChild("P1SubmitText"):settext(THEME:GetString("Groovestats", "Submitting"))
+				self:GetParent():GetChild("P2SubmitText"):settext(THEME:GetString("Groovestats", "Submitting"))
 				self:playcommand("MakeGrooveStatsRequest", {
 					endpoint="score-submit.php?"..NETWORK:EncodeQueryParameters(query),
 					method="POST",
@@ -430,13 +430,13 @@ af[#af+1] = LoadFont("Miso/_miso").. {
 		self:visible(GAMESTATE:IsSideJoined(PLAYER_1))
 	end,
 	SubmitCommand=function(self)
-		self:settext("Submitted!")
+		self:settext(THEME:GetString("Groovestats", "Submitted"))
 	end,
 	SubmitFailedCommand=function(self)
-		self:settext("Submit Failed 😞")
+		self:settext(THEME:GetString("Groovestats", "SubmitFailed"))
 	end,
 	TimedOutCommand=function(self)
-		self:settext("Timed Out")
+		self:settext(THEME:GetString("Groovestats", "TimedOut"))
 	end
 }
 
@@ -451,13 +451,13 @@ af[#af+1] = LoadFont("Miso/_miso").. {
 		self:visible(GAMESTATE:IsSideJoined(PLAYER_2))
 	end,
 	SubmitCommand=function(self)
-		self:settext("Submitted!")
+		self:settext(THEME:GetString("Groovestats", "Submitted"))
 	end,
 	SubmitFailedCommand=function(self)
-		self:settext("Submit Failed 😞")
+		self:settext(THEME:GetString("Groovestats", "SubmitFailed"))
 	end,
 	TimedOutCommand=function(self)
-		self:settext("Timed Out")
+		self:settext(THEME:GetString("Groovestats", "TimedOut"))
 	end
 }
 
