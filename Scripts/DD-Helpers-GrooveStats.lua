@@ -702,6 +702,7 @@ DownloadEventUnlock = function(url, unlockName, packName)
 				if response.headers["Content-Type"] == "application/zip" then
 					-- Downloads are usually of the form:
 					--    /Downloads/<name>.zip/<song_folders/
+					local destinationPack = "/Songs/"..packName.."/"
 					if not FILEMAN:Unzip("/Downloads/"..downloadfile, "/Songs/"..packName.."/") then
 						downloadInfo.ErrorMessage = "Failed to Unzip!"
 					else
