@@ -49,10 +49,8 @@ end
 SystemNames[#SystemNames+1] = THEME:GetString("DDPlayerMenu","TestInput")
 
 
--- only show practice mode if only P1 side is enabled
-if GAMESTATE:GetCurrentStyle():GetStyleType() ~= 'StyleType_TwoPlayersTwoSides' and GAMESTATE:IsPlayerEnabled(0) then 
-	SystemNames[#SystemNames+1] = THEME:GetString("DDPlayerMenu","Practice")
-end
+-- Practice mode
+SystemNames[#SystemNames+1] = THEME:GetString("DDPlayerMenu","Practice")
 
 --- I still do not understand why i have to throw in a random actor frame before everything else will work????
 af[#af+1] = Def.Quad{}
@@ -285,9 +283,7 @@ end
 Mod6Descriptions[#Mod6Descriptions+1] =  THEME:GetString("OptionExplanations","TestInput")
 
 -- Practice mode
-if GAMESTATE:GetCurrentStyle():GetStyleType() ~= 'StyleType_TwoPlayersTwoSides' and GAMESTATE:IsPlayerEnabled(0) then
-	Mod6Descriptions[#Mod6Descriptions+1] =  THEME:GetString("OptionExplanations","PracticeSong")
-end
+Mod6Descriptions[#Mod6Descriptions+1] =  THEME:GetString("OptionExplanations","PracticeSong")
 
 -- Bottom Information for mods
 af[#af+1] = Def.BitmapText{

@@ -118,9 +118,7 @@ end
 ColumnPerRow6[#ColumnPerRow6+1] = 1
 
 -- Practice mode
-if GAMESTATE:GetCurrentStyle():GetStyleType() ~= 'StyleType_TwoPlayersTwoSides' and GAMESTATE:IsPlayerEnabled(0) then 
-	ColumnPerRow6[#ColumnPerRow6+1] = 1
-end
+ColumnPerRow6[#ColumnPerRow6+1] = 1
 
 local RowPerTab = {
 #ColumnPerRow1,
