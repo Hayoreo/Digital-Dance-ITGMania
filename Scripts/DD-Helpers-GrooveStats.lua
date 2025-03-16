@@ -381,13 +381,14 @@ ValidForGrooveStats = function(player)
 		po:Little()  or po:NoHolds() or po:NoStretch()
 		or po:NoHands() or po:NoJumps() or po:NoFakes()
 		or po:NoLifts() or po:NoQuads() or po:NoRolls()
+		or po:NoMines()
 	)
 
 	-- score is invalid if notes were added
 	valid[10] = not (
 		po:Wide() or po:Skippy() or po:Quick()
 		or po:Echo() or po:BMRize() or po:Stomp()
-		or po:Big()
+		or po:Big() or po:Mines()
 	)
 
 	-- only FailTypes "Immediate" and "ImmediateContinue" are valid for GrooveStats
