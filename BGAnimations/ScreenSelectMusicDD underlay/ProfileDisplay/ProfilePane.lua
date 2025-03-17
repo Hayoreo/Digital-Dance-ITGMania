@@ -142,9 +142,17 @@ af[#af+1] = Def.BitmapText{
 			:maxwidth(94/zoom)
 			:zoom(zoom)
 			if pn == "P1" and GuestP1 then
-				self:settext("Player 1")
+				if SL["P1"].GrooveStatsUsername ~= "" then
+					self:settext(SL["P1"].GrooveStatsUsername)
+				else
+					self:settext("Player 1")
+				end
 			elseif pn == "P2" and GuestP2 then
-				self:settext("Player 2")
+				if SL["P2"].GrooveStatsUsername ~= "" then
+					self:settext(SL["P2"].GrooveStatsUsername)
+				else
+					self:settext("Player 2")
+				end
 			else
 				self:settext(player_name)
 			end
