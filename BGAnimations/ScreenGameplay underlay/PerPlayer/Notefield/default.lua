@@ -12,7 +12,7 @@ local af = Def.ActorFrame{
     -- playfield as the anchor point, and we want to move the playfield as a whole.
     self:addx(mods.NoteFieldOffsetX * 2)
     self:addy(mods.NoteFieldOffsetY * 2)
-    local player = SCREENMAN:GetTopScreen():GetChild("Player"..pn)
+    local player = GetPlayerAF(pn)
     player:addx(mods.NoteFieldOffsetX * 2)
     player:addy(mods.NoteFieldOffsetY * 2)
 
