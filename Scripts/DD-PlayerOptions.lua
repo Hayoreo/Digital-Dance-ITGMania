@@ -57,10 +57,14 @@ GetEffectiveSpeedModType = function(player, type)
 	if steps == nil then return "M" end
 	
 	local song = GAMESTATE:GetCurrentSong()
+	if song == nil then return "M" end
+	
 	local pack = tostring(song:GetGroupName():lower())
 	local subtitle = tostring(song:GetDisplaySubTitle():lower())
 	local name = "ITL"
 	local mod = "No CMOD"
+	
+	-- ITL Check first, then normal behavior otherwise.
 	if pack:find(name:lower()) then
 		if subtitle:find(mod:lower()) then
 			return "M"
