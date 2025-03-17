@@ -14,16 +14,15 @@ local FilterAlpha = {
 
 return Def.Quad{
 	InitCommand=function(self)
+		local padding = 30
 		self:xy(GetNotefieldX(player) + (mods.NoteFieldOffsetX * 2), _screen.cy )
 			:diffuse(Color.Black)
 			:diffusealpha( FilterAlpha[mods.BackgroundFilter] or 0 )
-		-- We need to scale the filter with mini
-		if tonumber(mini) > 0 then
-			self:zoomto( GetNotefieldWidth() + ((-1* mini)*1.275), _screen.h )
-		elseif tonumber(mini) < 0 then
-			self:zoomto( GetNotefieldWidth() + ((-1* mini)*1.33), _screen.h )
-		elseif tonumber(mini) == 0 then
-			self:zoomto( GetNotefieldWidth(), _screen.h )
+		-- We need to scale the filter with negative mini
+		if tonumber(mini) < 0 then
+			self:zoomto( GetNotefieldWidth() + ((-1* mini)*1.33 + padding), _screen.h )
+		else
+			self:zoomto( GetNotefieldWidth() + padding, _screen.h )
 		end
 	end,
 	OffCommand=function(self) self:queuecommand("ComboFlash") end,
