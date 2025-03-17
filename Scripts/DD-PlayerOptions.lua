@@ -54,11 +54,22 @@ GetEffectiveSpeedModType = function(player, type)
 	]]--
 
 	local steps = GAMESTATE:GetCurrentSteps(player)
-
 	if steps == nil then return "M" end
 	
-	local timingData = steps:GetTimingData()
+	local song = GAMESTATE:GetCurrentSong()
+	local pack = tostring(song:GetGroupName():lower())
+	local subtitle = tostring(song:GetDisplaySubTitle():lower())
+	local name = "ITL"
+	local mod = "No CMOD"
+	if pack:find(name:lower()) then
+		if subtitle:find(mod:lower()) then
+			return "M"
+		else
+			return "C"
+		end
+	end
 	
+	local timingData = steps:GetTimingData()
 	local displayBpms = steps:GetDisplayBpms()
 	
 	local hasShit = (
