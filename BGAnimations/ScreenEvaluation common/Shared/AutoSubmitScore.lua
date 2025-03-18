@@ -175,9 +175,17 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 				-- It's better to just not display anything than display the wrong scores.
 				if SL["P"..side].Streams.Hash == data[playerStr]["chartHash"] then
 					local personalRank = nil
+					local showExScore = SL["P"..side].ActiveModifiers.ShowEXScore and data[playerStr]["exLeaderboard"]
 					local wrScore = nil
 					local isWr = false
-					if data[playerStr]["gsLeaderboard"] then
+					local leaderboardData = nil
+					if showExScore then
+						leaderboardData = data[playerStr]["exLeaderboard"]
+					else
+						leaderboardData = data[playerStr]["gsLeaderboard"]
+					end
+					
+					if leaderboardData then
 						local IsBlackListed
 						local NumBlackListed = 0
 						-- We still want to play a WR Sound if you get a quad on a chart not ranked
@@ -191,7 +199,7 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 						if #data[playerStr]["gsLeaderboard"] > 0 then
 							wrScore = data[playerStr]["gsLeaderboard"][1]["score"]
 						end
-						for gsEntry in ivalues(data[playerStr]["gsLeaderboard"]) do
+						for gsEntry in ivalues(leaderboardData) do
 							local entry = highScorePane:GetChild("HighScoreList"):GetChild("HighScoreEntry"..entryNum)
 							IsBlackListed = false
 							for i=1, #BlackList do
@@ -210,6 +218,14 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 									ParseGrooveStatsDate(gsEntry["date"]),
 									entry
 								)
+								-- TODO(teejusb): Determine how we want to easily display EX scores.
+								-- For now just highlight blue because it's simple.
+								if showExScore then
+									entry:GetChild("Score"):diffuse(SL.JudgmentColors["FA+"][1])
+								else
+									entry:GetChild("Score"):diffuse(Color.White)
+								end
+								
 								if gsEntry["isRival"] then
 									entry:diffuse(color("#BD94FF"))
 									rivalNum = rivalNum + 1
@@ -253,13 +269,25 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 							-- differentiate between an Untied WR vs a Tied WR
 							if personalRank == 1 then
 								IsUntiedWR = true
-								recordText:settext(THEME:GetString("Groovestats", "UntiedWorldRecord"))
+								if showExScore then
+									recordText:settext(THEME:GetString("Groovestats", "UntiedWorldRecord").." (EX)")
+								else
+									recordText:settext(THEME:GetString("Groovestats", "UntiedWorldRecord"))
+								end
 								MESSAGEMAN:Broadcast("PlayRandomWRSound", {"P"..side})
 							elseif isWr then
-								recordText:settext(THEME:GetString("Groovestats", "WorldRecord"))
+								if showExScore then
+									recordText:settext(THEME:GetString("Groovestats", "WorldRecord").." (EX)")
+								else
+									recordText:settext(THEME:GetString("Groovestats", "WorldRecord"))
+								end
 								MESSAGEMAN:Broadcast("PlayRandomWRSound", {"P"..side})
 							else
-								recordText:settext(THEME:GetString("Groovestats", "PersonalBest"))
+								if showExScore then
+									recordText:settext(THEME:GetString("Groovestats", "PersonalBest").." (EX)")
+								else
+									recordText:settext(THEME:GetString("Groovestats", "PersonalBest"))
+								end
 							end
 							local recordTextXStart = recordText:GetX() - recordText:GetWidth()*recordText:GetZoom()/2
 							local GSIconWidth = GSIcon:GetWidth()*GSIcon:GetZoom()
