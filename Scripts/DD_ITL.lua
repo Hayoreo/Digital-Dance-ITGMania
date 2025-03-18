@@ -392,15 +392,16 @@ UpdateItlExScore = function(player, hash, exscore)
 			["judgments"] = {},
 			["ex"] = 0,
 			["clearType"] = 1,
-			["points"] = data["points"],
+			["points"] = 0,
+			--["points"] = data["points"],
 			["usedCmod"] = false,
 			["date"] = "",
 			["maxPoints"] = 0,
 			["noCmod"] = false,
-			["passingPoints"] = data["passingPoints"],
-			["maxScoringPoints"] = data["maxScoringPoints"],
-			["maxPoints"] = data["maxPoints"],
-			-- ITL has doubles now. populate the steps type of the song
+			--["passingPoints"] = data["passingPoints"],
+			--["maxScoringPoints"] = data["maxScoringPoints"],
+			--["maxPoints"] = data["maxPoints"],
+			-- ITL has double now. populate the steps type of the song
 			["stepsType"] = steps:GetStepsType() == "StepsType_Dance_Single" and "single" or "double",
 		}
 		
