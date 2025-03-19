@@ -378,7 +378,7 @@ local af = Def.ActorFrame {
 			}
 			local body = {}
 
-			local rate = SL.Global.ActiveModifiers.MusicRate * 100
+			local rate = tonumber(string.format("%.0f", SL.Global.ActiveModifiers.MusicRate * 100))
 			for i=1,2 do
 				local player = "PlayerNumber_P"..i
 				local pn = ToEnumShortString(player)
