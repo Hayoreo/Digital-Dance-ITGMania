@@ -15,8 +15,8 @@ local IsNumber = true
 local FAPlusCount = 0
 local HeldCount = 0
 local MinesHit = 0
-local HoldsRollsDropped = 0
 local undesirable_judgment_count = 0
+local HitHoldsRolls = 0
 -- -----------------------------------------------------------------------
 
 local pss = STATSMAN:GetCurStageStats():GetPlayerStageStats(player)
@@ -50,7 +50,7 @@ local GetCurrentExScore = function(player, ex_counts, PotentialNotes, PotentialH
 		total_points = total_points + MineCount * SL.ExWeights["HitMine"];
 	end
 	
-	local keys = { "W0", "W1", "W2", "W3", "W4", "W5", "Miss", "Held", "LetGo", "HitMine" }
+	local keys = { "W0", "W1", "W2", "W3", "W4", "W5", "Miss", "Held", "LetGo", "HitMine", "MissedHold"  }
 	local counts = ex_counts
 	counts["W0"] = counts["W0"] + PotentialNotes
 	counts["Held"] = counts["Held"] + PotentialHoldsRolls
@@ -70,8 +70,7 @@ local GetPossibleExScore = function(counts)
 	local best_counts = {}
 	local TotalStepsHit = 0
 	local PotentialNotes = 0
-	local PotentialHoldsRolls = 0
-	local keys = { "W0", "W1", "W2", "W3", "W4", "W5", "Miss", "Held", "LetGo", "HitMine" }
+	local keys = { "W0", "W1", "W2", "W3", "W4", "W5", "Miss", "Held", "LetGo", "HitMine", "MissedHold" }
 
 	for key in ivalues(keys) do
 		local value = counts[key]
@@ -85,10 +84,6 @@ local GetPossibleExScore = function(counts)
 			best_counts[key] = best_counts[key] + value
 			if key == "W0" or key == "W1" or key == "W2" or key == "W3" or key == "W4" or key == "W5" or key == "Miss" then
 				TotalStepsHit = TotalStepsHit + value
-			elseif key ==  "Held" or key ==  "LetGo" then
-				PotentialHoldsRolls = PotentialHoldsRolls + value
-			elseif key == "HitMine" then
-				MinesHit = MinesHit + 1
 			end
 		end
 	end
@@ -100,7 +95,7 @@ local GetPossibleExScore = function(counts)
 		end
 	end
 	PotentialNotes = NoteCount - TotalStepsHit
-	PotentialHoldsRolls = HoldCount - PotentialHoldsRolls
+	local PotentialHoldsRolls = HoldCount + RollCount - HitHoldsRolls
 	return GetCurrentExScore(player, best_counts, PotentialNotes, PotentialHoldsRolls)
 end
 
@@ -182,6 +177,9 @@ bmt.ExCountsChangedMessageCommand=function(self, params)
 			self:settext( ("-%.2f%%"):format(percent) )
 		end
 		if not HasFailed then
+			if params.IsHoldRoll then
+				HitHoldsRolls = HitHoldsRolls + 1
+			end
 			PossibleScore = GetPossibleExScore(params.ExCounts)
 			if undesirable_judgment_count > 10 then
 				IsNumber = false

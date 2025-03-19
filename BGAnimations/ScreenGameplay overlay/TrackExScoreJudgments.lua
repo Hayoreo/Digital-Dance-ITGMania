@@ -27,6 +27,7 @@ local valid_tns = {
 local valid_hns = {
 	LetGo = true,
 	Held = true,
+	MissedHold=true,
 }
 
 return Def.Actor{
@@ -46,6 +47,7 @@ return Def.Actor{
 			-- the HoldNoteScore.
 			Held = 0,
 			LetGo = 0,
+			MissedHold=0,
 		
 			-- The W0 count displayed in the pane in ScreenEvaluation should
 			-- still display the total count (whether or not the player has failed).
@@ -57,7 +59,9 @@ return Def.Actor{
 		if params.Player ~= player then return end
 		if IsAutoplay(player) then return end
 		local count_updated = false
+		local IsHoldRoll = false
 		if params.HoldNoteScore then
+			IsHoldRoll = true
 			local HNS = ToEnumShortString(params.HoldNoteScore)
 			-- Only track the HoldNoteScores we care about
 			if valid_hns[HNS] then
@@ -97,7 +101,7 @@ return Def.Actor{
 		end
 		if count_updated then
 			-- Broadcast so other elements on ScreenGameplay can process the updated count.
-			MESSAGEMAN:Broadcast("ExCountsChanged", { Player=player, ExCounts=storage.ex_counts, ExScore=CalculateExScore(player) })
+			MESSAGEMAN:Broadcast("ExCountsChanged", { Player=player, ExCounts=storage.ex_counts, ExScore=CalculateExScore(player), IsHoldRoll=IsHoldRoll })
 		end
 		if stats:GetFailed() and HasFailed == false then
 			HasFailed = true

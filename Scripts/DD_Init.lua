@@ -302,6 +302,7 @@ SL = {
 		W5=0,
 		Miss=0,
 		LetGo=0,
+		MissedHold=0,
 		Held=1,
 		HitMine=-1
 	},
