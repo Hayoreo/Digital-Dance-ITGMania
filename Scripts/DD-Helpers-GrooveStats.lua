@@ -430,9 +430,13 @@ ValidForGrooveStats = function(player)
 		or po:Echo() or po:BMRize() or po:Stomp()
 		or po:Big() or po:Mines()
 	)
-
+	
+	-- we can't use po:FailSetting() here because effective fail type can be overridden by preferences
+	-- use GAMESTATE:GetPlayerFailType() since ScreenGameplay uses the same function internally
+	local failType = GAMESTATE:GetPlayerFailType(player);
+	
 	-- only FailTypes "Immediate" and "ImmediateContinue" are valid for GrooveStats
-	valid[11] = (po:FailSetting() == "FailType_Immediate" or po:FailSetting() == "FailType_ImmediateContinue")
+	valid[11] = (failType == "FailType_Immediate" or failType == "FailType_ImmediateContinue")
 
 	-- AutoPlay/AutoplayCPU is not allowed
 	valid[12] = IsHumanPlayer(player)
