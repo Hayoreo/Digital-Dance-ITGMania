@@ -332,7 +332,7 @@ local song_mt = {
 				af[#af+1] = Def.ActorFrame {
 					-- The grade shown to the left of the song name
 					Def.Sprite{
-						Texture=THEME:GetPathG("","_grades/assets/grades 1x18.png"),
+						Texture=THEME:GetPathG("","_grades/assets/grades 1x19.png"),
 						InitCommand=function(subself) 
 							subself:visible(false)
 							:zoom(WideScale(.25,.18))

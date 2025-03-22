@@ -300,10 +300,10 @@ af[#af+1] = Def.BitmapText{
 local columnWidth = 100
 for i=1,4 do
 	af[#af+1] = Def.Sprite{
-		Texture=THEME:GetPathG("","_grades/assets/grades 1x18.png"),
+		Texture=THEME:GetPathG("","_grades/assets/grades 1x19.png"),
 		InitCommand=function(self) self:zoom(0):sleep(0.2):zoom(0.2):animate(false) end,
 		SetGradesCommand=function(self, params)
-			self:setstate(grades["Grade_Tier0"..i])
+			self:setstate(grades["Grade_Tier0"..i+1])
 			self:horizalign(left):vertalign(bottom)
 			if pn == "P1" then
 				self:x(85 + (i*40))

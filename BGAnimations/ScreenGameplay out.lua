@@ -17,7 +17,21 @@ return Def.Quad{
 			-- purposes.
 			--
 			-- TODO(teejusb): Remove once we have W0 support in ITGmania.
-			pss:SetScore(whites)
+			-- Let's also check to make sure the score has improved before saving the white counts this way.
+			local song = GAMESTATE:GetCurrentSong()
+			local chart = GAMESTATE:GetCurrentSteps(pn)
+			local scores = PROFILEMAN:GetProfile(pn):GetHighScoreList(song,chart):GetHighScores()
+			
+			-- obviously if we do worse don't update it.
+			if pss:GetPercentDancePoints() > scores[1]:GetPercentDP() then
+				pss:SetScore(whites)
+			--- In most cases this will be a requad
+			elseif pss:GetPercentDancePoints() == scores[1]:GetPercentDP() then
+				-- Only update white count if it's improved from the previous score.
+				if whites < scores[1]:GetScore() then
+					pss:SetScore(whites)
+				end
+			end
 		end
 	end
 }

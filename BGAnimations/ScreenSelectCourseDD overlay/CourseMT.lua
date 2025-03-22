@@ -176,7 +176,7 @@ local song_mt = {
 					end,
 					-- The grade shown to the left of the course name
 					Def.Sprite{
-						Texture=THEME:GetPathG("","_grades/assets/grades 1x18.png"),
+						Texture=THEME:GetPathG("","_grades/assets/grades 1x19.png"),
 						InitCommand=function(subself) subself:visible(false):zoom(WideScale(.25,.22)):xy(side*grade_position, 25):animate(0) self[pn..'grade_sprite'] = subself end,
 						SlideBackIntoGridCommand=function(subself)
 							subself:linear(.12):diffusealpha(0):zoom( WideScale(.25, 0.22)):xy(side*grade_position,25):linear(.12):diffusealpha(1)

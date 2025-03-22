@@ -99,9 +99,26 @@ TextBannerAfterSet = function(self)
 end
 
 ----------------------------------------------------------------------------------------
--- functions used by both SSM and ScreenSelectMusicDD
+-- functions used by ScreenSelectMusicDD
 
-
+-- This is a quick way to check if a score is a quint.
+-- Technically a hack until we actually get engine support for quints/tracking
+-- W0 but this is good enough for now.
+-- We do this by checking if:
+--  1. Any score exists that has a percentDP of 1.0 (they've quadded)
+--  2. The high score tracked whites (by determining if score < #Fantastics)
+--  3. The number of whites is actually 0
+function IsQuint(hsl)
+	if hsl == nil then return false end
+	for hs in ivalues(hsl:GetHighScores()) do
+		if (hs:GetPercentDP() == 1.0 and
+					hs:GetScore() < hs:GetTapNoteScore("TapNoteScore_W1")
+					and hs:GetScore() == 0) then
+			return true
+		end
+	end
+	return false
+end
 
 --- Returns the grade for a given song and chart or nil if there isn't a high score.
 --- @param player Enum
@@ -126,8 +143,14 @@ function GetTopGrade(player, song, chart)
 		end
 
 		if grade then
-			local converted_grade = Grade:Reverse()[grade]
-			if converted_grade > 17 then converted_grade = 17 end
+			-- plus 1 for quints
+			local converted_grade = Grade:Reverse()[grade]+1
+			if converted_grade > 18 then converted_grade = 18 end
+			if 	converted_grade == 1 then
+				if IsQuint(PROFILEMAN:GetProfile(pn):GetHighScoreList(song,chart)) then
+					converted_grade = 0
+				end
+			end
 			return converted_grade
 		end
 	else end
