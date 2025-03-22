@@ -22,15 +22,20 @@ return Def.Quad{
 			local chart = GAMESTATE:GetCurrentSteps(pn)
 			local scores = PROFILEMAN:GetProfile(pn):GetHighScoreList(song,chart):GetHighScores()
 			
-			-- obviously if we do worse don't update it.
-			if pss:GetPercentDancePoints() > scores[1]:GetPercentDP() then
-				pss:SetScore(whites)
-			--- In most cases this will be a requad
-			elseif pss:GetPercentDancePoints() == scores[1]:GetPercentDP() then
-				-- Only update white count if it's improved from the previous score.
-				if whites < scores[1]:GetScore() then
+			-- Don't bother checking scores if it's a guest profile or no scores exist.
+			if PROFILEMAN:IsPersistentProfile(pn) and scores[1] ~= nil then
+				-- obviously if we do worse don't update it.
+				if pss:GetPercentDancePoints() > scores[1]:GetPercentDP() then
 					pss:SetScore(whites)
+				--- In most cases this will be a requad
+				elseif pss:GetPercentDancePoints() == scores[1]:GetPercentDP() then
+					-- Only update white count if it's improved from the previous score.
+					if whites < scores[1]:GetScore() then
+						pss:SetScore(whites)
+					end
 				end
+			else
+				pss:SetScore(whites)
 			end
 		end
 	end
