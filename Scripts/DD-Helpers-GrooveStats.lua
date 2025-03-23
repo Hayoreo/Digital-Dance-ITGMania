@@ -491,7 +491,7 @@ CreateCommentString = function(player)
 				comment = comment .. ", "
 			end
 			comment = comment..WNumber..FAsuffix
-			IsQuint = false
+			isQuint = false
 		end
 	else
 		isQuint = false
@@ -509,18 +509,18 @@ CreateCommentString = function(player)
 			if #comment ~= 0 then
 				comment = comment .. ", "
 			end
-			IsQuad = false
+			isQuad = false
 			comment = comment..number..suffix
 		end
 	end
 	
 	--If the player got a quint, first of all nice, but let other people know here.
-	if IsQuint and IsQuad then
+	if isQuint and isQuad then
 		if #comment ~= 0 then
 			comment = comment .. ", "
 		end
 		comment = comment.."FBFC"
-	elseif IsQuad and not IsQuint then
+	elseif isQuad and not isQuint then
 		if #comment ~= 0 then
 			comment = comment .. ", "
 		end

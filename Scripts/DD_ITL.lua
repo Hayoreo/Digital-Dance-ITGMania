@@ -483,7 +483,7 @@ UpdateItlData = function(player)
 				allWindowsEnabled) then
 		local hash = SL[pn].Streams.Hash
 		local hashMap = SL[pn].ITLData["hashMap"]
-
+		local steps = GAMESTATE:GetCurrentSteps(player)
 		local prevData = nil
 		if hashMap ~= nil and hashMap[hash] ~= nil then
 			prevData = hashMap[hash]
@@ -512,6 +512,7 @@ UpdateItlData = function(player)
 				["ex"] = data["ex"],
 				["clearType"] = data["clearType"],
 				["points"] = data["points"],
+				["stepsType"] = steps:GetStepsType() == "StepsType_Dance_Single" and "single" or "double",
 				["usedCmod"] = data["usedCmod"],
 				["date"] = data["date"],
 				["maxPoints"] = data["maxPoints"],
