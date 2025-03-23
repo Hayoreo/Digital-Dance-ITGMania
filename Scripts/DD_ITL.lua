@@ -174,6 +174,13 @@ GetITLPointsForSong = function(passingPoints, maxScoringPoints, exScore)
 	return passingPoints + scoringPoints
 end
 
+-- Note that playing OUTSIDE of the ITL pack will result in 0 points for all upscores.
+-- Technically this number isn't displayed, but players can opt to swap the EX score in the
+-- wheel with this value instead if they prefer.
+local function ParseNumbers(input)
+	local num1, num2 = input:match("(%d+)%s+%(P%)%s+%+%s+(%d+)%s+%(S%)")
+	return tonumber(num1) or nil, tonumber(num2) or nil
+end
 -- Helper function used within UpdateItlData() below.
 -- Curates all the ITL data to be written to the ITL file for the played song.
 local DataForSong = function(player, prevData)
@@ -221,13 +228,6 @@ local DataForSong = function(player, prevData)
 	local steps = GAMESTATE:GetCurrentSteps(player)
 	local chartName = steps:GetChartName()
 
-	-- Note that playing OUTSIDE of the ITL pack will result in 0 points for all upscores.
-	-- Technically this number isn't displayed, but players can opt to swap the EX score in the
-	-- wheel with this value instead if they prefer.
-	function ParseNumbers(input)
-		local num1, num2 = input:match("(%d+)%s+%(P%)%s+%+%s+(%d+)%s+%(S%)")
-		return tonumber(num1) or nil, tonumber(num2) or nil
-	end
 	
 	local passingPoints, maxScoringPoints = ParseNumbers(chartName)
 	
@@ -414,31 +414,19 @@ UpdateItlExScore = function(player, hash, exscore)
 		local steps = GAMESTATE:GetCurrentSteps(player)
 		local chartName = steps:GetChartName()
 		
+		local passingPoints, maxScoringPoints = ParseNumbers(chartName)
+		local maxPoints = passingPoints + maxScoringPoints
+		hashMap[hash]["points"] = GetITLPointsForSong(passingPoints, maxScoringPoints, exscore/100)
+		hashMap[hash]["maxPoints"] = maxPoints
+		hashMap[hash]["passingPoints"] = passingPoints
+		hashMap[hash]["maxScoringPoints"] = maxScoringPoints
 
-		local maxPoints = nil
-		if steps:GetDescription() == SL[pn].Streams.Description then
-			maxPoints = chartName:gsub(" pts", "")
-			if #maxPoints == 0 then
-				maxPoints = nil
-			else
-				maxPoints = tonumber(maxPoints)
-				hashMap[hash]["maxPoints"] = maxPoints
-			end
-		end
-
-		if maxPoints == nil then
-			--  See if we already have these points stored if we failed to parse it.
-			if prevData ~= nil and prevData["maxPoints"] ~= nil then
-				maxPoints = prevData["maxPoints"]
-			-- Otherwise we don't know how many points this chart is. Default to 0.
-			else
-				maxPoints = 0
-			end
-		end
-		
-		-- Do not recalculate points if maxPoints is 0
-		if maxPoints > 0 then
-			hashMap[hash]["points"] = GetPointsForSong(maxPoints, exscore/100)
+		-- Update the pathMap as needed.
+		local song = GAMESTATE:GetCurrentSong()
+		local song_dir = song:GetSongDir()
+		if song_dir ~= nil and #song_dir ~= 0 then
+			local pathMap = SL[pn].ITLData["pathMap"]
+			pathMap[song_dir] = hash
 		end
 		
 		updated = true
@@ -559,6 +547,7 @@ UpdateItlData = function(player)
 			if updated then
 				CalculateITLSongRanks(player)
 				hashMap[hash]["usedCmod"] = data["usedCmod"]
+				hashMap[hash]["stepsType"] = steps:GetStepsType() == "StepsType_Dance_Single" and "single" or "double"
 				hashMap[hash]["date"] = data["date"]
 				hashMap[hash]["noCmod"] = data["noCmod"]
 				hashMap[hash]["passingPoints"] = data["passingPoints"]
