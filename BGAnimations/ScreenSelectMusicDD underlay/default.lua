@@ -66,7 +66,6 @@ local t = Def.ActorFrame {
 		GroupWheel:set_info_set(Groups, group_index)
 		local groupWheel = self:GetChild("GroupWheel")
 		groupWheel:SetDrawByZPosition(true)
-
 		self:queuecommand("Capture")
 	end,
 	CaptureCommand=function(self)
