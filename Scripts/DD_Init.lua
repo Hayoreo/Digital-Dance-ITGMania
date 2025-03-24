@@ -15,6 +15,7 @@ local PlayerDefaults = {
 				BackgroundFilter = "Darkest",
 				NoteFieldOffsetX = 0,
 				NoteFieldOffsetY = 0,
+				GhostWindow = 0,
 				VisualDelay = "0ms",
 
 				HideTargets = false,

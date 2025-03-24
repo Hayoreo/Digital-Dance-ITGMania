@@ -17,6 +17,7 @@ local permitted_profile_settings = {
 	HeldGraphic			= "string",
 	HoldJudgment		= "string",
 	BackgroundFilter	= "string",
+	GhostWindow			= "number",
 	NoteFieldOffsetX	= "number",
 	NoteFieldOffsetY	= "number",
 	VisualDelay			= "string",

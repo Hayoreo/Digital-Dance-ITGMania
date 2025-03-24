@@ -3025,6 +3025,7 @@ for i=1,#FAPlusOptions do
 						self:settext("✅")
 					end
 					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
+					MESSAGEMAN:Broadcast("UpdateGhostWindow")
 				elseif CurrentColumn == 2 and i == 2 then
 					if ShowEXScore then
 						ShowEXScore = false
@@ -3036,6 +3037,7 @@ for i=1,#FAPlusOptions do
 						self:settext("✅")
 					end
 					SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
+					MESSAGEMAN:Broadcast("UpdateGhostWindow")
 				end
 			end
 		end,
@@ -3078,6 +3080,7 @@ for i=1,#FAPlusOptions do
 							mods.ShowFaPlusWindow = ShowFaPlusWindow
 							self:settext("✅")
 						end
+						MESSAGEMAN:Broadcast("UpdateGhostWindow")
 						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					elseif j == 2 and j == i then
@@ -3092,6 +3095,7 @@ for i=1,#FAPlusOptions do
 							mods.ShowEXScore = ShowEXScore
 							self:settext("✅")
 						end
+						MESSAGEMAN:Broadcast("UpdateGhostWindow")
 						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 						break
 					end

@@ -313,6 +313,34 @@ local Overrides = {
 		end
 	},
 	-------------------------------------------------------------------------
+	GhostWindow = {
+		Choices = function()
+			local first	= 0
+			local last 	= 23
+			local step 	= 1
+
+			return stringify( range(first, last, step), "%g")
+		end,
+		LoadSelections = function(self, list, pn)
+			local val = tonumber(SL[ToEnumShortString(pn)].ActiveModifiers.GhostWindow) or 0
+			for i,v in ipairs(self.Choices) do
+				if v == val then
+					list[i] = true
+					break
+				end
+			end
+			return list
+		end,
+		SaveSelections = function(self, list, pn)
+			for i,v in ipairs(self.Choices) do
+				if list[i] then
+					SL[ToEnumShortString(pn)].ActiveModifiers.GhostWindow = v
+					break
+				end
+			end
+		end,
+	},
+	-------------------------------------------------------------------------
 	MusicRate = {
 		Choices = function()
 			local first	= 1

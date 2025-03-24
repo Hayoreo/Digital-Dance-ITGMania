@@ -2,6 +2,7 @@ local player = Var "Player"
 local pn = ToEnumShortString(player)
 local mods = SL[pn].ActiveModifiers
 local sprite
+local GhostWindow = mods.GhostWindow/1000 or 0
 
 -- In case anyone is playing on a profile that previously was using the toggle judgment tilt.
 if mods.JudgmentTilt == false or mods.JudgmentTilt == true then
@@ -70,7 +71,6 @@ return Def.ActorFrame{
 		if not mods.HideEarlyDecentWayOffFlash then
 			GetPlayerAF(pn):GetChild("NoteField"):did_tap_note(param.Column + 1, param.TapNoteScore, --[[bright]] false)
 		end
-
 		if not mods.HideEarlyDecentWayOffJudgments then
 			-- If the judgment font contains a graphic for the additional white fantastic window...
 			if sprite:GetNumStates() == 7 or sprite:GetNumStates() == 14 then
@@ -82,6 +82,11 @@ return Def.ActorFrame{
 						-- it's a nicer experience to always just display the top window graphic regardless.
 						-- This technically causes a discrepency on the histogram, but it's likely okay.
 						if not IsW0Judgment(param, player) and not IsAutoplay(player) then
+							frame = 1
+						end
+					end
+					if GhostWindow ~= 0 then
+						if math.abs(param.TapNoteOffset) > GhostWindow and not IsAutoplay(player) then
 							frame = 1
 						end
 					end
@@ -152,6 +157,11 @@ return Def.ActorFrame{
 					-- it's a nicer experience to always just display the top window graphic regardless.
 					-- This technically causes a discrepency on the histogram, but it's likely okay.
 					if not IsW0Judgment(param, player) and not IsAutoplay(player) then
+						frame = 1
+					end
+				end
+				if GhostWindow ~= 0 then
+					if math.abs(param.TapNoteOffset) > GhostWindow and not IsAutoplay(player) then
 						frame = 1
 					end
 				end

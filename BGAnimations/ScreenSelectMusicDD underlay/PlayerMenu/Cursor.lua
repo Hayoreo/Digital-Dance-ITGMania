@@ -41,6 +41,7 @@ local NameTable =
 		"NotefieldXBox",
 		"NotefieldYBox",
 		"VisualDelayBox",
+		"GhostWindowBox",
 	},
 	
 	-- Tab 3

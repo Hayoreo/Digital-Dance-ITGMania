@@ -28,6 +28,7 @@ THEME:GetString("OptionNames","Hide"),
 THEME:GetString("OptionTitles","NoteFieldOffsetX"),
 THEME:GetString("OptionTitles","NoteFieldOffsetY"),
 THEME:GetString("OptionTitles","VisualDelay"),
+THEME:GetString("OptionTitles","GhostWindow"),
 }
 
 --- I still do not understand why i have to throw in a random actor frame before everything else will work????
@@ -2550,6 +2551,212 @@ af[#af+1] = Def.BitmapText{
 	end,
 }
 
+--- Ghost Window Box
+af[#af+1] = Def.Quad{
+	Name=pn.."GhostWindowBox1",
+	InitCommand=function(self)
+		local Parent = self:GetParent():GetChild(pn.."VisualMods11")
+		local TextZoom = Parent:GetZoom()
+		local TextWidth = Parent:GetWidth() * TextZoom
+		local TextHeight = Parent:GetHeight()
+		local TextXPosition = Parent:GetX()
+		local TextYPosition = Parent:GetY()
+		self:diffuse(color("#4d4d4d"))
+			:draworder(1)
+			:zoomto(40, TextHeight)
+			:vertalign(top):horizalign(left)
+			:x(TextXPosition + TextWidth + 5)
+			:y(TextYPosition - (TextHeight*TextZoom)/4)
+			:queuecommand("UpdateDisplayedTab")
+	end,
+	UpdateDisplayedTabCommand=function(self)
+		if pn == "P1" then
+			if CurrentTabP1 == 2 then
+				self:visible(true)
+			else
+				self:visible(false)
+			end
+		elseif pn == "P2" then
+			if CurrentTabP2 == 2 then
+				self:visible(true)
+			else
+				self:visible(false)
+			end
+		end
+	end,
+	LeftMouseClickUpdateMessageCommand=function(self)
+		local CurrentTab, CurrentRow, CurrentColumn
+		if pn == "P1" then
+			CurrentTab = CurrentTabP1
+			CurrentRow = CurrentRowP1
+			CurrentColumn = CurrentColumnP1
+		elseif pn == "P2" then
+			CurrentTab = CurrentTabP2
+			CurrentRow = CurrentRowP2
+			CurrentColumn = CurrentColumnP2
+		end
+		if pn == "P1" and not PlayerMenuP1 then return end
+		if pn == "P2" and not PlayerMenuP2 then return end
+		if CurrentTab ~= 2 then return end
+		local Parent = self:GetParent():GetChild(pn.."GhostWindowBox1")
+		local ObjectWidth = Parent:GetZoomX()
+		local ObjectHeight = Parent:GetZoomY()
+		local ObjectX = Parent:GetX()
+		local ObjectY = Parent:GetY()
+		local HAlign = Parent:GetHAlign()
+		local VAlign = Parent:GetVAlign()
+		ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+		ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+		
+		if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 2 then
+			if CurrentRow ~= 11 then
+				if CurrentRow < 11 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+				elseif CurrentRow > 11 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+				end
+			end
+			CurrentRow = 11
+			CurrentColumn = 1
+			if pn == "P1" then
+				CurrentTabP1 = CurrentTab
+				CurrentRowP1 = CurrentRow
+				CurrentColumnP1 = CurrentColumn
+			elseif pn == "P2" then
+				CurrentTabP2 = CurrentTab
+				CurrentRowP2 = CurrentRow
+				CurrentColumnP2 = CurrentColumn
+			end
+			MESSAGEMAN:Broadcast("UpdateMenuCursorPosition"..pn, {})
+		end
+	
+	end,
+}
+
+-------------------------------------------------------------
+local PlayerGhostWindow = mods.GhostWindow or 0
+PlayerGhostWindow = tonumber(PlayerGhostWindow)
+
+local MinGhostWindow = 0
+--  No point in making it the same value as the normal FA window or the FA+ window.
+--  Or larger than the fantastic window for that matter.
+local MaxGhostWindow = mods.ShowFaPlusWindow and 14 or 22
+
+--- Ghost Window Value
+af[#af+1] = Def.BitmapText{
+	Font="Miso/_miso",
+	Name=pn.."GhostWindowText",
+	InitCommand=function(self)
+		local zoom = 0.7
+		local Parent = self:GetParent():GetChild(pn.."VisualMods11")
+		local TextZoom = Parent:GetZoom()
+		local QuadWidth = self:GetParent():GetChild(pn.."GhostWindowBox1"):GetZoomX()
+		local TextHeight = Parent:GetHeight() * TextZoom
+		local QuadXPosition = self:GetParent():GetChild(pn.."GhostWindowBox1"):GetX()
+		local TextYPosition = Parent:GetY()
+		local PastWidth
+		local PastX
+		local CurrentX
+		if PlayerGhostWindow > MaxGhostWindow then PlayerGhostWindow = MaxGhostWindow end
+		if PlayerGhostWindow == 0 then
+			self:settext( THEME:GetString("SLPlayerOptions","Off") )
+		else
+			self:settext(PlayerGhostWindow.."ms")
+		end
+		self:horizalign(center):vertalign(middle):shadowlength(1)
+			:draworder(2)
+			:y(TextYPosition + TextHeight/2)
+			:x(QuadXPosition + QuadWidth/2) 
+			:maxwidth((QuadWidth-2)/zoom)
+			:zoom(zoom)
+			:queuecommand("UpdateDisplayedTab")
+	
+	end,
+	UpdateDisplayedTabCommand=function(self)
+		if pn == "P1" then
+			if CurrentTabP1 == 2 then
+				self:visible(true)
+			else
+				self:visible(false)
+			end
+		elseif pn == "P2" then
+			if CurrentTabP2 == 2 then
+				self:visible(true)
+			else
+				self:visible(false)
+			end
+		end
+	end,
+	["UpdateMenuCursorPosition"..pn.."MessageCommand"]=function(self, params)
+		local CurrentTab, CurrentRow, CurrentColumn
+		if pn == "P1" then
+			 CurrentTab = CurrentTabP1
+			 CurrentRow = CurrentRowP1
+			 CurrentColumn = CurrentColumnP1
+		elseif pn == "P2" then
+			CurrentTab = CurrentTabP2
+			 CurrentRow = CurrentRowP2
+			 CurrentColumn = CurrentColumnP2
+		end
+		if CurrentTab == 2 and CurrentRow == 11 then
+			if params[1] == "left" then
+				if PlayerGhostWindow <= MinGhostWindow then
+					if not params[2] == true then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+						PlayerGhostWindow = MaxGhostWindow
+					end
+				elseif PlayerGhostWindow == 0 then
+					if not params[2] == true then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+						PlayerGhostWindow = PlayerGhostWindow - 1
+					end
+				else
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+					PlayerGhostWindow = PlayerGhostWindow - 1
+				end
+				mods.GhostWindow = PlayerGhostWindow
+				if PlayerGhostWindow == 0 then
+					self:settext( THEME:GetString("SLPlayerOptions","Off") )
+				else
+					self:settext(PlayerGhostWindow.."ms")
+				end
+			elseif params[1] == "right" then
+				if PlayerGhostWindow >= MaxGhostWindow then
+					if not params[2] == true then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+						PlayerGhostWindow = MinGhostWindow
+					end
+				elseif PlayerGhostWindow == 0 then
+					if not params[2] == true then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+						PlayerGhostWindow = PlayerGhostWindow + 1
+					end
+				else
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+					PlayerGhostWindow = PlayerGhostWindow + 1
+				end
+				mods.GhostWindow = PlayerGhostWindow
+				if PlayerGhostWindow == 0 then
+					self:settext( THEME:GetString("SLPlayerOptions","Off") )
+				else
+					self:settext(PlayerGhostWindow.."ms")
+				end
+			end
+		end
+	end,
+	UpdateGhostWindowMessageCommand=function(self)
+		-- We want to update the max possible value of the ghost window if the player changes FA+
+		MaxGhostWindow = mods.ShowFaPlusWindow and 14 or 22
+		if PlayerGhostWindow > MaxGhostWindow then PlayerGhostWindow = MaxGhostWindow end
+		mods.GhostWindow = PlayerGhostWindow
+		if PlayerGhostWindow == 0 then
+			self:settext( THEME:GetString("SLPlayerOptions","Off") )
+		else
+			self:settext(PlayerGhostWindow.."ms")
+		end
+	end,
+}
+
 -------------------------------------------------------------
 local Mod2Descriptions = {
 THEME:GetString("OptionExplanations","Perspective"),
@@ -2562,6 +2769,7 @@ THEME:GetString("OptionExplanations","Hide"),
 THEME:GetString("OptionExplanations","NoteFieldOffsetX"),
 THEME:GetString("OptionExplanations","NoteFieldOffsetY"),
 THEME:GetString("OptionExplanations","VisualDelay"),
+THEME:GetString("OptionExplanations","GhostWindow"),
 }
 
 -- Bottom Information for mods
