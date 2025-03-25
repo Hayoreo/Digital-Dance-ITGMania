@@ -15,6 +15,12 @@
 -- TODO(teejusb): Make this smarter as we can probably automatically figure
 -- out a good value for notesThreshold from the chart information.
 GetStreamSequences = function(notesPerMeasure, notesThreshold)
+	-- TODO: Identify and fix the root cause.
+	if notesThreshold == nil then
+		Warn("Provided notesThreshold is nil. This is likely a mods.MeasureCounter parsing error.")
+		return {}
+	end
+	
 	local streamMeasures = {}
 	for i,n in ipairs(notesPerMeasure) do
 		if n >= notesThreshold then
