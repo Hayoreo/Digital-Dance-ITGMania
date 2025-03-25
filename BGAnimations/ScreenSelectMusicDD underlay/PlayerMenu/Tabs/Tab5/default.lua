@@ -2377,7 +2377,7 @@ af[#af+1] = Def.Quad{
 		if pn == "P1" and not PlayerMenuP1 then return end
 		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 5 then return end
-		local Parent = self:GetParent():GetChild(pn.."BPMFilter2Box1")
+		local Parent = self:GetParent():GetChild(pn.."NPSFilter2Box1")
 		local ObjectWidth = Parent:GetZoomX()
 		local ObjectHeight = Parent:GetZoomY()
 		local ObjectX = Parent:GetX()
