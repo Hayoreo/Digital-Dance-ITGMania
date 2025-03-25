@@ -1,8 +1,10 @@
-# Digital Dance v1.0.9.5
+# Digital Dance v1.1.0
 
-# ------------ Differences from 1.0.9 ------------
+# ------------ Differences from 1.0.9.X ------------
 - ITL 2025 support.
-- Practice mode now works for P2/2 player.
+- NPS Sorting and Filters added.
+- Ghost Judgment added.
+- Practice mode now works for P2 and 2 player.
 - QR Groovestats Login support for local and guest profiles.
 - Added D-Mod speed type.
 - Toggle to allow animated banners on gameplay.
@@ -54,8 +56,14 @@ Always - It will always prompt the user to scan regardless if their profile is s
 Sometimes - It will only prompt the user if their profile is a Guest Profile or it does not have the GS api key set up.
 Never - It will never prompt the player to login with QR (previous old behavior).
 
+## Ghost Judgment
+Ghost Judgment is similar to how FA+ works, however you can choose what value you want it to be (1-22ms for normal timing and 1-14ms for FA+).
+Ghost Judgment has no effect on both normal score and ExScore and serves only as another aide for players.
+
 ## Player WR Sounds
-This is set up similarly to how WRSounds were before. Now instead of using the Sounds folder in the theme you need to go to your profile folder (Save/Local Profiles/[Your Profile Folder Here]) and then add a folder called "WRSounds". Within that folder you can then add any .mp3 or .ogg files you wish that will be randomly selected to play when you achieve a world record or a quad/quint. These sounds are seperated by player now so each player's sounds will only play if they get the record.
+This is set up similarly to how WRSounds were before. Now instead of using the Sounds folder in the theme you need to go to your profile folder (Save/Local Profiles/[Your Profile Folder Here]) and then add a folder called "WRSounds".
+Within that folder you can then add any .mp3 or .ogg files you wish that will be randomly selected to play when you achieve a world record or a quad/quint. 
+These sounds are seperated by player now so each player's sounds will only play if they get the record.
 
 ## ITGMANIA ONLY
 - As noted in the "About" section this theme is intended for use with ITGMania only.
