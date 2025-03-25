@@ -92,6 +92,8 @@ local NameTable =
 	"Difficulty2ModBox",
 	"BPMFilter1Box",
 	"BPMFilter2Box",
+	"NPSFilter1Box",
+	"NPSFilter2Box",
 	"LengthFilter1Box",
 	"LengthFilter2Box",
 	"GrooveStats",

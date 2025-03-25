@@ -35,6 +35,12 @@ local CurrentLowerBPM = InitialLowerBPM
 local InitialUpperBPM = GetUpperBPMFilter()
 local CurrentUpperBPM = InitialUpperBPM
 
+local InitialLowerNPS = GetLowerNPSFilter()
+local CurrentLowerNPS = InitialLowerNPS
+
+local InitialUpperNPS = GetUpperNPSFilter()
+local CurrentUpperNPS = InitialUpperNPS
+
 local InitialLowerLength = GetLowerLengthFilter()
 local CurrentLowerLength = InitialLowerLength
 
@@ -78,6 +84,8 @@ local HaveSortsFiltersChanged = function(self)
 	elseif CurrentChallenge ~= InitialChallenge then return true
 	elseif CurrentLowerBPM ~= InitialLowerBPM then return true
 	elseif CurrentUpperBPM ~= InitialUpperBPM then return true
+	elseif CurrentLowerNPS ~= InitialLowerNPS then return true
+	elseif CurrentUpperNPS ~= InitialUpperNPS then return true
 	elseif CurrentLowerLength ~= InitialLowerLength then return true
 	elseif CurrentUpperLength ~= InitialUpperLength then return true
 	elseif CurrentGrooveStats ~= InitialGrooveStats then return true
@@ -96,9 +104,11 @@ THEME:GetString("DDPlayerMenu","FilterMeter"),
 THEME:GetString("DDPlayerMenu","FilterDifficulty"),
 THEME:GetString("DDPlayerMenu","FilterDifficulty"),
 THEME:GetString("DDPlayerMenu","FilterBPM"),
+THEME:GetString("DDPlayerMenu","FilterNPS"),
 THEME:GetString("DDPlayerMenu","FilterLength"),
 THEME:GetString("DDPlayerMenu","FilterGrooveStats"),
 THEME:GetString("DDPlayerMenu","FilterAutogen"),
+"",
 "",
 "",
 "",
@@ -233,6 +243,7 @@ local MainSortText = {
 	THEME:GetString("DDPlayerMenu","Artist"),
 	THEME:GetString("DDPlayerMenu","Length"),
 	THEME:GetString("DDPlayerMenu","BPM"),
+	THEME:GetString("DDPlayerMenu","NPS"),
 	THEME:GetString("DDPlayerMenu","Meter"),
 	THEME:GetString("DDPlayerMenu","Tags"),
 }
@@ -422,6 +433,7 @@ local SubSortText = {
 	THEME:GetString("DDPlayerMenu","Artist"),
 	THEME:GetString("DDPlayerMenu","Length"),
 	THEME:GetString("DDPlayerMenu","BPM"),
+	THEME:GetString("DDPlayerMenu","NPS"),
 	THEME:GetString("DDPlayerMenu","NumSteps"),
 	THEME:GetString("DDPlayerMenu","Meter"),
 }
@@ -2095,6 +2107,411 @@ af[#af+1] = Def.BitmapText{
 		end
 	end,
 }
+-----------------------------------------------------------
+--NPS
+-- BPM Filter Box1
+af[#af+1] = Def.Quad{
+	Name=pn.."NPSFilter1Box1",
+	InitCommand=function(self)
+		local Parent = self:GetParent():GetChild(pn.."SortsFilters8")
+		local TextZoom = Parent:GetZoom()
+		local TextWidth = Parent:GetWidth() * TextZoom
+		local TextHeight = Parent:GetHeight()
+		local TextXPosition = Parent:GetX()
+		local TextYPosition = Parent:GetY()
+		self:diffuse(color("#4d4d4d"))
+			:draworder(1)
+			:zoomto(40, TextHeight)
+			:vertalign(top):horizalign(left)
+			:x(TextXPosition + TextWidth + 5)
+			:y(TextYPosition - (TextHeight*TextZoom)/4)
+			:queuecommand("UpdateDisplayedTab")
+	end,
+	UpdateDisplayedTabCommand=function(self)
+		if pn == "P1" then
+			if CurrentTabP1 == 5 then
+				self:visible(true)
+			else
+				self:visible(false)
+			end
+		elseif pn == "P2" then
+			if CurrentTabP2 == 5 then
+				self:visible(true)
+			else
+				self:visible(false)
+			end
+		end
+	end,
+	LeftMouseClickUpdateMessageCommand=function(self)
+		local CurrentTab, CurrentRow, CurrentColumn
+		if pn == "P1" then
+			CurrentTab = CurrentTabP1
+			CurrentRow = CurrentRowP1
+			CurrentColumn = CurrentColumnP1
+		elseif pn == "P2" then
+			CurrentTab = CurrentTabP2
+			CurrentRow = CurrentRowP2
+			CurrentColumn = CurrentColumnP2
+		end
+		if pn == "P1" and not PlayerMenuP1 then return end
+		if pn == "P2" and not PlayerMenuP2 then return end
+		if CurrentTab ~= 5 then return end
+		local Parent = self:GetParent():GetChild(pn.."NPSFilter1Box1")
+		local ObjectWidth = Parent:GetZoomX()
+		local ObjectHeight = Parent:GetZoomY()
+		local ObjectX = Parent:GetX()
+		local ObjectY = Parent:GetY()
+		local HAlign = Parent:GetHAlign()
+		local VAlign = Parent:GetVAlign()
+		ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+		ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+		
+		if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 5 then
+			if CurrentRow ~= 10 then
+				if CurrentRow < 10 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+				elseif CurrentRow > 10 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+				end
+			end
+			CurrentRow = 10
+			CurrentColumn = 1
+			if pn == "P1" then
+				CurrentTabP1 = CurrentTab
+				CurrentRowP1 = CurrentRow
+				CurrentColumnP1 = CurrentColumn
+			elseif pn == "P2" then
+				CurrentTabP2 = CurrentTab
+				CurrentRowP2 = CurrentRow
+				CurrentColumnP2 = CurrentColumn
+			end
+			MESSAGEMAN:Broadcast("UpdateMenuCursorPosition"..pn, {})
+		end
+	
+	end,
+}
+
+-- The lower nps text
+af[#af+1] = Def.BitmapText{
+	Font="Miso/_miso",
+	Name=pn.."LowerNPSText",
+	InitCommand=function(self)
+		local zoom = 0.7
+		local Parent = self:GetParent():GetChild(pn.."NPSFilter1Box1")
+		local TextX = Parent:GetX()
+		local TextY = Parent:GetY()
+		local QuadWidth = Parent:GetZoomX()
+		local QuadHeight = Parent:GetZoomY()
+		self:horizalign(center):vertalign(middle):shadowlength(1)
+			:draworder(2)
+			:x(TextX + QuadWidth/2)
+			:y(TextY + QuadHeight/2)
+			:maxwidth(QuadWidth - 5)
+			:zoom(zoom)
+			:settext(CurrentLowerNPS == 0 and "none" or CurrentLowerNPS)
+			:queuecommand("UpdateDisplayedTab")
+	end,
+	UpdateDisplayedTabCommand=function(self)
+		if pn == "P1" then
+			if CurrentTabP1 ~= 5 then
+				self:visible(false)
+			else
+				self:visible(true)
+			end
+		elseif pn == "P2" then
+			if CurrentTabP2 ~= 5 then
+				self:visible(false)
+			else
+				self:visible(true)
+			end
+		end
+	end,
+	["UpdateMenuCursorPosition"..pn.."MessageCommand"]=function(self, params)
+		local CurrentTab, CurrentRow, CurrentColumn
+		if pn == "P1" then
+			CurrentTab = CurrentTabP1
+			CurrentRow = CurrentRowP1
+			CurrentColumn = CurrentColumnP1
+		elseif pn == "P2" then
+			CurrentTab = CurrentTabP2
+			CurrentRow = CurrentRowP2
+			CurrentColumn = CurrentColumnP2
+		end
+		if CurrentTab == 5 and CurrentRow == 10 then
+			if params[1] == "right" then
+				if CurrentLowerNPS == MaxBPM then
+					if not params[2] == true then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+						CurrentLowerNPS = 0
+						SetLowerNPSFilter(CurrentLowerNPS)
+						self:settext(CurrentLowerNPS == 0 and "none" or CurrentLowerNPS)
+					end
+				else
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+					CurrentLowerNPS = CurrentLowerNPS + 1
+					SetLowerNPSFilter(CurrentLowerNPS)
+					self:settext(CurrentLowerNPS == 0 and "none" or CurrentLowerNPS)
+				end
+				if HaveSortsFiltersChanged() then
+					MusicWheelNeedsResetting = true
+				else
+					MusicWheelNeedsResetting = false
+				end
+				if IsUsingFilters() or IsUsingSorts() then
+					MESSAGEMAN:Broadcast("UpdateResetColor", {"green"})
+				else
+					MESSAGEMAN:Broadcast("UpdateResetColor", {"red"})
+				end
+			elseif params[1] == "left" then
+				if CurrentLowerNPS == 0 then
+					if not params[2] == true then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+						CurrentLowerNPS = MaxBPM
+						SetLowerNPSFilter(CurrentLowerNPS)
+						self:settext(CurrentLowerNPS == 0 and "none" or CurrentLowerNPS)
+					end
+				else
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+					CurrentLowerNPS = CurrentLowerNPS - 1
+					SetLowerNPSFilter(CurrentLowerNPS)
+					self:settext(CurrentLowerNPS == 0 and "none" or CurrentLowerNPS)
+				end
+				if HaveSortsFiltersChanged() then
+					MusicWheelNeedsResetting = true
+				else
+					MusicWheelNeedsResetting = false
+				end
+				if IsUsingFilters() or IsUsingSorts() then
+					MESSAGEMAN:Broadcast("UpdateResetColor", {"green"})
+				else
+					MESSAGEMAN:Broadcast("UpdateResetColor", {"red"})
+				end
+			end
+		end
+	end,
+}
+
+
+-- NPS Filter To
+af[#af+1] = Def.BitmapText{
+	Font="Miso/_miso",
+	Name=pn.."NPSFilterTo",
+	InitCommand=function(self)
+		local zoom = 0.7
+		local Parent = self:GetParent():GetChild(pn.."NPSFilter1Box1")
+		local QuadWidth = Parent:GetWidth()
+		local QuadHeight = Parent:GetHeight()
+		local QuadXPosition = Parent:GetX()
+		local QuadYPosition = Parent:GetY()
+		self:horizalign(left):vertalign(top):shadowlength(1)
+			:draworder(1)
+			:diffuse(color("#b0b0b0"))
+			:x(QuadXPosition + 50)
+			:y(QuadYPosition + self:GetHeight()*1.5)
+			:maxwidth((width/zoom) - 20)
+			:zoom(zoom)
+			:settext(THEME:GetString("DDPlayerMenu","To"))
+			:queuecommand("UpdateDisplayedTab")
+	end,
+	UpdateDisplayedTabCommand=function(self)
+		if pn == "P1" then
+			if CurrentTabP1 == 5 then
+				self:visible(true)
+			else
+				self:visible(false)
+			end
+		elseif pn == "P2" then
+			if CurrentTabP2 == 5 then
+				self:visible(true)
+			else
+				self:visible(false)
+			end
+		end
+	end,
+}
+
+-- NPS Filter Box2
+af[#af+1] = Def.Quad{
+	Name=pn.."NPSFilter2Box1",
+	InitCommand=function(self)
+		local Parent = self:GetParent():GetChild(pn.."NPSFilterTo")
+		local TextZoom = Parent:GetZoom()
+		local TextWidth = Parent:GetWidth() * TextZoom
+		local TextHeight = Parent:GetHeight()
+		local TextXPosition = Parent:GetX()
+		local QuadYPosition = self:GetParent():GetChild(pn.."SortsFilters8"):GetY()
+		self:diffuse(color("#4d4d4d"))
+			:draworder(1)
+			:zoomto(40, TextHeight)
+			:vertalign(top):horizalign(left)
+			:x(TextXPosition + TextWidth + 10)
+			:y(QuadYPosition - (TextHeight*TextZoom)/4)
+			:queuecommand("UpdateDisplayedTab")
+	end,
+	UpdateDisplayedTabCommand=function(self)
+		if pn == "P1" then
+			if CurrentTabP1 == 5 then
+				self:visible(true)
+			else
+				self:visible(false)
+			end
+		elseif pn == "P2" then
+			if CurrentTabP2 == 5 then
+				self:visible(true)
+			else
+				self:visible(false)
+			end
+		end
+	end,
+	LeftMouseClickUpdateMessageCommand=function(self)
+		local CurrentTab, CurrentRow, CurrentColumn
+		if pn == "P1" then
+			CurrentTab = CurrentTabP1
+			CurrentRow = CurrentRowP1
+			CurrentColumn = CurrentColumnP1
+		elseif pn == "P2" then
+			CurrentTab = CurrentTabP2
+			CurrentRow = CurrentRowP2
+			CurrentColumn = CurrentColumnP2
+		end
+		if pn == "P1" and not PlayerMenuP1 then return end
+		if pn == "P2" and not PlayerMenuP2 then return end
+		if CurrentTab ~= 5 then return end
+		local Parent = self:GetParent():GetChild(pn.."BPMFilter2Box1")
+		local ObjectWidth = Parent:GetZoomX()
+		local ObjectHeight = Parent:GetZoomY()
+		local ObjectX = Parent:GetX()
+		local ObjectY = Parent:GetY()
+		local HAlign = Parent:GetHAlign()
+		local VAlign = Parent:GetVAlign()
+		ObjectX = ObjectX + (0.5-HAlign)*ObjectWidth
+		ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
+		
+		if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 5 then
+			if CurrentRow ~= 11 then
+				if CurrentRow < 11 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
+				elseif CurrentRow > 11 then
+					SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
+				end
+			end
+			CurrentRow = 11
+			CurrentColumn = 1
+			if pn == "P1" then
+				CurrentTabP1 = CurrentTab
+				CurrentRowP1 = CurrentRow
+				CurrentColumnP1 = CurrentColumn
+			elseif pn == "P2" then
+				CurrentTabP2 = CurrentTab
+				CurrentRowP2 = CurrentRow
+				CurrentColumnP2 = CurrentColumn
+			end
+			MESSAGEMAN:Broadcast("UpdateMenuCursorPosition"..pn, {})
+		end
+	
+	end,
+}
+
+-- The upper NPS text
+af[#af+1] = Def.BitmapText{
+	Font="Miso/_miso",
+	Name=pn.."UpperNPSText",
+	InitCommand=function(self)
+		local zoom = 0.7
+		local Parent = self:GetParent():GetChild(pn.."NPSFilter2Box1")
+		local TextX = Parent:GetX()
+		local TextY = Parent:GetY()
+		local QuadWidth = Parent:GetZoomX()
+		local QuadHeight = Parent:GetZoomY()
+		self:horizalign(center):vertalign(middle):shadowlength(1)
+			:draworder(2)
+			:x(TextX + QuadWidth/2)
+			:y(TextY + QuadHeight/2)
+			:maxwidth(QuadWidth - 5)
+			:zoom(zoom)
+			:settext(CurrentUpperNPS == 0 and "none" or CurrentUpperNPS)
+			:queuecommand("UpdateDisplayedTab")
+	end,
+	UpdateDisplayedTabCommand=function(self)
+		if pn == "P1" then
+			if CurrentTabP1 ~= 5 then
+				self:visible(false)
+			else
+				self:visible(true)
+			end
+		elseif pn == "P2" then
+			if CurrentTabP2 ~= 5 then
+				self:visible(false)
+			else
+				self:visible(true)
+			end
+		end
+	end,
+	["UpdateMenuCursorPosition"..pn.."MessageCommand"]=function(self, params)
+		local CurrentTab, CurrentRow, CurrentColumn
+		if pn == "P1" then
+			CurrentTab = CurrentTabP1
+			CurrentRow = CurrentRowP1
+			CurrentColumn = CurrentColumnP1
+		elseif pn == "P2" then
+			CurrentTab = CurrentTabP2
+			CurrentRow = CurrentRowP2
+			CurrentColumn = CurrentColumnP2
+		end
+		if CurrentTab == 5 and CurrentRow == 11 then
+			if params[1] == "right" then
+				if CurrentUpperNPS == MaxBPM then
+					if not params[2] == true then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+						CurrentUpperNPS = 0
+						SetUpperNPSFilter(CurrentUpperNPS)
+						self:settext(CurrentUpperNPS == 0 and "none" or CurrentUpperNPS)
+					end
+				else
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+					CurrentUpperNPS = CurrentUpperNPS + 1
+					SetUpperNPSFilter(CurrentUpperNPS)
+					self:settext(CurrentUpperNPS == 0 and "none" or CurrentUpperNPS)
+				end
+				if HaveSortsFiltersChanged() then
+					MusicWheelNeedsResetting = true
+				else
+					MusicWheelNeedsResetting = false
+				end
+				if IsUsingFilters() or IsUsingSorts() then
+					MESSAGEMAN:Broadcast("UpdateResetColor", {"green"})
+				else
+					MESSAGEMAN:Broadcast("UpdateResetColor", {"red"})
+				end
+			elseif params[1] == "left" then
+				if CurrentUpperNPS == 0 then
+					if not params[2] == true then
+						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+						CurrentUpperNPS = MaxBPM
+						SetUpperNPSFilter(CurrentUpperNPS)
+						self:settext(CurrentUpperNPS == 0 and "none" or CurrentUpperNPS)
+					end
+				else
+					SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
+					CurrentUpperNPS = CurrentUpperNPS - 1
+					SetUpperNPSFilter(CurrentUpperNPS)
+					self:settext(CurrentUpperNPS == 0 and "none" or CurrentUpperNPS)
+				end
+				if HaveSortsFiltersChanged() then
+					MusicWheelNeedsResetting = true
+				else
+					MusicWheelNeedsResetting = false
+				end
+				if IsUsingFilters() or IsUsingSorts() then
+					MESSAGEMAN:Broadcast("UpdateResetColor", {"green"})
+				else
+					MESSAGEMAN:Broadcast("UpdateResetColor", {"red"})
+				end
+			end
+		end
+	end,
+}
+
 
 -------------------------------------------------------
 
@@ -2102,7 +2519,7 @@ af[#af+1] = Def.BitmapText{
 af[#af+1] = Def.Quad{
 	Name=pn.."LengthFilter1Box1",
 	InitCommand=function(self)
-		local Parent = self:GetParent():GetChild(pn.."SortsFilters8")
+		local Parent = self:GetParent():GetChild(pn.."SortsFilters9")
 		local TextZoom = Parent:GetZoom()
 		local TextWidth = Parent:GetWidth() * TextZoom
 		local TextHeight = Parent:GetHeight()
@@ -2156,14 +2573,14 @@ af[#af+1] = Def.Quad{
 		ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
 		
 		if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 5 then
-			if CurrentRow ~= 10 then
-				if CurrentRow < 10 then
+			if CurrentRow ~= 12 then
+				if CurrentRow < 12 then
 					SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
-				elseif CurrentRow > 10 then
+				elseif CurrentRow > 12 then
 					SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
 				end
 			end
-			CurrentRow = 10
+			CurrentRow = 12
 			CurrentColumn = 1
 			if pn == "P1" then
 				CurrentTabP1 = CurrentTab
@@ -2235,7 +2652,7 @@ af[#af+1] = Def.BitmapText{
 			CurrentRow = CurrentRowP2
 			CurrentColumn = CurrentColumnP2
 		end
-		if CurrentTab == 5 and CurrentRow == 10 then
+		if CurrentTab == 5 and CurrentRow == 12 then
 			if params[1] == "right" then
 				if CurrentLowerLength == 3600 then
 					if not params[2] == true then
@@ -2376,7 +2793,7 @@ af[#af+1] = Def.Quad{
 		local TextWidth = Parent:GetWidth() * TextZoom
 		local TextHeight = Parent:GetHeight()
 		local TextXPosition = Parent:GetX()
-		local QuadYPosition = self:GetParent():GetChild(pn.."SortsFilters8"):GetY()
+		local QuadYPosition = self:GetParent():GetChild(pn.."SortsFilters9"):GetY()
 		self:diffuse(color("#4d4d4d"))
 			:draworder(1)
 			:zoomto(60, TextHeight)
@@ -2425,14 +2842,14 @@ af[#af+1] = Def.Quad{
 		ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
 		
 		if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 5 then
-			if CurrentRow ~= 11 then
-				if CurrentRow < 11 then
+			if CurrentRow ~= 13 then
+				if CurrentRow < 13 then
 					SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
-				elseif CurrentRow > 11 then
+				elseif CurrentRow > 13 then
 					SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
 				end
 			end
-			CurrentRow = 11
+			CurrentRow = 13
 			CurrentColumn = 1
 			if pn == "P1" then
 				CurrentTabP1 = CurrentTab
@@ -2504,7 +2921,7 @@ af[#af+1] = Def.BitmapText{
 			CurrentRow = CurrentRowP2
 			CurrentColumn = CurrentColumnP2
 		end
-		if CurrentTab == 5 and CurrentRow == 11 then
+		if CurrentTab == 5 and CurrentRow == 13 then
 			if params[1] == "right" then
 				if CurrentUpperLength == 3600 then
 					if not params[2] == true then
@@ -2604,7 +3021,7 @@ for i=1,#FilterOptions do
 		Name=pn.."GrooveStats"..i,
 		InitCommand=function(self)
 			local zoom = 0.55
-			local Parent = self:GetParent():GetChild(pn.."SortsFilters9")
+			local Parent = self:GetParent():GetChild(pn.."SortsFilters10")
 			local TextZoom = Parent:GetZoom()
 			local TextWidth = Parent:GetWidth() * TextZoom
 			local TextHeight = Parent:GetHeight() * TextZoom
@@ -2692,7 +3109,7 @@ af[#af+1] = Def.Quad{
 			CurrentRow = CurrentRowP2
 			CurrentColumn = CurrentColumnP2
 		end
-		if CurrentTab == 5 and CurrentRow == 12 then
+		if CurrentTab == 5 and CurrentRow == 14 then
 			if CurrentColumn == 1 then
 				CurrentGrooveStats = 1
 				SetGrooveStatsFilter(CurrentGroovestats)
@@ -2754,44 +3171,44 @@ af[#af+1] = Def.Quad{
 			
 			if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 5 then
 				if j == 1 then
-					if CurrentRow ~= 12 and CurrentGrooveStats == 1 then
-						if CurrentRow < 12 then
+					if CurrentRow ~= 14 and CurrentGrooveStats == 1 then
+						if CurrentRow < 14 then
 							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
-						elseif CurrentRow > 12 then
+						elseif CurrentRow > 14 then
 							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
 						end
 					elseif CurrentGrooveStats ~= 1 then
 						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 					end
-					CurrentRow = 12
+					CurrentRow = 14
 					CurrentColumn = 1
 					CurrentGrooveStats = 1
 					SetGrooveStatsFilter(CurrentGrooveStats)
 				elseif j == 2 then
-					if CurrentRow ~= 12 and CurrentGrooveStats == 2 then
-						if CurrentRow < 12 then
+					if CurrentRow ~= 14 and CurrentGrooveStats == 2 then
+						if CurrentRow < 14 then
 							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
-						elseif CurrentRow > 12 then
+						elseif CurrentRow > 14 then
 							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
 						end
 					elseif CurrentGrooveStats ~= 2 then
 						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 					end
-					CurrentRow = 12
+					CurrentRow = 14
 					CurrentColumn = 2
 					CurrentGrooveStats = 2
 					SetGrooveStatsFilter(CurrentGrooveStats)
 				elseif j == 3 then
-					if CurrentRow ~= 12 and CurrentGrooveStats == 3 then
-						if CurrentRow < 12 then
+					if CurrentRow ~= 14 and CurrentGrooveStats == 3 then
+						if CurrentRow < 14 then
 							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
-						elseif CurrentRow > 12 then
+						elseif CurrentRow > 14 then
 							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
 						end
 					elseif CurrentGrooveStats ~= 3 then
 						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 					end
-					CurrentRow = 12
+					CurrentRow = 14
 					CurrentColumn = 3
 					CurrentGrooveStats = 3
 					SetGrooveStatsFilter(CurrentGrooveStats)
@@ -2841,7 +3258,7 @@ for i=1,#FilterOptions do
 		Name=pn.."Autogen"..i,
 		InitCommand=function(self)
 			local zoom = 0.55
-			local Parent = self:GetParent():GetChild(pn.."SortsFilters10")
+			local Parent = self:GetParent():GetChild(pn.."SortsFilters11")
 			local TextZoom = Parent:GetZoom()
 			local TextWidth = Parent:GetWidth() * TextZoom
 			local TextHeight = Parent:GetHeight() * TextZoom
@@ -2886,7 +3303,7 @@ end
 
 -- Autogen Selector
 af[#af+1] = Def.Quad{
-	Name=pn.."GrooveStatsSelector",
+	Name=pn.."AutogenSelector",
 	InitCommand=function(self)
 		local Parent = self:GetParent():GetChild(pn.."Autogen"..CurrentAutogen)
 		local TextZoom = Parent:GetZoom()
@@ -2929,7 +3346,7 @@ af[#af+1] = Def.Quad{
 			CurrentRow = CurrentRowP2
 			CurrentColumn = CurrentColumnP2
 		end
-		if CurrentTab == 5 and CurrentRow == 13 then
+		if CurrentTab == 5 and CurrentRow == 15 then
 			if CurrentColumn == 1 then
 				CurrentAutogen = 1
 				SetAutogenFilter(CurrentColumn)
@@ -2991,36 +3408,36 @@ af[#af+1] = Def.Quad{
 			
 			if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 5 then
 				if j == 1 then
-					if CurrentRow ~= 13 and CurrentAutogen == 1 then
-						if CurrentRow < 13 then
+					if CurrentRow ~= 15 and CurrentAutogen == 1 then
+						if CurrentRow < 15 then
 							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
-						elseif CurrentRow > 13 then
+						elseif CurrentRow > 15 then
 							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
 						end
 					elseif CurrentAutogen ~= 1 then
 						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 					end
-					CurrentRow = 13
+					CurrentRow = 15
 					CurrentColumn = 1
 					CurrentAutogen = 1
 					SetAutogenFilter(CurrentAutogen)
 				elseif j == 2 then
-					if CurrentRow ~= 13 and CurrentAutogen == 2 then
-						if CurrentRow < 13 then
+					if CurrentRow ~= 15 and CurrentAutogen == 2 then
+						if CurrentRow < 15 then
 							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
-						elseif CurrentRow > 13 then
+						elseif CurrentRow > 15 then
 							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
 						end
 					elseif CurrentAutogen ~= 2 then
 						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 					end
-					CurrentRow = 13
+					CurrentRow = 15
 					CurrentColumn = 2
 					CurrentAutogen = 2
 					SetAutogenFilter(CurrentAutogen)
 				elseif j == 3 then
-					if CurrentRow ~= 13 and CurrentAutogen == 3 then
-						if CurrentRow < 13 then
+					if CurrentRow ~= 15 and CurrentAutogen == 3 then
+						if CurrentRow < 15 then
 							SOUND:PlayOnce( THEME:GetPathS("", "_next row.ogg") )
 						elseif CurrentRow > 13 then
 							SOUND:PlayOnce( THEME:GetPathS("", "_prev row.ogg") )
@@ -3028,7 +3445,7 @@ af[#af+1] = Def.Quad{
 					elseif CurrentAutogen ~= 3 then
 						SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 					end
-					CurrentRow = 13
+					CurrentRow = 15
 					CurrentColumn = 3
 					CurrentAutogen = 3
 					SetAutogenFilter(CurrentAutogen)
@@ -3076,7 +3493,7 @@ af[#af+1] = Def.BitmapText{
 		Name=pn.."Reset",
 		InitCommand=function(self)
 			local zoom = 0.7
-			local Parent = self:GetParent():GetChild(pn.."SortsFilters11")
+			local Parent = self:GetParent():GetChild(pn.."SortsFilters12")
 			local TextYPosition = Parent:GetY()
 			self:horizalign(center):vertalign(top):shadowlength(1)
 				:x(XPos + padding/2 + border/2 + width/2)
@@ -3189,7 +3606,7 @@ af[#af+1] = Def.Quad{
 		ObjectY = ObjectY + (0.5-VAlign)*ObjectHeight
 		
 		if IsMouseGucci(ObjectX, ObjectY, ObjectWidth, ObjectHeight) and CurrentTab == 5 then
-			CurrentRow = 14
+			CurrentRow = 16
 			CurrentColumn = 1
 			SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 			MESSAGEMAN:Broadcast("DDResetSortsFilters")
@@ -3253,6 +3670,8 @@ THEME:GetString("OptionExplanations","DifficultyFilter"),
 THEME:GetString("OptionExplanations","DifficultyFilter"),
 THEME:GetString("OptionExplanations","BPMFilter"),
 THEME:GetString("OptionExplanations","BPMFilter"),
+THEME:GetString("OptionExplanations","NPSFilter"),
+THEME:GetString("OptionExplanations","NPSFilter"),
 THEME:GetString("OptionExplanations","LengthFilter"),
 THEME:GetString("OptionExplanations","LengthFilter"),
 THEME:GetString("OptionExplanations","GrooveStatsFilter"),

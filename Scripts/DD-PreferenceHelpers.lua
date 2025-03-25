@@ -221,6 +221,52 @@ function SetUpperBPMFilter(value)
 	end
 end
 
+----- Lower NPS Filter profile settings ----- 
+function GetLowerNPSFilter()
+	local value
+	if GAMESTATE:IsPlayerEnabled(PLAYER_1) then
+		value = DDStats.GetStat(PLAYER_1, 'LowerNPSFilter')
+	else
+		value = DDStats.GetStat(PLAYER_2, 'LowerNPSFilter')
+	end
+
+	if value == nil then
+		value = 0
+	end
+
+	return tonumber(value)
+end
+
+function SetLowerNPSFilter(value)
+	for i,playerNum in ipairs(GAMESTATE:GetHumanPlayers()) do
+		DDStats.SetStat(playerNum, 'LowerNPSFilter', value)
+		DDStats.Save(playerNum)
+	end
+end
+
+----- Upper NPS Filter profile settings ----- 
+function GetUpperNPSFilter()
+	local value
+	if GAMESTATE:IsPlayerEnabled(PLAYER_1) then
+		value = DDStats.GetStat(PLAYER_1, 'UpperNPSFilter')
+	else
+		value = DDStats.GetStat(PLAYER_2, 'UpperNPSFilter')
+	end
+
+	if value == nil then
+		value = 0
+	end
+
+	return tonumber(value)
+end
+
+function SetUpperNPSFilter(value)
+	for i,playerNum in ipairs(GAMESTATE:GetHumanPlayers()) do
+		DDStats.SetStat(playerNum, 'UpperNPSFilter', value)
+		DDStats.Save(playerNum)
+	end
+end
+
 ----- Lower Length Filter profile settings ----- 
 function GetLowerLengthFilter()
 	local value
@@ -325,6 +371,8 @@ function IsUsingFilters()
 	elseif GetShowDifficulty("Edit") ~= nil and GetShowDifficulty("Edit") ~= 1 then return true
 	elseif GetLowerBPMFilter() ~= nil and GetLowerBPMFilter() ~= 49 then return true
 	elseif GetUpperBPMFilter() ~= nil and GetUpperBPMFilter() ~= 49 then return true
+	elseif GetLowerNPSFilter() ~= nil and GetLowerNPSFilter() ~= 0 then return true
+	elseif GetUpperNPSFilter() ~= nil and GetUpperNPSFilter() ~= 0 then return true
 	elseif GetLowerLengthFilter() ~= nil and GetLowerLengthFilter() ~= 0 then return true
 	elseif GetUpperLengthFilter() ~= nil and GetUpperLengthFilter() ~= 0 then return true
 	elseif GetGrooveStatsFilter() ~= nil and GetGrooveStatsFilter() ~= 1 then return true
