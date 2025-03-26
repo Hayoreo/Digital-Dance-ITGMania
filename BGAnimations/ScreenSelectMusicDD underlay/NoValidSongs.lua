@@ -6,6 +6,8 @@ local DefaultLowerMeter = 0
 local DefaultUpperMeter = 0
 local DefaultLowerBPM = 49
 local DefaultUpperBPM = 49
+local DefaultLowerNPS = 0
+local DefaultUpperNPS = 0
 local DefaultLowerLength = 0
 local DefaultUpperLength = 0
 local DefaultGrooveStats = 1
@@ -24,6 +26,8 @@ GetShowDifficulty("Challenge") ~= DefaultDifficulty or
 GetShowDifficulty("Edit") ~= DefaultDifficulty or
 GetLowerBPMFilter() ~= DefaultLowerBPM or
 GetUpperBPMFilter() ~= DefaultUpperBPM or
+GetLowerNPSFilter() ~= DefaultLowerNPS or
+GetUpperNPSFilter() ~= DefaultUpperNPS or
 GetLowerLengthFilter() ~= DefaultLowerLength or
 GetUpperLengthFilter() ~= DefaultUpperLength or
 GetGrooveStatsFilter() ~= DefaultGrooveStats or
@@ -39,6 +43,8 @@ GetAutogenFilter() ~= DefaultAutogen then
 	SetShowDifficulty("Edit")
 	SetLowerBPMFilter(DefaultLowerBPM)
 	SetUpperBPMFilter(DefaultUpperBPM)
+	SetLowerNPSFilter(DefaultLowerNPS)
+	SetUpperNPSFilter(DefaultUpperNPS)
 	SetLowerLengthFilter(DefaultLowerLength)
 	SetUpperLengthFilter(DefaultUpperLength)
 	SetGrooveStatsFilter(DefaultGrooveStats)

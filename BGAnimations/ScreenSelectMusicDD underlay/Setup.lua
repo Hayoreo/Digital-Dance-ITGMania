@@ -378,6 +378,24 @@ local UpdatePrunedSongs = function()
 					end
 				end
 
+				-- Filter for NPS
+				if GetLowerNPSFilter() ~= 0 or GetUpperNPSFilter() ~= 0 then
+					local mpn = GAMESTATE:GetMasterPlayerNumber()
+					local hasPassingNPS = false
+					for steps in ivalues(song:GetStepsByStepsType(steps_type)) do
+						-- Need to round otherwise floating points will ruin your day.
+						local passesLower = GetLowerNPSFilter() == 0 or round(steps:GetPeakNPS(mpn), 2) >= round(GetLowerNPSFilter()/15, 2)
+						local passesUpper = GetUpperNPSFilter() == 0 or round(steps:GetPeakNPS(mpn), 2) <= round(GetUpperNPSFilter()/15, 2)
+						if passesLower and passesUpper then
+							hasPassingNPS = true
+							break
+						end
+					end
+					if not hasPassingNPS then
+						passesFilters = false
+					end
+				end
+				
 				---- Filter for GrooveStats
 				if GetGrooveStatsFilter() == 2 then
 					if not groovestats_groups_set[song:GetGroupName()] then
