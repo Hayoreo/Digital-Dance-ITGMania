@@ -7,6 +7,22 @@ elseif current_style == "StyleType_OnePlayerTwoSides" then
 	style = "Single"
 end
 
+----- Default preference values
+local DefaultMainSort = 1
+local DefaultSubSort = 2
+local DefaultSubSort2 = 2
+local DefaultLowerMeter = 0
+local DefaultUpperMeter = 0
+local DefaultDifficulty = 1
+local DefaultLowerBPM = 49
+local DefaultUpperBPM = 49
+local DefaultLowerNPS = 0
+local DefaultUpperNPS = 0
+local DefaultLowerLength = 0
+local DefaultUpperLength = 0
+local DefaultGrooveStats = 1
+local DefaultAutogen = 1
+
 local function GetLastStyle()
 	local value
 	if GAMESTATE:IsPlayerEnabled(PLAYER_1) then
@@ -39,20 +55,6 @@ local t = Def.ActorFrame{
 	end,
 	
 	DDResetSortsFiltersMessageCommand=function(self)
-		----- Default preference values
-		local DefaultMainSort = 1
-		local DefaultSubSort = 2
-		local DefaultSubSort2 = 2
-		local DefaultLowerMeter = 0
-		local DefaultUpperMeter = 0
-		local DefaultDifficulty = 1
-		local DefaultLowerBPM = 49
-		local DefaultUpperBPM = 49
-		local DefaultLowerLength = 0
-		local DefaultUpperLength = 0
-		local DefaultGrooveStats = 1
-		local DefaultAutogen = 1
-
 		if 
 		SongSearchWheelNeedsResetting == true or
 		IsUsingSorts() or
@@ -71,6 +73,8 @@ local t = Def.ActorFrame{
 			SetShowDifficulty("Edit", DefaultDifficulty)
 			SetLowerBPMFilter(DefaultLowerBPM)
 			SetUpperBPMFilter(DefaultUpperBPM)
+			SetLowerNPSFilter(DefaultLowerNPS)
+			SetUpperNPSFilter(DefaultUpperNPS)
 			SetLowerLengthFilter(DefaultLowerLength)
 			SetUpperLengthFilter(DefaultUpperLength)
 			SetGrooveStatsFilter(DefaultGrooveStats)
@@ -116,19 +120,7 @@ local t = Def.ActorFrame{
 	
 	ResetGuestStatsMessageCommand=function(self, params)
 		local playerNum = params[1]
-		----- Default preference values
-		local DefaultMainSort = 1
-		local DefaultSubSort = 2
-		local DefaultSubSort2 = 2
-		local DefaultLowerMeter = 0
-		local DefaultUpperMeter = 0
-		local DefaultDifficulty = 1
-		local DefaultLowerBPM = 49
-		local DefaultUpperBPM = 49
-		local DefaultLowerLength = 0
-		local DefaultUpperLength = 0
-		local DefaultGrooveStats = 1
-		local DefaultAutogen = 1
+		
 		--- other dd-stat variables that don't effect sort/filters
 		local DefaultLastStyle = "Single"
 		local DefaultLastTab = "Steps"
@@ -153,6 +145,8 @@ local t = Def.ActorFrame{
 		DDStats.SetStat(playerNum, "Edit", DefaultDifficulty)
 		DDStats.SetStat(playerNum, 'LowerBPMFilter', DefaultLowerBPM)
 		DDStats.SetStat(playerNum, 'UpperBPMFilter', DefaultUpperBPM)
+		DDStats.SetStat(playerNum, 'LowerNPSFilter', DefaultLowerNPS)
+		DDStats.SetStat(playerNum, 'UpperNPSFilter', DefaultUpperNPS)
 		DDStats.SetStat(playerNum, 'LowerLengthFilter', DefaultLowerLength)
 		DDStats.SetStat(playerNum, 'UpperLengthFilter', DefaultUpperLength)
 		DDStats.SetStat(playerNum, 'GrooveStatsFilter', DefaultGrooveStats)
