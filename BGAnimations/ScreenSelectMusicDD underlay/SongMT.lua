@@ -491,7 +491,7 @@ local song_mt = {
 				else
 					self.title_bmt:valign(0.5)
 				end
-				if GetMainSortPreference() ~= 7 then
+				if GetMainSortPreference() ~= 8 then
 					if NumPlayers == 1 then
 						if IsCurrentSongTagged(song, PlayerNum) or (IsCurrentGroupTagged(song:GetGroupName(), PlayerNum) and GetMainSortPreference() ~= 1) then
 							if PlayerNum == 0 then

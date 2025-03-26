@@ -15,7 +15,7 @@ local DefaultAutogen = 1
 local DefaultDifficulty = 1
 local DefaultMainSort = 1
 if
-GetMainSortPreference() == 7 or
+GetMainSortPreference() == 8 or
 GetLowerMeterFilter() ~= DefaultLowerMeter or
 GetUpperMeterFilter() ~= DefaultUpperMeter or
 GetShowDifficulty("Beginner") ~= DefaultDifficulty or

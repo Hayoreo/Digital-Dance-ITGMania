@@ -133,7 +133,7 @@ af.GetPlayerGradesCommand=function(self)
 						end
 					end
 				-- if sorted by difficulty only show grades if they match the difficulty of the group folder
-				elseif SongSort == 6 then
+				elseif SongSort == 7 then
 					if (songsteps:GetMeter() == NameOfGroup or (songsteps:GetMeter() >= 40 and NameOfGroup == "40+")) and stepstype == songsteps:GetStepsType() then
 						SongCount = SongCount + 1
 						HighScoreList = player_profile:GetHighScoreListIfExists(song,songsteps)

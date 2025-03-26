@@ -159,9 +159,9 @@ local t = Def.ActorFrame{
 				self:settext(NameOfGroup)
 				if GetMainSortPreference() == 4 then
 					self:zoom(0.6):maxwidth(BannerWidth/0.6)
-				elseif GetMainSortPreference() == 5 then
+				elseif GetMainSortPreference() == 5 or GetMainSortPreference() == 6 then
 					self:zoom(0.9):maxwidth(BannerWidth/0.9)
-				elseif GetMainSortPreference() == 7 then
+				elseif GetMainSortPreference() == 8 then
 					self:zoom(0.5):maxwidth(BannerWidth/0.5)
 				end
 				if NameOfGroup == "#" then

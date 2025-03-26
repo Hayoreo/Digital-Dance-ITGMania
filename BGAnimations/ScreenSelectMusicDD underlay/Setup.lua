@@ -74,6 +74,18 @@ local function GetSongBpmGroup(song)
 	end
 end
 
+function GetStepsNpsGroup(steps)
+	local mpn = GAMESTATE:GetMasterPlayerNumber()
+	local bpm_equivalent = math.round(steps:GetPeakNPS(mpn)*15)
+	local index = GetMaxIndexBelowOrEqual(song_bpms, bpm_equivalent)
+
+	if index == #song_bpms then
+		return max_bpm_group
+	else
+		return song_bpms[index] .. ' - ' .. (song_bpms[index+1] - 1)
+	end
+end
+
 -- Initialize GrooveStats filter
 local path = THEME:GetCurrentThemeDirectory() .. "Other/GrooveStats-Groups.txt"
 local groovestats_groups = GetFileContents(path)
@@ -190,12 +202,28 @@ local function GetStepCount(group, song)
 	return count
 end
 
+local function GetStepNPS(group, song)
+	local count = 0
+	local mpn = GAMESTATE:GetMasterPlayerNumber()
+
+	for steps in ivalues(song:GetStepsByStepsType(GAMESTATE:GetCurrentStyle():GetStepsType())) do
+		local nps = steps:GetPeakNPS(mpn)
+		if GetMainSortPreference() ~= 7 or GetStepsDifficultyGroup(steps) == group then
+			return  nps
+		end
+		count = math.max(count,  nps)
+	end
+	
+	return count
+end
+
 local subsort_funcs = {
 	function(g, s) return s:GetGroupName() end,
 	function(g, s) return s:GetDisplayMainTitle():lower() end,
 	function(g, s) return s:GetDisplayArtist():lower() end,
 	function(g, s) return s:MusicLengthSeconds() end,
 	function(g, s) return s:GetDisplayBpms()[2] end,
+	GetStepNPS,
 	GetStepCount,
 	GetHighestDifficulty,
 }
@@ -211,6 +239,20 @@ local main_sort_funcs = {
 	function(g, s) return math.floor(s:MusicLengthSeconds()) end,
 	-- Song BPM
 	function(g, s) return round(s:GetDisplayBpms()[2], 0) end,
+	-- Peak NPS
+	function(g, s)
+		local mpn = GAMESTATE:GetMasterPlayerNumber()
+		local max_bpm_equivalent = 0
+		for steps in ivalues(s:GetStepsByStepsType(steps_type)) do
+			local group = GetStepsNpsGroup(steps)
+			if group == g then
+				local bpm_equivalent = math.round(steps:GetPeakNPS(mpn)*15)
+				max_bpm_equivalent = math.max(bpm_equivalent, max_bpm_equivalent)
+			end
+		end
+		return max_bpm_equivalent
+	end,
+	
 	-- Difficulty (only subsort)
 	function(g, s) return '' end,
 	-- Tags
@@ -251,6 +293,20 @@ local UpdatePrunedSongs = function()
 	elseif sort_pref == 6 then
 		songs_by_group = {}
 		for song in ivalues(AllSongs) do
+			for steps in ivalues(song:GetStepsByStepsType(steps_type)) do
+				local group = GetStepsNpsGroup(steps)
+				if songs_by_group[group] == nil then
+					songs_by_group[group] = {song}
+				else
+					local songs = songs_by_group[group]
+					songs[#songs+1] = song
+				end
+			end
+		end
+	
+	elseif sort_pref == 7 then
+		songs_by_group = {}
+		for song in ivalues(AllSongs) do
 			local meters_set = {}
 			for steps in ivalues(song:GetStepsByStepsType(steps_type)) do
 				local MeetsRequirements = false
@@ -281,7 +337,8 @@ local UpdatePrunedSongs = function()
 				end
 			end
 		end
-	elseif sort_pref == 7 then
+
+	elseif sort_pref == 8 then
 		songs_by_group = {}
 		local PlayerNumber
 		local NumPlayers = GAMESTATE:GetNumPlayersEnabled()
@@ -640,6 +697,23 @@ local GetGroups = function()
 		local groups_set = {}
 		for song in ivalues(AllSongs) do
 			for steps in ivalues(song:GetStepsByStepsType(steps_type)) do
+				groups_set[GetStepsNpsGroup(steps)] = true
+			end
+		end
+		local groups = {}
+		for group, _ in pairs(groups_set) do
+			groups[#groups+1] = group
+		end
+		table.sort(groups, function(a,b)
+			local a_bpm = tonumber(a:match('^[0-9]*'))
+			local b_bpm = tonumber(b:match('^[0-9]*'))
+			return a_bpm < b_bpm
+		end)
+		return groups
+	elseif sort_pref == 7 then
+		local groups_set = {}
+		for song in ivalues(AllSongs) do
+			for steps in ivalues(song:GetStepsByStepsType(steps_type)) do
 				groups_set[GetStepsDifficultyGroup(steps)] = true
 			end
 		end
@@ -653,7 +727,7 @@ local GetGroups = function()
 			return a < b
 		end)
 		return groups
-	elseif sort_pref == 7 then
+	elseif sort_pref == 8 then
 		local groups = {}
 		local PlayerNumber
 		local NumPlayers = GAMESTATE:GetNumPlayersEnabled()
@@ -862,7 +936,7 @@ if not found_group then
 end
 
 -- Update group if we're sorted by difficulty.
-if GetMainSortPreference() == 6 and not SongSearchSSMDD then
+if GetMainSortPreference() == 7 and not SongSearchSSMDD then
 	local steps = GAMESTATE:GetCurrentSteps(GAMESTATE:GetMasterPlayerNumber())
 	if steps ~= nil then
 		NameOfGroup = GetStepsDifficultyGroup(steps)
