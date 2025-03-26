@@ -384,8 +384,8 @@ local UpdatePrunedSongs = function()
 					local hasPassingNPS = false
 					for steps in ivalues(song:GetStepsByStepsType(steps_type)) do
 						-- Need to round otherwise floating points will ruin your day.
-						local passesLower = GetLowerNPSFilter() == 0 or round(steps:GetPeakNPS(mpn), 2) >= round(GetLowerNPSFilter()/15, 2)
-						local passesUpper = GetUpperNPSFilter() == 0 or round(steps:GetPeakNPS(mpn), 2) <= round(GetUpperNPSFilter()/15, 2)
+						local passesLower = GetLowerNPSFilter() == 0 or round(steps:GetPeakNPS(mpn) * 15) >= round(GetLowerNPSFilter())
+						local passesUpper = GetUpperNPSFilter() == 0 or round(steps:GetPeakNPS(mpn) * 15) <= round(GetUpperNPSFilter())
 						if passesLower and passesUpper then
 							hasPassingNPS = true
 							break
