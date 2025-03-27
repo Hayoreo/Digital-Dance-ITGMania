@@ -200,7 +200,7 @@ local function GetStepCount(group, song)
 
 	for steps in ivalues(song:GetStepsByStepsType(GAMESTATE:GetCurrentStyle():GetStepsType())) do
 		local steps_count = steps:GetRadarValues(mpn):GetValue('RadarCategory_TapsAndHolds')
-		if GetMainSortPreference() ~= 6 or GetStepsDifficultyGroup(steps) == group then
+		if GetMainSortPreference() ~= 7 or GetStepsDifficultyGroup(steps) == group then
 			return steps_count
 		end
 		count = math.max(count, steps_count)
@@ -210,17 +210,12 @@ local function GetStepCount(group, song)
 end
 
 local function GetStepNPS(group, song)
-	local count = 0
-
+	local nps = 0
 	for steps in ivalues(song:GetStepsByStepsType(GAMESTATE:GetCurrentStyle():GetStepsType())) do
-		local nps = GetPeakNPS(steps)
-		if GetMainSortPreference() ~= 7 or GetStepsDifficultyGroup(steps) == group then
-			return  nps
+		if GetStepsNpsGroup(steps) == group then
+			return GetPeakNPS(steps)
 		end
-		count = math.max(count,  nps)
 	end
-	
-	return count
 end
 
 local subsort_funcs = {
