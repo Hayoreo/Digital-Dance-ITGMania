@@ -75,7 +75,8 @@ These sounds are seperated by player now so each player's sounds will only play 
 
 # ------------ Future endeavors ------------
 - Add keyboard support for number fields in the player menu.
-- Add more detailed sorts/filters.
-- Add tech parsing for double (it does not work at all right now).
+- Add sort/filter options to tags.
+- Take advantage of all engine side chart parsing.
+- Consolidate player menu for less clutter and more customization.
 - Add a way for a single player to switch sides without ending a session.
 - Give all screens mouse functionality.
