@@ -77,7 +77,7 @@ end
 function GetPeakNPS(steps)
 	local mpn = GAMESTATE:GetMasterPlayerNumber()
 	local song = SONGMAN:GetSongFromSteps(steps)
-	local nps = steps:GetPeakNPS(mpn)
+	local nps = steps:GetPeakNps(mpn)
 
 	return nps
 end

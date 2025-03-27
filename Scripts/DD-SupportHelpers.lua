@@ -85,16 +85,16 @@ end
 -- use StepManiaVersionIsSupported() to check if Digital Dance supports the version of ITGMania in use
 
 StepManiaVersionIsSupported = function()
-	-- ITGmania >= 1.0.0
+	-- ITGmania >= 1.0.1
 	if IsITGmania() then
-		return IsMinimumProductVersion(1, 0, 0)
+		return IsMinimumProductVersion(1, 0, 1)
 	end
 
 	return false
 end
 
 -- -----------------------------------------------------------------------
--- game types like "kickbox" and "lights" aren't supported in Simply Love, so we
+-- game types like "kickbox" and "lights" aren't supported in Digital Dance, so we
 -- use this function to hardcode a list of game modes that are supported, and use it
 -- in ScreenInit overlay.lua to redirect players to ScreenSelectGame if necessary.
 --
@@ -102,13 +102,9 @@ end
 -- having any idea they'd done so, and have then messaged me saying the theme was broken.)
 
 CurrentGameIsSupported = function()
-	-- a hardcoded list of games that Simply Love supports
+	-- a hardcoded list of games that Digital Dance supports
 	local support = {
 		dance  = true,
-		pump   = true,
-		techno = true,
-		para   = true,
-		kb7    = true
 	}
 	-- return true or nil
 	return support[GAMESTATE:GetCurrentGame():GetName()]
