@@ -67,7 +67,7 @@ These sounds are seperated by player now so each player's sounds will only play 
 
 ## ITGMANIA ONLY
 - As noted in the "About" section this theme is intended for use with ITGMania only.
-- If you are using ITGMania version 1.0.0 or older you will need to upgrade to 1.0.1 or newer.
+- If you are using ITGMania version 1.0.0 or older you will need to upgrade to 1.0.2 or newer.
 
 # -- General things to note --
 - This theme is intended for home use only.
