@@ -244,11 +244,6 @@ t.Handler = function(event)
 		return false
 	end
 	
-	-- Disable input if EscapeFromEventMode is active
-	if EscapeFromEventMode then
-		t.enabled = false
-	end
-	
 if not GAMESTATE:IsSideJoined(event.PlayerNumber) then
 		if not t.AllowLateJoin() then return false end
 

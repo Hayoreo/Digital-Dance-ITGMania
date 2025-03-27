@@ -147,8 +147,6 @@ local t = Def.ActorFrame {
 	LoadActor("./SortMenu/default.lua"),
 	-- a Test Input overlay can be accessed from the SortMenu
 	LoadActor("../ScreenSelectMusicDD underlay/TestInput.lua"),
-	-- For backing out of SSMDD.
-	LoadActor('../ScreenSelectMusicDD underlay/EscapeFromEventMode.lua'),
 	-- For transitioning to either gameplay or player options.
 	LoadActor('./OptionsMessage.lua'),
 }

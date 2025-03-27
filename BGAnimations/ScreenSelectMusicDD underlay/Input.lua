@@ -100,7 +100,7 @@ local lastMenuDownPressTime = 0
 t.Handler = function(event)
 	-- Input to open the song search menu or reload a single song on the wheel. Keep track of both left and right Ctrl being held.
 	if event.type == "InputEventType_FirstPress" and event.type ~= "InputEventType_Release" then
-		if not IsSearchMenuVisible and not EscapeFromEventMode and not IsTagsMenuVisible then
+		if not IsSearchMenuVisible and not IsTagsMenuVisible then
 			if event.DeviceInput.button == "DeviceButton_left ctrl" or event.DeviceInput.button == "DeviceButton_right ctrl" then
 				CtrlHeld = CtrlHeld + 1
 			end
@@ -127,7 +127,7 @@ t.Handler = function(event)
 			end
 		end
 		
-		if (event.DeviceInput.button == "DeviceButton_escape" or  event.GameButton == "Back") and IsSearchMenuVisible and not EscapeFromEventMode and not IsTagsMenuVisible then
+		if (event.DeviceInput.button == "DeviceButton_escape" or  event.GameButton == "Back") and IsSearchMenuVisible and not IsTagsMenuVisible then
 			SOUND:PlayOnce( THEME:GetPathS("ScreenPlayerOptions", "cancel all.ogg") )
 			MESSAGEMAN:Broadcast("ToggleSearchMenu")
 		end
@@ -148,7 +148,7 @@ t.Handler = function(event)
 	-- Allow Mouse Input here
 	if event.type == "InputEventType_FirstPress" and event.type ~= "InputEventType_Release" and not IsSearchMenuVisible and not IsTagsMenuVisible then
 		if IsMouseOnScreen() then
-			if not LeadboardHasFocus and not InputMenuHasFocus and not EscapeFromEventMode then
+			if not LeadboardHasFocus and not InputMenuHasFocus then
 				-- Close the song folder and switch to group wheel if mouse wheel is pressed.
 				if event.DeviceInput.button == "DeviceButton_middle mouse button" and t.WheelWithFocus == SongWheel then
 					stop_music()
@@ -485,7 +485,7 @@ t.Handler = function(event)
 	end
 	
 	-- if any of these, don't attempt to handle input
-	if t.Enabled == false or not event or not event.PlayerNumber or not event.button or IsSearchMenuVisible or EscapeFromEventMode or IsTagsMenuVisible then
+	if t.Enabled == false or not event or not event.PlayerNumber or not event.button or IsSearchMenuVisible or IsTagsMenuVisible then
 		return false
 	end
 
