@@ -74,9 +74,16 @@ local function GetSongBpmGroup(song)
 	end
 end
 
-function GetStepsNpsGroup(steps)
+function GetPeakNPS(steps)
 	local mpn = GAMESTATE:GetMasterPlayerNumber()
-	local bpm_equivalent = math.round(steps:GetPeakNPS(mpn)*15)
+	local song = SONGMAN:GetSongFromSteps(steps)
+	local nps = steps:GetPeakNPS(mpn)
+
+	return nps
+end
+
+function GetStepsNpsGroup(steps)
+	local bpm_equivalent = math.round(GetPeakNPS(steps)*15)
 	local index = GetMaxIndexBelowOrEqual(song_bpms, bpm_equivalent)
 
 	if index == #song_bpms then
@@ -204,10 +211,9 @@ end
 
 local function GetStepNPS(group, song)
 	local count = 0
-	local mpn = GAMESTATE:GetMasterPlayerNumber()
 
 	for steps in ivalues(song:GetStepsByStepsType(GAMESTATE:GetCurrentStyle():GetStepsType())) do
-		local nps = steps:GetPeakNPS(mpn)
+		local nps = GetPeakNPS(steps)
 		if GetMainSortPreference() ~= 7 or GetStepsDifficultyGroup(steps) == group then
 			return  nps
 		end
@@ -240,19 +246,7 @@ local main_sort_funcs = {
 	-- Song BPM
 	function(g, s) return round(s:GetDisplayBpms()[2], 0) end,
 	-- Peak NPS
-	function(g, s)
-		local mpn = GAMESTATE:GetMasterPlayerNumber()
-		local max_bpm_equivalent = 0
-		for steps in ivalues(s:GetStepsByStepsType(steps_type)) do
-			local group = GetStepsNpsGroup(steps)
-			if group == g then
-				local bpm_equivalent = math.round(steps:GetPeakNPS(mpn)*15)
-				max_bpm_equivalent = math.max(bpm_equivalent, max_bpm_equivalent)
-			end
-		end
-		return max_bpm_equivalent
-	end,
-	
+	function(g, s) return '' end,
 	-- Difficulty (only subsort)
 	function(g, s) return '' end,
 	-- Tags
@@ -437,12 +431,11 @@ local UpdatePrunedSongs = function()
 
 				-- Filter for NPS
 				if GetLowerNPSFilter() ~= 0 or GetUpperNPSFilter() ~= 0 then
-					local mpn = GAMESTATE:GetMasterPlayerNumber()
 					local hasPassingNPS = false
 					for steps in ivalues(song:GetStepsByStepsType(steps_type)) do
 						-- Need to round otherwise floating points will ruin your day.
-						local passesLower = GetLowerNPSFilter() == 0 or round(steps:GetPeakNPS(mpn) * 15) >= round(GetLowerNPSFilter())
-						local passesUpper = GetUpperNPSFilter() == 0 or round(steps:GetPeakNPS(mpn) * 15) <= round(GetUpperNPSFilter())
+						local passesLower = GetLowerNPSFilter() == 0 or round(GetPeakNPS(steps) * 15) >= round(GetLowerNPSFilter())
+						local passesUpper = GetUpperNPSFilter() == 0 or round(GetPeakNPS(steps) * 15) <= round(GetUpperNPSFilter())
 						if passesLower and passesUpper then
 							hasPassingNPS = true
 							break
