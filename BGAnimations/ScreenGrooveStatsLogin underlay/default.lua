@@ -48,6 +48,16 @@ ws = NETWORK:WebSocket{
 }
 
 local InputHandler = function(event)
+	-- mouse input here
+	if event.type == "InputEventType_FirstPress" and event.type ~= "InputEventType_Release" then
+		if event.DeviceInput.button == "DeviceButton_left mouse button" then
+			SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
+			SCREENMAN:GetTopScreen():StartTransitioningScreen("SM_GoToNextScreen")
+		elseif event.DeviceInput.button == "DeviceButton_right mouse button" then
+			-- Exit screen
+			SCREENMAN:GetTopScreen():Cancel()
+		end
+	end
 	if not event.PlayerNumber or not event.button then return false end
 
 	if event.type == "InputEventType_FirstPress" then
