@@ -212,10 +212,15 @@ end
 local function GetStepNPS(group, song)
 	local nps = 0
 	for steps in ivalues(song:GetStepsByStepsType(GAMESTATE:GetCurrentStyle():GetStepsType())) do
-		if GetStepsNpsGroup(steps) == group then
-			return GetPeakNPS(steps)
+		if GetMainSortPreference() == 6 then
+			if GetStepsNpsGroup(steps) == group then
+				return GetPeakNPS(steps)
+			end
+		else
+			nps = math.max(nps, GetPeakNPS(steps))
 		end
 	end
+	return nps
 end
 
 local subsort_funcs = {
