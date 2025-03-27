@@ -16,8 +16,6 @@ return Def.Banner{
 			self:y(-135)
 			
 		end
-		if ThemePrefs.Get("AnimateGameplayBanners") == false then
-			self:animate(false)
-		end
+		self:SetDecodeMovie(ThemePrefs.Get("AnimateBanners"))
 	end
 }

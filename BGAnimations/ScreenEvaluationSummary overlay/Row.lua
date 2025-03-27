@@ -48,7 +48,9 @@ t[#t+1] = Def.Banner{
 		else
 			self:LoadFromSong(SongOrCourse)
 		end
-		self:setsize(418,164):zoom(0.333):animate(false)
+		self:setsize(418,164):zoom(0.333)
+		-- This also gets ignored here for some reason lmao
+		self:SetDecodeMovie(ThemePrefs.Get("AnimateBanners"))
 	end
 }
 

@@ -26,10 +26,12 @@ if SongOrCourse and SongOrCourse:HasBanner() then
 		Name="Banner",
 		InitCommand=function(self)
 			if GAMESTATE:IsCourseMode() then
-				self:LoadFromCourse( GAMESTATE:GetCurrentCourse() ):animate(false)
+				self:LoadFromCourse( GAMESTATE:GetCurrentCourse() )
 			else
-				self:LoadFromSong( GAMESTATE:GetCurrentSong() ):animate(false)
+				self:LoadFromSong( GAMESTATE:GetCurrentSong() )
 			end
+			-- It's ignoring this for some reason, and only on this screen :)
+			self:SetDecodeMovie(ThemePrefs.Get("AnimateBanners"))
 		end,
 		OnCommand=cmd(xy, _screen.cx, 121.5; setsize,418,164; zoom, 0.7 )
 	}

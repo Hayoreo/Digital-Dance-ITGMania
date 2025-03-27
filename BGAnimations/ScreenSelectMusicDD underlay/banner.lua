@@ -51,6 +51,7 @@ local t = Def.ActorFrame{
 			else
 				self:visible(false)
 			end
+			self:SetDecodeMovie(ThemePrefs.Get("AnimateBanners"))
 		end,
 	},
 	
@@ -82,6 +83,8 @@ local t = Def.ActorFrame{
 				self:zoomto(BannerWidth,BannerHeight)
 				self:visible(true)
 			end
+			-- I don't think you can use videos for group banners still, but just in case.
+			self:SetDecodeMovie(ThemePrefs.Get("AnimateBanners"))
 		end,
 	},
 	

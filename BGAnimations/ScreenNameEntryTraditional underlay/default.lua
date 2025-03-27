@@ -125,7 +125,8 @@ for i=1,NumStages do
 				else
 					self:LoadFromSong(SongOrCourse)
 				end
-				self:setsize(418,164):zoom(0.7):animate(false)
+				self:setsize(418,164):zoom(0.7)
+				self:SetDecodeMovie(ThemePrefs.Get("AnimateBanners"))
 			end
 		end
 	}
