@@ -7,7 +7,7 @@
 - Practice mode now works for P2 and 2 player.
 - QR Groovestats Login support for local and guest profiles.
 - Added D-Mod speed type.
-- Toggle to allow animated banners on gameplay.
+- Toggle to allow animated banners.
 - The life line on the Steps Statistics density graph will now respect "Hide Lifebar" setting.
 - Added "Delayed Back" as an operator menu option in Advanced Settings.
 - Added mid-session set summary! It can be accessed via the player menu.
@@ -52,9 +52,9 @@ The D-Mod speed type is also supported for ITL charts and will switch between C 
 You can now log into Groovestats via QR Code after selecting your profile if you have it enabled in the Operator Menu under Groovestats Options.
 
 The three possible options are:
-Always - It will always prompt the user to scan regardless if their profile is set up with a GS api key or not.
-Sometimes - It will only prompt the user if their profile is a Guest Profile or it does not have the GS api key set up.
-Never - It will never prompt the player to login with QR (previous old behavior).
+- Always: It will always prompt the user to scan regardless if their profile is set up with a GS api key or not.
+- Sometimes: It will only prompt the user if their profile is a Guest Profile or it does not have the GS api key set up.
+- Never: It will never prompt the player to login with QR (previous old behavior).
 
 ## Ghost Judgment
 Ghost Judgment is similar to how FA+ works, however you can choose what value you want it to be (1-22ms for normal timing and 1-14ms for FA+).
