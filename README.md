@@ -32,13 +32,13 @@
 - Fixed rounding issue in the Player Menu.
 - Various bug fixes
 
-##Practice Mode
+## Practice Mode
 Practice mode has been in DD for awhile now. However due to previous engine
 limitations it was only ever accessible by P1 if they were the only player joined.
 It is now possible to use Practice Mode with both P1 and P2 (or even on 2 player).
 It is accessible in the Player Menu on the Select Music screen under the "System" tab.
 
-##D-Mod
+## D-Mod
 The D in D-Mod stands for Dynamic. It is a speed mod type similar to M-Mod, 
 however if the chart is C-Mod legal (no stops, bpm changes, attacks, etc) it will use a C-Mod instead of an M-Mod.
 This also means if a song has bpm changes, but no stops/etc and has a display bpm a C-Mod will be used.
