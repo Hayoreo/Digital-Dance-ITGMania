@@ -198,46 +198,31 @@ local InputHandler = function(event)
 				
 			elseif event.DeviceInput.button == "DeviceButton_enter" then
 
-				if SL[pn].HighScores.EnteringName then
-					SL[pn].HighScores.EnteringName = false
+				if SL["P1"].HighScores.EnteringName then
+					SL["P1"].HighScores.EnteringName = false
 					t:GetChild("enter"):playforplayer(PlayerNum)
 					-- Swap input to the other player if they need to submit still.
-					if pn == "P1" then
-						if SL["P2"].HighScores.EnteringName then
-							pn = "P2"
-							PlayerNum = "PlayerNumber_P2"
-						end
-					elseif pn == "P2" then
-						if SL["P1"].HighScores.EnteringName then
-							pn = "P1"
-							PlayerNum = "PlayerNumber_P1"
-						end
+					if SL["P2"].HighScores.EnteringName then
+						pn = "P2"
+						PlayerNum = "PlayerNumber_P2"
 					end
-					MESSAGEMAN:Broadcast("SetNamePlayer", {pn})
+					MESSAGEMAN:Broadcast("SetNamePlayer", {"P1"})
 				end
 
 				-- check if we're ready to save scores and proceed to the next screen
 				t:queuecommand("AttemptToFinish")
-			elseif event.GameButton == "Start" then
-				local pnid = ToEnumShortString(event.PlayerNumber)
-				
-				if SL[pnid].HighScores.EnteringName then
-					SL[pnid].HighScores.EnteringName = false
-					t:GetChild("enter"):playforplayer(event.PlayerNumber)
+			elseif event.DeviceInput.button == "DeviceButton_KP enter" then
+					if SL["P2"].HighScores.EnteringName then
+					SL["P2"].HighScores.EnteringName = false
+					t:GetChild("enter"):playforplayer(PlayerNum)
 					-- Swap input to the other player if they need to submit still.
-					if pnid == "P1" then
-						if SL["P2"].HighScores.EnteringName then
-							pn = "P2"
-							PlayerNum = "PlayerNumber_P2"
-						end
-					elseif pnid == "P2" then
-						if SL["P1"].HighScores.EnteringName then
-							pn = "P1"
-							PlayerNum = "PlayerNumber_P1"
-						end
+					if SL["P1"].HighScores.EnteringName then
+						pn = "P1"
+						PlayerNum = "PlayerNumber_P1"
 					end
-					MESSAGEMAN:Broadcast("SetNamePlayer", {pn})
+					MESSAGEMAN:Broadcast("SetNamePlayer", {"P2"})
 				end
+
 				-- check if we're ready to save scores and proceed to the next screen
 				t:queuecommand("AttemptToFinish")
 			elseif event.DeviceInput.button == 'DeviceButton_backspace' and SL[pn].HighScores.EnteringName then
