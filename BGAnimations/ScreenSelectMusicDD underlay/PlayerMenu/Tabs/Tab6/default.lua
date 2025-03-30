@@ -14,7 +14,7 @@ local af = args.af
 local pn = ToEnumShortString(player)
 local Style = GAMESTATE:GetCurrentStyle():GetStyleType() == "StyleType_OnePlayerOneSide" and  THEME:GetString("ScreenSelectMusicDD","Double") or THEME:GetString("ScreenSelectMusicDD","Single")
 local Mode = GAMESTATE:IsCourseMode() and THEME:GetString("DDPlayerMenu","SongWheel") or THEME:GetString("DDPlayerMenu","CourseMode")
-
+local ExpectedTab = 6
 -----------------------------------------------------------------------------------------------------
 
 local SystemNames = {
@@ -71,31 +71,10 @@ for i=1, #SystemNames do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 6 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 6 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 		["PlayerMenuSelection"..pn.."MessageCommand"]=function(self)
-			local CurrentTab, CurrentRow, CurrentColumn
-			if pn == "P1" then
-				CurrentTab = CurrentTabP1
-				CurrentRow = CurrentRowP1
-				CurrentColumn = CurrentColumnP1
-			elseif pn == "P2" then
-				CurrentTab = CurrentTabP2
-				CurrentRow = CurrentRowP2
-				CurrentColumn = CurrentColumnP2
-			end
+			local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
 			
 			if CurrentTab == 6 then
 				-- This lets us have a dynamic list more easily
@@ -163,16 +142,8 @@ for i=1, #SystemNames do
 			end
 		end,
 		LeftMouseClickUpdateMessageCommand=function(self)
-			local CurrentTab, CurrentRow, CurrentColumn
-			if pn == "P1" then
-				CurrentTab = CurrentTabP1
-				CurrentRow = CurrentRowP1
-				CurrentColumn = CurrentColumnP1
-			elseif pn == "P2" then
-				CurrentTab = CurrentTabP2
-				CurrentRow = CurrentRowP2
-				CurrentColumn = CurrentColumnP2
-			end
+			local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+			
 			if pn == "P1" and not PlayerMenuP1 then return end
 			if pn == "P2" and not PlayerMenuP2 then return end
 			if CurrentTab ~= 6 then return end

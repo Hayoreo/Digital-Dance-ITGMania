@@ -12,6 +12,7 @@ local TabWidth = args.TabWidth
 local af = args.af
 
 local pn = ToEnumShortString(player)
+local ExpectedTab = 5
 
 
 local InitialMainSort = GetMainSortPreference()
@@ -135,19 +136,7 @@ for i=1, #SortsFiltersNames do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 5 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 5 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 	}
 end
@@ -172,31 +161,11 @@ af[#af+1] = Def.Quad{
 			:queuecommand("UpdateDisplayedTab")
 	end,
 	UpdateDisplayedTabCommand=function(self)
-		if pn == "P1" then
-			if CurrentTabP1 == 5 then
-				self:visible(true)
-			else
-				self:visible(false)
-			end
-		elseif pn == "P2" then
-			if CurrentTabP2 == 5 then
-				self:visible(true)
-			else
-				self:visible(false)
-			end
-		end
+		self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 	end,
 	LeftMouseClickUpdateMessageCommand=function(self)
-		local CurrentTab, CurrentRow, CurrentColumn
-		if pn == "P1" then
-			CurrentTab = CurrentTabP1
-			CurrentRow = CurrentRowP1
-			CurrentColumn = CurrentColumnP1
-		elseif pn == "P2" then
-			CurrentTab = CurrentTabP2
-			CurrentRow = CurrentRowP2
-			CurrentColumn = CurrentColumnP2
-		end
+		local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+		
 		if pn == "P1" and not PlayerMenuP1 then return end
 		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 5 then return end
@@ -270,31 +239,11 @@ af[#af+1] = Def.BitmapText{
 			:queuecommand("UpdateDisplayedTab")
 	end,
 	UpdateDisplayedTabCommand=function(self)
-		if pn == "P1" then
-			if CurrentTabP1 ~= 5 then
-				self:visible(false)
-			else
-				self:visible(true)
-			end
-		elseif pn == "P2" then
-			if CurrentTabP2 ~= 5 then
-				self:visible(false)
-			else
-				self:visible(true)
-			end
-		end
+		self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 	end,
 	["UpdateMenuCursorPosition"..pn.."MessageCommand"]=function(self, params)
-		local CurrentTab, CurrentRow, CurrentColumn
-		if pn == "P1" then
-			CurrentTab = CurrentTabP1
-			CurrentRow = CurrentRowP1
-			CurrentColumn = CurrentColumnP1
-		elseif pn == "P2" then
-			CurrentTab = CurrentTabP2
-			CurrentRow = CurrentRowP2
-			CurrentColumn = CurrentColumnP2
-		end
+		local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+		
 		if CurrentTab == 5 and CurrentRow == 1 then
 			local MaxSorts = #MainSortText
 			if params[1] == "right" then
@@ -362,31 +311,11 @@ af[#af+1] = Def.Quad{
 			:queuecommand("UpdateDisplayedTab")
 	end,
 	UpdateDisplayedTabCommand=function(self)
-		if pn == "P1" then
-			if CurrentTabP1 == 5 then
-				self:visible(true)
-			else
-				self:visible(false)
-			end
-		elseif pn == "P2" then
-			if CurrentTabP2 == 5 then
-				self:visible(true)
-			else
-				self:visible(false)
-			end
-		end
+		self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 	end,
 	LeftMouseClickUpdateMessageCommand=function(self)
-		local CurrentTab, CurrentRow, CurrentColumn
-		if pn == "P1" then
-			CurrentTab = CurrentTabP1
-			CurrentRow = CurrentRowP1
-			CurrentColumn = CurrentColumnP1
-		elseif pn == "P2" then
-			CurrentTab = CurrentTabP2
-			CurrentRow = CurrentRowP2
-			CurrentColumn = CurrentColumnP2
-		end
+		local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+		
 		if pn == "P1" and not PlayerMenuP1 then return end
 		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 5 then return end
@@ -459,31 +388,11 @@ af[#af+1] = Def.BitmapText{
 			:queuecommand("UpdateDisplayedTab")
 	end,
 	UpdateDisplayedTabCommand=function(self)
-		if pn == "P1" then
-			if CurrentTabP1 ~= 5 then
-				self:visible(false)
-			else
-				self:visible(true)
-			end
-		elseif pn == "P2" then
-			if CurrentTabP2 ~= 5 then
-				self:visible(false)
-			else
-				self:visible(true)
-			end
-		end
+		self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 	end,
 	["UpdateMenuCursorPosition"..pn.."MessageCommand"]=function(self, params)
-		local CurrentTab, CurrentRow, CurrentColumn
-		if pn == "P1" then
-			CurrentTab = CurrentTabP1
-			CurrentRow = CurrentRowP1
-			CurrentColumn = CurrentColumnP1
-		elseif pn == "P2" then
-			CurrentTab = CurrentTabP2
-			CurrentRow = CurrentRowP2
-			CurrentColumn = CurrentColumnP2
-		end
+		local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+		
 		if CurrentTab == 5 and CurrentRow == 2 then
 			local MaxSorts = #SubSortText
 			if params[1] == "right" then
@@ -551,31 +460,11 @@ af[#af+1] = Def.Quad{
 			:queuecommand("UpdateDisplayedTab")
 	end,
 	UpdateDisplayedTabCommand=function(self)
-		if pn == "P1" then
-			if CurrentTabP1 == 5 then
-				self:visible(true)
-			else
-				self:visible(false)
-			end
-		elseif pn == "P2" then
-			if CurrentTabP2 == 5 then
-				self:visible(true)
-			else
-				self:visible(false)
-			end
-		end
+		self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 	end,
 	LeftMouseClickUpdateMessageCommand=function(self)
-		local CurrentTab, CurrentRow, CurrentColumn
-		if pn == "P1" then
-			CurrentTab = CurrentTabP1
-			CurrentRow = CurrentRowP1
-			CurrentColumn = CurrentColumnP1
-		elseif pn == "P2" then
-			CurrentTab = CurrentTabP2
-			CurrentRow = CurrentRowP2
-			CurrentColumn = CurrentColumnP2
-		end
+		local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+		
 		if pn == "P1" and not PlayerMenuP1 then return end
 		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 5 then return end
@@ -635,31 +524,11 @@ af[#af+1] = Def.BitmapText{
 			:queuecommand("UpdateDisplayedTab")
 	end,
 	UpdateDisplayedTabCommand=function(self)
-		if pn == "P1" then
-			if CurrentTabP1 ~= 5 then
-				self:visible(false)
-			else
-				self:visible(true)
-			end
-		elseif pn == "P2" then
-			if CurrentTabP2 ~= 5 then
-				self:visible(false)
-			else
-				self:visible(true)
-			end
-		end
+		self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 	end,
 	["UpdateMenuCursorPosition"..pn.."MessageCommand"]=function(self, params)
-		local CurrentTab, CurrentRow, CurrentColumn
-		if pn == "P1" then
-			CurrentTab = CurrentTabP1
-			CurrentRow = CurrentRowP1
-			CurrentColumn = CurrentColumnP1
-		elseif pn == "P2" then
-			CurrentTab = CurrentTabP2
-			CurrentRow = CurrentRowP2
-			CurrentColumn = CurrentColumnP2
-		end
+		local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+		
 		if CurrentTab == 5 and CurrentRow == 3 then
 			local MaxSorts = #SubSortText
 			if params[1] == "right" then
@@ -730,31 +599,11 @@ af[#af+1] = Def.Quad{
 			:queuecommand("UpdateDisplayedTab")
 	end,
 	UpdateDisplayedTabCommand=function(self)
-		if pn == "P1" then
-			if CurrentTabP1 == 5 then
-				self:visible(true)
-			else
-				self:visible(false)
-			end
-		elseif pn == "P2" then
-			if CurrentTabP2 == 5 then
-				self:visible(true)
-			else
-				self:visible(false)
-			end
-		end
+		self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 	end,
 	LeftMouseClickUpdateMessageCommand=function(self)
-		local CurrentTab, CurrentRow, CurrentColumn
-		if pn == "P1" then
-			CurrentTab = CurrentTabP1
-			CurrentRow = CurrentRowP1
-			CurrentColumn = CurrentColumnP1
-		elseif pn == "P2" then
-			CurrentTab = CurrentTabP2
-			CurrentRow = CurrentRowP2
-			CurrentColumn = CurrentColumnP2
-		end
+		local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+		
 		if pn == "P1" and not PlayerMenuP1 then return end
 		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 5 then return end
@@ -816,31 +665,11 @@ af[#af+1] = Def.BitmapText{
 			:queuecommand("UpdateDisplayedTab")
 	end,
 	UpdateDisplayedTabCommand=function(self)
-		if pn == "P1" then
-			if CurrentTabP1 ~= 5 then
-				self:visible(false)
-			else
-				self:visible(true)
-			end
-		elseif pn == "P2" then
-			if CurrentTabP2 ~= 5 then
-				self:visible(false)
-			else
-				self:visible(true)
-			end
-		end
+		self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 	end,
 	["UpdateMenuCursorPosition"..pn.."MessageCommand"]=function(self, params)
-		local CurrentTab, CurrentRow, CurrentColumn
-		if pn == "P1" then
-			CurrentTab = CurrentTabP1
-			CurrentRow = CurrentRowP1
-			CurrentColumn = CurrentColumnP1
-		elseif pn == "P2" then
-			CurrentTab = CurrentTabP2
-			CurrentRow = CurrentRowP2
-			CurrentColumn = CurrentColumnP2
-		end
+		local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+		
 		if CurrentTab == 5 and CurrentRow == 4 then
 			if params[1] == "right" then
 				if CurrentLowerMeter == MaxMeter then
@@ -917,19 +746,7 @@ af[#af+1] = Def.BitmapText{
 			:queuecommand("UpdateDisplayedTab")
 	end,
 	UpdateDisplayedTabCommand=function(self)
-		if pn == "P1" then
-			if CurrentTabP1 == 5 then
-				self:visible(true)
-			else
-				self:visible(false)
-			end
-		elseif pn == "P2" then
-			if CurrentTabP2 == 5 then
-				self:visible(true)
-			else
-				self:visible(false)
-			end
-		end
+		self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 	end,
 }
 
@@ -952,31 +769,11 @@ af[#af+1] = Def.Quad{
 			:queuecommand("UpdateDisplayedTab")
 	end,
 	UpdateDisplayedTabCommand=function(self)
-		if pn == "P1" then
-			if CurrentTabP1 == 5 then
-				self:visible(true)
-			else
-				self:visible(false)
-			end
-		elseif pn == "P2" then
-			if CurrentTabP2 == 5 then
-				self:visible(true)
-			else
-				self:visible(false)
-			end
-		end
+		self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 	end,
 	LeftMouseClickUpdateMessageCommand=function(self)
-		local CurrentTab, CurrentRow, CurrentColumn
-		if pn == "P1" then
-			CurrentTab = CurrentTabP1
-			CurrentRow = CurrentRowP1
-			CurrentColumn = CurrentColumnP1
-		elseif pn == "P2" then
-			CurrentTab = CurrentTabP2
-			CurrentRow = CurrentRowP2
-			CurrentColumn = CurrentColumnP2
-		end
+		local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+		
 		if pn == "P1" and not PlayerMenuP1 then return end
 		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 5 then return end
@@ -1036,31 +833,11 @@ af[#af+1] = Def.BitmapText{
 			:queuecommand("UpdateDisplayedTab")
 	end,
 	UpdateDisplayedTabCommand=function(self)
-		if pn == "P1" then
-			if CurrentTabP1 ~= 5 then
-				self:visible(false)
-			else
-				self:visible(true)
-			end
-		elseif pn == "P2" then
-			if CurrentTabP2 ~= 5 then
-				self:visible(false)
-			else
-				self:visible(true)
-			end
-		end
+		self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 	end,
 	["UpdateMenuCursorPosition"..pn.."MessageCommand"]=function(self, params)
-		local CurrentTab, CurrentRow, CurrentColumn
-		if pn == "P1" then
-			CurrentTab = CurrentTabP1
-			CurrentRow = CurrentRowP1
-			CurrentColumn = CurrentColumnP1
-		elseif pn == "P2" then
-			CurrentTab = CurrentTabP2
-			CurrentRow = CurrentRowP2
-			CurrentColumn = CurrentColumnP2
-		end
+		local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+		
 		if CurrentTab == 5 and CurrentRow == 5 then
 			if params[1] == "right" then
 				if CurrentUpperMeter == MaxMeter then
@@ -1161,19 +938,7 @@ for i=1,#Difficulties do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 5 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 5 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 	}
 end
@@ -1198,19 +963,7 @@ for i=1,#Difficulties do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 5 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 5 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 	}
 end
@@ -1260,31 +1013,11 @@ for i=1,#Difficulties do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 5 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 5 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 		["PlayerMenuSelection"..pn.."MessageCommand"]=function(self)
-			local CurrentTab, CurrentRow, CurrentColumn
-			if pn == "P1" then
-				CurrentTab = CurrentTabP1
-				CurrentRow = CurrentRowP1
-				CurrentColumn = CurrentColumnP1
-			elseif pn == "P2" then
-				CurrentTab = CurrentTabP2
-				CurrentRow = CurrentRowP2
-				CurrentColumn = CurrentColumnP2
-			end
+			local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+			
 			if CurrentTab == 5 and CurrentRow == 6 then
 				if CurrentColumn == 1 and i == 1 then
 					if CurrentEasy == 1 then
@@ -1334,16 +1067,8 @@ for i=1,#Difficulties do
 			end
 		end,
 		LeftMouseClickUpdateMessageCommand=function(self)
-			local CurrentTab, CurrentRow, CurrentColumn
-			if pn == "P1" then
-				CurrentTab = CurrentTabP1
-				CurrentRow = CurrentRowP1
-				CurrentColumn = CurrentColumnP1
-			elseif pn == "P2" then
-				CurrentTab = CurrentTabP2
-				CurrentRow = CurrentRowP2
-				CurrentColumn = CurrentColumnP2
-			end
+			local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+			
 			if pn == "P1" and not PlayerMenuP1 then return end
 			if pn == "P2" and not PlayerMenuP2 then return end
 			if CurrentTab ~= 5 then return end
@@ -1477,19 +1202,7 @@ for i=1,#Difficulties2 do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 5 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 5 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 	}
 end
@@ -1514,19 +1227,7 @@ for i=1,#Difficulties2 do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 5 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 5 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 	}
 end
@@ -1565,31 +1266,11 @@ for i=1,#Difficulties2 do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 5 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 5 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 		["PlayerMenuSelection"..pn.."MessageCommand"]=function(self)
-			local CurrentTab, CurrentRow, CurrentColumn
-			if pn == "P1" then
-				CurrentTab = CurrentTabP1
-				CurrentRow = CurrentRowP1
-				CurrentColumn = CurrentColumnP1
-			elseif pn == "P2" then
-				CurrentTab = CurrentTabP2
-				CurrentRow = CurrentRowP2
-				CurrentColumn = CurrentColumnP2
-			end
+			local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+			
 			if CurrentTab == 5 and CurrentRow == 7 then
 				if CurrentColumn == 1 and i == 1 then
 					if CurrentBeginner == 1 then
@@ -1617,16 +1298,8 @@ for i=1,#Difficulties2 do
 			end
 		end,
 		LeftMouseClickUpdateMessageCommand=function(self)
-			local CurrentTab, CurrentRow, CurrentColumn
-			if pn == "P1" then
-				CurrentTab = CurrentTabP1
-				CurrentRow = CurrentRowP1
-				CurrentColumn = CurrentColumnP1
-			elseif pn == "P2" then
-				CurrentTab = CurrentTabP2
-				CurrentRow = CurrentRowP2
-				CurrentColumn = CurrentColumnP2
-			end
+			local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+			
 			if pn == "P1" and not PlayerMenuP1 then return end
 			if pn == "P2" and not PlayerMenuP2 then return end
 			if CurrentTab ~= 5 then return end
@@ -1725,31 +1398,11 @@ af[#af+1] = Def.Quad{
 			:queuecommand("UpdateDisplayedTab")
 	end,
 	UpdateDisplayedTabCommand=function(self)
-		if pn == "P1" then
-			if CurrentTabP1 == 5 then
-				self:visible(true)
-			else
-				self:visible(false)
-			end
-		elseif pn == "P2" then
-			if CurrentTabP2 == 5 then
-				self:visible(true)
-			else
-				self:visible(false)
-			end
-		end
+		self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 	end,
 	LeftMouseClickUpdateMessageCommand=function(self)
-		local CurrentTab, CurrentRow, CurrentColumn
-		if pn == "P1" then
-			CurrentTab = CurrentTabP1
-			CurrentRow = CurrentRowP1
-			CurrentColumn = CurrentColumnP1
-		elseif pn == "P2" then
-			CurrentTab = CurrentTabP2
-			CurrentRow = CurrentRowP2
-			CurrentColumn = CurrentColumnP2
-		end
+		local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+		
 		if pn == "P1" and not PlayerMenuP1 then return end
 		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 5 then return end
@@ -1809,31 +1462,11 @@ af[#af+1] = Def.BitmapText{
 			:queuecommand("UpdateDisplayedTab")
 	end,
 	UpdateDisplayedTabCommand=function(self)
-		if pn == "P1" then
-			if CurrentTabP1 ~= 5 then
-				self:visible(false)
-			else
-				self:visible(true)
-			end
-		elseif pn == "P2" then
-			if CurrentTabP2 ~= 5 then
-				self:visible(false)
-			else
-				self:visible(true)
-			end
-		end
+		self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 	end,
 	["UpdateMenuCursorPosition"..pn.."MessageCommand"]=function(self, params)
-		local CurrentTab, CurrentRow, CurrentColumn
-		if pn == "P1" then
-			CurrentTab = CurrentTabP1
-			CurrentRow = CurrentRowP1
-			CurrentColumn = CurrentColumnP1
-		elseif pn == "P2" then
-			CurrentTab = CurrentTabP2
-			CurrentRow = CurrentRowP2
-			CurrentColumn = CurrentColumnP2
-		end
+		local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+		
 		if CurrentTab == 5 and CurrentRow == 8 then
 			if params[1] == "right" then
 				if CurrentLowerBPM == MaxBPM then
@@ -1910,19 +1543,7 @@ af[#af+1] = Def.BitmapText{
 			:queuecommand("UpdateDisplayedTab")
 	end,
 	UpdateDisplayedTabCommand=function(self)
-		if pn == "P1" then
-			if CurrentTabP1 == 5 then
-				self:visible(true)
-			else
-				self:visible(false)
-			end
-		elseif pn == "P2" then
-			if CurrentTabP2 == 5 then
-				self:visible(true)
-			else
-				self:visible(false)
-			end
-		end
+		self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 	end,
 }
 
@@ -1945,31 +1566,11 @@ af[#af+1] = Def.Quad{
 			:queuecommand("UpdateDisplayedTab")
 	end,
 	UpdateDisplayedTabCommand=function(self)
-		if pn == "P1" then
-			if CurrentTabP1 == 5 then
-				self:visible(true)
-			else
-				self:visible(false)
-			end
-		elseif pn == "P2" then
-			if CurrentTabP2 == 5 then
-				self:visible(true)
-			else
-				self:visible(false)
-			end
-		end
+		self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 	end,
 	LeftMouseClickUpdateMessageCommand=function(self)
-		local CurrentTab, CurrentRow, CurrentColumn
-		if pn == "P1" then
-			CurrentTab = CurrentTabP1
-			CurrentRow = CurrentRowP1
-			CurrentColumn = CurrentColumnP1
-		elseif pn == "P2" then
-			CurrentTab = CurrentTabP2
-			CurrentRow = CurrentRowP2
-			CurrentColumn = CurrentColumnP2
-		end
+		local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+		
 		if pn == "P1" and not PlayerMenuP1 then return end
 		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 5 then return end
@@ -2029,31 +1630,11 @@ af[#af+1] = Def.BitmapText{
 			:queuecommand("UpdateDisplayedTab")
 	end,
 	UpdateDisplayedTabCommand=function(self)
-		if pn == "P1" then
-			if CurrentTabP1 ~= 5 then
-				self:visible(false)
-			else
-				self:visible(true)
-			end
-		elseif pn == "P2" then
-			if CurrentTabP2 ~= 5 then
-				self:visible(false)
-			else
-				self:visible(true)
-			end
-		end
+		self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 	end,
 	["UpdateMenuCursorPosition"..pn.."MessageCommand"]=function(self, params)
-		local CurrentTab, CurrentRow, CurrentColumn
-		if pn == "P1" then
-			CurrentTab = CurrentTabP1
-			CurrentRow = CurrentRowP1
-			CurrentColumn = CurrentColumnP1
-		elseif pn == "P2" then
-			CurrentTab = CurrentTabP2
-			CurrentRow = CurrentRowP2
-			CurrentColumn = CurrentColumnP2
-		end
+		local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+		
 		if CurrentTab == 5 and CurrentRow == 9 then
 			if params[1] == "right" then
 				if CurrentUpperBPM == MaxBPM then
@@ -2128,31 +1709,11 @@ af[#af+1] = Def.Quad{
 			:queuecommand("UpdateDisplayedTab")
 	end,
 	UpdateDisplayedTabCommand=function(self)
-		if pn == "P1" then
-			if CurrentTabP1 == 5 then
-				self:visible(true)
-			else
-				self:visible(false)
-			end
-		elseif pn == "P2" then
-			if CurrentTabP2 == 5 then
-				self:visible(true)
-			else
-				self:visible(false)
-			end
-		end
+		self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 	end,
 	LeftMouseClickUpdateMessageCommand=function(self)
-		local CurrentTab, CurrentRow, CurrentColumn
-		if pn == "P1" then
-			CurrentTab = CurrentTabP1
-			CurrentRow = CurrentRowP1
-			CurrentColumn = CurrentColumnP1
-		elseif pn == "P2" then
-			CurrentTab = CurrentTabP2
-			CurrentRow = CurrentRowP2
-			CurrentColumn = CurrentColumnP2
-		end
+		local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+		
 		if pn == "P1" and not PlayerMenuP1 then return end
 		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 5 then return end
@@ -2212,31 +1773,11 @@ af[#af+1] = Def.BitmapText{
 			:queuecommand("UpdateDisplayedTab")
 	end,
 	UpdateDisplayedTabCommand=function(self)
-		if pn == "P1" then
-			if CurrentTabP1 ~= 5 then
-				self:visible(false)
-			else
-				self:visible(true)
-			end
-		elseif pn == "P2" then
-			if CurrentTabP2 ~= 5 then
-				self:visible(false)
-			else
-				self:visible(true)
-			end
-		end
+		self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 	end,
 	["UpdateMenuCursorPosition"..pn.."MessageCommand"]=function(self, params)
-		local CurrentTab, CurrentRow, CurrentColumn
-		if pn == "P1" then
-			CurrentTab = CurrentTabP1
-			CurrentRow = CurrentRowP1
-			CurrentColumn = CurrentColumnP1
-		elseif pn == "P2" then
-			CurrentTab = CurrentTabP2
-			CurrentRow = CurrentRowP2
-			CurrentColumn = CurrentColumnP2
-		end
+		local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+		
 		if CurrentTab == 5 and CurrentRow == 10 then
 			if params[1] == "right" then
 				if CurrentLowerNPS == MaxBPM then
@@ -2314,19 +1855,7 @@ af[#af+1] = Def.BitmapText{
 			:queuecommand("UpdateDisplayedTab")
 	end,
 	UpdateDisplayedTabCommand=function(self)
-		if pn == "P1" then
-			if CurrentTabP1 == 5 then
-				self:visible(true)
-			else
-				self:visible(false)
-			end
-		elseif pn == "P2" then
-			if CurrentTabP2 == 5 then
-				self:visible(true)
-			else
-				self:visible(false)
-			end
-		end
+		self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 	end,
 }
 
@@ -2349,31 +1878,11 @@ af[#af+1] = Def.Quad{
 			:queuecommand("UpdateDisplayedTab")
 	end,
 	UpdateDisplayedTabCommand=function(self)
-		if pn == "P1" then
-			if CurrentTabP1 == 5 then
-				self:visible(true)
-			else
-				self:visible(false)
-			end
-		elseif pn == "P2" then
-			if CurrentTabP2 == 5 then
-				self:visible(true)
-			else
-				self:visible(false)
-			end
-		end
+		self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 	end,
 	LeftMouseClickUpdateMessageCommand=function(self)
-		local CurrentTab, CurrentRow, CurrentColumn
-		if pn == "P1" then
-			CurrentTab = CurrentTabP1
-			CurrentRow = CurrentRowP1
-			CurrentColumn = CurrentColumnP1
-		elseif pn == "P2" then
-			CurrentTab = CurrentTabP2
-			CurrentRow = CurrentRowP2
-			CurrentColumn = CurrentColumnP2
-		end
+		local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+		
 		if pn == "P1" and not PlayerMenuP1 then return end
 		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 5 then return end
@@ -2433,31 +1942,11 @@ af[#af+1] = Def.BitmapText{
 			:queuecommand("UpdateDisplayedTab")
 	end,
 	UpdateDisplayedTabCommand=function(self)
-		if pn == "P1" then
-			if CurrentTabP1 ~= 5 then
-				self:visible(false)
-			else
-				self:visible(true)
-			end
-		elseif pn == "P2" then
-			if CurrentTabP2 ~= 5 then
-				self:visible(false)
-			else
-				self:visible(true)
-			end
-		end
+		self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 	end,
 	["UpdateMenuCursorPosition"..pn.."MessageCommand"]=function(self, params)
-		local CurrentTab, CurrentRow, CurrentColumn
-		if pn == "P1" then
-			CurrentTab = CurrentTabP1
-			CurrentRow = CurrentRowP1
-			CurrentColumn = CurrentColumnP1
-		elseif pn == "P2" then
-			CurrentTab = CurrentTabP2
-			CurrentRow = CurrentRowP2
-			CurrentColumn = CurrentColumnP2
-		end
+		local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+		
 		if CurrentTab == 5 and CurrentRow == 11 then
 			if params[1] == "right" then
 				if CurrentUpperNPS == MaxBPM then
@@ -2534,31 +2023,11 @@ af[#af+1] = Def.Quad{
 			:queuecommand("UpdateDisplayedTab")
 	end,
 	UpdateDisplayedTabCommand=function(self)
-		if pn == "P1" then
-			if CurrentTabP1 == 5 then
-				self:visible(true)
-			else
-				self:visible(false)
-			end
-		elseif pn == "P2" then
-			if CurrentTabP2 == 5 then
-				self:visible(true)
-			else
-				self:visible(false)
-			end
-		end
+		self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 	end,
 	LeftMouseClickUpdateMessageCommand=function(self)
-		local CurrentTab, CurrentRow, CurrentColumn
-		if pn == "P1" then
-			CurrentTab = CurrentTabP1
-			CurrentRow = CurrentRowP1
-			CurrentColumn = CurrentColumnP1
-		elseif pn == "P2" then
-			CurrentTab = CurrentTabP2
-			CurrentRow = CurrentRowP2
-			CurrentColumn = CurrentColumnP2
-		end
+		local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+		
 		if pn == "P1" and not PlayerMenuP1 then return end
 		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 5 then return end
@@ -2627,31 +2096,11 @@ af[#af+1] = Def.BitmapText{
 			:queuecommand("UpdateLength")
 	end,
 	UpdateDisplayedTabCommand=function(self)
-		if pn == "P1" then
-			if CurrentTabP1 ~= 5 then
-				self:visible(false)
-			else
-				self:visible(true)
-			end
-		elseif pn == "P2" then
-			if CurrentTabP2 ~= 5 then
-				self:visible(false)
-			else
-				self:visible(true)
-			end
-		end
+		self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 	end,
 	["UpdateMenuCursorPosition"..pn.."MessageCommand"]=function(self, params)
-		local CurrentTab, CurrentRow, CurrentColumn
-		if pn == "P1" then
-			CurrentTab = CurrentTabP1
-			CurrentRow = CurrentRowP1
-			CurrentColumn = CurrentColumnP1
-		elseif pn == "P2" then
-			CurrentTab = CurrentTabP2
-			CurrentRow = CurrentRowP2
-			CurrentColumn = CurrentColumnP2
-		end
+		local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+		
 		if CurrentTab == 5 and CurrentRow == 12 then
 			if params[1] == "right" then
 				if CurrentLowerLength == 3600 then
@@ -2768,19 +2217,7 @@ af[#af+1] = Def.BitmapText{
 			:queuecommand("UpdateDisplayedTab")
 	end,
 	UpdateDisplayedTabCommand=function(self)
-		if pn == "P1" then
-			if CurrentTabP1 == 5 then
-				self:visible(true)
-			else
-				self:visible(false)
-			end
-		elseif pn == "P2" then
-			if CurrentTabP2 == 5 then
-				self:visible(true)
-			else
-				self:visible(false)
-			end
-		end
+		self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 	end,
 }
 
@@ -2803,31 +2240,11 @@ af[#af+1] = Def.Quad{
 			:queuecommand("UpdateDisplayedTab")
 	end,
 	UpdateDisplayedTabCommand=function(self)
-		if pn == "P1" then
-			if CurrentTabP1 == 5 then
-				self:visible(true)
-			else
-				self:visible(false)
-			end
-		elseif pn == "P2" then
-			if CurrentTabP2 == 5 then
-				self:visible(true)
-			else
-				self:visible(false)
-			end
-		end
+		self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 	end,
 	LeftMouseClickUpdateMessageCommand=function(self)
-		local CurrentTab, CurrentRow, CurrentColumn
-		if pn == "P1" then
-			CurrentTab = CurrentTabP1
-			CurrentRow = CurrentRowP1
-			CurrentColumn = CurrentColumnP1
-		elseif pn == "P2" then
-			CurrentTab = CurrentTabP2
-			CurrentRow = CurrentRowP2
-			CurrentColumn = CurrentColumnP2
-		end
+		local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+		
 		if pn == "P1" and not PlayerMenuP1 then return end
 		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 5 then return end
@@ -2896,31 +2313,11 @@ af[#af+1] = Def.BitmapText{
 			:queuecommand("UpdateLength")
 	end,
 	UpdateDisplayedTabCommand=function(self)
-		if pn == "P1" then
-			if CurrentTabP1 ~= 5 then
-				self:visible(false)
-			else
-				self:visible(true)
-			end
-		elseif pn == "P2" then
-			if CurrentTabP2 ~= 5 then
-				self:visible(false)
-			else
-				self:visible(true)
-			end
-		end
+		self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 	end,
 	["UpdateMenuCursorPosition"..pn.."MessageCommand"]=function(self, params)
-		local CurrentTab, CurrentRow, CurrentColumn
-		if pn == "P1" then
-			CurrentTab = CurrentTabP1
-			CurrentRow = CurrentRowP1
-			CurrentColumn = CurrentColumnP1
-		elseif pn == "P2" then
-			CurrentTab = CurrentTabP2
-			CurrentRow = CurrentRowP2
-			CurrentColumn = CurrentColumnP2
-		end
+		local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+		
 		if CurrentTab == 5 and CurrentRow == 13 then
 			if params[1] == "right" then
 				if CurrentUpperLength == 3600 then
@@ -3047,19 +2444,7 @@ for i=1,#FilterOptions do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 5 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 5 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 	}
 end
@@ -3084,31 +2469,11 @@ af[#af+1] = Def.Quad{
 			:queuecommand("UpdateDisplayedTab")
 	end,
 	UpdateDisplayedTabCommand=function(self)
-		if pn == "P1" then
-			if CurrentTabP1 == 5 then
-				self:visible(true)
-			else
-				self:visible(false)
-			end
-		elseif pn == "P2" then
-			if CurrentTabP2 == 5 then
-				self:visible(true)
-			else
-				self:visible(false)
-			end
-		end
+		self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 	end,
 	["PlayerMenuSelection"..pn.."MessageCommand"]=function(self)
-		local CurrentTab, CurrentRow, CurrentColumn
-		if pn == "P1" then
-			CurrentTab = CurrentTabP1
-			CurrentRow = CurrentRowP1
-			CurrentColumn = CurrentColumnP1
-		elseif pn == "P2" then
-			CurrentTab = CurrentTabP2
-			CurrentRow = CurrentRowP2
-			CurrentColumn = CurrentColumnP2
-		end
+		local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+		
 		if CurrentTab == 5 and CurrentRow == 14 then
 			if CurrentColumn == 1 then
 				CurrentGrooveStats = 1
@@ -3143,17 +2508,9 @@ af[#af+1] = Def.Quad{
 		end
 	end,
 	LeftMouseClickUpdateMessageCommand=function(self)
-		local CurrentTab, CurrentRow, CurrentColumn
+		local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+		
 		local MadeSelection = false
-		if pn == "P1" then
-			CurrentTab = CurrentTabP1
-			CurrentRow = CurrentRowP1
-			CurrentColumn = CurrentColumnP1
-		elseif pn == "P2" then
-			CurrentTab = CurrentTabP2
-			CurrentRow = CurrentRowP2
-			CurrentColumn = CurrentColumnP2
-		end
 		if pn == "P1" and not PlayerMenuP1 then return end
 		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 5 then return end
@@ -3284,19 +2641,7 @@ for i=1,#FilterOptions do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 5 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 5 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 	}
 end
@@ -3321,31 +2666,11 @@ af[#af+1] = Def.Quad{
 			:queuecommand("UpdateDisplayedTab")
 	end,
 	UpdateDisplayedTabCommand=function(self)
-		if pn == "P1" then
-			if CurrentTabP1 == 5 then
-				self:visible(true)
-			else
-				self:visible(false)
-			end
-		elseif pn == "P2" then
-			if CurrentTabP2 == 5 then
-				self:visible(true)
-			else
-				self:visible(false)
-			end
-		end
+		self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 	end,
 	["PlayerMenuSelection"..pn.."MessageCommand"]=function(self)
-		local CurrentTab, CurrentRow, CurrentColumn
-		if pn == "P1" then
-			CurrentTab = CurrentTabP1
-			CurrentRow = CurrentRowP1
-			CurrentColumn = CurrentColumnP1
-		elseif pn == "P2" then
-			CurrentTab = CurrentTabP2
-			CurrentRow = CurrentRowP2
-			CurrentColumn = CurrentColumnP2
-		end
+		local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+		
 		if CurrentTab == 5 and CurrentRow == 15 then
 			if CurrentColumn == 1 then
 				CurrentAutogen = 1
@@ -3380,17 +2705,9 @@ af[#af+1] = Def.Quad{
 		end
 	end,
 	LeftMouseClickUpdateMessageCommand=function(self)
-		local CurrentTab, CurrentRow, CurrentColumn
+		local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+		
 		local MadeSelection = false
-		if pn == "P1" then
-			CurrentTab = CurrentTabP1
-			CurrentRow = CurrentRowP1
-			CurrentColumn = CurrentColumnP1
-		elseif pn == "P2" then
-			CurrentTab = CurrentTabP2
-			CurrentRow = CurrentRowP2
-			CurrentColumn = CurrentColumnP2
-		end
 		if pn == "P1" and not PlayerMenuP1 then return end
 		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 5 then return end
@@ -3505,19 +2822,7 @@ af[#af+1] = Def.BitmapText{
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 5 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 5 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 }
 
@@ -3544,19 +2849,7 @@ af[#af+1] = Def.Quad{
 			:queuecommand("UpdateDisplayedTab")
 	end,
 	UpdateDisplayedTabCommand=function(self)
-		if pn == "P1" then
-			if CurrentTabP1 == 5 then
-				self:visible(true)
-			else
-				self:visible(false)
-			end
-		elseif pn == "P2" then
-			if CurrentTabP2 == 5 then
-				self:visible(true)
-			else
-				self:visible(false)
-			end
-		end
+		self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 	end,
 	UpdateResetColorMessageCommand=function(self, params)
 		if params[1] == "green" then
@@ -3566,32 +2859,16 @@ af[#af+1] = Def.Quad{
 		end
 	end,
 	["PlayerMenuSelection"..pn.."MessageCommand"]=function(self)
-		local CurrentTab, CurrentRow, CurrentColumn
-		if pn == "P1" then
-			CurrentTab = CurrentTabP1
-			CurrentRow = CurrentRowP1
-			CurrentColumn = CurrentColumnP1
-		elseif pn == "P2" then
-			CurrentTab = CurrentTabP2
-			CurrentRow = CurrentRowP2
-			CurrentColumn = CurrentColumnP2
-		end
+		local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+		
 		if CurrentTab == 5 and CurrentRow == #SortsFiltersNames then
 			SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 			MESSAGEMAN:Broadcast("DDResetSortsFilters")
 		end
 	end,
 	LeftMouseClickUpdateMessageCommand=function(self)
-		local CurrentTab, CurrentRow, CurrentColumn
-		if pn == "P1" then
-			CurrentTab = CurrentTabP1
-			CurrentRow = CurrentRowP1
-			CurrentColumn = CurrentColumnP1
-		elseif pn == "P2" then
-			CurrentTab = CurrentTabP2
-			CurrentRow = CurrentRowP2
-			CurrentColumn = CurrentColumnP2
-		end
+		local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+		
 		if pn == "P1" and not PlayerMenuP1 then return end
 		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 5 then return end
@@ -3643,19 +2920,7 @@ af[#af+1] = Def.Quad{
 			:queuecommand("UpdateDisplayedTab")
 	end,
 	UpdateDisplayedTabCommand=function(self)
-		if pn == "P1" then
-			if CurrentTabP1 == 5 then
-				self:visible(true)
-			else
-				self:visible(false)
-			end
-		elseif pn == "P2" then
-			if CurrentTabP2 == 5 then
-				self:visible(true)
-			else
-				self:visible(false)
-			end
-		end
+		self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 	end,
 }
 

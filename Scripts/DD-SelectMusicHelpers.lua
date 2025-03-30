@@ -211,6 +211,8 @@ GetFileContents = function(path)
 end
 
 IsCurrentSongTagged = function(song, PlayerNum)
+	-- Idk why this is being hit when switching between course/song select, but yeah.
+	if GAMESTATE:GetPlayMode() ~= 'PlayMode_Regular' then return false end
 	local style
 	if GAMESTATE:GetCurrentStyle():GetStyleType() == 'StyleType_OnePlayerTwoSides' then
 		style = "double"
@@ -385,4 +387,29 @@ GetAvailableTagsToAdd = function(Object, PlayerNumber)
 	end
 	
 	return TagsToBeAdded
+end
+
+SetLocalCursor = function(pn)
+	if pn == "P1" then
+		return CurrentTabP1, CurrentRowP1, CurrentColumnP1
+	elseif pn == "P2" then
+		return CurrentTabP2, CurrentRowP2, CurrentColumnP2
+	end
+end
+
+
+GetPlayerMenuVisibility = function(pn, ExpectedTab)
+	if pn == "P1" then
+		if CurrentTabP1 == ExpectedTab then
+			return true
+		else
+			return false
+		end
+	elseif pn == "P2" then
+		if CurrentTabP2 == ExpectedTab then
+			return true
+		else
+			return false
+		end
+	end
 end

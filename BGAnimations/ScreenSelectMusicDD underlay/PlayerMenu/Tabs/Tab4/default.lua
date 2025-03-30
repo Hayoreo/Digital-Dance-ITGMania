@@ -16,6 +16,7 @@ local mods = SL[pn].ActiveModifiers
 
 local PlayerState = GAMESTATE:GetPlayerState(pn)
 
+local ExpectedTab = 4
 -----------------------------------------------------------------------------------------------------
 
 local UncommonModsNames = {
@@ -54,19 +55,7 @@ for i=1, #UncommonModsNames do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 	}
 end
@@ -118,19 +107,7 @@ for i=1,#InsertMods do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 	}
 end
@@ -155,19 +132,7 @@ for i=1,#InsertMods do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 	}
 end
@@ -222,31 +187,11 @@ for i=1,#InsertMods do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 		["PlayerMenuSelection"..pn.."MessageCommand"]=function(self)
-			local CurrentTab, CurrentRow, CurrentColumn
-			if pn == "P1" then
-				CurrentTab = CurrentTabP1
-				CurrentRow = CurrentRowP1
-				CurrentColumn = CurrentColumnP1
-			elseif pn == "P2" then
-				CurrentTab = CurrentTabP2
-				CurrentRow = CurrentRowP2
-				CurrentColumn = CurrentColumnP2
-			end
+			local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+			
 			if CurrentTab == 4 and CurrentRow == 1 then
 				if CurrentColumn == 1 and i == 1 then
 					if IsWide == true then
@@ -296,16 +241,8 @@ for i=1,#InsertMods do
 			end
 		end,
 		LeftMouseClickUpdateMessageCommand=function(self)
-			local CurrentTab, CurrentRow, CurrentColumn
-			if pn == "P1" then
-				CurrentTab = CurrentTabP1
-				CurrentRow = CurrentRowP1
-				CurrentColumn = CurrentColumnP1
-			elseif pn == "P2" then
-				CurrentTab = CurrentTabP2
-				CurrentRow = CurrentRowP2
-				CurrentColumn = CurrentColumnP2
-			end
+			local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+			
 			if pn == "P1" and not PlayerMenuP1 then return end
 			if pn == "P2" and not PlayerMenuP2 then return end
 			if CurrentTab ~= 4 then return end
@@ -430,19 +367,7 @@ for i=1,#InsertMods2 do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 	}
 end
@@ -468,19 +393,7 @@ for i=1,#InsertMods2 do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 	}
 end
@@ -529,31 +442,11 @@ for i=1,#InsertMods2 do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 		["PlayerMenuSelection"..pn.."MessageCommand"]=function(self)
-			local CurrentTab, CurrentRow, CurrentColumn
-			if pn == "P1" then
-				CurrentTab = CurrentTabP1
-				CurrentRow = CurrentRowP1
-				CurrentColumn = CurrentColumnP1
-			elseif pn == "P2" then
-				CurrentTab = CurrentTabP2
-				CurrentRow = CurrentRowP2
-				CurrentColumn = CurrentColumnP2
-			end
+			local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+			
 			if CurrentTab == 4 and CurrentRow == 2 then
 				if CurrentColumn == 1 and i == 1 then
 					if IsSkippy == true then
@@ -592,16 +485,8 @@ for i=1,#InsertMods2 do
 			end
 		end,
 		LeftMouseClickUpdateMessageCommand=function(self)
-			local CurrentTab, CurrentRow, CurrentColumn
-			if pn == "P1" then
-				CurrentTab = CurrentTabP1
-				CurrentRow = CurrentRowP1
-				CurrentColumn = CurrentColumnP1
-			elseif pn == "P2" then
-				CurrentTab = CurrentTabP2
-				CurrentRow = CurrentRowP2
-				CurrentColumn = CurrentColumnP2
-			end
+			local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+			
 			if pn == "P1" and not PlayerMenuP1 then return end
 			if pn == "P2" and not PlayerMenuP2 then return end
 			if CurrentTab ~= 4 then return end
@@ -726,19 +611,7 @@ for i=1,#RemoveMods do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 	}
 end
@@ -763,19 +636,7 @@ for i=1,#RemoveMods do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 	}
 end
@@ -830,31 +691,11 @@ for i=1,#RemoveMods do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 		["PlayerMenuSelection"..pn.."MessageCommand"]=function(self)
-			local CurrentTab, CurrentRow, CurrentColumn
-			if pn == "P1" then
-				CurrentTab = CurrentTabP1
-				CurrentRow = CurrentRowP1
-				CurrentColumn = CurrentColumnP1
-			elseif pn == "P2" then
-				CurrentTab = CurrentTabP2
-				CurrentRow = CurrentRowP2
-				CurrentColumn = CurrentColumnP2
-			end
+			local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+			
 			if CurrentTab == 4 and CurrentRow == 3 then
 				if CurrentColumn == 1 and i == 1 then
 					if Little == true then
@@ -904,16 +745,8 @@ for i=1,#RemoveMods do
 			end
 		end,
 		LeftMouseClickUpdateMessageCommand=function(self)
-			local CurrentTab, CurrentRow, CurrentColumn
-			if pn == "P1" then
-				CurrentTab = CurrentTabP1
-				CurrentRow = CurrentRowP1
-				CurrentColumn = CurrentColumnP1
-			elseif pn == "P2" then
-				CurrentTab = CurrentTabP2
-				CurrentRow = CurrentRowP2
-				CurrentColumn = CurrentColumnP2
-			end
+			local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+			
 			if pn == "P1" and not PlayerMenuP1 then return end
 			if pn == "P2" and not PlayerMenuP2 then return end
 			if CurrentTab ~= 4 then return end
@@ -1036,19 +869,7 @@ for i=1,#RemoveMods2 do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 	}
 end
@@ -1074,19 +895,7 @@ for i=1,#RemoveMods2 do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 	}
 end
@@ -1141,31 +950,11 @@ for i=1,#RemoveMods2 do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 		["PlayerMenuSelection"..pn.."MessageCommand"]=function(self)
-			local CurrentTab, CurrentRow, CurrentColumn
-			if pn == "P1" then
-				CurrentTab = CurrentTabP1
-				CurrentRow = CurrentRowP1
-				CurrentColumn = CurrentColumnP1
-			elseif pn == "P2" then
-				CurrentTab = CurrentTabP2
-				CurrentRow = CurrentRowP2
-				CurrentColumn = CurrentColumnP2
-			end
+			local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+			
 			if CurrentTab == 4 and CurrentRow == 4 then
 				if CurrentColumn == 1 and i == 1 then
 					if NoHands == true then
@@ -1215,16 +1004,8 @@ for i=1,#RemoveMods2 do
 			end
 		end,
 		LeftMouseClickUpdateMessageCommand=function(self)
-			local CurrentTab, CurrentRow, CurrentColumn
-			if pn == "P1" then
-				CurrentTab = CurrentTabP1
-				CurrentRow = CurrentRowP1
-				CurrentColumn = CurrentColumnP1
-			elseif pn == "P2" then
-				CurrentTab = CurrentTabP2
-				CurrentRow = CurrentRowP2
-				CurrentColumn = CurrentColumnP2
-			end
+			local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+			
 			if pn == "P1" and not PlayerMenuP1 then return end
 			if pn == "P2" and not PlayerMenuP2 then return end
 			if CurrentTab ~= 4 then return end
@@ -1358,19 +1139,7 @@ for i=1,#Notes2HoldsMods do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 	}
 end
@@ -1395,19 +1164,7 @@ for i=1,#Notes2HoldsMods do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 	}
 end
@@ -1448,31 +1205,11 @@ for i=1,#Notes2HoldsMods do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 		["PlayerMenuSelection"..pn.."MessageCommand"]=function(self)
-			local CurrentTab, CurrentRow, CurrentColumn
-			if pn == "P1" then
-				CurrentTab = CurrentTabP1
-				CurrentRow = CurrentRowP1
-				CurrentColumn = CurrentColumnP1
-			elseif pn == "P2" then
-				CurrentTab = CurrentTabP2
-				CurrentRow = CurrentRowP2
-				CurrentColumn = CurrentColumnP2
-			end
+			local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+			
 			if CurrentTab == 4 and CurrentRow == 5 then
 				if CurrentColumn == 1 and i == 1 then
 					if Planted == true then
@@ -1500,16 +1237,8 @@ for i=1,#Notes2HoldsMods do
 			end
 		end,
 		LeftMouseClickUpdateMessageCommand=function(self)
-			local CurrentTab, CurrentRow, CurrentColumn
-			if pn == "P1" then
-				CurrentTab = CurrentTabP1
-				CurrentRow = CurrentRowP1
-				CurrentColumn = CurrentColumnP1
-			elseif pn == "P2" then
-				CurrentTab = CurrentTabP2
-				CurrentRow = CurrentRowP2
-				CurrentColumn = CurrentColumnP2
-			end
+			local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+			
 			if pn == "P1" and not PlayerMenuP1 then return end
 			if pn == "P2" and not PlayerMenuP2 then return end
 			if CurrentTab ~= 4 then return end
@@ -1605,19 +1334,7 @@ for i=1,#Notes2HoldsMods2 do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 	}
 end
@@ -1642,19 +1359,7 @@ for i=1,#Notes2HoldsMods2 do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 	}
 end
@@ -1695,31 +1400,11 @@ for i=1,#Notes2HoldsMods2 do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 		["PlayerMenuSelection"..pn.."MessageCommand"]=function(self)
-			local CurrentTab, CurrentRow, CurrentColumn
-			if pn == "P1" then
-				CurrentTab = CurrentTabP1
-				CurrentRow = CurrentRowP1
-				CurrentColumn = CurrentColumnP1
-			elseif pn == "P2" then
-				CurrentTab = CurrentTabP2
-				CurrentRow = CurrentRowP2
-				CurrentColumn = CurrentColumnP2
-			end
+			local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+			
 			if CurrentTab == 4 and CurrentRow == 6 then
 				if CurrentColumn == 1 and i == 1 then
 					if Twister == true then
@@ -1747,16 +1432,8 @@ for i=1,#Notes2HoldsMods2 do
 			end
 		end,
 		LeftMouseClickUpdateMessageCommand=function(self)
-			local CurrentTab, CurrentRow, CurrentColumn
-			if pn == "P1" then
-				CurrentTab = CurrentTabP1
-				CurrentRow = CurrentRowP1
-				CurrentColumn = CurrentColumnP1
-			elseif pn == "P2" then
-				CurrentTab = CurrentTabP2
-				CurrentRow = CurrentRowP2
-				CurrentColumn = CurrentColumnP2
-			end
+			local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+			
 			if pn == "P1" and not PlayerMenuP1 then return end
 			if pn == "P2" and not PlayerMenuP2 then return end
 			if CurrentTab ~= 4 then return end
@@ -1863,19 +1540,7 @@ for i=1,#AccelMods do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 	}
 end
@@ -1900,19 +1565,7 @@ for i=1,#AccelMods do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 	}
 end
@@ -1960,31 +1613,11 @@ for i=1,#AccelMods do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 		["PlayerMenuSelection"..pn.."MessageCommand"]=function(self)
-			local CurrentTab, CurrentRow, CurrentColumn
-			if pn == "P1" then
-				CurrentTab = CurrentTabP1
-				CurrentRow = CurrentRowP1
-				CurrentColumn = CurrentColumnP1
-			elseif pn == "P2" then
-				CurrentTab = CurrentTabP2
-				CurrentRow = CurrentRowP2
-				CurrentColumn = CurrentColumnP2
-			end
+			local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+			
 			if CurrentTab == 4 and CurrentRow == 7 then
 				if CurrentColumn == 1 and i == 1 then
 					if Boost == 1 then
@@ -2023,16 +1656,8 @@ for i=1,#AccelMods do
 			end
 		end,
 		LeftMouseClickUpdateMessageCommand=function(self)
-			local CurrentTab, CurrentRow, CurrentColumn
-			if pn == "P1" then
-				CurrentTab = CurrentTabP1
-				CurrentRow = CurrentRowP1
-				CurrentColumn = CurrentColumnP1
-			elseif pn == "P2" then
-				CurrentTab = CurrentTabP2
-				CurrentRow = CurrentRowP2
-				CurrentColumn = CurrentColumnP2
-			end
+			local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+			
 			if pn == "P1" and not PlayerMenuP1 then return end
 			if pn == "P2" and not PlayerMenuP2 then return end
 			if CurrentTab ~= 4 then return end
@@ -2141,19 +1766,7 @@ for i=1,#AccelMods2 do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 	}
 end
@@ -2179,19 +1792,7 @@ for i=1,#AccelMods2 do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 	}
 end
@@ -2232,31 +1833,11 @@ for i=1,#AccelMods2 do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 		["PlayerMenuSelection"..pn.."MessageCommand"]=function(self)
-			local CurrentTab, CurrentRow, CurrentColumn
-			if pn == "P1" then
-				CurrentTab = CurrentTabP1
-				CurrentRow = CurrentRowP1
-				CurrentColumn = CurrentColumnP1
-			elseif pn == "P2" then
-				CurrentTab = CurrentTabP2
-				CurrentRow = CurrentRowP2
-				CurrentColumn = CurrentColumnP2
-			end
+			local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+			
 			if CurrentTab == 4 and CurrentRow == 8 then
 				if CurrentColumn == 1 and i == 1 then
 					if Expand == 1 then
@@ -2284,16 +1865,8 @@ for i=1,#AccelMods2 do
 			end
 		end,
 		LeftMouseClickUpdateMessageCommand=function(self)
-			local CurrentTab, CurrentRow, CurrentColumn
-			if pn == "P1" then
-				CurrentTab = CurrentTabP1
-				CurrentRow = CurrentRowP1
-				CurrentColumn = CurrentColumnP1
-			elseif pn == "P2" then
-				CurrentTab = CurrentTabP2
-				CurrentRow = CurrentRowP2
-				CurrentColumn = CurrentColumnP2
-			end
+			local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+			
 			if pn == "P1" and not PlayerMenuP1 then return end
 			if pn == "P2" and not PlayerMenuP2 then return end
 			if CurrentTab ~= 4 then return end
@@ -2405,19 +1978,7 @@ for i=1,#EffectMods do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 	}
 end
@@ -2442,19 +2003,7 @@ for i=1,#EffectMods do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 	}
 end
@@ -2509,31 +2058,11 @@ for i=1,#EffectMods do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 		["PlayerMenuSelection"..pn.."MessageCommand"]=function(self)
-			local CurrentTab, CurrentRow, CurrentColumn
-			if pn == "P1" then
-				CurrentTab = CurrentTabP1
-				CurrentRow = CurrentRowP1
-				CurrentColumn = CurrentColumnP1
-			elseif pn == "P2" then
-				CurrentTab = CurrentTabP2
-				CurrentRow = CurrentRowP2
-				CurrentColumn = CurrentColumnP2
-			end
+			local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+			
 			if CurrentTab == 4 and CurrentRow == 9 then
 				if CurrentColumn == 1 and i == 1 then
 					if Drunk == 1 then
@@ -2583,16 +2112,8 @@ for i=1,#EffectMods do
 			end
 		end,
 		LeftMouseClickUpdateMessageCommand=function(self)
-			local CurrentTab, CurrentRow, CurrentColumn
-			if pn == "P1" then
-				CurrentTab = CurrentTabP1
-				CurrentRow = CurrentRowP1
-				CurrentColumn = CurrentColumnP1
-			elseif pn == "P2" then
-				CurrentTab = CurrentTabP2
-				CurrentRow = CurrentRowP2
-				CurrentColumn = CurrentColumnP2
-			end
+			local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+			
 			if pn == "P1" and not PlayerMenuP1 then return end
 			if pn == "P2" and not PlayerMenuP2 then return end
 			if CurrentTab ~= 4 then return end
@@ -2716,19 +2237,7 @@ for i=1,#EffectMods2 do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 	}
 end
@@ -2753,19 +2262,7 @@ for i=1,#EffectMods2 do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 	}
 end
@@ -2827,31 +2324,11 @@ for i=1,#EffectMods2 do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 		["PlayerMenuSelection"..pn.."MessageCommand"]=function(self)
-			local CurrentTab, CurrentRow, CurrentColumn
-			if pn == "P1" then
-				CurrentTab = CurrentTabP1
-				CurrentRow = CurrentRowP1
-				CurrentColumn = CurrentColumnP1
-			elseif pn == "P2" then
-				CurrentTab = CurrentTabP2
-				CurrentRow = CurrentRowP2
-				CurrentColumn = CurrentColumnP2
-			end
+			local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+			
 			if CurrentTab == 4 and CurrentRow == 10 then
 				if CurrentColumn == 1 and i == 1 then
 					if Invert == 1 then
@@ -2912,16 +2389,8 @@ for i=1,#EffectMods2 do
 			end
 		end,
 		LeftMouseClickUpdateMessageCommand=function(self)
-			local CurrentTab, CurrentRow, CurrentColumn
-			if pn == "P1" then
-				CurrentTab = CurrentTabP1
-				CurrentRow = CurrentRowP1
-				CurrentColumn = CurrentColumnP1
-			elseif pn == "P2" then
-				CurrentTab = CurrentTabP2
-				CurrentRow = CurrentRowP2
-				CurrentColumn = CurrentColumnP2
-			end
+			local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+			
 			if pn == "P1" and not PlayerMenuP1 then return end
 			if pn == "P2" and not PlayerMenuP2 then return end
 			if CurrentTab ~= 4 then return end
@@ -3066,19 +2535,7 @@ for i=1,#AppearanceMods do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 	}
 end
@@ -3103,19 +2560,7 @@ for i=1,#AppearanceMods do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 	}
 end
@@ -3171,31 +2616,11 @@ for i=1,#AppearanceMods do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 		["PlayerMenuSelection"..pn.."MessageCommand"]=function(self)
-			local CurrentTab, CurrentRow, CurrentColumn
-			if pn == "P1" then
-				CurrentTab = CurrentTabP1
-				CurrentRow = CurrentRowP1
-				CurrentColumn = CurrentColumnP1
-			elseif pn == "P2" then
-				CurrentTab = CurrentTabP2
-				CurrentRow = CurrentRowP2
-				CurrentColumn = CurrentColumnP2
-			end
+			local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+			
 			if CurrentTab == 4 and CurrentRow == 11 then
 				if CurrentColumn == 1 and i == 1 then
 					if Hidden == 1 then
@@ -3245,16 +2670,8 @@ for i=1,#AppearanceMods do
 			end
 		end,
 		LeftMouseClickUpdateMessageCommand=function(self)
-			local CurrentTab, CurrentRow, CurrentColumn
-			if pn == "P1" then
-				CurrentTab = CurrentTabP1
-				CurrentRow = CurrentRowP1
-				CurrentColumn = CurrentColumnP1
-			elseif pn == "P2" then
-				CurrentTab = CurrentTabP2
-				CurrentRow = CurrentRowP2
-				CurrentColumn = CurrentColumnP2
-			end
+			local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+			
 			if pn == "P1" and not PlayerMenuP1 then return end
 			if pn == "P2" and not PlayerMenuP2 then return end
 			if CurrentTab ~= 4 then return end
@@ -3383,19 +2800,7 @@ for i=1,#AttackMods do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 	}
 end
@@ -3432,31 +2837,11 @@ af[#af+1] = Def.Quad{
 			:queuecommand("UpdateDisplayedTab")
 	end,
 	UpdateDisplayedTabCommand=function(self)
-		if pn == "P1" then
-			if CurrentTabP1 == 4 then
-				self:visible(true)
-			else
-				self:visible(false)
-			end
-		elseif pn == "P2" then
-			if CurrentTabP2 == 4 then
-				self:visible(true)
-			else
-				self:visible(false)
-			end
-		end
+		self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 	end,
 	["PlayerMenuSelection"..pn.."MessageCommand"]=function(self)
-		local CurrentTab, CurrentRow, CurrentColumn
-		if pn == "P1" then
-			CurrentTab = CurrentTabP1
-			CurrentRow = CurrentRowP1
-			CurrentColumn = CurrentColumnP1
-		elseif pn == "P2" then
-			CurrentTab = CurrentTabP2
-			CurrentRow = CurrentRowP2
-			CurrentColumn = CurrentColumnP2
-		end
+		local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+		
 		if CurrentTab == 4 and CurrentRow == 12 then
 			if CurrentColumn == 1 then
 				AttackNumber = 1
@@ -3485,17 +2870,9 @@ af[#af+1] = Def.Quad{
 		end
 	end,
 	LeftMouseClickUpdateMessageCommand=function(self)
-		local CurrentTab, CurrentRow, CurrentColumn
+		local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+		
 		local MadeSelection = false
-		if pn == "P1" then
-			CurrentTab = CurrentTabP1
-			CurrentRow = CurrentRowP1
-			CurrentColumn = CurrentColumnP1
-		elseif pn == "P2" then
-			CurrentTab = CurrentTabP2
-			CurrentRow = CurrentRowP2
-			CurrentColumn = CurrentColumnP2
-		end
 		if pn == "P1" and not PlayerMenuP1 then return end
 		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 4 then return end
@@ -3625,19 +3002,7 @@ for i=1,#HasteMods do
 				:queuecommand("UpdateDisplayedTab")
 		end,
 		UpdateDisplayedTabCommand=function(self)
-			if pn == "P1" then
-				if CurrentTabP1 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			elseif pn == "P2" then
-				if CurrentTabP2 == 4 then
-					self:visible(true)
-				else
-					self:visible(false)
-				end
-			end
+			self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 		end,
 	}
 end
@@ -3665,31 +3030,11 @@ af[#af+1] = Def.Quad{
 			:queuecommand("UpdateDisplayedTab")
 	end,
 	UpdateDisplayedTabCommand=function(self)
-		if pn == "P1" then
-			if CurrentTabP1 == 4 then
-				self:visible(true)
-			else
-				self:visible(false)
-			end
-		elseif pn == "P2" then
-			if CurrentTabP2 == 4 then
-				self:visible(true)
-			else
-				self:visible(false)
-			end
-		end
+		self:visible( GetPlayerMenuVisibility(pn, ExpectedTab) )
 	end,
 	["PlayerMenuSelection"..pn.."MessageCommand"]=function(self)
-		local CurrentTab, CurrentRow, CurrentColumn
-		if pn == "P1" then
-			CurrentTab = CurrentTabP1
-			CurrentRow = CurrentRowP1
-			CurrentColumn = CurrentColumnP1
-		elseif pn == "P2" then
-			CurrentTab = CurrentTabP2
-			CurrentRow = CurrentRowP2
-			CurrentColumn = CurrentColumnP2
-		end
+		local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+		
 		if CurrentTab == 4 and CurrentRow == 13 then
 			SOUND:PlayOnce( THEME:GetPathS("Common", "start.ogg") )
 			if CurrentColumn == 1 then
@@ -3733,17 +3078,9 @@ af[#af+1] = Def.Quad{
 		
 	end,
 	LeftMouseClickUpdateMessageCommand=function(self)
-		local CurrentTab, CurrentRow, CurrentColumn
+		local CurrentTab, CurrentRow, CurrentColumn = SetLocalCursor(pn)
+		
 		local MadeSelection = false
-		if pn == "P1" then
-			CurrentTab = CurrentTabP1
-			CurrentRow = CurrentRowP1
-			CurrentColumn = CurrentColumnP1
-		elseif pn == "P2" then
-			CurrentTab = CurrentTabP2
-			CurrentRow = CurrentRowP2
-			CurrentColumn = CurrentColumnP2
-		end
 		if pn == "P1" and not PlayerMenuP1 then return end
 		if pn == "P2" and not PlayerMenuP2 then return end
 		if CurrentTab ~= 4 then return end
