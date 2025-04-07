@@ -220,8 +220,10 @@ IsCurrentSongTagged = function(song, PlayerNum)
 		style = "single"
 	end
 	local PlayerNum = PlayerNum
+	if song == nil then return false end
 	local song = song
 	local SongPath = song:GetSongDir():sub(7):sub(1, -2)
+	
 	local tag_path = PROFILEMAN:GetProfileDir(PlayerNum) .. "Tags-"..style..".txt"
 	local tag_lines = GetFileContents(tag_path)
 	local Value = false
@@ -411,5 +413,30 @@ GetPlayerMenuVisibility = function(pn, ExpectedTab)
 		else
 			return false
 		end
+	end
+end
+
+
+SwitchSongCourseSelect=function(current_GameMode)
+	if current_GameMode == 'PlayMode_Regular' or current_GameMode ~= 'PlayMode_Nonstop' then
+		GAMESTATE:SetCurrentSong(nil)
+		GAMESTATE:SetCurrentPlayMode(1)
+		local value = "Course"
+		for i,playerNum in ipairs(GAMESTATE:GetHumanPlayers()) do
+			DDStats.SetStat(playerNum, 'AreCourseOrSong', value)
+			DDStats.Save(playerNum)
+		end
+		SCREENMAN:GetTopScreen():SetNextScreenName("ScreenReloadSSCDD")
+		SCREENMAN:GetTopScreen():StartTransitioningScreen("SM_GoToNextScreen")
+	elseif current_GameMode == 'PlayMode_Nonstop' then
+		GAMESTATE:SetCurrentCourse(nil)
+		GAMESTATE:SetCurrentPlayMode(0)
+		local value = "Song"
+		for i,playerNum in ipairs(GAMESTATE:GetHumanPlayers()) do
+			DDStats.SetStat(playerNum, 'AreCourseOrSong', value)
+			DDStats.Save(playerNum)
+		end
+		SCREENMAN:GetTopScreen():SetNextScreenName("ScreenReloadSSMDD")
+		SCREENMAN:GetTopScreen():StartTransitioningScreen("SM_GoToNextScreen")
 	end
 end

@@ -94,7 +94,7 @@ for i=1, #SystemNames do
 				elseif CurrentText == THEME:GetString("DDPlayerMenu","SwitchStyle").." "..Style then
 					MESSAGEMAN:Broadcast("DDSwitchStyles")
 				elseif CurrentText == THEME:GetString("DDPlayerMenu","SwitchMode").." "..Mode then
-					MESSAGEMAN:Broadcast("SwitchSongCourseSelect")
+					MESSAGEMAN:Broadcast("DDSwitchPlayMode")
 				elseif CurrentText == THEME:GetString("DDPlayerMenu","Leaderboards") then
 					local curSong = GAMESTATE:GetCurrentSong()
 					if curSong then
@@ -177,7 +177,7 @@ for i=1, #SystemNames do
 					elseif CurrentText == THEME:GetString("DDPlayerMenu","SwitchStyle").." "..Style then
 						MESSAGEMAN:Broadcast("DDSwitchStyles")
 					elseif CurrentText == THEME:GetString("DDPlayerMenu","SwitchMode").." "..Mode then
-						MESSAGEMAN:Broadcast("SwitchSongCourseSelect")
+						MESSAGEMAN:Broadcast("DDSwitchPlayMode")
 					elseif CurrentText == THEME:GetString("DDPlayerMenu","Leaderboards") then
 						local curSong = GAMESTATE:GetCurrentSong()
 						if curSong then
@@ -288,5 +288,11 @@ af[#af+1] = Def.BitmapText{
 				self:visible(true)
 			end
 		end
+	end,
+	DDSwitchPlayModeMessageCommand=function(self)
+		self:sleep(0.2):queuecommand('UpdatePlayMode')
+	end,
+	UpdatePlayModeCommand=function(self)
+		SwitchSongCourseSelect(GAMESTATE:GetPlayMode())
 	end,
 }

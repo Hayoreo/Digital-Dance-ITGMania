@@ -143,7 +143,7 @@ t.Handler = function(event)
 						end
 						-- Switch between Song/Course Select
 						if DDSortMenuCursorPosition == 9 then
-							MESSAGEMAN:Broadcast("SwitchSongCourseSelect")
+							SwitchSongCourseSelect(GAMESTATE:GetPlayMode())
 						end
 						-- Everything from here on is dynamic so it's not always the same for each position.
 						if DDSortMenuCursorPosition == 10 then
