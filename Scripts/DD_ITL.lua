@@ -545,7 +545,6 @@ UpdateItlData = function(player)
 			end
 
 			if updated then
-				CalculateITLSongRanks(player)
 				hashMap[hash]["usedCmod"] = data["usedCmod"]
 				hashMap[hash]["stepsType"] = steps:GetStepsType() == "StepsType_Dance_Single" and "single" or "double"
 				hashMap[hash]["date"] = data["date"]
@@ -553,6 +552,8 @@ UpdateItlData = function(player)
 				hashMap[hash]["passingPoints"] = data["passingPoints"]
 				hashMap[hash]["maxScoringPoints"] = data["maxScoringPoints"]
 				hashMap[hash]["maxPoints"] = data["maxPoints"]
+				hashMap[hash]["points"] = data["points"]
+				CalculateITLSongRanks(player)
 			end
 		end
 
