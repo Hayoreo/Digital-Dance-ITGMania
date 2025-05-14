@@ -75,7 +75,7 @@ af[#af+1] = Def.ActorFrame{
 			local Width = self:GetWidth()
 			local dim1, dim2=math.max(Width, Height), math.min(Width, Height)
 			local ratio=math.max(dim1/dim2, 2)
-			local toScale = Width > Height and Width or Height
+			local toScale = (Width > Height or Width == Height) and Width or Height*1.25
 			self:zoom(17/toScale * ratio)
 			self:horizalign(right):vertalign(middle)
 			self:xy(QuadWidth - 10,36/2)
@@ -97,7 +97,7 @@ af[#af+1] = Def.ActorFrame{
 			local Width = self:GetWidth()
 			local dim1, dim2=math.max(Width, Height), math.min(Width, Height)
 			local ratio=math.max(dim1/dim2, 2)
-			local toScale = Width > Height and Width or Height
+			local toScale = (Width > Height or Width == Height) and Width or Height*1.25
 			self:zoom(17/toScale * ratio)
 			self:visible(GAMESTATE:GetCurrentSong() ~= nil and true or false)
 		end
