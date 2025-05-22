@@ -6,7 +6,13 @@ local AllSongs = SONGMAN:GetAllSongs()
 IsUntiedWR = false
 HaveTagsChanged = false
 local HasDifficultyFilters =  IsUsingDifficultyFilters()
-
+local DifficultyNames = {
+	'Difficulty_Beginner',
+	'Difficulty_Easy',
+	'Difficulty_Medium',
+	'Difficulty_Hard',
+	'Difficulty_Challenge'
+}
 
 local song_lengths = {}
 for i=0,90-1,30 do
@@ -76,7 +82,6 @@ end
 
 function GetPeakNPS(steps)
 	local mpn = GAMESTATE:GetMasterPlayerNumber()
-	local song = SONGMAN:GetSongFromSteps(steps)
 	local nps = steps:GetPeakNps(mpn)
 
 	return nps
@@ -286,14 +291,54 @@ local UpdatePrunedSongs = function()
 		songs_by_group = GroupSongsBy(GetSongBpmGroup)
 	elseif sort_pref == 6 then
 		songs_by_group = {}
+		local mpn = GAMESTATE:GetMasterPlayerNumber()
 		for song in ivalues(AllSongs) do
+			local npsBeginner, npsEasy, npsMedium, npsHard, npsExpert
 			for steps in ivalues(song:GetStepsByStepsType(steps_type)) do
-				local group = GetStepsNpsGroup(steps)
-				if songs_by_group[group] == nil then
-					songs_by_group[group] = {song}
-				else
-					local songs = songs_by_group[group]
-					songs[#songs+1] = song
+					-- Let's avoid adding the same song multiple times if multiple charts have the same value...
+					-- TODO: Make this more efficient(?)
+					if steps:GetDifficulty() == DifficultyNames[1] then
+						npsBeginner = steps:GetPeakNps(mpn)
+						if npsBeginner == npsEasy or npsBeginner == npsMedium or npsBeginner == npsHard or npsBeginner == npsExpert then
+							npsBeginner = nil
+						end
+					elseif steps:GetDifficulty() == DifficultyNames[2] then
+						npsEasy = steps:GetPeakNps(mpn)
+						if npsEasy == npsBeginner or npsEasy == npsMedium or npsEasy == npsHard or npsEasy == npsExpert then
+							npsEasy = nil
+						end
+					elseif steps:GetDifficulty() == DifficultyNames[3] then
+						npsMedium = steps:GetPeakNps(mpn)
+						if npsMedium == npsBeginner or npsMedium == npsEasy or npsMedium == npsHard or npsMedium == npsExpert then
+							npsMedium = nil
+						end
+					elseif steps:GetDifficulty() == DifficultyNames[4] then
+						npsHard = steps:GetPeakNps(mpn)
+						if npsHard == npsBeginner or npsHard == npsEasy or npsHard == npsMedium or npsHard == npsExpert then
+							npsHard = nil
+						end
+					elseif steps:GetDifficulty() == DifficultyNames[5] then
+						npsExpert = steps:GetPeakNps(mpn)
+						if npsExpert == npsBeginner or npsExpert == npsEasy or npsExpert == npsMedium or npsExpert == npsHard then
+							npsExpert = nil
+						end
+					end
+				-- Ignore edits
+				if steps:GetDifficulty() ~= 'Difficulty_Edit' then
+					if (steps:GetDifficulty() == DifficultyNames[1] and npsBeginner ~= nil) or
+						(steps:GetDifficulty() == DifficultyNames[2] and npsEasy ~= nil) or
+						(steps:GetDifficulty() == DifficultyNames[3] and npsMedium ~= nil) or
+						(steps:GetDifficulty() == DifficultyNames[4] and npsHard ~= nil) or
+						(steps:GetDifficulty() == DifficultyNames[5] and npsExpert ~= nil)
+					then
+						local group = GetStepsNpsGroup(steps)
+						if songs_by_group[group] == nil then
+							songs_by_group[group] = {song}
+						else
+							local songs = songs_by_group[group]
+							songs[#songs+1] = song
+						end
+					end
 				end
 			end
 		end
