@@ -22,10 +22,10 @@ play_sample_music = function()
 
 		if song then
 			local songpath = song:GetMusicPath()
-			local sample_start = song:GetSampleStart()
-			local sample_len = song:GetSampleLength()
+			local sample_start = song:GetSampleStart() or 0
+			local sample_len = song:GetSampleLength() or 12
 
-			if songpath and sample_start and sample_len then
+			if songpath then
 				SOUND:DimMusic(PREFSMAN:GetPreference("SoundVolume"), math.huge)
 				SOUND:PlayMusicPart(songpath, sample_start,sample_len, 0.5, 1.5, false, true)
 			else
