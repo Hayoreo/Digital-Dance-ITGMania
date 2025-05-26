@@ -6,7 +6,6 @@ end
 local af = Def.ActorFrame{}
 
 local holdingCtrl = false
-local holdingShift = false
 
 local InputHandler = function( event )
 
@@ -19,8 +18,6 @@ local InputHandler = function( event )
 		
 		if event.DeviceInput.button == "DeviceButton_left ctrl" then
 			holdingCtrl = true
-		elseif event.DeviceInput.button == "DeviceButton_left shift" then
-			holdingShift = true
 		end
 		
 		if holdingCtrl then
@@ -34,8 +31,6 @@ local InputHandler = function( event )
 	if event.type == "InputEventType_Release" then
 		if event.DeviceInput.button == "DeviceButton_left ctrl" then
 			holdingCtrl = false
-		elseif event.DeviceInput.button == "DeviceButton_left shift" then
-			holdingShift = false
 		end
 	end
 
