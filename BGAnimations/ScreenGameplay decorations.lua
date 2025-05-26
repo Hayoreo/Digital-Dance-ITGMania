@@ -1,7 +1,6 @@
---- This is the script that fails a player if they quit out too early.
---- It also will end a song early if it's cut or the chart ends sooner than other charts.
+--- This is the script that will end a song early if it's cut or the chart ends sooner than other charts.
 
-
+-- Let's not use this in course mode.
 if not GAMESTATE:IsCourseMode() then
 	local sTable = GAMESTATE:GetCurrentSong():GetStepsByStepsType( "StepsType_Dance_Single" );
 	local nsj = GAMESTATE:GetNumSidesJoined()
@@ -12,8 +11,7 @@ if not GAMESTATE:IsCourseMode() then
 		end
 	end
 
-	-- Update stats
-	local song = GAMESTATE:GetCurrentSong()
+	-- Populate stats
 	local PlayerOneChart = GAMESTATE:GetCurrentSteps(0)
 	local PlayerTwoChart = GAMESTATE:GetCurrentSteps(1)
 	local TotalMinesP1
@@ -143,7 +141,6 @@ if not GAMESTATE:IsCourseMode() then
 			DDStats.Save(PLAYER_2)
 		end
 	end
-	local wtf = 0
 	local t = Def.ActorFrame {
 			OnCommand=function(self)
 				self:sleep(999999)
@@ -174,65 +171,7 @@ if not GAMESTATE:IsCourseMode() then
 				FinishedCommand=function(self)
 					SCREENMAN:GetTopScreen():StartTransitioningScreen("SM_DoNextScreen")
 				end,
-				OffCommand=function(self)
-					self:stoptweening():sleep(0.6):queuecommand("Fail")
-				end,
-				FailCommand=function(self)
-					if not IsSongOver() then
-						-- Let's fail the bots as well.
-						for player in ivalues( GAMESTATE:GetEnabledPlayers() ) do
-							local pss = STATSMAN:GetCurStageStats():GetPlayerStageStats(player)
-							pss:FailPlayer()
-						end
-					-- fail the player if they use Haste
-					elseif GAMESTATE:GetSongOptionsObject("ModsLevel_Preferred"):Haste() ~= 0 then
-						-- Let's fail the bots as well.
-						for player in ivalues( GAMESTATE:GetEnabledPlayers() ) do
-							local pss = STATSMAN:GetCurStageStats():GetPlayerStageStats(player)
-							pss:FailPlayer()
-						end
-					else
-						--- in the event that the player is playing on a sm build with the broken mine fix and they fail on the last step lol
-						for player in ivalues( GAMESTATE:GetEnabledPlayers() ) do
-							local LifeState = GAMESTATE:GetPlayerState(player):GetHealthState()
-							local pss = STATSMAN:GetCurStageStats():GetPlayerStageStats(player)
-							if LifeState == "HealthState_Dead" then
-								pss:FailPlayer()
-							end
-						end
-					end
-				end,
 			}
 		}
 	return t
-else
-	local t = Def.ActorFrame{
-		OnCommand=function(self)
-			self:sleep(999999)
-		end,
-		Def.ActorFrame {
-			OffCommand=function(self)
-				local fail = (GAMESTATE:GetCurMusicSeconds() < GAMESTATE:GetCurrentSong():GetLastSecond())
-
-				-- In course mode always fail if we're not already on the last
-				-- song. If we are on the last song, then we fall back to the
-				-- condition above.
-				local course = GAMESTATE:GetCurrentCourse()
-				if GAMESTATE:GetCourseSongIndex() + 1 < course:GetNumCourseEntries() then
-					fail = true
-				end
-				
-				if fail then
-					-- Let's fail the bots as well.
-					for player in ivalues( GAMESTATE:GetEnabledPlayers() ) do
-						local pss = STATSMAN:GetCurStageStats():GetPlayerStageStats(player)
-						pss:FailPlayer()
-					end
-				end
-			end,
-		}
-	}
-
-return t
-
 end
