@@ -7,6 +7,7 @@ local PlayerDefaults = {
 				SpeedModType = "C",
 				SpeedMod = 600,
 				JudgmentGraphic = "Digital 2x7 (doubleres).png",
+				JudgmentSize = 100,
 				HeldGraphic = "None",
 				ComboFont = "Wendy",
 				HoldJudgment = "Ice 1x2.png",

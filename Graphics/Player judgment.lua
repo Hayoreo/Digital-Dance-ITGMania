@@ -3,6 +3,7 @@ local pn = ToEnumShortString(player)
 local mods = SL[pn].ActiveModifiers
 local sprite
 local GhostWindow = mods.GhostWindow/1000 or 0
+local JudgeScale = mods.JudgmentSize/100 or 1
 
 -- In case anyone is playing on a profile that previously was using the toggle judgment tilt.
 if mods.JudgmentTilt == false or mods.JudgmentTilt == true then
@@ -127,7 +128,7 @@ return Def.ActorFrame{
 				sprite:rotationz(direction * offset)
 			end
 			-- this should match the custom JudgmentTween() from SL for 3.95
-			sprite:zoom(0.8):decelerate(0.1):zoom(0.75):sleep(0.6):accelerate(0.2):zoom(0)
+			sprite:horizalign(center):zoom(0.8 * JudgeScale):decelerate(0.1):zoom(0.75 * JudgeScale):sleep(0.6):accelerate(0.2):zoom(0)
 		end
 	end,
 	JudgmentMessageCommand=function(self, param)
@@ -209,7 +210,7 @@ return Def.ActorFrame{
 			end
 		end
 		-- this should match the custom JudgmentTween() from SL for 3.95
-		sprite:zoom(0.8):decelerate(0.1):zoom(0.75):sleep(0.6):accelerate(0.2):zoom(0)
+		sprite:horizalign(center):zoom(0.8 * JudgeScale):decelerate(0.1):zoom(0.75 * JudgeScale):sleep(0.6):accelerate(0.2):zoom(0)
 	end,
 
 	Def.Sprite{

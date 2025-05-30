@@ -16,6 +16,7 @@ local ColumnPerRow1 = {
 1,
 1,
 1,
+1,
 3,
 4,
 1,
@@ -197,7 +198,7 @@ local InputHandler = function( event )
 				if CurrentTab == 1 then
 					if ColumnPerRow1[CurrentRow] > 1 then
 						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
-					elseif CurrentRow >= 4 and CurrentRow <= 8 then
+					elseif (CurrentRow >= 4 and CurrentRow <= 5) or (CurrentRow >= 7 and CurrentRow <= 9) then
 						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 					end
 				elseif CurrentTab == 2 and ColumnPerRow2[CurrentRow] > 1 then
@@ -234,7 +235,7 @@ local InputHandler = function( event )
 				if CurrentTab == 1 then
 					if ColumnPerRow1[CurrentRow] > 1 then
 						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
-					elseif CurrentRow >= 4 and CurrentRow <= 8 then
+					elseif (CurrentRow >= 4 and CurrentRow <= 5) or (CurrentRow >= 7 and CurrentRow <= 9) then
 						SOUND:PlayOnce( THEME:GetPathS("", "_change value") )
 					end
 				elseif CurrentTab == 2 and ColumnPerRow2[CurrentRow] > 1 then

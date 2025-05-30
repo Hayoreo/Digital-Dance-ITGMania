@@ -21,6 +21,7 @@ local NameTable =
 		"MiniBox",
 		"NoteskinBox",
 		"JudgmentBox",
+		"JudgmentSizeBox",
 		"ComboBox",
 		"HoldJBox",
 		"HeldMissesBox",
